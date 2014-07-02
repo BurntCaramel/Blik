@@ -1,0 +1,482 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B2ADDBD21963DA2E0014EF84 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */; };
+		B2ADDBDC1963DA2E0014EF84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBDA1963DA2E0014EF84 /* InfoPlist.strings */; };
+		B2ADDBDE1963DA2E0014EF84 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ADDBDD1963DA2E0014EF84 /* main.m */; };
+		B2ADDBE21963DA2E0014EF84 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBE01963DA2E0014EF84 /* Credits.rtf */; };
+		B2ADDBE51963DA2E0014EF84 /* GLAAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ADDBE41963DA2E0014EF84 /* GLAAppDelegate.m */; };
+		B2ADDBE81963DA2E0014EF84 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBE61963DA2E0014EF84 /* MainMenu.xib */; };
+		B2ADDBEA1963DA2E0014EF84 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBE91963DA2E0014EF84 /* Images.xcassets */; };
+		B2ADDBF11963DA2E0014EF84 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBF01963DA2E0014EF84 /* XCTest.framework */; };
+		B2ADDBF21963DA2E0014EF84 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */; };
+		B2ADDBFA1963DA2E0014EF84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBF81963DA2E0014EF84 /* InfoPlist.strings */; };
+		B2ADDBFC1963DA2E0014EF84 /* Glance_Prototype_ATests.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ADDBFB1963DA2E0014EF84 /* Glance_Prototype_ATests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B2ADDBF31963DA2E0014EF84 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B2ADDBC61963DA2E0014EF84 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B2ADDBCD1963DA2E0014EF84;
+			remoteInfo = "Glance Prototype A";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		B2ADDBCE1963DA2E0014EF84 /* Glance Prototype A.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Glance Prototype A.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		B2ADDBD41963DA2E0014EF84 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		B2ADDBD51963DA2E0014EF84 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		B2ADDBD61963DA2E0014EF84 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		B2ADDBD91963DA2E0014EF84 /* Glance Prototype A-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Glance Prototype A-Info.plist"; sourceTree = "<group>"; };
+		B2ADDBDB1963DA2E0014EF84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B2ADDBDD1963DA2E0014EF84 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B2ADDBDF1963DA2E0014EF84 /* Glance Prototype A-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Glance Prototype A-Prefix.pch"; sourceTree = "<group>"; };
+		B2ADDBE11963DA2E0014EF84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		B2ADDBE31963DA2E0014EF84 /* GLAAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLAAppDelegate.h; sourceTree = "<group>"; };
+		B2ADDBE41963DA2E0014EF84 /* GLAAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLAAppDelegate.m; sourceTree = "<group>"; };
+		B2ADDBE71963DA2E0014EF84 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		B2ADDBE91963DA2E0014EF84 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		B2ADDBEF1963DA2E0014EF84 /* Glance Prototype ATests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Glance Prototype ATests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B2ADDBF01963DA2E0014EF84 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		B2ADDBF71963DA2E0014EF84 /* Glance Prototype ATests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Glance Prototype ATests-Info.plist"; sourceTree = "<group>"; };
+		B2ADDBF91963DA2E0014EF84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B2ADDBFB1963DA2E0014EF84 /* Glance_Prototype_ATests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Glance_Prototype_ATests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B2ADDBCB1963DA2E0014EF84 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B2ADDBD21963DA2E0014EF84 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B2ADDBEC1963DA2E0014EF84 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B2ADDBF21963DA2E0014EF84 /* Cocoa.framework in Frameworks */,
+				B2ADDBF11963DA2E0014EF84 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B2ADDBC51963DA2E0014EF84 = {
+			isa = PBXGroup;
+			children = (
+				B2ADDBD71963DA2E0014EF84 /* Glance Prototype A */,
+				B2ADDBF51963DA2E0014EF84 /* Glance Prototype ATests */,
+				B2ADDBD01963DA2E0014EF84 /* Frameworks */,
+				B2ADDBCF1963DA2E0014EF84 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B2ADDBCF1963DA2E0014EF84 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B2ADDBCE1963DA2E0014EF84 /* Glance Prototype A.app */,
+				B2ADDBEF1963DA2E0014EF84 /* Glance Prototype ATests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B2ADDBD01963DA2E0014EF84 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */,
+				B2ADDBF01963DA2E0014EF84 /* XCTest.framework */,
+				B2ADDBD31963DA2E0014EF84 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B2ADDBD31963DA2E0014EF84 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B2ADDBD41963DA2E0014EF84 /* AppKit.framework */,
+				B2ADDBD51963DA2E0014EF84 /* CoreData.framework */,
+				B2ADDBD61963DA2E0014EF84 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		B2ADDBD71963DA2E0014EF84 /* Glance Prototype A */ = {
+			isa = PBXGroup;
+			children = (
+				B2ADDBE31963DA2E0014EF84 /* GLAAppDelegate.h */,
+				B2ADDBE41963DA2E0014EF84 /* GLAAppDelegate.m */,
+				B2ADDBE61963DA2E0014EF84 /* MainMenu.xib */,
+				B2ADDBE91963DA2E0014EF84 /* Images.xcassets */,
+				B2ADDBD81963DA2E0014EF84 /* Supporting Files */,
+			);
+			path = "Glance Prototype A";
+			sourceTree = "<group>";
+		};
+		B2ADDBD81963DA2E0014EF84 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B2ADDBD91963DA2E0014EF84 /* Glance Prototype A-Info.plist */,
+				B2ADDBDA1963DA2E0014EF84 /* InfoPlist.strings */,
+				B2ADDBDD1963DA2E0014EF84 /* main.m */,
+				B2ADDBDF1963DA2E0014EF84 /* Glance Prototype A-Prefix.pch */,
+				B2ADDBE01963DA2E0014EF84 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B2ADDBF51963DA2E0014EF84 /* Glance Prototype ATests */ = {
+			isa = PBXGroup;
+			children = (
+				B2ADDBFB1963DA2E0014EF84 /* Glance_Prototype_ATests.m */,
+				B2ADDBF61963DA2E0014EF84 /* Supporting Files */,
+			);
+			path = "Glance Prototype ATests";
+			sourceTree = "<group>";
+		};
+		B2ADDBF61963DA2E0014EF84 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B2ADDBF71963DA2E0014EF84 /* Glance Prototype ATests-Info.plist */,
+				B2ADDBF81963DA2E0014EF84 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B2ADDBCD1963DA2E0014EF84 /* Glance Prototype A */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B2ADDBFF1963DA2E0014EF84 /* Build configuration list for PBXNativeTarget "Glance Prototype A" */;
+			buildPhases = (
+				B2ADDBCA1963DA2E0014EF84 /* Sources */,
+				B2ADDBCB1963DA2E0014EF84 /* Frameworks */,
+				B2ADDBCC1963DA2E0014EF84 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Glance Prototype A";
+			productName = "Glance Prototype A";
+			productReference = B2ADDBCE1963DA2E0014EF84 /* Glance Prototype A.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B2ADDBEE1963DA2E0014EF84 /* Glance Prototype ATests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B2ADDC021963DA2E0014EF84 /* Build configuration list for PBXNativeTarget "Glance Prototype ATests" */;
+			buildPhases = (
+				B2ADDBEB1963DA2E0014EF84 /* Sources */,
+				B2ADDBEC1963DA2E0014EF84 /* Frameworks */,
+				B2ADDBED1963DA2E0014EF84 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B2ADDBF41963DA2E0014EF84 /* PBXTargetDependency */,
+			);
+			name = "Glance Prototype ATests";
+			productName = "Glance Prototype ATests";
+			productReference = B2ADDBEF1963DA2E0014EF84 /* Glance Prototype ATests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B2ADDBC61963DA2E0014EF84 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = GLA;
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = "Burnt Caramel";
+				TargetAttributes = {
+					B2ADDBEE1963DA2E0014EF84 = {
+						TestTargetID = B2ADDBCD1963DA2E0014EF84;
+					};
+				};
+			};
+			buildConfigurationList = B2ADDBC91963DA2E0014EF84 /* Build configuration list for PBXProject "Glance Prototype A" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B2ADDBC51963DA2E0014EF84;
+			productRefGroup = B2ADDBCF1963DA2E0014EF84 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B2ADDBCD1963DA2E0014EF84 /* Glance Prototype A */,
+				B2ADDBEE1963DA2E0014EF84 /* Glance Prototype ATests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B2ADDBCC1963DA2E0014EF84 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B2ADDBDC1963DA2E0014EF84 /* InfoPlist.strings in Resources */,
+				B2ADDBEA1963DA2E0014EF84 /* Images.xcassets in Resources */,
+				B2ADDBE21963DA2E0014EF84 /* Credits.rtf in Resources */,
+				B2ADDBE81963DA2E0014EF84 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B2ADDBED1963DA2E0014EF84 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B2ADDBFA1963DA2E0014EF84 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B2ADDBCA1963DA2E0014EF84 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B2ADDBDE1963DA2E0014EF84 /* main.m in Sources */,
+				B2ADDBE51963DA2E0014EF84 /* GLAAppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B2ADDBEB1963DA2E0014EF84 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B2ADDBFC1963DA2E0014EF84 /* Glance_Prototype_ATests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B2ADDBF41963DA2E0014EF84 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B2ADDBCD1963DA2E0014EF84 /* Glance Prototype A */;
+			targetProxy = B2ADDBF31963DA2E0014EF84 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		B2ADDBDA1963DA2E0014EF84 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B2ADDBDB1963DA2E0014EF84 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		B2ADDBE01963DA2E0014EF84 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B2ADDBE11963DA2E0014EF84 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		B2ADDBE61963DA2E0014EF84 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B2ADDBE71963DA2E0014EF84 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		B2ADDBF81963DA2E0014EF84 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B2ADDBF91963DA2E0014EF84 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B2ADDBFD1963DA2E0014EF84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		B2ADDBFE1963DA2E0014EF84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		B2ADDC001963DA2E0014EF84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Glance Prototype A/Glance Prototype A-Prefix.pch";
+				INFOPLIST_FILE = "Glance Prototype A/Glance Prototype A-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		B2ADDC011963DA2E0014EF84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Glance Prototype A/Glance Prototype A-Prefix.pch";
+				INFOPLIST_FILE = "Glance Prototype A/Glance Prototype A-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		B2ADDC031963DA2E0014EF84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Glance Prototype A.app/Contents/MacOS/Glance Prototype A";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Glance Prototype A/Glance Prototype A-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Glance Prototype ATests/Glance Prototype ATests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		B2ADDC041963DA2E0014EF84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Glance Prototype A.app/Contents/MacOS/Glance Prototype A";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Glance Prototype A/Glance Prototype A-Prefix.pch";
+				INFOPLIST_FILE = "Glance Prototype ATests/Glance Prototype ATests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B2ADDBC91963DA2E0014EF84 /* Build configuration list for PBXProject "Glance Prototype A" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B2ADDBFD1963DA2E0014EF84 /* Debug */,
+				B2ADDBFE1963DA2E0014EF84 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B2ADDBFF1963DA2E0014EF84 /* Build configuration list for PBXNativeTarget "Glance Prototype A" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B2ADDC001963DA2E0014EF84 /* Debug */,
+				B2ADDC011963DA2E0014EF84 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		B2ADDC021963DA2E0014EF84 /* Build configuration list for PBXNativeTarget "Glance Prototype ATests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B2ADDC031963DA2E0014EF84 /* Debug */,
+				B2ADDC041963DA2E0014EF84 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B2ADDBC61963DA2E0014EF84 /* Project object */;
+}
