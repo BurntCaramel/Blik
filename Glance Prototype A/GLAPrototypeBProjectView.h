@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import "GLAView.h"
 
-@interface GLAPrototypeBProjectView : NSView
+@interface GLAPrototypeBProjectView : GLAView
 
 @end

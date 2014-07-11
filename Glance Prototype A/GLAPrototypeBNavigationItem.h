@@ -13,6 +13,14 @@
 
 @interface GLAPrototypeBNavigationItem : NSButton
 
+@property (nonatomic) GLAPrototypeBNavigationItemCell *cell;
+
+@property (nonatomic) CGFloat leftSpacing;
+@property (nonatomic) CGFloat rightSpacing;
+@property (nonatomic) CGFloat verticalOffsetDown;
+
+@property (nonatomic, getter = isAlwaysHighlighted) BOOL alwaysHighlighted;
+
 @end
 
 
@@ -22,7 +30,8 @@
 @property (nonatomic) CGFloat rightSpacing;
 @property (nonatomic) CGFloat verticalOffsetDown;
 
-@property (readonly, nonatomic, getter = isAlwaysHighlighted) BOOL alwaysHighlighted;
+@property (nonatomic, getter = isAlwaysHighlighted) BOOL alwaysHighlighted;
+
 @property (readonly, nonatomic, getter = isOnAndShowsOnState) BOOL onAndShowsOnState;
 
 @end

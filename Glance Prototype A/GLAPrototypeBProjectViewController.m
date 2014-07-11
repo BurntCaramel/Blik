@@ -216,7 +216,7 @@
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
 	if (row == 0) {
-		return 2.0 * 21.0;
+		return 2.0 * 24.0;
 	}
 	else {
 		//return 2.0 * 18.0;

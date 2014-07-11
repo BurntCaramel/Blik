@@ -191,7 +191,7 @@
                                                         <rect key="frame" x="-2" y="0.0" width="252" height="36"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="36" id="9zR-aN-7jZ"/>
+                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="36" id="9zR-aN-7jZ"/>
                                                         </constraints>
                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="pBN-CX-Mzc">
                                                             <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -201,7 +201,7 @@
                                                     </textField>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstAttribute="bottom" secondItem="CNu-U7-Yfv" secondAttribute="bottom" id="6ha-Cq-Bnd"/>
+                                                    <constraint firstAttribute="bottom" secondItem="CNu-U7-Yfv" secondAttribute="bottom" id="Ach-S4-0dT"/>
                                                     <constraint firstItem="CNu-U7-Yfv" firstAttribute="top" secondItem="Asp-zL-oFT" secondAttribute="top" id="i6v-eJ-JsW"/>
                                                     <constraint firstItem="CNu-U7-Yfv" firstAttribute="leading" secondItem="Asp-zL-oFT" secondAttribute="leading" id="r2o-BF-ixs"/>
                                                     <constraint firstAttribute="trailing" secondItem="CNu-U7-Yfv" secondAttribute="trailing" id="ssg-Lm-2Zb"/>

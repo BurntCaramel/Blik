@@ -16,6 +16,8 @@
 		B219DAB3196AD462007900DF /* GLAPrototypeBProjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B219DAB1196AD462007900DF /* GLAPrototypeBProjectViewController.xib */; };
 		B219DAB6196AD698007900DF /* GLAUIStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAB5196AD698007900DF /* GLAUIStyle.m */; };
 		B24B3607196D1F720094FA1F /* GLAReminderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3606196D1F720094FA1F /* GLAReminderItem.m */; };
+		B24B360B196E336E0094FA1F /* GLAMainNavigationBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */; };
+		B24B360C196E336E0094FA1F /* GLAMainNavigationBarController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B24B360A196E336E0094FA1F /* GLAMainNavigationBarController.xib */; };
 		B2ADDBD21963DA2E0014EF84 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */; };
 		B2ADDBDC1963DA2E0014EF84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBDA1963DA2E0014EF84 /* InfoPlist.strings */; };
 		B2ADDBDE1963DA2E0014EF84 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ADDBDD1963DA2E0014EF84 /* main.m */; };
@@ -31,6 +33,7 @@
 		B2ADDC091963DA970014EF84 /* GLAPrototypeAWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDC071963DA970014EF84 /* GLAPrototypeAWindowController.xib */; };
 		B2ADDC0D1964E3E10014EF84 /* GLAPrototypeAFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ADDC0B1964E3E10014EF84 /* GLAPrototypeAFilesViewController.m */; };
 		B2ADDC0E1964E3E10014EF84 /* GLAPrototypeAFilesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDC0C1964E3E10014EF84 /* GLAPrototypeAFilesViewController.xib */; };
+		B2C7F287196FFFDF005780B4 /* GLAView.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C7F286196FFFDF005780B4 /* GLAView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +63,9 @@
 		B219DAB5196AD698007900DF /* GLAUIStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAUIStyle.m; sourceTree = "<group>"; };
 		B24B3605196D1F720094FA1F /* GLAReminderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAReminderItem.h; sourceTree = "<group>"; };
 		B24B3606196D1F720094FA1F /* GLAReminderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAReminderItem.m; sourceTree = "<group>"; };
+		B24B3608196E336E0094FA1F /* GLAMainNavigationBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainNavigationBarController.h; sourceTree = "<group>"; };
+		B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainNavigationBarController.m; sourceTree = "<group>"; };
+		B24B360A196E336E0094FA1F /* GLAMainNavigationBarController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAMainNavigationBarController.xib; sourceTree = "<group>"; };
 		B2ADDBCE1963DA2E0014EF84 /* Glance Prototype A.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Glance Prototype A.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		B2ADDBD41963DA2E0014EF84 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -85,6 +91,8 @@
 		B2ADDC0A1964E3E10014EF84 /* GLAPrototypeAFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPrototypeAFilesViewController.h; sourceTree = "<group>"; };
 		B2ADDC0B1964E3E10014EF84 /* GLAPrototypeAFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPrototypeAFilesViewController.m; sourceTree = "<group>"; };
 		B2ADDC0C1964E3E10014EF84 /* GLAPrototypeAFilesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAPrototypeAFilesViewController.xib; sourceTree = "<group>"; };
+		B2C7F285196FFFDF005780B4 /* GLAView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAView.h; sourceTree = "<group>"; };
+		B2C7F286196FFFDF005780B4 /* GLAView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,23 +116,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B219DAA4196AB665007900DF /* B */ = {
+		B219DAA4196AB665007900DF /* View Controller */ = {
 			isa = PBXGroup;
 			children = (
 				B219DA9F196AB65D007900DF /* GLAPrototypeBWindowController.h */,
 				B219DAA0196AB65D007900DF /* GLAPrototypeBWindowController.m */,
 				B219DAA1196AB65D007900DF /* GLAPrototypeBWindowController.xib */,
+				B24B3608196E336E0094FA1F /* GLAMainNavigationBarController.h */,
+				B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */,
+				B24B360A196E336E0094FA1F /* GLAMainNavigationBarController.xib */,
 				B219DAAF196AD462007900DF /* GLAPrototypeBProjectViewController.h */,
 				B219DAB0196AD462007900DF /* GLAPrototypeBProjectViewController.m */,
 				B219DAB1196AD462007900DF /* GLAPrototypeBProjectViewController.xib */,
-				B219DAAC196ACE8D007900DF /* GLAPrototypeBProjectView.h */,
-				B219DAAD196ACE8D007900DF /* GLAPrototypeBProjectView.m */,
-				B219DAA6196AB7D6007900DF /* GLAPrototypeBNavigationBar.h */,
-				B219DAA7196AB7D6007900DF /* GLAPrototypeBNavigationBar.m */,
-				B219DAA9196AB8D1007900DF /* GLAPrototypeBNavigationItem.h */,
-				B219DAAA196AB8D1007900DF /* GLAPrototypeBNavigationItem.m */,
 			);
-			name = B;
+			name = "View Controller";
 			sourceTree = "<group>";
 		};
 		B219DAA5196AB66A007900DF /* A */ = {
@@ -206,7 +211,8 @@
 				B2ADDBE91963DA2E0014EF84 /* Images.xcassets */,
 				B219DAA5196AB66A007900DF /* A */,
 				B219DAB7196AD69D007900DF /* Style (Colours) */,
-				B219DAA4196AB665007900DF /* B */,
+				B219DAA4196AB665007900DF /* View Controller */,
+				B2C7F284196FFFC1005780B4 /* View */,
 				B24B3604196D1F4D0094FA1F /* Model */,
 				B2ADDBD81963DA2E0014EF84 /* Supporting Files */,
 			);
@@ -241,6 +247,21 @@
 				B2ADDBF81963DA2E0014EF84 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B2C7F284196FFFC1005780B4 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B2C7F285196FFFDF005780B4 /* GLAView.h */,
+				B2C7F286196FFFDF005780B4 /* GLAView.m */,
+				B219DAAC196ACE8D007900DF /* GLAPrototypeBProjectView.h */,
+				B219DAAD196ACE8D007900DF /* GLAPrototypeBProjectView.m */,
+				B219DAA6196AB7D6007900DF /* GLAPrototypeBNavigationBar.h */,
+				B219DAA7196AB7D6007900DF /* GLAPrototypeBNavigationBar.m */,
+				B219DAA9196AB8D1007900DF /* GLAPrototypeBNavigationItem.h */,
+				B219DAAA196AB8D1007900DF /* GLAPrototypeBNavigationItem.m */,
+			);
+			name = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -322,6 +343,7 @@
 			files = (
 				B2ADDC091963DA970014EF84 /* GLAPrototypeAWindowController.xib in Resources */,
 				B219DAB3196AD462007900DF /* GLAPrototypeBProjectViewController.xib in Resources */,
+				B24B360C196E336E0094FA1F /* GLAMainNavigationBarController.xib in Resources */,
 				B2ADDBDC1963DA2E0014EF84 /* InfoPlist.strings in Resources */,
 				B2ADDC0E1964E3E10014EF84 /* GLAPrototypeAFilesViewController.xib in Resources */,
 				B2ADDBEA1963DA2E0014EF84 /* Images.xcassets in Resources */,
@@ -346,8 +368,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2C7F287196FFFDF005780B4 /* GLAView.m in Sources */,
 				B2ADDC081963DA970014EF84 /* GLAPrototypeAWindowController.m in Sources */,
 				B219DAA2196AB65D007900DF /* GLAPrototypeBWindowController.m in Sources */,
+				B24B360B196E336E0094FA1F /* GLAMainNavigationBarController.m in Sources */,
 				B219DAB6196AD698007900DF /* GLAUIStyle.m in Sources */,
 				B2ADDBDE1963DA2E0014EF84 /* main.m in Sources */,
 				B219DAAE196ACE8D007900DF /* GLAPrototypeBProjectView.m in Sources */,

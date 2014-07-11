@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAPrototypeBWindowController">
             <connections>
+                <outlet property="barHolderView" destination="IAs-3U-KCq" id="IT5-dV-eTk"/>
                 <outlet property="contentView" destination="lUf-gC-iRj" id="77L-qi-CZf"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
@@ -23,106 +24,26 @@
                 <rect key="frame" x="0.0" y="0.0" width="500" height="310"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="IAs-3U-KCq" customClass="GLAPrototypeBNavigationBar">
+                    <customView identifier="mainNavigation" translatesAutoresizingMaskIntoConstraints="NO" id="IAs-3U-KCq" customClass="GLAView">
                         <rect key="frame" x="0.0" y="267" width="500" height="43"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <subviews>
-                            <button placeholderIntrinsicWidth="82" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="hNY-kA-QtC" customClass="GLAPrototypeBNavigationItem">
-                                <rect key="frame" x="209" y="0.0" width="82" height="43"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="square" title="Today" bezelStyle="shadowlessSquare" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ksB-3s-MqK" customClass="GLAPrototypeBNavigationItemCell">
-                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                                    <font key="font" size="13" name="AvenirNext-Medium"/>
-                                </buttonCell>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                                        <integer key="value" value="-2"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="changeMainSection:" target="-2" id="XWk-Zf-Irc"/>
-                                </connections>
-                            </button>
-                            <button placeholderIntrinsicWidth="82" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="ksL-dc-2oI" customClass="GLAPrototypeBNavigationItem">
-                                <rect key="frame" x="127" y="0.0" width="82" height="43"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="square" title="All" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0HI-a2-FV0" customClass="GLAPrototypeBNavigationItemCell">
-                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                                    <font key="font" size="13" name="AvenirNext-Medium"/>
-                                </buttonCell>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                                        <integer key="value" value="-2"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="changeMainSection:" target="-2" id="CxT-2B-ZU4"/>
-                                </connections>
-                            </button>
-                            <button placeholderIntrinsicWidth="82" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="bHc-Ky-9vf" customClass="GLAPrototypeBNavigationItem">
-                                <rect key="frame" x="291" y="0.0" width="82" height="43"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="square" title="Planned" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Txz-PE-0nC" customClass="GLAPrototypeBNavigationItemCell">
-                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                                    <font key="font" size="13" name="AvenirNext-Medium"/>
-                                </buttonCell>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                                        <integer key="value" value="-2"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="changeMainSection:" target="-2" id="oAM-ti-I2Z"/>
-                                </connections>
-                            </button>
-                            <button placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="TOc-tZ-cMH" customClass="GLAPrototypeBNavigationItem">
-                                <rect key="frame" x="457" y="0.0" width="43" height="43"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="square" title="+" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QH0-MM-k4N" customClass="GLAPrototypeBNavigationItemCell">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" size="44" name="Avenir-Light"/>
-                                </buttonCell>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                                        <integer key="value" value="-5"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="cell.alwaysHighlighted" value="YES"/>
-                                </userDefinedRuntimeAttributes>
-                            </button>
-                        </subviews>
                         <constraints>
-                            <constraint firstItem="bHc-Ky-9vf" firstAttribute="top" secondItem="IAs-3U-KCq" secondAttribute="top" id="0aG-nc-dbE"/>
-                            <constraint firstAttribute="bottom" secondItem="bHc-Ky-9vf" secondAttribute="bottom" id="0uA-3F-aIl"/>
-                            <constraint firstAttribute="trailing" secondItem="TOc-tZ-cMH" secondAttribute="trailing" id="ETG-FZ-9yY"/>
-                            <constraint firstAttribute="bottom" secondItem="TOc-tZ-cMH" secondAttribute="bottom" id="Iq5-5h-zHG"/>
-                            <constraint firstItem="ksL-dc-2oI" firstAttribute="top" secondItem="IAs-3U-KCq" secondAttribute="top" id="J6z-vS-ayN"/>
-                            <constraint firstItem="bHc-Ky-9vf" firstAttribute="leading" secondItem="hNY-kA-QtC" secondAttribute="trailing" id="JxA-fK-Sq6"/>
                             <constraint firstAttribute="height" constant="43" id="Yq4-h7-UvZ"/>
-                            <constraint firstAttribute="bottom" secondItem="ksL-dc-2oI" secondAttribute="bottom" id="ar9-GR-6jn"/>
-                            <constraint firstAttribute="centerX" secondItem="hNY-kA-QtC" secondAttribute="centerX" id="hib-47-4vc"/>
-                            <constraint firstItem="hNY-kA-QtC" firstAttribute="top" secondItem="IAs-3U-KCq" secondAttribute="top" id="pyP-dn-AWy"/>
-                            <constraint firstItem="hNY-kA-QtC" firstAttribute="leading" secondItem="ksL-dc-2oI" secondAttribute="trailing" id="uAr-Fd-oqp"/>
-                            <constraint firstAttribute="bottom" secondItem="hNY-kA-QtC" secondAttribute="bottom" id="v7F-oi-FoE"/>
-                            <constraint firstItem="TOc-tZ-cMH" firstAttribute="top" secondItem="IAs-3U-KCq" secondAttribute="top" id="zB9-FQ-8wI"/>
                         </constraints>
                     </customView>
-                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="lUf-gC-iRj">
+                    <customView identifier="content" translatesAutoresizingMaskIntoConstraints="NO" id="lUf-gC-iRj" customClass="GLAView">
                         <rect key="frame" x="0.0" y="0.0" width="500" height="267"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </customView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="lUf-gC-iRj" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="8SL-xP-Y6L"/>
-                    <constraint firstItem="lUf-gC-iRj" firstAttribute="top" secondItem="IAs-3U-KCq" secondAttribute="bottom" id="9Uo-8h-vuk"/>
-                    <constraint firstItem="lUf-gC-iRj" firstAttribute="top" secondItem="IAs-3U-KCq" secondAttribute="bottom" id="ASo-St-zSa"/>
+                    <constraint firstAttribute="bottom" secondItem="lUf-gC-iRj" secondAttribute="bottom" id="A5u-PP-dAG"/>
                     <constraint firstItem="IAs-3U-KCq" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="DgD-ZL-hUo"/>
                     <constraint firstAttribute="trailing" secondItem="IAs-3U-KCq" secondAttribute="trailing" id="IcW-E8-2Th"/>
-                    <constraint firstAttribute="trailing" secondItem="lUf-gC-iRj" secondAttribute="trailing" id="PZp-7y-eHo"/>
-                    <constraint firstAttribute="bottom" secondItem="lUf-gC-iRj" secondAttribute="bottom" id="Ykd-gZ-84h"/>
+                    <constraint firstItem="lUf-gC-iRj" firstAttribute="top" secondItem="IAs-3U-KCq" secondAttribute="bottom" id="LzH-z9-qP0"/>
+                    <constraint firstItem="lUf-gC-iRj" firstAttribute="trailing" secondItem="IAs-3U-KCq" secondAttribute="trailing" id="SX6-iF-gps"/>
+                    <constraint firstItem="lUf-gC-iRj" firstAttribute="leading" secondItem="IAs-3U-KCq" secondAttribute="leading" id="Zcj-k4-QcT"/>
                     <constraint firstItem="IAs-3U-KCq" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" id="cCs-Ia-1FS"/>
-                    <constraint firstAttribute="trailing" secondItem="lUf-gC-iRj" secondAttribute="trailing" id="eCf-Ec-bxf"/>
-                    <constraint firstAttribute="bottom" secondItem="lUf-gC-iRj" secondAttribute="bottom" id="l2e-PL-Opf"/>
-                    <constraint firstItem="lUf-gC-iRj" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="wmc-aF-Cwq"/>
                 </constraints>
             </view>
             <connections>

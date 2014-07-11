@@ -7,14 +7,21 @@
 //
 
 @import Cocoa;
+#import "GLAMainNavigationBarController.h"
 #import "GLAPrototypeBProjectViewController.h"
+#import "GLAMainNavigationBarController.h"
+#import "GLAView.h"
 
-@interface GLAPrototypeBWindowController : NSWindowController
+@interface GLAPrototypeBWindowController : NSWindowController <GLAMainNavigationBarControllerDelegate>
 
+@property (nonatomic) GLAMainNavigationBarController *mainNavigationBarController;
 @property (nonatomic) GLAPrototypeBProjectViewController *projectViewController;
 
+@property (nonatomic) GLAMainNavigationSection currentSection;
+
+@property (nonatomic) IBOutlet NSView *barHolderView;
 @property (nonatomic) IBOutlet NSView *contentView;
 
-- (IBAction)changeMainSection:(id)sender;
+
 
 @end

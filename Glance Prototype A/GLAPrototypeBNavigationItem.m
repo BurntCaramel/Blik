@@ -11,6 +11,11 @@
 
 @implementation GLAPrototypeBNavigationItem
 
++ (BOOL)requiresConstraintBasedLayout
+{
+	return YES;
+}
+
 - (id)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
@@ -18,6 +23,56 @@
 		(self.cell) = [GLAPrototypeBNavigationItemCell new];
     }
     return self;
+}
+
+- (GLAPrototypeBNavigationItemCell *)cell
+{
+	return [super cell];
+}
+
+- (void)setCell:(GLAPrototypeBNavigationItemCell *)cell
+{
+	[super setCell:cell];
+}
+
+- (CGFloat)leftSpacing
+{
+	return (self.cell.leftSpacing);
+}
+
+- (void)setLeftSpacing:(CGFloat)leftSpacing
+{
+	(self.cell.leftSpacing) = leftSpacing;
+}
+
+- (CGFloat)rightSpacing
+{
+	return (self.cell.rightSpacing);
+}
+
+- (void)setRightSpacing:(CGFloat)rightSpacing
+{
+	(self.cell.rightSpacing) = rightSpacing;
+}
+
+- (CGFloat)verticalOffsetDown
+{
+	return (self.cell.verticalOffsetDown);
+}
+
+- (void)setVerticalOffsetDown:(CGFloat)verticalOffsetDown
+{
+	(self.cell.verticalOffsetDown) = verticalOffsetDown;
+}
+
+- (BOOL)isAlwaysHighlighted
+{
+	return (self.cell.isAlwaysHighlighted);
+}
+
+- (void)setAlwaysHighlighted:(BOOL)alwaysHighlighted
+{
+	(self.cell.alwaysHighlighted) = alwaysHighlighted;
 }
 
 - (void)drawRect:(NSRect)dirtyRect
