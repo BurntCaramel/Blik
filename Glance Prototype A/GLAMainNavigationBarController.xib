@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAMainNavigationBarController">
             <connections>
+                <outlet property="addProjectButton" destination="hxP-cr-AEv" id="vE9-gT-JJk"/>
+                <outlet property="addProjectButtonTopConstraint" destination="M09-u9-UXM" id="bsh-Ya-72t"/>
                 <outlet property="allButton" destination="qAd-jv-zj2" id="z1C-Vc-7xC"/>
+                <outlet property="allButtonTopConstraint" destination="YS1-If-gMJ" id="NXf-82-B8c"/>
+                <outlet property="editingProjectBackButton" destination="WcU-G7-cKy" id="rsF-tP-pk2"/>
+                <outlet property="editingProjectBackButtonLeadingConstraint" destination="gpz-tb-53A" id="hSy-ko-iDx"/>
                 <outlet property="plannedButton" destination="46L-fD-wEe" id="Me1-Uf-jzr"/>
+                <outlet property="plannedButtonTopConstraint" destination="Lso-2X-pgH" id="6Bp-fV-nJg"/>
                 <outlet property="todayButton" destination="xNl-pT-6vZ" id="KWg-zP-2aC"/>
+                <outlet property="todayButtonTopConstraint" destination="ZGD-xQ-RJh" id="xuI-RC-iPX"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
@@ -18,13 +25,13 @@
             <rect key="frame" x="0.0" y="0.0" width="500" height="43"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button placeholderIntrinsicWidth="82" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="xNl-pT-6vZ" customClass="GLAPrototypeBNavigationItem">
+                <button placeholderIntrinsicWidth="82" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="xNl-pT-6vZ" customClass="GLANavigationButton">
                     <rect key="frame" x="209" y="0.0" width="82" height="43"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="43" id="MmO-EA-ZHz"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" title="Today" bezelStyle="shadowlessSquare" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gkH-IG-Qcc" customClass="GLAPrototypeBNavigationItemCell">
+                    <buttonCell key="cell" type="square" title="Now" bezelStyle="shadowlessSquare" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gkH-IG-Qcc" customClass="GLANavigationButtonCell">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
                     </buttonCell>
@@ -37,13 +44,13 @@
                         <action selector="goToToday:" target="-2" id="d4V-Ag-cYM"/>
                     </connections>
                 </button>
-                <button placeholderIntrinsicWidth="82" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="qAd-jv-zj2" customClass="GLAPrototypeBNavigationItem">
+                <button placeholderIntrinsicWidth="82" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="qAd-jv-zj2" customClass="GLANavigationButton">
                     <rect key="frame" x="127" y="0.0" width="82" height="43"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="43" id="ZQU-Ui-dJc"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" title="All" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QXr-ge-8tk" customClass="GLAPrototypeBNavigationItemCell">
+                    <buttonCell key="cell" type="square" title="All Projects" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QXr-ge-8tk" customClass="GLANavigationButtonCell">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
                     </buttonCell>
@@ -56,13 +63,13 @@
                         <action selector="goToAll:" target="-2" id="5Wn-2y-L3z"/>
                     </connections>
                 </button>
-                <button placeholderIntrinsicWidth="82" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="46L-fD-wEe" customClass="GLAPrototypeBNavigationItem">
+                <button placeholderIntrinsicWidth="82" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="46L-fD-wEe" customClass="GLANavigationButton">
                     <rect key="frame" x="291" y="0.0" width="82" height="43"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="43" id="1fV-H2-H86"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" title="Planned" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ZVQ-zV-GHz" customClass="GLAPrototypeBNavigationItemCell">
+                    <buttonCell key="cell" type="square" title="Planned" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ZVQ-zV-GHz" customClass="GLANavigationButtonCell">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
                     </buttonCell>
@@ -75,13 +82,13 @@
                         <action selector="goToPlanned:" target="-2" id="t3C-ZE-lUN"/>
                     </connections>
                 </button>
-                <button placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="hxP-cr-AEv" customClass="GLAPrototypeBNavigationItem">
+                <button placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="hxP-cr-AEv" customClass="GLANavigationButton">
                     <rect key="frame" x="457" y="0.0" width="43" height="43"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="43" id="3GB-Pu-s6S"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" title="+" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="r0P-tn-42Q" customClass="GLAPrototypeBNavigationItemCell">
+                    <buttonCell key="cell" type="square" title="+" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="r0P-tn-42Q" customClass="GLANavigationButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="44" name="Avenir-Light"/>
                     </buttonCell>
@@ -92,6 +99,26 @@
                         <userDefinedRuntimeAttribute type="boolean" keyPath="cell.alwaysHighlighted" value="YES"/>
                     </userDefinedRuntimeAttributes>
                 </button>
+                <button placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="WcU-G7-cKy" customClass="GLANavigationButton">
+                    <rect key="frame" x="0.0" y="0.0" width="43" height="43"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="43" id="wvq-Rs-ptV"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="Back to ..." bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0bt-YE-fFF" customClass="GLANavigationButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="-2"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="cell.alwaysHighlighted" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="exitCurrentProject:" target="-2" id="77e-uv-dhf"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
                 <constraint firstAttribute="centerX" secondItem="xNl-pT-6vZ" secondAttribute="centerX" id="6qb-cg-Qhy"/>
@@ -100,8 +127,10 @@
                 <constraint firstItem="hxP-cr-AEv" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="M09-u9-UXM"/>
                 <constraint firstItem="qAd-jv-zj2" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="YS1-If-gMJ"/>
                 <constraint firstItem="xNl-pT-6vZ" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="ZGD-xQ-RJh"/>
+                <constraint firstItem="WcU-G7-cKy" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="gpz-tb-53A"/>
                 <constraint firstItem="46L-fD-wEe" firstAttribute="leading" secondItem="xNl-pT-6vZ" secondAttribute="trailing" id="ish-st-fxa"/>
                 <constraint firstItem="xNl-pT-6vZ" firstAttribute="leading" secondItem="qAd-jv-zj2" secondAttribute="trailing" id="nPk-jH-dn7"/>
+                <constraint firstItem="WcU-G7-cKy" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="rCa-hS-nCn"/>
             </constraints>
         </customView>
     </objects>

@@ -1,12 +1,13 @@
 //
 //  GLAMainNavigationBarController.h
-//  Glance Prototype A
+//  Blik
 //
 //  Created by Patrick Smith on 10/07/2014.
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+@import Cocoa;
+#import "GLAPrototypeBNavigationBar.h"
 
 
 typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
@@ -18,19 +19,35 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 @protocol GLAMainNavigationBarControllerDelegate;
 
 
-@interface GLAMainNavigationBarController : NSViewController
+@interface GLAMainNavigationBarController : NSViewController <GLAViewDelegate>
 
-@property (nonatomic) IBOutlet NSButton *allButton;
-@property (nonatomic) IBOutlet NSButton *todayButton;
-@property (nonatomic) IBOutlet NSButton *plannedButton;
+@property(readonly, nonatomic) GLAPrototypeBNavigationBar *navigationBar;
 
-@property (nonatomic) GLAMainNavigationSection currentSection;
+@property(nonatomic) IBOutlet NSButton *allButton;
+@property(nonatomic) IBOutlet NSButton *todayButton;
+@property(nonatomic) IBOutlet NSButton *plannedButton;
+@property(nonatomic) IBOutlet NSButton *addProjectButton;
+@property(nonatomic) IBOutlet NSButton *editingProjectBackButton;
 
-@property (weak, nonatomic) id<GLAMainNavigationBarControllerDelegate> delegate;
+@property(nonatomic) IBOutlet NSLayoutConstraint *allButtonTopConstraint;
+@property(nonatomic) IBOutlet NSLayoutConstraint *todayButtonTopConstraint;
+@property(nonatomic) IBOutlet NSLayoutConstraint *plannedButtonTopConstraint;
+@property(nonatomic) IBOutlet NSLayoutConstraint *addProjectButtonTopConstraint;
+@property(nonatomic) IBOutlet NSLayoutConstraint *editingProjectBackButtonLeadingConstraint;
+
+@property(nonatomic) GLAMainNavigationSection currentSection;
+
+@property(weak, nonatomic) id<GLAMainNavigationBarControllerDelegate> delegate;
 
 - (IBAction)goToAll:(id)sender;
 - (IBAction)goToToday:(id)sender;
 - (IBAction)goToPlanned:(id)sender;
+
+- (void)enterProject:(id)project;
+@property(nonatomic) id currentProject;
+- (IBAction)exitCurrentProject:(id)sender;
+
+@property(nonatomic, getter = isEnabled) BOOL enabled;
 
 @end
 
@@ -39,4 +56,5 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didChangeCurrentSection:(GLAMainNavigationSection)newSection;
 
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didExitProject:(id)project;
 @end

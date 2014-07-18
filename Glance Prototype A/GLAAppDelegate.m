@@ -1,6 +1,6 @@
 //
 //  GLAAppDelegate.m
-//  Glance Prototype A
+//  Blik
 //
 //  Created by Patrick Smith on 2/07/2014.
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
@@ -44,7 +44,7 @@
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		(self.prototypeBWindowController) = [[GLAPrototypeBWindowController alloc] initWithWindowNibName:@"GLAPrototypeBWindowController"];
+		(self.prototypeBWindowController) = [[GLAMainWindowController alloc] initWithWindowNibName:@"GLAMainWindowController"];
 	});
 }
 

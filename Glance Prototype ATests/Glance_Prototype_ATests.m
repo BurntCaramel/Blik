@@ -1,6 +1,6 @@
 //
 //  Glance_Prototype_ATests.m
-//  Glance Prototype ATests
+//  BlikTests
 //
 //  Created by Patrick Smith on 2/07/2014.
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.

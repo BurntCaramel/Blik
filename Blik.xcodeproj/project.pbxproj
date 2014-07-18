@@ -7,17 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B219DAA2196AB65D007900DF /* GLAPrototypeBWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAA0196AB65D007900DF /* GLAPrototypeBWindowController.m */; };
-		B219DAA3196AB65D007900DF /* GLAPrototypeBWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B219DAA1196AB65D007900DF /* GLAPrototypeBWindowController.xib */; };
+		B219DAA2196AB65D007900DF /* GLAMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAA0196AB65D007900DF /* GLAMainWindowController.m */; };
+		B219DAA3196AB65D007900DF /* GLAMainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B219DAA1196AB65D007900DF /* GLAMainWindowController.xib */; };
 		B219DAA8196AB7D6007900DF /* GLAPrototypeBNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAA7196AB7D6007900DF /* GLAPrototypeBNavigationBar.m */; };
-		B219DAAB196AB8D1007900DF /* GLAPrototypeBNavigationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAAA196AB8D1007900DF /* GLAPrototypeBNavigationItem.m */; };
+		B219DAAB196AB8D1007900DF /* GLANavigationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAAA196AB8D1007900DF /* GLANavigationButton.m */; };
 		B219DAAE196ACE8D007900DF /* GLAPrototypeBProjectView.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAAD196ACE8D007900DF /* GLAPrototypeBProjectView.m */; };
-		B219DAB2196AD462007900DF /* GLAPrototypeBProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAB0196AD462007900DF /* GLAPrototypeBProjectViewController.m */; };
-		B219DAB3196AD462007900DF /* GLAPrototypeBProjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B219DAB1196AD462007900DF /* GLAPrototypeBProjectViewController.xib */; };
+		B219DAB2196AD462007900DF /* GLAProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAB0196AD462007900DF /* GLAProjectViewController.m */; };
+		B219DAB3196AD462007900DF /* GLAProjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B219DAB1196AD462007900DF /* GLAProjectViewController.xib */; };
 		B219DAB6196AD698007900DF /* GLAUIStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAB5196AD698007900DF /* GLAUIStyle.m */; };
+		B23515331973BEAB00883FB3 /* GLAButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B23515321973BEAB00883FB3 /* GLAButton.m */; };
 		B24B3607196D1F720094FA1F /* GLAReminderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3606196D1F720094FA1F /* GLAReminderItem.m */; };
 		B24B360B196E336E0094FA1F /* GLAMainNavigationBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */; };
 		B24B360C196E336E0094FA1F /* GLAMainNavigationBarController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B24B360A196E336E0094FA1F /* GLAMainNavigationBarController.xib */; };
+		B28D217F1977C24000A12C6D /* GLAToggleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B28D217E1977C24000A12C6D /* GLAToggleButton.m */; };
+		B28D21821977D6E600A12C6D /* GLATableRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = B28D21811977D6E600A12C6D /* GLATableRowView.m */; };
 		B2ADDBD21963DA2E0014EF84 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */; };
 		B2ADDBDC1963DA2E0014EF84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBDA1963DA2E0014EF84 /* InfoPlist.strings */; };
 		B2ADDBDE1963DA2E0014EF84 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ADDBDD1963DA2E0014EF84 /* main.m */; };
@@ -34,6 +37,12 @@
 		B2ADDC0D1964E3E10014EF84 /* GLAPrototypeAFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ADDC0B1964E3E10014EF84 /* GLAPrototypeAFilesViewController.m */; };
 		B2ADDC0E1964E3E10014EF84 /* GLAPrototypeAFilesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDC0C1964E3E10014EF84 /* GLAPrototypeAFilesViewController.xib */; };
 		B2C7F287196FFFDF005780B4 /* GLAView.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C7F286196FFFDF005780B4 /* GLAView.m */; };
+		B2C7F28B197023EF005780B4 /* GLAProjectsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C7F289197023EF005780B4 /* GLAProjectsListViewController.m */; };
+		B2C7F28C197023EF005780B4 /* GLAProjectsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2C7F28A197023EF005780B4 /* GLAProjectsListViewController.xib */; };
+		B2C7F28F19704A2C005780B4 /* GLAProjectOverviewTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C7F28E19704A2C005780B4 /* GLAProjectOverviewTableCellView.m */; };
+		B2C7F2921970D5D3005780B4 /* GLAMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C7F2911970D5D3005780B4 /* GLAMainWindow.m */; };
+		B2C7F29819739239005780B4 /* GLAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C7F29719739239005780B4 /* GLAViewController.m */; };
+		B2C7F29D1973998C005780B4 /* GLAProjectActionsBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C7F29C1973998C005780B4 /* GLAProjectActionsBarController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,42 +56,48 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B219DA9F196AB65D007900DF /* GLAPrototypeBWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPrototypeBWindowController.h; sourceTree = "<group>"; };
-		B219DAA0196AB65D007900DF /* GLAPrototypeBWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPrototypeBWindowController.m; sourceTree = "<group>"; };
-		B219DAA1196AB65D007900DF /* GLAPrototypeBWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAPrototypeBWindowController.xib; sourceTree = "<group>"; };
+		B219DA9F196AB65D007900DF /* GLAMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainWindowController.h; sourceTree = "<group>"; };
+		B219DAA0196AB65D007900DF /* GLAMainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainWindowController.m; sourceTree = "<group>"; };
+		B219DAA1196AB65D007900DF /* GLAMainWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAMainWindowController.xib; sourceTree = "<group>"; };
 		B219DAA6196AB7D6007900DF /* GLAPrototypeBNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPrototypeBNavigationBar.h; sourceTree = "<group>"; };
 		B219DAA7196AB7D6007900DF /* GLAPrototypeBNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPrototypeBNavigationBar.m; sourceTree = "<group>"; };
-		B219DAA9196AB8D1007900DF /* GLAPrototypeBNavigationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPrototypeBNavigationItem.h; sourceTree = "<group>"; };
-		B219DAAA196AB8D1007900DF /* GLAPrototypeBNavigationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPrototypeBNavigationItem.m; sourceTree = "<group>"; };
+		B219DAA9196AB8D1007900DF /* GLANavigationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLANavigationButton.h; sourceTree = "<group>"; };
+		B219DAAA196AB8D1007900DF /* GLANavigationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLANavigationButton.m; sourceTree = "<group>"; };
 		B219DAAC196ACE8D007900DF /* GLAPrototypeBProjectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPrototypeBProjectView.h; sourceTree = "<group>"; };
 		B219DAAD196ACE8D007900DF /* GLAPrototypeBProjectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPrototypeBProjectView.m; sourceTree = "<group>"; };
-		B219DAAF196AD462007900DF /* GLAPrototypeBProjectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPrototypeBProjectViewController.h; sourceTree = "<group>"; };
-		B219DAB0196AD462007900DF /* GLAPrototypeBProjectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPrototypeBProjectViewController.m; sourceTree = "<group>"; };
-		B219DAB1196AD462007900DF /* GLAPrototypeBProjectViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAPrototypeBProjectViewController.xib; sourceTree = "<group>"; };
+		B219DAAF196AD462007900DF /* GLAProjectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProjectViewController.h; sourceTree = "<group>"; };
+		B219DAB0196AD462007900DF /* GLAProjectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProjectViewController.m; sourceTree = "<group>"; };
+		B219DAB1196AD462007900DF /* GLAProjectViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAProjectViewController.xib; sourceTree = "<group>"; };
 		B219DAB4196AD698007900DF /* GLAUIStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAUIStyle.h; sourceTree = "<group>"; };
 		B219DAB5196AD698007900DF /* GLAUIStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAUIStyle.m; sourceTree = "<group>"; };
+		B23515311973BEAB00883FB3 /* GLAButton.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = GLAButton.h; sourceTree = "<group>"; tabWidth = 4; usesTabs = 1; wrapsLines = 1; };
+		B23515321973BEAB00883FB3 /* GLAButton.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = GLAButton.m; sourceTree = "<group>"; tabWidth = 4; usesTabs = 1; wrapsLines = 1; };
 		B24B3605196D1F720094FA1F /* GLAReminderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAReminderItem.h; sourceTree = "<group>"; };
 		B24B3606196D1F720094FA1F /* GLAReminderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAReminderItem.m; sourceTree = "<group>"; };
 		B24B3608196E336E0094FA1F /* GLAMainNavigationBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainNavigationBarController.h; sourceTree = "<group>"; };
 		B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainNavigationBarController.m; sourceTree = "<group>"; };
 		B24B360A196E336E0094FA1F /* GLAMainNavigationBarController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAMainNavigationBarController.xib; sourceTree = "<group>"; };
-		B2ADDBCE1963DA2E0014EF84 /* Glance Prototype A.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Glance Prototype A.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B28D217D1977C24000A12C6D /* GLAToggleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAToggleButton.h; sourceTree = "<group>"; };
+		B28D217E1977C24000A12C6D /* GLAToggleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAToggleButton.m; sourceTree = "<group>"; };
+		B28D21801977D6E600A12C6D /* GLATableRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLATableRowView.h; sourceTree = "<group>"; };
+		B28D21811977D6E600A12C6D /* GLATableRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLATableRowView.m; sourceTree = "<group>"; };
+		B2ADDBCE1963DA2E0014EF84 /* Blik.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blik.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		B2ADDBD41963DA2E0014EF84 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		B2ADDBD51963DA2E0014EF84 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		B2ADDBD61963DA2E0014EF84 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		B2ADDBD91963DA2E0014EF84 /* Glance Prototype A-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Glance Prototype A-Info.plist"; sourceTree = "<group>"; };
+		B2ADDBD91963DA2E0014EF84 /* Blik-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Blik-Info.plist"; sourceTree = "<group>"; };
 		B2ADDBDB1963DA2E0014EF84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B2ADDBDD1963DA2E0014EF84 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		B2ADDBDF1963DA2E0014EF84 /* Glance Prototype A-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Glance Prototype A-Prefix.pch"; sourceTree = "<group>"; };
+		B2ADDBDF1963DA2E0014EF84 /* Blik-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Blik-Prefix.pch"; sourceTree = "<group>"; };
 		B2ADDBE11963DA2E0014EF84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		B2ADDBE31963DA2E0014EF84 /* GLAAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLAAppDelegate.h; sourceTree = "<group>"; };
 		B2ADDBE41963DA2E0014EF84 /* GLAAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLAAppDelegate.m; sourceTree = "<group>"; };
 		B2ADDBE71963DA2E0014EF84 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		B2ADDBE91963DA2E0014EF84 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		B2ADDBEF1963DA2E0014EF84 /* Glance Prototype ATests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Glance Prototype ATests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B2ADDBEF1963DA2E0014EF84 /* BlikTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlikTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2ADDBF01963DA2E0014EF84 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		B2ADDBF71963DA2E0014EF84 /* Glance Prototype ATests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Glance Prototype ATests-Info.plist"; sourceTree = "<group>"; };
+		B2ADDBF71963DA2E0014EF84 /* BlikTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BlikTests-Info.plist"; sourceTree = "<group>"; };
 		B2ADDBF91963DA2E0014EF84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B2ADDBFB1963DA2E0014EF84 /* Glance_Prototype_ATests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Glance_Prototype_ATests.m; sourceTree = "<group>"; };
 		B2ADDC051963DA970014EF84 /* GLAPrototypeAWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLAPrototypeAWindowController.h; path = ../GLAPrototypeAWindowController.h; sourceTree = "<group>"; };
@@ -93,6 +108,17 @@
 		B2ADDC0C1964E3E10014EF84 /* GLAPrototypeAFilesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAPrototypeAFilesViewController.xib; sourceTree = "<group>"; };
 		B2C7F285196FFFDF005780B4 /* GLAView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAView.h; sourceTree = "<group>"; };
 		B2C7F286196FFFDF005780B4 /* GLAView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAView.m; sourceTree = "<group>"; };
+		B2C7F288197023EF005780B4 /* GLAProjectsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProjectsListViewController.h; sourceTree = "<group>"; };
+		B2C7F289197023EF005780B4 /* GLAProjectsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProjectsListViewController.m; sourceTree = "<group>"; };
+		B2C7F28A197023EF005780B4 /* GLAProjectsListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAProjectsListViewController.xib; sourceTree = "<group>"; };
+		B2C7F28D19704A2C005780B4 /* GLAProjectOverviewTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProjectOverviewTableCellView.h; sourceTree = "<group>"; };
+		B2C7F28E19704A2C005780B4 /* GLAProjectOverviewTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProjectOverviewTableCellView.m; sourceTree = "<group>"; };
+		B2C7F2901970D5D3005780B4 /* GLAMainWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainWindow.h; sourceTree = "<group>"; };
+		B2C7F2911970D5D3005780B4 /* GLAMainWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainWindow.m; sourceTree = "<group>"; };
+		B2C7F29619739239005780B4 /* GLAViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAViewController.h; sourceTree = "<group>"; };
+		B2C7F29719739239005780B4 /* GLAViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAViewController.m; sourceTree = "<group>"; };
+		B2C7F29B1973998C005780B4 /* GLAProjectActionsBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProjectActionsBarController.h; sourceTree = "<group>"; };
+		B2C7F29C1973998C005780B4 /* GLAProjectActionsBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProjectActionsBarController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,15 +145,16 @@
 		B219DAA4196AB665007900DF /* View Controller */ = {
 			isa = PBXGroup;
 			children = (
-				B219DA9F196AB65D007900DF /* GLAPrototypeBWindowController.h */,
-				B219DAA0196AB65D007900DF /* GLAPrototypeBWindowController.m */,
-				B219DAA1196AB65D007900DF /* GLAPrototypeBWindowController.xib */,
+				B2C7F29619739239005780B4 /* GLAViewController.h */,
+				B2C7F29719739239005780B4 /* GLAViewController.m */,
+				B219DA9F196AB65D007900DF /* GLAMainWindowController.h */,
+				B219DAA0196AB65D007900DF /* GLAMainWindowController.m */,
+				B219DAA1196AB65D007900DF /* GLAMainWindowController.xib */,
 				B24B3608196E336E0094FA1F /* GLAMainNavigationBarController.h */,
 				B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */,
 				B24B360A196E336E0094FA1F /* GLAMainNavigationBarController.xib */,
-				B219DAAF196AD462007900DF /* GLAPrototypeBProjectViewController.h */,
-				B219DAB0196AD462007900DF /* GLAPrototypeBProjectViewController.m */,
-				B219DAB1196AD462007900DF /* GLAPrototypeBProjectViewController.xib */,
+				B2C7F29919739925005780B4 /* Single Project */,
+				B2C7F29A1973993A005780B4 /* Projects List */,
 			);
 			name = "View Controller";
 			sourceTree = "<group>";
@@ -176,8 +203,8 @@
 		B2ADDBCF1963DA2E0014EF84 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B2ADDBCE1963DA2E0014EF84 /* Glance Prototype A.app */,
-				B2ADDBEF1963DA2E0014EF84 /* Glance Prototype ATests.xctest */,
+				B2ADDBCE1963DA2E0014EF84 /* Blik.app */,
+				B2ADDBEF1963DA2E0014EF84 /* BlikTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -222,10 +249,10 @@
 		B2ADDBD81963DA2E0014EF84 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				B2ADDBD91963DA2E0014EF84 /* Glance Prototype A-Info.plist */,
+				B2ADDBD91963DA2E0014EF84 /* Blik-Info.plist */,
 				B2ADDBDA1963DA2E0014EF84 /* InfoPlist.strings */,
 				B2ADDBDD1963DA2E0014EF84 /* main.m */,
-				B2ADDBDF1963DA2E0014EF84 /* Glance Prototype A-Prefix.pch */,
+				B2ADDBDF1963DA2E0014EF84 /* Blik-Prefix.pch */,
 				B2ADDBE01963DA2E0014EF84 /* Credits.rtf */,
 			);
 			name = "Supporting Files";
@@ -243,7 +270,7 @@
 		B2ADDBF61963DA2E0014EF84 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				B2ADDBF71963DA2E0014EF84 /* Glance Prototype ATests-Info.plist */,
+				B2ADDBF71963DA2E0014EF84 /* BlikTests-Info.plist */,
 				B2ADDBF81963DA2E0014EF84 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -252,24 +279,56 @@
 		B2C7F284196FFFC1005780B4 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				B2C7F2901970D5D3005780B4 /* GLAMainWindow.h */,
+				B2C7F2911970D5D3005780B4 /* GLAMainWindow.m */,
 				B2C7F285196FFFDF005780B4 /* GLAView.h */,
 				B2C7F286196FFFDF005780B4 /* GLAView.m */,
 				B219DAAC196ACE8D007900DF /* GLAPrototypeBProjectView.h */,
 				B219DAAD196ACE8D007900DF /* GLAPrototypeBProjectView.m */,
 				B219DAA6196AB7D6007900DF /* GLAPrototypeBNavigationBar.h */,
 				B219DAA7196AB7D6007900DF /* GLAPrototypeBNavigationBar.m */,
-				B219DAA9196AB8D1007900DF /* GLAPrototypeBNavigationItem.h */,
-				B219DAAA196AB8D1007900DF /* GLAPrototypeBNavigationItem.m */,
+				B23515311973BEAB00883FB3 /* GLAButton.h */,
+				B23515321973BEAB00883FB3 /* GLAButton.m */,
+				B219DAA9196AB8D1007900DF /* GLANavigationButton.h */,
+				B219DAAA196AB8D1007900DF /* GLANavigationButton.m */,
+				B28D217D1977C24000A12C6D /* GLAToggleButton.h */,
+				B28D217E1977C24000A12C6D /* GLAToggleButton.m */,
+				B28D21801977D6E600A12C6D /* GLATableRowView.h */,
+				B28D21811977D6E600A12C6D /* GLATableRowView.m */,
 			);
 			name = View;
+			sourceTree = "<group>";
+		};
+		B2C7F29919739925005780B4 /* Single Project */ = {
+			isa = PBXGroup;
+			children = (
+				B219DAAF196AD462007900DF /* GLAProjectViewController.h */,
+				B219DAB0196AD462007900DF /* GLAProjectViewController.m */,
+				B219DAB1196AD462007900DF /* GLAProjectViewController.xib */,
+				B2C7F29B1973998C005780B4 /* GLAProjectActionsBarController.h */,
+				B2C7F29C1973998C005780B4 /* GLAProjectActionsBarController.m */,
+			);
+			name = "Single Project";
+			sourceTree = "<group>";
+		};
+		B2C7F29A1973993A005780B4 /* Projects List */ = {
+			isa = PBXGroup;
+			children = (
+				B2C7F288197023EF005780B4 /* GLAProjectsListViewController.h */,
+				B2C7F289197023EF005780B4 /* GLAProjectsListViewController.m */,
+				B2C7F28A197023EF005780B4 /* GLAProjectsListViewController.xib */,
+				B2C7F28D19704A2C005780B4 /* GLAProjectOverviewTableCellView.h */,
+				B2C7F28E19704A2C005780B4 /* GLAProjectOverviewTableCellView.m */,
+			);
+			name = "Projects List";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B2ADDBCD1963DA2E0014EF84 /* Glance Prototype A */ = {
+		B2ADDBCD1963DA2E0014EF84 /* Blik */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B2ADDBFF1963DA2E0014EF84 /* Build configuration list for PBXNativeTarget "Glance Prototype A" */;
+			buildConfigurationList = B2ADDBFF1963DA2E0014EF84 /* Build configuration list for PBXNativeTarget "Blik" */;
 			buildPhases = (
 				B2ADDBCA1963DA2E0014EF84 /* Sources */,
 				B2ADDBCB1963DA2E0014EF84 /* Frameworks */,
@@ -279,14 +338,14 @@
 			);
 			dependencies = (
 			);
-			name = "Glance Prototype A";
+			name = Blik;
 			productName = "Glance Prototype A";
-			productReference = B2ADDBCE1963DA2E0014EF84 /* Glance Prototype A.app */;
+			productReference = B2ADDBCE1963DA2E0014EF84 /* Blik.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B2ADDBEE1963DA2E0014EF84 /* Glance Prototype ATests */ = {
+		B2ADDBEE1963DA2E0014EF84 /* BlikTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B2ADDC021963DA2E0014EF84 /* Build configuration list for PBXNativeTarget "Glance Prototype ATests" */;
+			buildConfigurationList = B2ADDC021963DA2E0014EF84 /* Build configuration list for PBXNativeTarget "BlikTests" */;
 			buildPhases = (
 				B2ADDBEB1963DA2E0014EF84 /* Sources */,
 				B2ADDBEC1963DA2E0014EF84 /* Frameworks */,
@@ -297,9 +356,9 @@
 			dependencies = (
 				B2ADDBF41963DA2E0014EF84 /* PBXTargetDependency */,
 			);
-			name = "Glance Prototype ATests";
+			name = BlikTests;
 			productName = "Glance Prototype ATests";
-			productReference = B2ADDBEF1963DA2E0014EF84 /* Glance Prototype ATests.xctest */;
+			productReference = B2ADDBEF1963DA2E0014EF84 /* BlikTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -317,7 +376,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B2ADDBC91963DA2E0014EF84 /* Build configuration list for PBXProject "Glance Prototype A" */;
+			buildConfigurationList = B2ADDBC91963DA2E0014EF84 /* Build configuration list for PBXProject "Blik" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -330,8 +389,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B2ADDBCD1963DA2E0014EF84 /* Glance Prototype A */,
-				B2ADDBEE1963DA2E0014EF84 /* Glance Prototype ATests */,
+				B2ADDBCD1963DA2E0014EF84 /* Blik */,
+				B2ADDBEE1963DA2E0014EF84 /* BlikTests */,
 			);
 		};
 /* End PBXProject section */
@@ -342,13 +401,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2ADDC091963DA970014EF84 /* GLAPrototypeAWindowController.xib in Resources */,
-				B219DAB3196AD462007900DF /* GLAPrototypeBProjectViewController.xib in Resources */,
+				B219DAB3196AD462007900DF /* GLAProjectViewController.xib in Resources */,
 				B24B360C196E336E0094FA1F /* GLAMainNavigationBarController.xib in Resources */,
 				B2ADDBDC1963DA2E0014EF84 /* InfoPlist.strings in Resources */,
 				B2ADDC0E1964E3E10014EF84 /* GLAPrototypeAFilesViewController.xib in Resources */,
+				B2C7F28C197023EF005780B4 /* GLAProjectsListViewController.xib in Resources */,
 				B2ADDBEA1963DA2E0014EF84 /* Images.xcassets in Resources */,
 				B2ADDBE21963DA2E0014EF84 /* Credits.rtf in Resources */,
-				B219DAA3196AB65D007900DF /* GLAPrototypeBWindowController.xib in Resources */,
+				B219DAA3196AB65D007900DF /* GLAMainWindowController.xib in Resources */,
 				B2ADDBE81963DA2E0014EF84 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -370,15 +430,23 @@
 			files = (
 				B2C7F287196FFFDF005780B4 /* GLAView.m in Sources */,
 				B2ADDC081963DA970014EF84 /* GLAPrototypeAWindowController.m in Sources */,
-				B219DAA2196AB65D007900DF /* GLAPrototypeBWindowController.m in Sources */,
+				B28D21821977D6E600A12C6D /* GLATableRowView.m in Sources */,
+				B219DAA2196AB65D007900DF /* GLAMainWindowController.m in Sources */,
 				B24B360B196E336E0094FA1F /* GLAMainNavigationBarController.m in Sources */,
+				B2C7F29D1973998C005780B4 /* GLAProjectActionsBarController.m in Sources */,
 				B219DAB6196AD698007900DF /* GLAUIStyle.m in Sources */,
 				B2ADDBDE1963DA2E0014EF84 /* main.m in Sources */,
 				B219DAAE196ACE8D007900DF /* GLAPrototypeBProjectView.m in Sources */,
+				B23515331973BEAB00883FB3 /* GLAButton.m in Sources */,
+				B2C7F28F19704A2C005780B4 /* GLAProjectOverviewTableCellView.m in Sources */,
+				B2C7F29819739239005780B4 /* GLAViewController.m in Sources */,
 				B2ADDC0D1964E3E10014EF84 /* GLAPrototypeAFilesViewController.m in Sources */,
 				B24B3607196D1F720094FA1F /* GLAReminderItem.m in Sources */,
-				B219DAB2196AD462007900DF /* GLAPrototypeBProjectViewController.m in Sources */,
-				B219DAAB196AB8D1007900DF /* GLAPrototypeBNavigationItem.m in Sources */,
+				B2C7F28B197023EF005780B4 /* GLAProjectsListViewController.m in Sources */,
+				B28D217F1977C24000A12C6D /* GLAToggleButton.m in Sources */,
+				B2C7F2921970D5D3005780B4 /* GLAMainWindow.m in Sources */,
+				B219DAB2196AD462007900DF /* GLAProjectViewController.m in Sources */,
+				B219DAAB196AB8D1007900DF /* GLANavigationButton.m in Sources */,
 				B219DAA8196AB7D6007900DF /* GLAPrototypeBNavigationBar.m in Sources */,
 				B2ADDBE51963DA2E0014EF84 /* GLAAppDelegate.m in Sources */,
 			);
@@ -397,7 +465,7 @@
 /* Begin PBXTargetDependency section */
 		B2ADDBF41963DA2E0014EF84 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B2ADDBCD1963DA2E0014EF84 /* Glance Prototype A */;
+			target = B2ADDBCD1963DA2E0014EF84 /* Blik */;
 			targetProxy = B2ADDBF31963DA2E0014EF84 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -514,9 +582,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Glance Prototype A/Glance Prototype A-Prefix.pch";
-				INFOPLIST_FILE = "Glance Prototype A/Glance Prototype A-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "Glance Prototype A/Blik-Prefix.pch";
+				INFOPLIST_FILE = "Glance Prototype A/Blik-Info.plist";
+				PRODUCT_NAME = Blik;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -527,9 +595,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Glance Prototype A/Glance Prototype A-Prefix.pch";
-				INFOPLIST_FILE = "Glance Prototype A/Glance Prototype A-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "Glance Prototype A/Blik-Prefix.pch";
+				INFOPLIST_FILE = "Glance Prototype A/Blik-Info.plist";
+				PRODUCT_NAME = Blik;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -549,8 +617,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "Glance Prototype ATests/Glance Prototype ATests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "Glance Prototype ATests/BlikTests-Info.plist";
+				PRODUCT_NAME = BlikTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -567,8 +635,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Glance Prototype A/Glance Prototype A-Prefix.pch";
-				INFOPLIST_FILE = "Glance Prototype ATests/Glance Prototype ATests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "Glance Prototype ATests/BlikTests-Info.plist";
+				PRODUCT_NAME = BlikTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -577,7 +645,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B2ADDBC91963DA2E0014EF84 /* Build configuration list for PBXProject "Glance Prototype A" */ = {
+		B2ADDBC91963DA2E0014EF84 /* Build configuration list for PBXProject "Blik" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B2ADDBFD1963DA2E0014EF84 /* Debug */,
@@ -586,7 +654,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B2ADDBFF1963DA2E0014EF84 /* Build configuration list for PBXNativeTarget "Glance Prototype A" */ = {
+		B2ADDBFF1963DA2E0014EF84 /* Build configuration list for PBXNativeTarget "Blik" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B2ADDC001963DA2E0014EF84 /* Debug */,
@@ -595,7 +663,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B2ADDC021963DA2E0014EF84 /* Build configuration list for PBXNativeTarget "Glance Prototype ATests" */ = {
+		B2ADDC021963DA2E0014EF84 /* Build configuration list for PBXNativeTarget "BlikTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B2ADDC031963DA2E0014EF84 /* Debug */,

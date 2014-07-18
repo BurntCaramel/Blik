@@ -1,24 +1,52 @@
 //
 //  GLAUIStyle.h
-//  Glance Prototype A
+//  Blik
 //
 //  Created by Patrick Smith on 7/07/2014.
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Cocoa;
 
 @interface GLAUIStyle : NSObject
 
 + (instancetype)styleA;
 
+
+#pragma mark Colors
+
 @property (nonatomic) NSColor *barBackgroundColor;
 @property (nonatomic) NSColor *contentBackgroundColor;
 
-@property (nonatomic) NSColor *activeBarColor;
+@property (nonatomic) NSColor *activeBarBackgroundColor;
+@property (nonatomic) NSColor *activeBarTextColor;
+
+@property (nonatomic) NSColor *activeButtonHighlightColor;
+@property (nonatomic) NSColor *activeButtonDisabledHighlightColor;
 
 @property (nonatomic) NSColor *lightTextColor;
+@property (nonatomic) NSColor *lightTextDisabledColor;
 @property (nonatomic) NSColor *activeTextColor;
+@property (nonatomic) NSColor *activeTextDisabledColor;
+
+@property (nonatomic) NSColor *editedTextColor;
+@property (nonatomic) NSColor *editedTextBackgroundColor;
+
+@property (nonatomic) NSColor *toggleBorderColor;
+@property (nonatomic) NSColor *toggleInsideColor;
+
+@property (nonatomic) NSColor *projectTableRowHoverBackgroundColor;
+
+@property (nonatomic) NSColor *deleteProjectButtonColor;
+
+
+@property (nonatomic) NSColor *lightBlueItemColor;
+@property (nonatomic) NSColor *greenItemColor;
+@property (nonatomic) NSColor *pinkyPurpleItemColor;
+@property (nonatomic) NSColor *reddishItemColor;
+@property (nonatomic) NSColor *yellowItemColor;
+
+#pragma mark Fonts
 
 @property (nonatomic) NSFont *smallReminderFont;
 @property (nonatomic) NSFont *highlightedReminderFont;
