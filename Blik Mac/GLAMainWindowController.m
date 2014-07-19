@@ -8,6 +8,7 @@
 
 #import "GLAMainWindowController.h"
 #import "GLAUIStyle.h"
+#import "GLATableRowView.h"
 @import QuartzCore;
 
 
@@ -106,7 +107,7 @@
 
 - (void)setUpMainNavigationBarController
 {
-	if ((self.mainNavigationBarController)) {
+	if (self.mainNavigationBarController) {
 		return;
 	}
 	
@@ -118,6 +119,8 @@
 	
 	[self setUpViewController:controller constrainedToFillView:(self.barHolderView)];
 }
+
+#pragma mark Setting Up Content View Controllers
 
 - (NSArray *)allProjectsDummyContent
 {
@@ -133,7 +136,7 @@
 
 - (BOOL)setUpAllProjectsViewController
 {
-	if ((self.allProjectsViewController)) {
+	if (self.allProjectsViewController) {
 		return NO;
 	}
 	
@@ -144,9 +147,11 @@
 	(self.allProjectsViewController) = controller;
 	
 	// Add it to the content view
-	[(self.contentViewController) fillViewWithInnerView:(controller.view)];
+	
+	[self addViewToContentViewIfNeeded:(controller.view) layout:YES];
+	//[(self.contentViewController) fillViewWithInnerView:(controller.view)];
 	// Put it into position
-	[self hideChildContentView:(self.allProjectsViewController.view) offsetBy:-500.0 animate:NO];
+	//[self hideChildContentView:(controller.view) offsetBy:-500.0 animate:NO];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(projectListViewControllerDidClickOnProjectNotification:) name:GLAProjectListViewControllerDidClickOnProjectNotification object:controller];
 	
@@ -155,7 +160,7 @@
 
 - (BOOL)setUpNowProjectViewController
 {
-	if ((self.nowProjectViewController)) {
+	if (self.nowProjectViewController) {
 		return NO;
 	}
 	
@@ -164,6 +169,7 @@
 	
 	(self.nowProjectViewController) = controller;
 	
+	// Add it to the content view
 	[(self.contentViewController) fillViewWithInnerView:(controller.view)];
 	
 	return YES;
@@ -182,7 +188,7 @@
 
 - (BOOL)setUpPlannedProjectsViewController
 {
-	if ((self.plannedProjectsViewController)) {
+	if (self.plannedProjectsViewController) {
 		return NO;
 	}
 	
@@ -193,9 +199,10 @@
 	(self.plannedProjectsViewController) = controller;
 	
 	// Add it to the content view
-	[(self.contentViewController) fillViewWithInnerView:(controller.view)];
+	[self addViewToContentViewIfNeeded:(controller.view) layout:YES];
+	//[(self.contentViewController) fillViewWithInnerView:(controller.view)];
 	// Put it into position
-	[self hideChildContentView:(self.plannedProjectsViewController.view) offsetBy:500.0 animate:NO];
+	//[self hideChildContentView:(controller.view) offsetBy:500.0 animate:NO];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(projectListViewControllerDidClickOnProjectNotification:) name:GLAProjectListViewControllerDidClickOnProjectNotification object:controller];
 	
@@ -204,7 +211,7 @@
 
 - (BOOL)setUpEditedProjectViewController
 {
-	if ((self.editedProjectViewController)) {
+	if (self.editedProjectViewController) {
 		return NO;
 	}
 	
@@ -214,9 +221,11 @@
 	(self.editedProjectViewController) = controller;
 	
 	// Add it to the content view
-	[(self.contentViewController) fillViewWithInnerView:(controller.view)];
+	[self addViewToContentViewIfNeeded:(controller.view) layout:YES];
+	//[self addViewToContentViewIfNeeded:(controller.view) layout:YES];
+	//[(self.contentViewController) fillViewWithInnerView:(controller.view)];
 	// Put it into position
-	[self hideChildContentView:(self.editedProjectViewController.view) offsetBy:500.0 animate:NO];
+	//[self hideChildContentView:(controller.view) offsetBy:500.0 animate:NO];
 	
 	return YES;
 }
@@ -336,13 +345,14 @@
 	
 	if (newSection == GLAMainWindowControllerSectionAll) {
 		if (previousSection == GLAMainWindowControllerSectionAllEditProject) {
-			[self hideChildContentView:(self.editedProjectViewController.view) offsetBy:500.0 animate:YES];
+			[self hideChildContentView:(self.allProjectsViewController.view) offsetBy:-500.0 animate:NO];
+			
 			[self showChildContentView:(self.allProjectsViewController.view) animate:YES];
+			[self hideChildContentView:(self.editedProjectViewController.view) offsetBy:500.0 animate:YES];
 		}
 		else {
-			if ([self setUpAllProjectsViewController]) {
-				[self hideChildContentView:(self.allProjectsViewController.view) offsetBy:-500.0 animate:NO];
-			}
+			[self setUpAllProjectsViewController];
+			[self hideChildContentView:(self.allProjectsViewController.view) offsetBy:-500.0 animate:NO];
 			
 			[self showChildContentView:(self.allProjectsViewController.view) animate:YES];
 			[self hideChildContentView:(self.nowProjectViewController.view) offsetBy:500.0 animate:YES];
@@ -355,11 +365,17 @@
 	else if (newSection == GLAMainWindowControllerSectionToday) {
 		[self setUpNowProjectViewController];
 		
+		if (previousSection == GLAMainWindowControllerSectionAll) {
+			[self hideChildContentView:(self.nowProjectViewController.view) offsetBy:500.0 animate:NO];
+		}
+		else if (previousSection == GLAMainWindowControllerSectionPlanned) {
+			[self hideChildContentView:(self.nowProjectViewController.view) offsetBy:-500.0 animate:NO];
+		}
+		[self showChildContentView:(self.nowProjectViewController.view) animate:YES];
+		
 		if (self.allProjectsViewController) {
 			[self hideChildContentView:(self.allProjectsViewController.view) offsetBy:-500.0 animate:YES];
 		}
-		
-		[self showChildContentView:(self.nowProjectViewController.view) animate:YES];
 		
 		if (self.plannedProjectsViewController) {
 			[self hideChildContentView:(self.plannedProjectsViewController.view) offsetBy:500.0 animate:YES];
@@ -367,28 +383,33 @@
 	}
 	else if (newSection == GLAMainWindowControllerSectionPlanned) {
 		if (previousSection == GLAMainWindowControllerSectionPlannedEditProject) {
-			[self hideChildContentView:(self.editedProjectViewController.view) offsetBy:500.0 animate:YES];
+			[self hideChildContentView:(self.plannedProjectsViewController.view) offsetBy:-500.0 animate:NO];
+			
 			[self showChildContentView:(self.plannedProjectsViewController.view) animate:YES];
+			[self hideChildContentView:(self.editedProjectViewController.view) offsetBy:500.0 animate:YES];
 		}
 		else {
 			[self setUpPlannedProjectsViewController];
+			[self hideChildContentView:(self.plannedProjectsViewController.view) offsetBy:500.0 animate:NO];
+			
+			[self hideChildContentView:(self.nowProjectViewController.view) offsetBy:-500.0 animate:YES];
+			[self showChildContentView:(self.plannedProjectsViewController.view) animate:YES];
 			
 			if (self.allProjectsViewController) {
 				[self hideChildContentView:(self.allProjectsViewController.view) offsetBy:-1000.0 animate:YES];
 			}
-			
-			[self hideChildContentView:(self.nowProjectViewController.view) offsetBy:-500.0 animate:YES];
-			[self showChildContentView:(self.plannedProjectsViewController.view) animate:YES];
 		}
 	}
 	else if (newSection == GLAMainWindowControllerSectionAllEditProject) {
 		[self setUpEditedProjectViewController];
+		[self hideChildContentView:(self.editedProjectViewController.view) offsetBy:500.0 animate:NO];
 		
 		[self hideChildContentView:(self.allProjectsViewController.view) offsetBy:-500.0 animate:YES];
 		[self showChildContentView:(self.editedProjectViewController.view) animate:YES];
 	}
 	else if (newSection == GLAMainWindowControllerSectionPlannedEditProject) {
 		[self setUpEditedProjectViewController];
+		[self hideChildContentView:(self.editedProjectViewController.view) offsetBy:500.0 animate:NO];
 		
 		[self hideChildContentView:(self.plannedProjectsViewController.view) offsetBy:-500.0 animate:YES];
 		[self showChildContentView:(self.editedProjectViewController.view) animate:YES];
@@ -407,8 +428,21 @@
 	}
 }
 
+- (void)addViewToContentViewIfNeeded:(NSView *)view layout:(BOOL)layout
+{
+	if (!(view.superview)) {
+		[(self.contentViewController) fillViewWithInnerView:view];
+		
+		if (layout) {
+			[(self.contentViewController.view) layoutSubtreeIfNeeded];
+		}
+	}
+}
+
 - (void)hideChildContentView:(NSView *)view offsetBy:(CGFloat)offset animate:(BOOL)animate
 {
+	[self addViewToContentViewIfNeeded:view layout:YES];
+	
 	NSLayoutConstraint *leadingConstraint = [self layoutConstraintWithBaseIdentifier:@"leading" view:view inHolderView:(self.contentView)];
 	if (!leadingConstraint) {
 		return;
@@ -438,12 +472,35 @@
 		if ((self.currentSection) != GLAMainWindowControllerSectionToday) {
 			//(view.hidden) = YES;
 		}
+		
+		NSTableView *tableView = nil;
+		if (view == (self.allProjectsViewController.view)) {
+			tableView = (self.allProjectsViewController.tableView);
+		}
+		else if (view == (self.plannedProjectsViewController.view)) {
+			tableView = (self.plannedProjectsViewController.tableView);
+		}
+		
+		if (tableView) {
+			[tableView enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowViewSuperclassed, NSInteger row) {
+				GLATableRowView *rowView = (GLATableRowView *)rowViewSuperclassed;
+				[rowView checkMouseLocationIsInside];
+			}];
+		}
+		
+		if (animate) {
+			[view removeFromSuperview];
+			//[(view.superview) layoutSubtreeIfNeeded];
+		}
+		//[(self.contentViewController.view) layoutSubtreeIfNeeded];
 		//NSLog(@"HIDE COMPLETED %@", (view.identifier));
 	}];
 }
 
 - (void)showChildContentView:(NSView *)view animate:(BOOL)animate
 {
+	[self addViewToContentViewIfNeeded:view layout:YES];
+	
 	NSLayoutConstraint *leadingConstraint = [self layoutConstraintWithBaseIdentifier:@"leading" view:view inHolderView:(self.contentView)];
 	if (!leadingConstraint) {
 		return;

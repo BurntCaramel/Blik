@@ -23,7 +23,6 @@
 	NSRectFill(frame);
 #endif
 	
-	
 	CGFloat ellipseDimension = 16.0;
 	NSPoint offset = NSMakePoint((NSWidth(frame) - ellipseDimension) / 2.0, (NSHeight(frame) - ellipseDimension) / 2.0);
 	NSRect ellipseRect = NSMakeRect(NSMinX(frame) + offset.x, NSMinY(frame) + offset.y, ellipseDimension, ellipseDimension);
@@ -33,7 +32,8 @@
 	[[NSBezierPath bezierPathWithOvalInRect:NSInsetRect(ellipseRect, 0.5, 0.5)] stroke];
 	
 	if (self.isOnAndShowsOnState) {
-		NSRect insideEllipseRect = NSInsetRect(ellipseRect, 3.0, 3.0);
+		CGFloat inset = 4.0; // OR 2.0
+		NSRect insideEllipseRect = NSInsetRect(ellipseRect, inset, inset);
 		[(uiStyle.toggleInsideColor) setFill];
 		[[NSBezierPath bezierPathWithOvalInRect:insideEllipseRect] fill];
 	}

@@ -82,7 +82,7 @@
 		[holderView addSubview:innerView];
 		
 		// Interface Builder's default is to have this on for new view controllers in 10.9 for some reason.
-		// I have disabled it where I remember to in the xib file.
+		// I have disabled it where I remember to in the xib file, but no harm in just setting it off here too.
 		(innerView.translatesAutoresizingMaskIntoConstraints) = NO;
 		
 		NSLayoutConstraint *widthConstraint = [NSLayoutConstraint constraintWithItem:innerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:holderView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0.0];

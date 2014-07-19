@@ -59,7 +59,7 @@
 	[self setNeedsDisplay:YES];
 }
 
-- (void)scrollViewDidScroll:(NSNotification *)note
+- (void)checkMouseLocationIsInside
 {
 	NSPoint mouseLocation = [(self.window) mouseLocationOutsideOfEventStream];
 	mouseLocation = [self convertPoint:mouseLocation fromView:nil];
@@ -68,6 +68,11 @@
 		(self.mouseIsInside) = mouseIsInside;
 		[self setNeedsDisplay:YES];
 	}
+}
+
+- (void)scrollViewDidScroll:(NSNotification *)note
+{
+	[self checkMouseLocationIsInside];
 }
 
 - (void)drawBackgroundInRect:(NSRect)dirtyRect

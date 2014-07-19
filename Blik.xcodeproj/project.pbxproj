@@ -19,6 +19,7 @@
 		B24B3607196D1F720094FA1F /* GLAReminderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3606196D1F720094FA1F /* GLAReminderItem.m */; };
 		B24B360B196E336E0094FA1F /* GLAMainNavigationBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */; };
 		B24B360C196E336E0094FA1F /* GLAMainNavigationBarController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B24B360A196E336E0094FA1F /* GLAMainNavigationBarController.xib */; };
+		B284D5621978EC1F00157126 /* GLAProjectItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B284D5611978EC1F00157126 /* GLAProjectItem.m */; };
 		B28D217F1977C24000A12C6D /* GLAToggleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B28D217E1977C24000A12C6D /* GLAToggleButton.m */; };
 		B28D21821977D6E600A12C6D /* GLATableRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = B28D21811977D6E600A12C6D /* GLATableRowView.m */; };
 		B2ADDBD21963DA2E0014EF84 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */; };
@@ -77,6 +78,8 @@
 		B24B3608196E336E0094FA1F /* GLAMainNavigationBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainNavigationBarController.h; sourceTree = "<group>"; };
 		B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainNavigationBarController.m; sourceTree = "<group>"; };
 		B24B360A196E336E0094FA1F /* GLAMainNavigationBarController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAMainNavigationBarController.xib; sourceTree = "<group>"; };
+		B284D5601978EC1F00157126 /* GLAProjectItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProjectItem.h; sourceTree = "<group>"; };
+		B284D5611978EC1F00157126 /* GLAProjectItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProjectItem.m; sourceTree = "<group>"; };
 		B28D217D1977C24000A12C6D /* GLAToggleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAToggleButton.h; sourceTree = "<group>"; };
 		B28D217E1977C24000A12C6D /* GLAToggleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAToggleButton.m; sourceTree = "<group>"; };
 		B28D21801977D6E600A12C6D /* GLATableRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLATableRowView.h; sourceTree = "<group>"; };
@@ -184,6 +187,8 @@
 		B24B3604196D1F4D0094FA1F /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B284D5601978EC1F00157126 /* GLAProjectItem.h */,
+				B284D5611978EC1F00157126 /* GLAProjectItem.m */,
 				B24B3605196D1F720094FA1F /* GLAReminderItem.h */,
 				B24B3606196D1F720094FA1F /* GLAReminderItem.m */,
 			);
@@ -193,8 +198,8 @@
 		B2ADDBC51963DA2E0014EF84 = {
 			isa = PBXGroup;
 			children = (
-				B2ADDBD71963DA2E0014EF84 /* Glance Prototype A */,
-				B2ADDBF51963DA2E0014EF84 /* Glance Prototype ATests */,
+				B2ADDBD71963DA2E0014EF84 /* Blik Mac */,
+				B2ADDBF51963DA2E0014EF84 /* Blik Tests */,
 				B2ADDBD01963DA2E0014EF84 /* Frameworks */,
 				B2ADDBCF1963DA2E0014EF84 /* Products */,
 			);
@@ -229,7 +234,7 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		B2ADDBD71963DA2E0014EF84 /* Glance Prototype A */ = {
+		B2ADDBD71963DA2E0014EF84 /* Blik Mac */ = {
 			isa = PBXGroup;
 			children = (
 				B2ADDBE31963DA2E0014EF84 /* GLAAppDelegate.h */,
@@ -243,7 +248,7 @@
 				B24B3604196D1F4D0094FA1F /* Model */,
 				B2ADDBD81963DA2E0014EF84 /* Supporting Files */,
 			);
-			path = "Glance Prototype A";
+			path = "Blik Mac";
 			sourceTree = "<group>";
 		};
 		B2ADDBD81963DA2E0014EF84 /* Supporting Files */ = {
@@ -258,13 +263,13 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		B2ADDBF51963DA2E0014EF84 /* Glance Prototype ATests */ = {
+		B2ADDBF51963DA2E0014EF84 /* Blik Tests */ = {
 			isa = PBXGroup;
 			children = (
 				B2ADDBFB1963DA2E0014EF84 /* Glance_Prototype_ATests.m */,
 				B2ADDBF61963DA2E0014EF84 /* Supporting Files */,
 			);
-			path = "Glance Prototype ATests";
+			path = "Blik Tests";
 			sourceTree = "<group>";
 		};
 		B2ADDBF61963DA2E0014EF84 /* Supporting Files */ = {
@@ -449,6 +454,7 @@
 				B219DAAB196AB8D1007900DF /* GLANavigationButton.m in Sources */,
 				B219DAA8196AB7D6007900DF /* GLAPrototypeBNavigationBar.m in Sources */,
 				B2ADDBE51963DA2E0014EF84 /* GLAAppDelegate.m in Sources */,
+				B284D5621978EC1F00157126 /* GLAProjectItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -580,10 +586,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
+				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Glance Prototype A/Blik-Prefix.pch";
-				INFOPLIST_FILE = "Glance Prototype A/Blik-Info.plist";
+				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
+				INFOPLIST_FILE = "Blik Mac/Blik-Info.plist";
 				PRODUCT_NAME = Blik;
 				WRAPPER_EXTENSION = app;
 			};
@@ -593,10 +602,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
+				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Glance Prototype A/Blik-Prefix.pch";
-				INFOPLIST_FILE = "Glance Prototype A/Blik-Info.plist";
+				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
+				INFOPLIST_FILE = "Blik Mac/Blik-Info.plist";
 				PRODUCT_NAME = Blik;
 				WRAPPER_EXTENSION = app;
 			};

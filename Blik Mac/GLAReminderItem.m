@@ -14,6 +14,7 @@
 {
 	GLAReminderItem *reminderItem = [self new];
 	(reminderItem.title) = title;
+	
 	return reminderItem;
 }
 

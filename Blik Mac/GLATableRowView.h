@@ -11,4 +11,6 @@
 
 @interface GLATableRowView : NSTableRowView
 
+- (void)checkMouseLocationIsInside;
+
 @end

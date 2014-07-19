@@ -10,6 +10,7 @@
 #import "GLAView.h"
 #import "GLAProjectActionsBarController.h"
 #import "GLAPrototypeBProjectView.h"
+#import "GLAProjectItem.h"
 #import "GLAReminderItem.h"
 
 @class GLAProjectItemsViewController;

@@ -67,12 +67,15 @@
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
                                                     </button>
-                                                    <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RUk-GO-gyx" customClass="GLANavigationButton">
-                                                        <rect key="frame" x="382" y="10" width="95" height="25"/>
+                                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="RUk-GO-gyx" customClass="GLANavigationButton">
+                                                        <rect key="frame" x="382" y="10" width="95" height="23"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="23" id="51Q-Ms-aPB"/>
+                                                        </constraints>
                                                         <buttonCell key="cell" type="square" title="Delete Project" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="left" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eD0-2P-IqQ" customClass="GLANavigationButtonCell">
                                                             <behavior key="behavior" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AvenirNext-DemiBold"/>
+                                                            <font key="font" size="13" name="AvenirNext-Medium"/>
                                                         </buttonCell>
                                                     </button>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rPy-bU-lu1">
@@ -87,7 +90,7 @@
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="UnQ-Ry-Bvo" firstAttribute="top" secondItem="LCw-fj-f7m" secondAttribute="top" constant="6" id="22V-nJ-Fuc"/>
-                                                    <constraint firstItem="RUk-GO-gyx" firstAttribute="baseline" secondItem="rPy-bU-lu1" secondAttribute="baseline" id="Eku-bi-LU9"/>
+                                                    <constraint firstItem="RUk-GO-gyx" firstAttribute="bottom" secondItem="rPy-bU-lu1" secondAttribute="bottom" id="Eku-bi-LU9"/>
                                                     <constraint firstAttribute="trailing" secondItem="UnQ-Ry-Bvo" secondAttribute="trailing" constant="20" symbolic="YES" id="Ig8-ed-u90"/>
                                                     <constraint firstItem="rPy-bU-lu1" firstAttribute="leading" secondItem="LCw-fj-f7m" secondAttribute="leading" constant="20" id="ZV4-p9-1JU"/>
                                                     <constraint firstAttribute="bottom" secondItem="rPy-bU-lu1" secondAttribute="bottom" constant="10" id="c4f-0C-5wn"/>

@@ -96,7 +96,7 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
                             <integer key="value" value="-5"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="cell.alwaysHighlighted" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="cell.alwaysHighlighted" value="NO"/>
                     </userDefinedRuntimeAttributes>
                 </button>
                 <button placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="WcU-G7-cKy" customClass="GLANavigationButton">

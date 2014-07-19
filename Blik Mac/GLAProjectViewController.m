@@ -359,11 +359,11 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	(self.mutableItems) =
 	[
 	 @[
-	   @"Working Items",
-	   @"Briefs",
-	   @"Contacts",
-	   @"Apps",
-	   @"Research"
+	   [GLAProjectItem dummyItemWithTitle:@"Working Items" colorIdentifier:GLAProjectItemColorLightBlue],
+	   [GLAProjectItem dummyItemWithTitle:@"Briefs" colorIdentifier:GLAProjectItemColorGreen],
+	   [GLAProjectItem dummyItemWithTitle:@"Contacts" colorIdentifier:GLAProjectItemColorPinkyPurple],
+	   [GLAProjectItem dummyItemWithTitle:@"Apps" colorIdentifier:GLAProjectItemColorRed],
+	   [GLAProjectItem dummyItemWithTitle:@"Research" colorIdentifier:GLAProjectItemColorYellow]
 	   ] mutableCopy];
 	
 	[(self.tableView) reloadData];
@@ -398,7 +398,8 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	return (self.mutableItems)[row];
+	GLAProjectItem *item = (self.mutableItems)[row];
+	return item;
 }
 
 #pragma mark Table View Delegate
@@ -413,9 +414,13 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	(cellView.canDrawSubviewsIntoLayer) = YES;
 	
-	NSString *displayName = (self.mutableItems)[row];
-	(cellView.objectValue) = displayName;
-	(cellView.textField.stringValue) = displayName;
+	GLAProjectItem *item = (self.mutableItems)[row];
+	NSString *title = (item.title);
+	(cellView.objectValue) = item;
+	(cellView.textField.stringValue) = title;
+	
+	GLAUIStyle *uiStyle = [GLAUIStyle styleA];
+	(cellView.textField.textColor) = [uiStyle colorForProjectItemColorIdentifier:(item.colorIdentifier)];
 	
 	return cellView;
 }

@@ -8,6 +8,8 @@
 
 @import Cocoa;
 
+#import "GLAProjectItem.h"
+
 @interface GLAUIStyle : NSObject
 
 + (instancetype)styleA;
@@ -45,6 +47,8 @@
 @property (nonatomic) NSColor *pinkyPurpleItemColor;
 @property (nonatomic) NSColor *reddishItemColor;
 @property (nonatomic) NSColor *yellowItemColor;
+
+- (NSColor *)colorForProjectItemColorIdentifier:(GLAProjectItemColor)colorIdentifier;
 
 #pragma mark Fonts
 

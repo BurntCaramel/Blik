@@ -42,6 +42,8 @@
 	[super loadView];
 	
 	(self.navigationBar.delegate) = self;
+	
+	(self.editingProjectBackButton.canDrawSubviewsIntoLayer) = YES;
 }
 
 - (void)updateSelectedSectionUI
