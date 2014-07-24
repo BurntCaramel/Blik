@@ -347,9 +347,72 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="View" id="H8h-7b-M4v">
+                <menuItem title="Collections" id="Vc8-OF-5QR">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="View" id="HyV-fh-RgO">
+                    <menu key="submenu" title="Collections" id="y5R-d6-Gfj">
+                        <items>
+                            <menuItem title="Add Files Collection…" id="jfO-Ol-vRE">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem title="Add Contacts Collection…" id="McO-7U-HxW">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Plan" id="96z-eX-NDn">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Plan" id="5cF-uk-BG1">
+                        <items>
+                            <menuItem title="Add New Reminder…" id="cHO-vO-C6E">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem title="Late is After" id="wXo-kK-QIc">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Late is After" id="e8S-Pr-fJy">
+                                    <items>
+                                        <menuItem title="4PM" id="z3F-jB-jnU">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="5PM" id="JYe-ET-yk2">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="6PM" id="rSx-3K-XzY">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="7PM" state="on" id="bM4-qM-Mv5">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="8PM" id="giC-Sa-tk1">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="9PM" id="ep2-40-HBm">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="10PM" id="6Cc-0N-RJO">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="11PM" id="UbH-9b-b4a">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="12AM" id="gfd-TE-PvH">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="1AM" id="bGc-m3-K9I">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="2AM" id="72Z-FR-SZa">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Projects" id="H8h-7b-M4v">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Projects" id="HyV-fh-RgO">
                         <items>
                             <menuItem title="Show Prototype A" keyEquivalent="1" id="snW-S8-Cw5">
                                 <connections>

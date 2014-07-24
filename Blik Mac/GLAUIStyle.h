@@ -8,7 +8,7 @@
 
 @import Cocoa;
 
-#import "GLAProjectItem.h"
+#import "GLACollection.h"
 
 @interface GLAUIStyle : NSObject
 
@@ -48,7 +48,7 @@
 @property (nonatomic) NSColor *reddishItemColor;
 @property (nonatomic) NSColor *yellowItemColor;
 
-- (NSColor *)colorForProjectItemColorIdentifier:(GLAProjectItemColor)colorIdentifier;
+- (NSColor *)colorForProjectItemColorIdentifier:(GLACollectionColor)colorIdentifier;
 
 #pragma mark Fonts
 

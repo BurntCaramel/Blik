@@ -16,18 +16,19 @@
 
 
 typedef NS_ENUM(NSInteger, GLAMainWindowControllerSection) {
+	GLAMainWindowControllerSectionUnknown,
 	GLAMainWindowControllerSectionAll,
 	GLAMainWindowControllerSectionToday,
 	GLAMainWindowControllerSectionPlanned,
 	GLAMainWindowControllerSectionAllEditProject,
-	GLAMainWindowControllerSectionPlannedEditProject
+	GLAMainWindowControllerSectionPlannedEditProject,
+	GLAMainWindowControllerSectionAddNewProject
 };
 
 
 @interface GLAMainWindowController : NSWindowController <GLAMainNavigationBarControllerDelegate>
 
 @property (nonatomic) GLAMainNavigationBarController *mainNavigationBarController;
-
 @property (nonatomic) GLAViewController *contentViewController;
 
 @property (nonatomic) GLAProjectsListViewController *allProjectsViewController;
@@ -35,6 +36,7 @@ typedef NS_ENUM(NSInteger, GLAMainWindowControllerSection) {
 
 @property (nonatomic) GLAProjectViewController *nowProjectViewController;
 @property (nonatomic) GLAProjectViewController *editedProjectViewController;
+@property (nonatomic) GLAProjectViewController *addedProjectViewController;
 
 @property (nonatomic) GLAMainWindowControllerSection currentSection;
 

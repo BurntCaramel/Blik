@@ -7,6 +7,7 @@
 //
 
 @import Cocoa;
+#import "GLAViewController.h"
 #import "GLAPrototypeBNavigationBar.h"
 
 
@@ -19,7 +20,7 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 @protocol GLAMainNavigationBarControllerDelegate;
 
 
-@interface GLAMainNavigationBarController : NSViewController <GLAViewDelegate>
+@interface GLAMainNavigationBarController : GLAViewController <GLAViewDelegate>
 
 @property(readonly, nonatomic) GLAPrototypeBNavigationBar *navigationBar;
 
@@ -27,7 +28,13 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 @property(nonatomic) IBOutlet NSButton *todayButton;
 @property(nonatomic) IBOutlet NSButton *plannedButton;
 @property(nonatomic) IBOutlet NSButton *addProjectButton;
+
+@property(nonatomic) IBOutlet NSButton *templateButton;
+
 @property(nonatomic) IBOutlet NSButton *editingProjectBackButton;
+
+@property(nonatomic) IBOutlet NSButton *addingNewProjectCancelButton;
+@property(nonatomic) IBOutlet NSButton *addingNewProjectConfirmButton;
 
 @property(nonatomic) IBOutlet NSLayoutConstraint *allButtonTopConstraint;
 @property(nonatomic) IBOutlet NSLayoutConstraint *todayButtonTopConstraint;
@@ -39,15 +46,19 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 @property(weak, nonatomic) id<GLAMainNavigationBarControllerDelegate> delegate;
 
+@property(nonatomic, getter = isEnabled) BOOL enabled;
+
 - (IBAction)goToAll:(id)sender;
 - (IBAction)goToToday:(id)sender;
 - (IBAction)goToPlanned:(id)sender;
 
-- (void)enterProject:(id)project;
-@property(nonatomic) id currentProject;
-- (IBAction)exitCurrentProject:(id)sender;
+- (IBAction)addNewProject:(id)sender;
 
-@property(nonatomic, getter = isEnabled) BOOL enabled;
+- (void)enterProject:(id)project;
+- (void)enterAddedProject:(id)project;
+@property(nonatomic) id currentProject;
+@property(nonatomic) BOOL currentProjectIsAddedNew;
+- (IBAction)exitCurrentProject:(id)sender;
 
 @end
 
@@ -55,6 +66,8 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 @protocol GLAMainNavigationBarControllerDelegate <NSObject>
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didChangeCurrentSection:(GLAMainNavigationSection)newSection;
+
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performAddNewProject:(id)sender;
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didExitProject:(id)project;
 @end

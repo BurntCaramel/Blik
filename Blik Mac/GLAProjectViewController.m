@@ -9,6 +9,7 @@
 @import QuartzCore;
 #import "GLAProjectViewController.h"
 #import "GLAUIStyle.h"
+#import "GLAReminderManager.h"
 
 
 NSString *GLAProjectViewControllerDidBeginEditingItemsNotification = @"GLA.projectViewController.didBeginEditingItems";
@@ -20,7 +21,7 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 
 @interface GLAProjectViewController ()
 
-@property(nonatomic) id private_project;
+@property(nonatomic) GLAProject *private_project;
 
 @property(nonatomic) BOOL focusedOnItemsView;
 @property(nonatomic) BOOL focusedOnPlanView;
@@ -72,19 +73,28 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	
 	(self.planViewTrailingConstraintDefaultConstant) = (self.planViewTrailingConstraint.constant);
 	(self.planViewHeightConstraintDefaultConstant) = (self.planViewHeightConstraint.constant);
+	
+	GLAView *actionsBarView = (self.actionsBarController.view);
+	(actionsBarView.wantsLayer) = YES;
+	(actionsBarView.layer.backgroundColor) = ([GLAUIStyle styleA].contentBackgroundColor.CGColor);
 }
 
-- (id)project
+- (GLAProject *)project
 {
 	return (self.private_project);
 }
 
-- (void)setProject:(id)project
+- (void)setProject:(GLAProject *)project
 {
 	if ((self.private_project) != project) {
 		(self.private_project) = project;
 		
-		(self.nameTextField.stringValue) = project;
+		(self.itemsViewController.project) = project;
+		(self.planViewController.project) = project;
+		
+		(self.nameTextField.stringValue) = (project.name);
+		
+		
 	}
 }
 
@@ -126,6 +136,16 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidEndEditingPlanNotification object:self];
 	}
+}
+
+- (void)clearName
+{
+	(self.nameTextField.stringValue) = @"";
+}
+
+- (void)focusNameTextField
+{
+	[(self.view.window) makeFirstResponder:(self.nameTextField)];
 }
 
 
@@ -303,6 +323,26 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	
 	[self animatePlanViewForFocusChange:YES];
 	//[self updateConstraintsWithAnimatedDuration:7.0 / 12.0];
+	
+	GLAReminderManager *reminderManager = [GLAReminderManager sharedReminderManager];
+	if (!(reminderManager.isAuthorized)) {
+		[reminderManager requestAccessToReminders:^(BOOL granted, NSError *error) {
+			if (!granted) {
+				(self.planViewController.showsDoesNotHaveAccessToReminders) = YES;
+			}
+			else {
+				(self.planViewController.showsDoesNotHaveAccessToReminders) = NO;
+			}
+		}];
+	}
+	else {
+		CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
+		[reminderManager fetchAllRemindersIfNeeded:^(NSArray *allReminders) {
+			CFAbsoluteTime endTime = CFAbsoluteTimeGetCurrent();
+			NSLog(@"Took %f second to get all reminders", endTime - startTime);
+			NSLog(@"%lu %@", (allReminders.count), allReminders);
+		}];
+	}
 }
 
 - (void)endFocusingOnPlanView
@@ -346,6 +386,13 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 @end
 
 
+#pragma mark -
+
+@interface GLAProjectItemsViewController ()
+
+@property(nonatomic) GLAProject *private_project;
+
+@end
 
 @implementation GLAProjectItemsViewController
 
@@ -354,16 +401,30 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	return (id)(self.view);
 }
 
+- (GLAProject *)project
+{
+	return (self.private_project);
+}
+
+- (void)setProject:(GLAProject *)project
+{
+	if ((self.private_project) != project) {
+		(self.private_project) = project;
+		
+		
+	}
+}
+
 - (void)prepareDummyContent
 {
 	(self.mutableItems) =
 	[
 	 @[
-	   [GLAProjectItem dummyItemWithTitle:@"Working Items" colorIdentifier:GLAProjectItemColorLightBlue],
-	   [GLAProjectItem dummyItemWithTitle:@"Briefs" colorIdentifier:GLAProjectItemColorGreen],
-	   [GLAProjectItem dummyItemWithTitle:@"Contacts" colorIdentifier:GLAProjectItemColorPinkyPurple],
-	   [GLAProjectItem dummyItemWithTitle:@"Apps" colorIdentifier:GLAProjectItemColorRed],
-	   [GLAProjectItem dummyItemWithTitle:@"Research" colorIdentifier:GLAProjectItemColorYellow]
+	   [GLACollection dummyCollectionWithTitle:@"Working Items" colorIdentifier:GLACollectionColorLightBlue],
+	   [GLACollection dummyCollectionWithTitle:@"Briefs" colorIdentifier:GLACollectionColorGreen],
+	   [GLACollection dummyCollectionWithTitle:@"Contacts" colorIdentifier:GLACollectionColorPinkyPurple],
+	   [GLACollection dummyCollectionWithTitle:@"Apps" colorIdentifier:GLACollectionColorRed],
+	   [GLACollection dummyCollectionWithTitle:@"Research" colorIdentifier:GLACollectionColorYellow]
 	   ] mutableCopy];
 	
 	[(self.tableView) reloadData];
@@ -398,7 +459,7 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	GLAProjectItem *item = (self.mutableItems)[row];
+	GLACollection *item = (self.mutableItems)[row];
 	return item;
 }
 
@@ -414,7 +475,7 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	(cellView.canDrawSubviewsIntoLayer) = YES;
 	
-	GLAProjectItem *item = (self.mutableItems)[row];
+	GLACollection *item = (self.mutableItems)[row];
 	NSString *title = (item.title);
 	(cellView.objectValue) = item;
 	(cellView.textField.stringValue) = title;
@@ -428,6 +489,15 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 @end
 
 
+#pragma mark -
+
+#pragma mark -
+
+@interface GLAProjectPlanViewController ()
+
+@property(nonatomic) GLAProject *private_project;
+
+@end
 
 @implementation GLAProjectPlanViewController
 
@@ -436,17 +506,31 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	return (id)(self.view);
 }
 
+- (GLAProject *)project
+{
+	return (self.private_project);
+}
+
+- (void)setProject:(GLAProject *)project
+{
+	if ((self.private_project) != project) {
+		(self.private_project) = project;
+		
+		
+	}
+}
+
 - (void)prepareDummyContent
 {
 	(self.mutableReminders) =
 	[
 	 @[
-	   [GLAReminderItem dummyReminderItemWithTitle:@"About page redesign blah blah blah blah longer name"],
-	   [GLAReminderItem dummyReminderItemWithTitle:@"Double check Muted Light logo and gallery sliders"],
-	   [GLAReminderItem dummyReminderItemWithTitle:@"Prototyping landing page blah blah blah longer name blah blah"],
-	   [GLAReminderItem dummyReminderItemWithTitle:@"Brief Stage D completed blah blah blah longer name blah blah"],
-	   [GLAReminderItem dummyReminderItemWithTitle:@"Brief Stage E completed blah blah blah longer name blah blah"],
-	   [GLAReminderItem dummyReminderItemWithTitle:@"Brief Stage F completed blah blah blah longer name blah blah"],
+	   [GLAReminder dummyReminderWithTitle:@"About page redesign blah blah blah blah longer name"],
+	   [GLAReminder dummyReminderWithTitle:@"Double check Muted Light logo and gallery sliders"],
+	   [GLAReminder dummyReminderWithTitle:@"Prototyping landing page blah blah blah longer name blah blah"],
+	   [GLAReminder dummyReminderWithTitle:@"Brief Stage D completed blah blah blah longer name blah blah"],
+	   [GLAReminder dummyReminderWithTitle:@"Brief Stage E completed blah blah blah longer name blah blah"],
+	   [GLAReminder dummyReminderWithTitle:@"Brief Stage F completed blah blah blah longer name blah blah"],
 	   ] mutableCopy];
 	
 	[(self.tableView) reloadData];
@@ -457,6 +541,10 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	NSTableView *tableView = (self.tableView);
 	(tableView.backgroundColor) = ([GLAUIStyle styleA].contentBackgroundColor);
 	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle styleA].contentBackgroundColor);
+	
+	
+	GLAReminderManager *reminderManager = [GLAReminderManager sharedReminderManager];
+	[reminderManager createEventStore];
 }
 
 - (void)loadView
@@ -481,7 +569,7 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	GLAReminderItem *reminderItem = (self.mutableReminders)[row];
+	GLAReminder *reminderItem = (self.mutableReminders)[row];
 	return (reminderItem.title);
 }
 
@@ -497,7 +585,7 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	(cellView.canDrawSubviewsIntoLayer) = YES;
 	
-	GLAReminderItem *reminderItem = (self.mutableReminders)[row];
+	GLAReminder *reminderItem = (self.mutableReminders)[row];
 	NSString *title = (reminderItem.title);
 	NSString *middleDot = @"\u00b7";
 	NSString *displayText = [NSString stringWithFormat:@"4PM Today %@ %@", middleDot, title];

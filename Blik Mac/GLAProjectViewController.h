@@ -10,8 +10,9 @@
 #import "GLAView.h"
 #import "GLAProjectActionsBarController.h"
 #import "GLAPrototypeBProjectView.h"
-#import "GLAProjectItem.h"
-#import "GLAReminderItem.h"
+#import "GLAProject.h"
+#import "GLACollection.h"
+#import "GLAReminder.h"
 
 @class GLAProjectItemsViewController;
 @class GLAProjectPlanViewController;
@@ -38,10 +39,13 @@
 
 @property(strong, nonatomic) IBOutlet NSTextField *nameTextField;
 
-@property(nonatomic) id project;
+@property(nonatomic) GLAProject *project;
 
 - (IBAction)editItems:(id)sender;
 - (IBAction)editPlan:(id)sender;
+
+- (void)clearName;
+- (void)focusNameTextField;
 
 @end
 
@@ -55,9 +59,14 @@ extern NSString *GLAProjectViewControllerDidEndEditingPlanNotification;
 
 @interface GLAProjectItemsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
 
-@property (readonly, nonatomic) NSTableView *tableView;
+@property(readonly, nonatomic) NSTableView *tableView;
 
-@property (copy, nonatomic) NSMutableArray *mutableItems;
+@property(nonatomic) GLAProject *project;
+
+//- (void)collectionsDidChange;
+- (void)reloadCollections;
+
+@property(copy, nonatomic) NSMutableArray *mutableItems;
 
 @end
 
@@ -65,8 +74,15 @@ extern NSString *GLAProjectViewControllerDidEndEditingPlanNotification;
 
 @interface GLAProjectPlanViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
 
-@property (readonly, nonatomic) NSTableView *tableView;
+@property(readonly, nonatomic) NSTableView *tableView;
 
-@property (copy, nonatomic) NSMutableArray *mutableReminders;
+@property(nonatomic) GLAProject *project;
+
+//- (void)remindersDidChange;
+- (void)reloadReminders;
+
+@property(copy, nonatomic) NSMutableArray *mutableReminders;
+
+@property(nonatomic) BOOL showsDoesNotHaveAccessToReminders;
 
 @end

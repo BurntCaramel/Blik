@@ -8,12 +8,14 @@
 
 #import "GLAMainNavigationBarController.h"
 @import QuartzCore;
+#import "GLAButton.h"
 
 @interface GLAMainNavigationBarController ()
 
 @property(nonatomic) BOOL private_enabled;
 
-@property(nonatomic, getter = isAnimating) BOOL animating;
+@property(readonly, getter = isAnimating, nonatomic) BOOL animating;
+@property(nonatomic) NSUInteger animatingCounter;
 
 @property(readonly, nonatomic) NSString *titleForEditingProjectBackButton;
 
@@ -43,7 +45,13 @@
 	
 	(self.navigationBar.delegate) = self;
 	
-	(self.editingProjectBackButton.canDrawSubviewsIntoLayer) = YES;
+	(self.templateButton.canDrawSubviewsIntoLayer) = YES;
+	[(self.templateButton) removeFromSuperview];
+}
+
+- (BOOL)isAnimating
+{
+	return (self.animatingCounter) > 0;
 }
 
 - (void)updateSelectedSectionUI
@@ -85,9 +93,18 @@
 	[self changeCurrentSectionTo:GLAMainNavigationSectionPlanned];
 }
 
+- (IBAction)addNewProject:(id)sender
+{
+	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
+	if (delegate) {
+		[delegate mainNavigationBarController:self performAddNewProject:sender];
+	}
+}
+
 - (NSString *)titleForEditingProjectBackButton
 {
 	GLAMainNavigationSection currentSection = (self.currentSection);
+	
 	if (currentSection == GLAMainNavigationSectionAll) {
 		return NSLocalizedString(@"Back to All Projects", @"Title for editing project back button to go back to all projects");
 	}
@@ -96,47 +113,19 @@
 	}
 	else {
 		return nil;
+		//return NSLocalizedString(@"Back", @"Title for editing project back button to go back");
 	}
 }
 
-- (void)enterProject:(id)project
+- (void)enterProject:(id)project isAddedNew:(BOOL)isAddedNew
 {
 	(self.currentProject) = project;
-	
-	(self.editingProjectBackButton.title) = (self.titleForEditingProjectBackButton);
-	
-	(self.animating) = YES;
-	
-	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-		(context.duration) = 4.0 / 12.0;
-		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-		
-		(self.allButtonTopConstraint.animator.constant) = -50;
-		(self.todayButtonTopConstraint.animator.constant) = -50;
-		(self.plannedButtonTopConstraint.animator.constant) = -50;
-		(self.addProjectButtonTopConstraint.animator.constant) = -50;
-		
-		(self.editingProjectBackButton.animator.alphaValue) = 1.0;
-	} completionHandler:^ {
-		(self.animating) = NO;
-	}];
-	
-	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-		(context.duration) = 4.0 / 12.0;
-		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-		
-		(self.editingProjectBackButtonLeadingConstraint.animator.constant) = 0;
-	} completionHandler:nil];
+	(self.currentProjectIsAddedNew) = isAddedNew;
 }
 
-- (IBAction)exitCurrentProject:(id)sender
+- (void)showMainButtons
 {
-	if (self.isAnimating) {
-		return;
-	}
-	
-	(self.animating) = YES;
-	
+	(self.animatingCounter)++;
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 		(context.duration) = 4.0 / 12.0;
 		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
@@ -145,18 +134,185 @@
 		(self.todayButtonTopConstraint.animator.constant) = 0;
 		(self.plannedButtonTopConstraint.animator.constant) = 0;
 		(self.addProjectButtonTopConstraint.animator.constant) = 0;
-		
-		(self.editingProjectBackButton.animator.alphaValue) = 0.0;
 	} completionHandler:^ {
-		(self.animating) = NO;
+		(self.animatingCounter)--;
 	}];
-	
+}
+
+- (void)hideMainButtons
+{
+	(self.animatingCounter)++;
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 		(context.duration) = 4.0 / 12.0;
-		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
 		
-		(self.editingProjectBackButtonLeadingConstraint.animator.constant) = -200;
-	} completionHandler:nil];
+		(self.allButtonTopConstraint.animator.constant) = -50;
+		(self.todayButtonTopConstraint.animator.constant) = -50;
+		(self.plannedButtonTopConstraint.animator.constant) = -50;
+		(self.addProjectButtonTopConstraint.animator.constant) = -50;
+	} completionHandler:^ {
+		(self.animatingCounter)--;
+	}];
+}
+
+- (void)showButtonsForEditingExistingProject
+{
+	NSString *backTitle = (self.titleForEditingProjectBackButton);
+	GLAButton *backButton = [self addLeadingButtonWithTitle:backTitle action:@selector(exitCurrentProject:) identifier:@"backEditingProject"];
+	(self.editingProjectBackButton) = backButton;
+	
+	NSLayoutConstraint *backLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:backButton];
+	NSLog(@"showButtonsForEditingExistingProject %@", [(self.view.subviews) valueForKey:@"identifier"]);
+	
+	//(backButton.alphaValue) = 0.0;
+	//(backLeadingConstraint.constant) = -250.0;
+	
+	(backButton.alphaValue) = 1.0;
+	(backLeadingConstraint.constant) = 0.0;
+	
+	[(self.view) setNeedsLayout:YES];
+	[(self.view) layoutSubtreeIfNeeded];
+	
+	return;
+	
+	(self.animatingCounter)++;
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 4.0 / 12.0;
+		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+		
+		// Cancel button
+		(backButton.animator.alphaValue) = 1.0;
+		// Constraint
+		(backLeadingConstraint.animator.constant) = 0.0;
+	} completionHandler:^ {
+		NSLog(@"%f %f", (backButton.alphaValue), (backLeadingConstraint.constant));
+		(self.animatingCounter)--;
+	}];
+}
+
+- (void)hideButtonsForEditingExistingProject
+{
+	NSButton *backButton = (self.editingProjectBackButton);
+	
+	NSLayoutConstraint *backLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:backButton];
+	
+	(self.animatingCounter)++;
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 4.0 / 12.0;
+		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+		
+		// Cancel button
+		(backButton.animator.alphaValue) = 0.0;
+		// Constraint
+		(backLeadingConstraint.animator.constant) = -250.0;
+	} completionHandler:^ {
+		(self.animatingCounter)--;
+		
+		[backButton removeFromSuperview];
+		(self.editingProjectBackButton) = nil;
+	}];
+}
+
+- (void)showButtonsForAddingNewProject
+{
+	NSString *cancelTitle = NSLocalizedString(@"Cancel", @"Title for cancel adding new project button");
+	GLAButton *cancelButton = [self addLeadingButtonWithTitle:cancelTitle action:@selector(cancelAddingNewProject:) identifier:@"cancelAddNewProject"];
+	(self.addingNewProjectCancelButton) = cancelButton;
+	
+	NSString *confirmCreateTitle = NSLocalizedString(@"Create New Project", @"Title for confirming creating new project button");
+	GLAButton *confirmButton = [self addTrailingButtonWithTitle:confirmCreateTitle action:@selector(confirmAddingNewProject:) identifier:@"confirmAddNewProject"];
+	(self.addingNewProjectConfirmButton) = confirmButton;
+	
+	NSLayoutConstraint *cancelLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:cancelButton];
+	NSLayoutConstraint *confirmTrailingConstraint = [self layoutConstraintWithIdentifier:@"trailing" forChildView:confirmButton];
+	
+	(self.animatingCounter)++;
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 4.0 / 12.0;
+		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+		
+		// Cancel button
+		(cancelButton.alphaValue) = 0.0;
+		(cancelButton.animator.alphaValue) = 1.0;
+		// Constraint
+		(cancelLeadingConstraint.constant) = -250.0;
+		(cancelLeadingConstraint.animator.constant) = 0.0;
+		
+		// Confirm button
+		(confirmButton.alphaValue) = 0.0;
+		(confirmButton.animator.alphaValue) = 1.0;
+		// Constraint
+		(confirmTrailingConstraint.constant) = 250.0;
+		(confirmTrailingConstraint.animator.constant) = 0.0;
+	} completionHandler:^ {
+		(self.animatingCounter)--;
+	}];
+}
+
+- (void)hideButtonsForAddingNewProject
+{
+	NSButton *cancelButton = (self.addingNewProjectCancelButton);
+	NSButton *confirmButton = (self.addingNewProjectConfirmButton);
+	
+	NSLayoutConstraint *cancelLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:cancelButton];
+	NSLayoutConstraint *confirmTrailingConstraint = [self layoutConstraintWithIdentifier:@"trailing" forChildView:confirmButton];
+	
+	(self.animatingCounter)++;
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 4.0 / 12.0;
+		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+		
+		// Cancel button
+		(cancelButton.animator.alphaValue) = 0.0;
+		// Constraint
+		(cancelLeadingConstraint.animator.constant) = -250.0;
+		
+		// Confirm button
+		(confirmButton.animator.alphaValue) = 0.0;
+		// Constraint
+		(confirmTrailingConstraint.animator.constant) = 250.0;
+	} completionHandler:^ {
+		(self.animatingCounter)--;
+		
+		[cancelButton removeFromSuperview];
+		[confirmButton removeFromSuperview];
+		
+		(self.addingNewProjectCancelButton) = nil;
+		(self.addingNewProjectConfirmButton) = nil;
+	}];
+}
+
+- (void)enterProject:(id)project
+{
+	[self hideMainButtons];
+	[self showButtonsForEditingExistingProject];
+	
+	[self enterProject:project isAddedNew:NO];
+}
+
+- (void)enterAddedProject:(id)project
+{
+	[self hideMainButtons];
+	[self showButtonsForAddingNewProject];
+	
+	[self enterProject:project isAddedNew:YES];
+}
+
+- (IBAction)exitCurrentProject:(id)sender
+{
+	if (self.isAnimating) {
+		return;
+	}
+	
+	[self showMainButtons];
+	
+	if (self.currentProjectIsAddedNew) {
+		[self hideButtonsForAddingNewProject];
+	}
+	else {
+		[self hideButtonsForEditingExistingProject];
+	}
+	
 	
 	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
@@ -164,6 +320,27 @@
 	}
 	
 	(self.currentProject) = nil;
+}
+
+- (IBAction)cancelAddingNewProject:(id)sender
+{
+	if (self.isAnimating) {
+		return;
+	}
+	
+	[self exitCurrentProject:sender];
+}
+
+- (IBAction)confirmAddingNewProject:(id)sender
+{
+	if (self.isAnimating) {
+		return;
+	}
+	
+	//[self hideButtonsForAddingNewProject];
+	[self showButtonsForEditingExistingProject];
+	//[self showMainButtons];
+	//[self exitCurrentProject:sender];
 }
 
 - (void)setEnabled:(BOOL)enabled
@@ -175,7 +352,7 @@
 		(self.todayButton.enabled) = enabled;
 		(self.plannedButton.enabled) = enabled;
 		(self.addProjectButton.enabled) = enabled;
-		(self.editingProjectBackButton.enabled) = enabled;
+		(self.templateButton.enabled) = enabled;
 	}
 }
 
@@ -184,16 +361,55 @@
 	return (self.private_enabled);
 }
 
+- (GLAButton *)addButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier
+{
+	GLAButton *button = [GLAButton new];
+	(button.cell) = [(self.templateButton.cell) copy];
+	(button.identifier) = identifier;
+	(button.title) = title;
+	(button.target) = self;
+	(button.action) = action;
+	(button.translatesAutoresizingMaskIntoConstraints) = NO;
+	
+	GLAPrototypeBNavigationBar *navigationBar = (self.navigationBar);
+	[navigationBar addSubview:button];
+	
+	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:button identifier:@"top"];
+	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeBottom withChildView:button identifier:@"bottom"];
+	
+	return button;
+}
+
+- (GLAButton *)addLeadingButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier
+{
+	GLAButton *button = [self addButtonWithTitle:title action:action identifier:identifier];
+	
+	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:button identifier:@"leading"];
+	
+	return button;
+}
+
+- (GLAButton *)addTrailingButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier
+{
+	GLAButton *button = [self addButtonWithTitle:title action:action identifier:identifier];
+	
+	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTrailing withChildView:button identifier:@"trailing"];
+	
+	return button;
+}
+
 - (void)viewUpdateConstraints:(GLAPrototypeBNavigationBar *)view
 {
+	/*
 	if (self.currentProject) {
-		(self.editingProjectBackButton.alphaValue) = 1.0;
+		(self.templateButton.alphaValue) = 1.0;
 		(self.editingProjectBackButtonLeadingConstraint.constant) = 0;
 	}
 	else {
-		(self.editingProjectBackButton.alphaValue) = 0.0;
-		(self.editingProjectBackButtonLeadingConstraint.constant) = -200;
+		(self.templateButton.alphaValue) = 0.0;
+		(self.editingProjectBackButtonLeadingConstraint.constant) = -250;
 	}
+	 */
 }
 
 @end

@@ -11,32 +11,11 @@
 
 @implementation GLAPrototypeBNavigationBar
 
-- (id)initWithFrame:(NSRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code here.
-    }
-    return self;
-}
-
 - (void)awakeFromNib
 {
 	(self.wantsLayer) = YES;
-	CALayer *layer = (self.layer);
-	(layer.backgroundColor) = ([GLAUIStyle styleA].barBackgroundColor.CGColor);
-	//(layer.backgroundColor) = [NSColor clearColor].CGColor;
-	//(self.window.backgroundColor) = [NSColor clearColor];
-	//[self.window invalidateShadow];
-}
-
-- (void)drawRect:(NSRect)dirtyRect
-{
-    //[super drawRect:dirtyRect];
-    
-	//CGContextRef c = [NSGraphicsContext currentContext].graphicsPort;
-	//CGContextClearRect(c, dirtyRect);
-    // Drawing code here.
+	//CALayer *layer = (self.layer);
+	//(layer.backgroundColor) = ([GLAUIStyle styleA].contentBackgroundColor.CGColor);
 }
 
 @end

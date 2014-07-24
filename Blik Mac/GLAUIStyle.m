@@ -19,7 +19,8 @@
 		
 		// COLORS
 		
-		NSColor *grayDark = [NSColor colorWithSRGBRed:43.0/255.0 green:43.0/255.0 blue:43.0/255.0 alpha:1.0];
+		//NSColor *grayDark = [NSColor colorWithSRGBRed:43.0/255.0 green:43.0/255.0 blue:43.0/255.0 alpha:1.0];
+		NSColor *grayDark = [NSColor colorWithSRGBRed:50.0/255.0 green:50.0/255.0 blue:50.0/255.0 alpha:1.0];
 		//NSColor *grayMid = [NSColor colorWithSRGBRed:58.0/255.0 green:58.0/255.0 blue:58.0/255.0 alpha:1.0];
 		NSColor *grayMid = [NSColor colorWithSRGBRed:46.0/255.0 green:46.0/255.0 blue:46.0/255.0 alpha:1.0];
 		NSColor *whiteAlmost = [NSColor colorWithSRGBRed:252.0/255.0 green:252.0/255.0 blue:252.0/255.0 alpha:1.0];
@@ -33,7 +34,7 @@
 		//(style.barBackgroundColor) = grayDark;
 		//(style.contentBackgroundColor) = grayMid;
 		(style.barBackgroundColor) = grayMid;
-		(style.contentBackgroundColor) = grayMid;
+		(style.contentBackgroundColor) = grayDark;
 		
 		(style.activeBarBackgroundColor) = activeYellow;
 		(style.activeBarTextColor) = grayDark;
@@ -72,22 +73,22 @@
 }
 
 
-- (NSColor *)colorForProjectItemColorIdentifier:(GLAProjectItemColor)colorIdentifier
+- (NSColor *)colorForProjectItemColorIdentifier:(GLACollectionColor)colorIdentifier
 {
 	switch (colorIdentifier) {
-		case GLAProjectItemColorLightBlue:
+		case GLACollectionColorLightBlue:
 			return (self.lightBlueItemColor);
 		
-		case GLAProjectItemColorGreen:
+		case GLACollectionColorGreen:
 			return (self.greenItemColor);
 		
-		case GLAProjectItemColorPinkyPurple:
+		case GLACollectionColorPinkyPurple:
 			return (self.pinkyPurpleItemColor);
 		
-		case GLAProjectItemColorRed:
+		case GLACollectionColorRed:
 			return (self.reddishItemColor);
 		
-		case GLAProjectItemColorYellow:
+		case GLACollectionColorYellow:
 			return (self.yellowItemColor);
 			
 		default:

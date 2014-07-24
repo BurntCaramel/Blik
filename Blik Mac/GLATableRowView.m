@@ -45,6 +45,13 @@
 	}
 }
 
+- (void)prepareForReuse
+{
+	(self.mouseIsInside) = NO;
+	
+	[super prepareForReuse];
+}
+
 - (void)mouseEntered:(NSEvent *)theEvent
 {
 	(self.mouseIsInside) = YES;

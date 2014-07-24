@@ -43,7 +43,12 @@
 
 - (void)setUpNormalView
 {
-	[self fillViewWithInnerView:(self.normalView)];
+	GLAView *normalView = (self.normalView);
+	
+	(normalView.wantsLayer) = YES;
+	//(normalView.canDrawSubviewsIntoLayer) = YES;
+	
+	[self fillViewWithChildView:normalView];
 }
 
 - (BOOL)setUpEditingItemsViewIfNeeded
@@ -53,8 +58,11 @@
 		return NO;
 	}
 	
+	(editingItemsView.wantsLayer) = YES;
+	//(editingItemsView.canDrawSubviewsIntoLayer) = YES;
 	(editingItemsView.layer.backgroundColor) = ([GLAUIStyle styleA].activeBarBackgroundColor.CGColor);
-	[self fillViewWithInnerView:editingItemsView];
+	
+	[self fillViewWithChildView:editingItemsView];
 	
 	return YES;
 }
@@ -67,7 +75,7 @@
 	}
 	
 	(editingPlanView.layer.backgroundColor) = ([GLAUIStyle styleA].activeBarBackgroundColor.CGColor);
-	[self fillViewWithInnerView:editingPlanView];
+	[self fillViewWithChildView:editingPlanView];
 	
 	return YES;
 }
@@ -105,7 +113,7 @@
 
 - (void)animateEditingItemsView
 {
-	NSLayoutConstraint *editingItemsTopConstraint = [self layoutConstraintWithIdentifier:@"top" insideView:(self.editingItemsView)];
+	NSLayoutConstraint *editingItemsTopConstraint = [self layoutConstraintWithIdentifier:@"top" forChildView:(self.editingItemsView)];
 	
 	if (self.editingItems) {
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -125,7 +133,7 @@
 
 - (void)animateEditingPlanView
 {
-	NSLayoutConstraint *editingPlanTopConstraint = [self layoutConstraintWithIdentifier:@"top" insideView:(self.editingPlanView)];
+	NSLayoutConstraint *editingPlanTopConstraint = [self layoutConstraintWithIdentifier:@"top" forChildView:(self.editingPlanView)];
 	
 	if (self.editingPlan) {
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -189,7 +197,7 @@
 
 - (void)viewUpdateConstraints:(GLAView *)view
 {
-	NSLayoutConstraint *editingItemsTopConstraint = [self layoutConstraintWithIdentifier:@"top" insideView:(self.editingItemsView)];
+	NSLayoutConstraint *editingItemsTopConstraint = [self layoutConstraintWithIdentifier:@"top" forChildView:(self.editingItemsView)];
 	if (self.editingItems) {
 		(editingItemsTopConstraint.constant) = 0;
 		//(self.editingItemsView.alphaValue) = 1.0;
@@ -199,7 +207,7 @@
 		(editingItemsTopConstraint.constant) = 50;
 	}
 	
-	NSLayoutConstraint *editingPlanTopConstraint = [self layoutConstraintWithIdentifier:@"top" insideView:(self.editingPlanView)];
+	NSLayoutConstraint *editingPlanTopConstraint = [self layoutConstraintWithIdentifier:@"top" forChildView:(self.editingPlanView)];
 	if (self.editingPlan) {
 		(editingPlanTopConstraint.constant) = 0;
 		//(self.editingPlanView.alphaValue) = 1.0;

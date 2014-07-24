@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import "GLAViewController.h"
 
-@interface GLAProjectsListViewController : NSViewController
+@interface GLAProjectsListViewController : GLAViewController
 
 @property (nonatomic) IBOutlet NSTableView *tableView;
 

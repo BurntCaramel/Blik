@@ -10,7 +10,7 @@
 
 @interface GLAViewController ()
 
-- (NSString *)layoutConstraintIdentifierWithBaseIdentifier:(NSString *)baseIdentifier insideView:(NSView *)innerView;
+- (NSString *)layoutConstraintIdentifierWithBaseIdentifier:(NSString *)baseIdentifier forChildView:(NSView *)innerView;
 
 @end
 
@@ -52,18 +52,18 @@
 	[view layoutSubtreeIfNeeded];
 }
 
-- (NSString *)layoutConstraintIdentifierWithBaseIdentifier:(NSString *)baseIdentifier insideView:(NSView *)innerView
+- (NSString *)layoutConstraintIdentifierWithBaseIdentifier:(NSString *)baseIdentifier forChildView:(NSView *)innerView
 {
 	return [NSString stringWithFormat:@"%@--%@", (innerView.identifier), baseIdentifier];
 }
 
-- (NSLayoutConstraint *)layoutConstraintWithIdentifier:(NSString *)baseIdentifier insideView:(NSView *)innerView
+- (NSLayoutConstraint *)layoutConstraintWithIdentifier:(NSString *)baseIdentifier forChildView:(NSView *)innerView
 {
 	if (!innerView) {
 		return nil;
 	}
 	
-	NSString *constraintIdentifier = [self layoutConstraintIdentifierWithBaseIdentifier:baseIdentifier insideView:innerView];
+	NSString *constraintIdentifier = [self layoutConstraintIdentifierWithBaseIdentifier:baseIdentifier forChildView:innerView];
 	NSArray *leadingConstraintInArray = [(self.view.constraints) filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"identifier = %@", constraintIdentifier]];
 	
 	if (leadingConstraintInArray.count == 0) {
@@ -74,7 +74,20 @@
 	}
 }
 
-- (void)fillViewWithInnerView:(NSView *)innerView
+- (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier
+{
+	NSView *holderView = (self.view);
+	
+	NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:innerView attribute:attribute relatedBy:NSLayoutRelationEqual toItem:holderView attribute:attribute multiplier:1.0 constant:0.0];
+	
+	(constraint.identifier) = [self layoutConstraintIdentifierWithBaseIdentifier:identifier forChildView:innerView];
+	
+	[holderView addConstraint:constraint];
+	
+	return constraint;
+}
+
+- (void)fillViewWithChildView:(NSView *)innerView
 {
 	NSView *holderView = (self.view);
 	
@@ -85,15 +98,11 @@
 		// I have disabled it where I remember to in the xib file, but no harm in just setting it off here too.
 		(innerView.translatesAutoresizingMaskIntoConstraints) = NO;
 		
-		NSLayoutConstraint *widthConstraint = [NSLayoutConstraint constraintWithItem:innerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:holderView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0.0];
-		NSLayoutConstraint *heightConstraint = [NSLayoutConstraint constraintWithItem:innerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:holderView attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0];
-		NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:innerView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:holderView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0];
-		NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:innerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:holderView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
-		
-		(leadingConstraint.identifier) = [self layoutConstraintIdentifierWithBaseIdentifier:@"leading" insideView:innerView];
-		(topConstraint.identifier) = [self layoutConstraintIdentifierWithBaseIdentifier:@"top" insideView:innerView];
-		
-		[holderView addConstraints:@[widthConstraint, heightConstraint, leadingConstraint, topConstraint]];
+		// By setting width and height constraints, we can move the view around whilst keeping it the same size.
+		[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeWidth withChildView:innerView identifier:@"width"];
+		[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeHeight withChildView:innerView identifier:@"height"];
+		[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:innerView identifier:@"leading"];
+		[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:innerView identifier:@"top"];
 	}
 }
 

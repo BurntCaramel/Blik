@@ -23,7 +23,7 @@
     self = [super initWithFrame:frame];
     if (self) {
 		(self.cell) = [GLAButtonCell new];
-		(self.layer.delegate) = self;
+		//(self.layer.delegate) = self;
     }
     return self;
 }
@@ -176,6 +176,23 @@
 
 
 @implementation GLAButtonCell
+
+- (instancetype)copyWithZone:(NSZone *)zone
+{
+	GLAButtonCell *copy = [super copyWithZone:zone];
+	
+	(copy.leftSpacing) = (self.leftSpacing);
+	(copy.rightSpacing) = (self.rightSpacing);
+	(copy.verticalOffsetDown) = (self.verticalOffsetDown);
+	
+	(copy.alwaysHighlighted) = (self.alwaysHighlighted);
+	(copy.secondary) = (self.secondary);
+	
+	(copy.textHighlightColor) = (self.textHighlightColor);
+	(copy.highlightOpacity) = (self.highlightOpacity);
+	
+	return copy;
+}
 
 - (NSSize)cellSizeForBounds:(NSRect)aRect
 {

@@ -16,8 +16,9 @@
 - (void)updateConstraintsWithAnimatedDuration:(NSTimeInterval)duration;
 - (void)updateConstraintsNow;
 
-- (NSLayoutConstraint *)layoutConstraintWithIdentifier:(NSString *)baseIdentifier insideView:(NSView *)innerView;
+- (void)fillViewWithChildView:(NSView *)innerView;
+- (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier;
 
-- (void)fillViewWithInnerView:(NSView *)innerView;
+- (NSLayoutConstraint *)layoutConstraintWithIdentifier:(NSString *)baseIdentifier forChildView:(NSView *)innerView;
 
 @end
