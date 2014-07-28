@@ -9,6 +9,7 @@
 #import "GLAMainNavigationBarController.h"
 @import QuartzCore;
 #import "GLAButton.h"
+#import "GLAUIStyle.h"
 
 @interface GLAMainNavigationBarController ()
 
@@ -23,9 +24,9 @@
 
 @implementation GLAMainNavigationBarController
 
-- (GLAPrototypeBNavigationBar *)navigationBar
+- (GLANavigationBar *)navigationBar
 {
-	return (GLAPrototypeBNavigationBar *)(self.view);
+	return (GLANavigationBar *)(self.view);
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -93,35 +94,7 @@
 	[self changeCurrentSectionTo:GLAMainNavigationSectionPlanned];
 }
 
-- (IBAction)addNewProject:(id)sender
-{
-	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
-	if (delegate) {
-		[delegate mainNavigationBarController:self performAddNewProject:sender];
-	}
-}
-
-- (NSString *)titleForEditingProjectBackButton
-{
-	GLAMainNavigationSection currentSection = (self.currentSection);
-	
-	if (currentSection == GLAMainNavigationSectionAll) {
-		return NSLocalizedString(@"Back to All Projects", @"Title for editing project back button to go back to all projects");
-	}
-	else if (currentSection == GLAMainNavigationSectionPlanned) {
-		return NSLocalizedString(@"Back to Planned Projects", @"Title for editing project back button to go back to planned projects");
-	}
-	else {
-		return nil;
-		//return NSLocalizedString(@"Back", @"Title for editing project back button to go back");
-	}
-}
-
-- (void)enterProject:(id)project isAddedNew:(BOOL)isAddedNew
-{
-	(self.currentProject) = project;
-	(self.currentProjectIsAddedNew) = isAddedNew;
-}
+#pragma mark Hiding and Showing Buttons
 
 - (void)showMainButtons
 {
@@ -282,20 +255,70 @@
 	}];
 }
 
+- (void)showButtonsForCurrentCollection
+{
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	GLACollection *collection = (self.currentCollection);
+	
+	NSString *collectionTitle = (collection.title);
+	GLAButton *collectionButton = [self addCenterButtonWithTitle:collectionTitle action:nil identifier:@"collectionTitle"];
+	(collectionButton.textHighlightColor) = [uiStyle colorForProjectItemColorIdentifier:(collection.colorIdentifier)];
+	(self.collectionTitleButton) = collectionButton;
+}
+
+- (void)hideButtonsForCurrentCollection
+{
+	NSButton *collectionTitleButton = (self.collectionTitleButton);
+	[collectionTitleButton removeFromSuperview];
+	(self.collectionTitleButton) = nil;
+}
+
+#pragma mark Projects
+
+- (IBAction)addNewProject:(id)sender
+{
+	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
+	if (delegate) {
+		[delegate mainNavigationBarController:self performAddNewProject:sender];
+	}
+}
+
+- (NSString *)titleForEditingProjectBackButton
+{
+	GLAMainNavigationSection currentSection = (self.currentSection);
+	
+	if (currentSection == GLAMainNavigationSectionAll) {
+		return NSLocalizedString(@"Back to All Projects", @"Title for editing project back button to go back to all projects");
+	}
+	else if (currentSection == GLAMainNavigationSectionPlanned) {
+		return NSLocalizedString(@"Back to Planned Projects", @"Title for editing project back button to go back to planned projects");
+	}
+	else {
+		return nil;
+		//return NSLocalizedString(@"Back", @"Title for editing project back button to go back");
+	}
+}
+
+- (void)setCurrentProject:(id)project isAddedNew:(BOOL)isAddedNew
+{
+	(self.currentProject) = project;
+	(self.currentProjectIsAddedNew) = isAddedNew;
+}
+
 - (void)enterProject:(id)project
 {
+	[self setCurrentProject:project isAddedNew:NO];
+	
 	[self hideMainButtons];
 	[self showButtonsForEditingExistingProject];
-	
-	[self enterProject:project isAddedNew:NO];
 }
 
 - (void)enterAddedProject:(id)project
 {
+	[self setCurrentProject:project isAddedNew:YES];
+	
 	[self hideMainButtons];
 	[self showButtonsForAddingNewProject];
-	
-	[self enterProject:project isAddedNew:YES];
 }
 
 - (IBAction)exitCurrentProject:(id)sender
@@ -343,6 +366,34 @@
 	//[self exitCurrentProject:sender];
 }
 
+#pragma mark Collections
+
+- (void)enterProjectCollection:(GLACollection *)collection
+{
+	(self.currentCollection) = collection;
+	
+	[self hideMainButtons];
+	[self hideButtonsForCurrentCollection];
+	[self showButtonsForCurrentCollection];
+	
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	NSColor *collectionColor = [uiStyle colorForProjectItemColorIdentifier:(collection.colorIdentifier)];
+	//[self animateBackgroundColorTo:collectionColor];
+	GLANavigationBar *view = (self.navigationBar);
+	[view highlightWithColor:collectionColor animate:YES];
+}
+
+- (void)exitCurrentCollection:(id)sender
+{
+	if (self.isAnimating) {
+		return;
+	}
+	
+	(self.currentCollection) = nil;
+}
+
+#pragma mark -
+
 - (void)setEnabled:(BOOL)enabled
 {
 	if (enabled != (self.private_enabled)) {
@@ -371,7 +422,7 @@
 	(button.action) = action;
 	(button.translatesAutoresizingMaskIntoConstraints) = NO;
 	
-	GLAPrototypeBNavigationBar *navigationBar = (self.navigationBar);
+	GLANavigationBar *navigationBar = (self.navigationBar);
 	[navigationBar addSubview:button];
 	
 	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:button identifier:@"top"];
@@ -398,7 +449,16 @@
 	return button;
 }
 
-- (void)viewUpdateConstraints:(GLAPrototypeBNavigationBar *)view
+- (GLAButton *)addCenterButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier
+{
+	GLAButton *button = [self addButtonWithTitle:title action:action identifier:identifier];
+	
+	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeCenterX withChildView:button identifier:@"centerX"];
+	
+	return button;
+}
+
+- (void)viewUpdateConstraints:(GLANavigationBar *)view
 {
 	/*
 	if (self.currentProject) {

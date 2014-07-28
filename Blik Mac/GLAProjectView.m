@@ -6,14 +6,14 @@
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-#import "GLAPrototypeBProjectView.h"
+#import "GLAProjectView.h"
 #import "GLAUIStyle.h"
 
-@interface GLAPrototypeBProjectView ()
+@interface GLAProjectView ()
 
 @end
 
-@implementation GLAPrototypeBProjectView
+@implementation GLAProjectView
 
 - (id)initWithFrame:(NSRect)frame
 {
@@ -21,7 +21,7 @@
     if (self) {
 		(self.wantsLayer) = YES;
 		CALayer *layer = (self.layer);
-		(layer.backgroundColor) = ([GLAUIStyle styleA].contentBackgroundColor.CGColor);
+		(layer.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor.CGColor);
     }
     return self;
 }

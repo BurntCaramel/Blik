@@ -32,8 +32,8 @@ NSString *GLAProjectListViewControllerDidClickOnProjectNotification = @"GLA.proj
 - (void)prepareViews
 {
 	NSTableView *tableView = (self.tableView);
-	(tableView.backgroundColor) = ([GLAUIStyle styleA].contentBackgroundColor);
-	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle styleA].contentBackgroundColor);
+	(tableView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
+	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
 }
 
 - (void)loadView
@@ -83,9 +83,9 @@ NSString *GLAProjectListViewControllerDidClickOnProjectNotification = @"GLA.proj
 	(cellView.objectValue) = displayName;
 	(cellView.textField.stringValue) = displayName;
 	
-	GLANavigationButton *deleteProjectButton = (cellView.deleteProjectButton);
-	//(deleteProjectButton.alwaysHighlighted) = YES;
-	(deleteProjectButton.textHighlightColor) = ([GLAUIStyle styleA].deleteProjectButtonColor);
+	GLANavigationButton *workOnNowButton = (cellView.workOnNowButton);
+	(workOnNowButton.alwaysHighlighted) = YES;
+	//(workOnNowButton.textHighlightColor) = ([GLAUIStyle activeStyle].deleteProjectButtonColor);
 	
 	return cellView;
 }

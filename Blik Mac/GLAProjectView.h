@@ -8,6 +8,6 @@
 
 #import "GLAView.h"
 
-@interface GLAPrototypeBProjectView : GLAView
+@interface GLAProjectView : GLAView
 
 @end

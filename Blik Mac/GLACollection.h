@@ -20,7 +20,7 @@ typedef NS_ENUM(NSInteger, GLACollectionColor) {
 };
 
 
-@interface GLACollection : MTLModel
+@interface GLACollection : MTLModel <MTLJSONSerializing>
 
 @property(readonly, nonatomic) NSUUID *UUID;
 @property(copy, nonatomic) NSString *title;

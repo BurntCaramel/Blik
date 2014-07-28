@@ -9,20 +9,20 @@
 @import Cocoa;
 #import "GLAView.h"
 #import "GLAProjectActionsBarController.h"
-#import "GLAPrototypeBProjectView.h"
+#import "GLAProjectView.h"
 #import "GLAProject.h"
 #import "GLACollection.h"
 #import "GLAReminder.h"
 
-@class GLAProjectItemsViewController;
+@class GLAProjectCollectionsViewController;
 @class GLAProjectPlanViewController;
 
 
 @interface GLAProjectViewController : GLAViewController <GLAViewDelegate, NSTextFieldDelegate>
 
-@property(readonly, nonatomic) GLAPrototypeBProjectView *projectView;
+@property(readonly, nonatomic) GLAProjectView *projectView;
 
-@property(strong, nonatomic) IBOutlet GLAProjectItemsViewController *itemsViewController;
+@property(strong, nonatomic) IBOutlet GLAProjectCollectionsViewController *itemsViewController;
 @property(strong, nonatomic) IBOutlet GLAProjectPlanViewController *planViewController;
 
 @property(strong, nonatomic) IBOutlet NSLayoutConstraint *itemsViewLeadingConstraint;
@@ -55,9 +55,11 @@ extern NSString *GLAProjectViewControllerDidEndEditingItemsNotification;
 extern NSString *GLAProjectViewControllerDidBeginEditingPlanNotification;
 extern NSString *GLAProjectViewControllerDidEndEditingPlanNotification;
 
+extern NSString *GLAProjectViewControllerDidEnterCollectionNotification;
 
 
-@interface GLAProjectItemsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
+
+@interface GLAProjectCollectionsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
 
 @property(readonly, nonatomic) NSTableView *tableView;
 
@@ -69,6 +71,8 @@ extern NSString *GLAProjectViewControllerDidEndEditingPlanNotification;
 @property(copy, nonatomic) NSMutableArray *mutableItems;
 
 @end
+
+extern NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification;
 
 
 

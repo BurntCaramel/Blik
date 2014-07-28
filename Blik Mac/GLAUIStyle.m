@@ -10,7 +10,7 @@
 
 @implementation GLAUIStyle
 
-+ (instancetype)styleA
++ (instancetype)activeStyle
 {
 	static GLAUIStyle *style;
 	static dispatch_once_t onceToken;
@@ -53,7 +53,9 @@
 		(style.toggleBorderColor) = whiteAlmost;
 		(style.toggleInsideColor) = whiteAlmost;
 		
-		(style.projectTableRowHoverBackgroundColor) = [whiteAlmost colorWithAlphaComponent:0.04];
+		(style.projectTableRowHoverBackgroundColor) = [whiteAlmost colorWithAlphaComponent:0.026];
+		(style.projectTableDividerColor) = [whiteAlmost colorWithAlphaComponent:0.067];
+		
 		(style.deleteProjectButtonColor) = deleteRed;
 		
 		// Item colors
@@ -61,7 +63,8 @@
 		(style.greenItemColor) = [NSColor colorWithSRGBRed:191.0/255.0 green:218.0/255.0 blue:126.0/255.0 alpha:1.0];
 		(style.pinkyPurpleItemColor) = [NSColor colorWithSRGBRed:228.0/255.0 green:203.0/255.0 blue:255.0/255.0 alpha:1.0];
 		(style.reddishItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:197.0/255.0 blue:132.0/255.0 alpha:1.0];
-		(style.yellowItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:211.0/255.0 blue:18.0/255.0 alpha:1.0];
+		//(style.yellowItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:211.0/255.0 blue:18.0/255.0 alpha:1.0];
+		(style.yellowItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:227.0/255.0 blue:102.0/255.0 alpha:1.0];
 		
 		// FONTS
 		
@@ -72,6 +75,8 @@
 	return style;
 }
 
+
+#pragma mark Colors
 
 - (NSColor *)colorForProjectItemColorIdentifier:(GLACollectionColor)colorIdentifier
 {
@@ -94,6 +99,33 @@
 		default:
 			return (self.lightTextColor);
 	}
+}
+
+
+#pragma mark Drawing
+
+- (CGRect)rectOfActiveHighlightForBounds:(CGRect)bounds time:(CGFloat)t
+{
+	CGFloat height = 6.0 * t;
+	CGRect topBarRect, elseRect;
+	CGRectDivide(bounds, &topBarRect, &elseRect, height, CGRectMinYEdge);
+	
+	return topBarRect;
+}
+
+- (CGRect)drawingRectOfActiveHighlightForBounds:(CGRect)bounds time:(CGFloat)t
+{
+	return [self rectOfActiveHighlightForBounds:bounds time:t];
+}
+
+- (void)drawActiveHighlightForBounds:(CGRect)bounds withColor:(NSColor *)color time:(CGFloat)t
+{
+	CGRect topBarRect = [self rectOfActiveHighlightForBounds:bounds time:t];
+	
+	//color = [color colorWithAlphaComponent:t * (color.alphaComponent)];
+	[color setFill];
+	
+	NSRectFill(topBarRect);
 }
 
 @end

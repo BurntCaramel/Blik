@@ -13,6 +13,8 @@
 
 @property(readonly, nonatomic) GLAView *view;
 
+#pragma mark Auto Layout
+
 - (void)updateConstraintsWithAnimatedDuration:(NSTimeInterval)duration;
 - (void)updateConstraintsNow;
 
@@ -20,5 +22,9 @@
 - (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier;
 
 - (NSLayoutConstraint *)layoutConstraintWithIdentifier:(NSString *)baseIdentifier forChildView:(NSView *)innerView;
+
+#pragma mark Colors
+
+- (void)animateBackgroundColorTo:(NSColor *)color;
 
 @end

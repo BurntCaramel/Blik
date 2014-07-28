@@ -50,7 +50,7 @@
 	
 	NSView *contentView = (self.contentView);
 	(contentView.wantsLayer) = YES;
-	(contentView.layer.backgroundColor) = ([GLAUIStyle styleA].contentBackgroundColor.CGColor);
+	(contentView.layer.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor.CGColor);
 }
 
 - (void)setUpContentViewController
@@ -137,7 +137,7 @@
 	
 	GLAView *navigationBarView = (controller.view);
 	(navigationBarView.wantsLayer) = YES;
-	(navigationBarView.layer.backgroundColor) = ([GLAUIStyle styleA].barBackgroundColor.CGColor);
+	(navigationBarView.layer.backgroundColor) = ([GLAUIStyle activeStyle].barBackgroundColor.CGColor);
 }
 
 #pragma mark Setting Up Content View Controllers
@@ -318,6 +318,44 @@
 
 #pragma mark Working with Project View Controllers
 
+- (GLAProjectViewController *)activeProjectViewController
+{
+	switch (self.currentSection) {
+		case GLAMainWindowControllerSectionToday:
+			return (self.nowProjectViewController);
+			
+		case GLAMainWindowControllerSectionAllEditProject:
+		case GLAMainWindowControllerSectionPlannedEditProject:
+			return (self.editedProjectViewController);
+			
+		case GLAMainWindowControllerSectionAddNewProject:
+			return (self.addedProjectViewController);
+			
+		default:
+			return nil;
+	}
+}
+
+- (IBAction)workOnEditedProjectNow:(id)sender
+{
+	GLAProjectViewController *projectViewController = (self.editedProjectViewController);
+	if (projectViewController) {
+		(self.nowProjectViewController) = projectViewController;
+		[self transitionToSection:GLAMainWindowControllerSectionToday animate:YES];
+	}
+}
+
+- (BOOL)canWorkOnEditedProjectNow
+{
+	GLAProjectViewController *projectViewController = (self.editedProjectViewController);
+	if (projectViewController) {
+		return YES;
+	}
+	else {
+		return NO;
+	}
+}
+
 - (void)projectViewControllerDidBecomeActive:(GLAProjectViewController *)projectViewController
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -329,15 +367,16 @@
 	[nc addObserver:self selector:@selector(activeProjectViewControllerDidEndEditing:) name:GLAProjectViewControllerDidEndEditingItemsNotification object:projectViewController];
 	// End editing plan
 	[nc addObserver:self selector:@selector(activeProjectViewControllerDidEndEditing:) name:GLAProjectViewControllerDidEndEditingPlanNotification object:projectViewController];
+	
+	// Enter collection
+	[nc addObserver:self selector:@selector(activeProjectViewControllerDidEnterCollection:) name:GLAProjectViewControllerDidEnterCollectionNotification object:projectViewController];
 }
 
 - (void)projectViewControllerDidBecomeInactive:(GLAProjectViewController *)projectViewController
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	[nc removeObserver:self name:GLAProjectViewControllerDidBeginEditingItemsNotification object:projectViewController];
-	[nc removeObserver:self name:GLAProjectViewControllerDidBeginEditingPlanNotification object:projectViewController];
-	[nc removeObserver:self name:GLAProjectViewControllerDidEndEditingItemsNotification object:projectViewController];
-	[nc removeObserver:self name:GLAProjectViewControllerDidEndEditingPlanNotification object:projectViewController];
+	// Remove all that were added in -projectViewControllerDidBecomeActive:
+	[nc removeObserver:self name:nil object:projectViewController];
 }
 
 - (void)activeProjectViewControllerDidBeginEditing:(NSNotification *)note
@@ -351,6 +390,12 @@
 	if (controller != (self.addedProjectViewController)) {
 		(self.mainNavigationBarController.enabled) = YES;
 	}
+}
+
+- (void)activeProjectViewControllerDidEnterCollection:(NSNotification *)note
+{
+	GLACollection *collection = (note.userInfo)[@"collection"];
+	[(self.mainNavigationBarController) enterProjectCollection:collection];
 }
 
 - (GLAMainWindowControllerSection)sectionForNavigationSection:(GLAMainNavigationSection)navigationSection

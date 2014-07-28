@@ -11,6 +11,6 @@
 
 @interface GLAProjectOverviewTableCellView : NSTableCellView
 
-@property(weak, nonatomic) IBOutlet GLANavigationButton *deleteProjectButton;
+@property(weak, nonatomic) IBOutlet GLANavigationButton *workOnNowButton;
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "GLAViewController.h"
+@import QuartzCore;
 
 @interface GLAViewController ()
 
@@ -104,6 +105,21 @@
 		[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:innerView identifier:@"leading"];
 		[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:innerView identifier:@"top"];
 	}
+}
+
+#pragma mark Colors
+
+- (void)animateBackgroundColorTo:(NSColor *)color
+{
+	CALayer *layer = (self.view.layer);
+	
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.allowsImplicitAnimation) = YES;
+		
+		(layer.backgroundColor) = (color.CGColor);
+	} completionHandler:^{
+		
+	}];
 }
 
 @end

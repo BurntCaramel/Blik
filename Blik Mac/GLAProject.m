@@ -13,7 +13,7 @@
 
 @interface GLAProject ()
 
-@property(readwrite, copy, nonatomic) NSArray *collections;
+@property(readwrite, copy, nonatomic) NSArray *collectionsForMantle;
 @property(readwrite, copy, nonatomic) NSArray *loadedCollections;
 @property(readonly, nonatomic) GLAProjectCollectionListEditor *collectionListEditor;
 
@@ -28,9 +28,9 @@
 	return
 	@{
 	  @"UUID": @"UUID",
-	  @"title": @"title",
-	  @"collections": @"collections",
-	  @"reminders": @"reminders"
+	  @"name": @"name",
+	  @"collections": @"collectionsForMantle",
+	  @"reminders": @"remindersForMantle"
 	  };
 }
 
@@ -39,26 +39,30 @@
 	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
 }
 
-+ (NSValueTransformer *)collectionsJSONTransformer
++ (NSValueTransformer *)collectionsForMantleJSONTransformer
 {
 	return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:[GLACollection class]];
 }
 
-+ (NSValueTransformer *)remindersJSONTransformer
++ (NSValueTransformer *)remindersForMantleJSONTransformer
 {
 	return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:[GLAReminder class]];
 }
 
 
+- (NSArray *)copyCollections
+{
+	return [(self.collectionListEditor.mutableCollections) copy];
+}
 
-- (void)setCollections:(NSArray *)collections
+- (void)setCollectionsForMantle:(NSArray *)collections
 {
 	(self.loadedCollections) = collections;
 }
 
-- (NSArray *)copyCollections
+- (NSArray *)collectionsForMantle
 {
-	return [(self.collectionListEditor.mutableCollections) copy];
+	return [self copyCollections];
 }
 
 - (id<GLACollectionListEditing>)collectionsEditing

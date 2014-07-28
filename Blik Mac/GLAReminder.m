@@ -11,15 +11,60 @@
 
 @interface GLAReminder ()
 
-@property(readwrite, nonatomic) EKReminder *eventKitReminder;
+@property(readwrite, nonatomic) EKReminder/*?*/ *eventKitReminder;
+
+// Used by Mantle
+@property(nonatomic, readonly) NSString *calendarItemExternalIdentifier;
+@property(nonatomic, readonly) NSString *calendarTitle;
 
 @end
 
 @implementation GLAReminder
 
-- (void)pendingEventKitReminderWasCreated:(EKReminder *)eventKitReminder
++ (NSDictionary *)JSONKeyPathsByPropertyKey
+{
+	return
+	@{
+	  @"title": @"title",
+	  @"highPriority": @"highPriority",
+	  @"calendarItemExternalIdentifier": @"calendarItemExternalIdentifier",
+	  @"calendarTitle": @"calendarTitle"
+	  };
+}
+
+- (instancetype)initWithTitle:(NSString *)title
+{
+	self = [super init];
+	if (self) {
+		(self.title) = title;
+	}
+	return self;
+}
+
+- (instancetype)initWithEventKitReminder:(EKReminder *)eventKitReminder
+{
+	self = [self initWithTitle:(eventKitReminder.title)];
+	if (self) {
+		(self.eventKitReminder) = eventKitReminder;
+	}
+	return self;
+}
+
+- (void)setCreatedEventKitReminder:(EKReminder *)eventKitReminder
 {
 	(self.eventKitReminder) = eventKitReminder;
+}
+
+#pragma mark Mantle specific properties
+
+- (NSString *)calendarItemExternalIdentifier
+{
+	return (self.eventKitReminder.calendarItemExternalIdentifier);
+}
+
+- (NSString *)calendarTitle
+{
+	return (self.eventKitReminder.calendar.title);
 }
 
 @end

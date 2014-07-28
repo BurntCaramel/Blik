@@ -39,6 +39,7 @@ typedef NS_ENUM(NSInteger, GLAMainWindowControllerSection) {
 @property (nonatomic) GLAProjectViewController *addedProjectViewController;
 
 @property (nonatomic) GLAMainWindowControllerSection currentSection;
+@property (readonly, nonatomic) GLAProjectViewController *activeProjectViewController;
 
 @property (nonatomic) IBOutlet NSView *barHolderView;
 @property (nonatomic) IBOutlet NSView *contentView;

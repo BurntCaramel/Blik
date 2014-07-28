@@ -228,22 +228,22 @@
 	NSColor *color = nil;
 	//NSLog(@"mouse %lu", (unsigned long)(self.mouseDownFlags));
 	if ((self.isOnAndShowsOnState) || (self.alwaysHighlighted) || (self.textHighlightColor) /*|| ((self.mouseDownFlags & NSMouseEnteredMask) == NSMouseEnteredMask)*/ ) {
-		if (self.isEnabled) {
+		if (self.isEnabled || (self.alwaysHighlighted)) {
 			color = (self.textHighlightColor);
 			if (!color) {
-				color = ([GLAUIStyle styleA].activeTextColor);
+				color = ([GLAUIStyle activeStyle].activeTextColor);
 			}
 		}
 		else {
-			color = ([GLAUIStyle styleA].activeTextDisabledColor);
+			color = ([GLAUIStyle activeStyle].activeTextDisabledColor);
 		}
 	}
 	else {
 		if (self.isEnabled) {
-			color = ([GLAUIStyle styleA].lightTextColor);
+			color = ([GLAUIStyle activeStyle].lightTextColor);
 		}
 		else {
-			color = ([GLAUIStyle styleA].lightTextDisabledColor);
+			color = ([GLAUIStyle activeStyle].lightTextDisabledColor);
 		}
 	}
 	// Replace text color.

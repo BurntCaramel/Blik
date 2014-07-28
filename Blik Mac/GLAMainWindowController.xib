@@ -17,22 +17,22 @@
             <windowStyleMask key="styleMask" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" canJoinAllSpaces="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES"/>
-            <rect key="contentRect" x="488" y="198" width="500" height="310"/>
+            <rect key="contentRect" x="488" y="198" width="500" height="320"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
-            <value key="minSize" type="size" width="500" height="310"/>
+            <value key="minSize" type="size" width="500" height="314"/>
             <view key="contentView" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="500" height="310"/>
+                <rect key="frame" x="0.0" y="0.0" width="500" height="320"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView identifier="mainNavigation" translatesAutoresizingMaskIntoConstraints="NO" id="IAs-3U-KCq" customClass="GLAView">
-                        <rect key="frame" x="0.0" y="267" width="500" height="43"/>
+                        <rect key="frame" x="0.0" y="277" width="500" height="43"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="43" id="Yq4-h7-UvZ"/>
                         </constraints>
                     </customView>
                     <customView identifier="content" translatesAutoresizingMaskIntoConstraints="NO" id="lUf-gC-iRj" customClass="GLAView">
-                        <rect key="frame" x="0.0" y="0.0" width="500" height="267"/>
+                        <rect key="frame" x="0.0" y="0.0" width="500" height="277"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </customView>
                 </subviews>

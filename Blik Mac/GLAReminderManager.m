@@ -23,6 +23,9 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 
 @property(nonatomic) id fetchRemindersIdentifier;
 @property(nonatomic) NSBlockOperation *operationToFetchAllReminders;
+@property(nonatomic) NSArray *allReminders;
+
+@property(nonatomic) NSArray *allReminderCalendars;
 
 @end
 
@@ -50,6 +53,16 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 	return sharedReminderManager;
 }
 
+#pragma mark Getting set up early
+
+- (void)createEventStoreIfNeeded
+{
+	[self useEventStoreOnMainQueue:YES block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
+		// Do nothing, just set off the creation.
+	}];
+}
+
+#pragma mark Requesting Access from the User
 
 - (void)updateAuthorizationStatus
 {
@@ -63,7 +76,7 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 
 - (void)requestAccessToReminders:(EKEventStoreRequestAccessCompletionHandler)completion
 {
-	[self performOnMainQueue:YES blockRequiringEventStore:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
+	[self useEventStoreOnMainQueue:YES block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
 		[eventStore requestAccessToEntityType:EKEntityTypeReminder completion:^(BOOL granted, NSError *error) {
 			[reminderManager updateAuthorizationStatus];
 			completion(granted, error);
@@ -76,28 +89,45 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 	return @[(self.calendarForNewReminders)];
 }
 
-- (void)createEventStore
-{
-	[self performOnMainQueue:YES blockRequiringEventStore:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
-		
-	}];
-}
+#pragma mark All Reminders
 
-- (void)fetchAllRemindersIfNeeded:(void(^)(NSArray *allReminders))allRemindersReceiver
+- (void)useAllReminders:(void(^)(NSArray *allReminders))allRemindersReceiver
 {
-	[self performOnMainQueue:YES blockRequiringAllReminders:^(GLAReminderManager *reminderManager, EKEventStore *eventStore, NSArray *allReminders) {
+	[self useAllRemindersOnMainQueue:YES block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore, NSArray *allReminders) {
 		allRemindersReceiver(allReminders);
 	}];
 }
 
-- (void)findRemindersWithTitle:(NSString *)title reminderReceiver:(void(^)(NSArray *reminders, NSError *errorOrNil))reminderReceiver
+- (void)invalidateAllReminders
 {
-	[self performOnMainQueue:NO blockRequiringAllReminders:^(GLAReminderManager *reminderManager, EKEventStore *eventStore, NSArray *allReminders) {
+	// This will fetch the reminders again next time they are requested.
+	(self.operationToFetchAllReminders) = nil;
+}
+
+#pragma mark Finding Reminders
+
+- (void)findRemindersWithTitle:(NSString *)title reminderReceiver:(void(^)(NSArray *reminders))reminderReceiver
+{
+	[self useAllRemindersOnMainQueue:NO block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore, NSArray *allReminders) {
 		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"title = %@", title];
 		NSArray *matchingReminders = [allReminders filteredArrayUsingPredicate:predicate];
-		reminderReceiver(matchingReminders, nil);
+		[reminderManager performBlockOnMainQueue:^{
+			reminderReceiver(matchingReminders);
+		}];
 	}];
 }
+
+#pragma mark Reminder Lists/Calendars
+
+- (void)useCurrentAllReminderCalendars:(void(^)(NSArray *allReminderCalendars))allReminderCalendarsReceiver
+{
+	[self useEventStoreOnMainQueue:YES block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
+		NSArray *allReminderCalendars = [eventStore calendarsForEntityType:EKEntityTypeReminder];
+		allReminderCalendarsReceiver(allReminderCalendars);
+	}];
+}
+
+#pragma mark Saving Reminders
 
 - (void)createAndSaveEventKitReminderForReminder:(GLAReminder *)reminder
 {
@@ -110,9 +140,9 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 	
 	(eventKitReminder.title) = (reminder.title);
 	
-	[reminder pendingEventKitReminderWasCreated:eventKitReminder];
+	[reminder setCreatedEventKitReminder:eventKitReminder];
 	
-	[self performOnMainQueue:NO blockRequiringEventStore:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
+	[self useEventStoreOnMainQueue:NO block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
 		NSError *error;
 		BOOL saveSuccess = [eventStore saveReminder:eventKitReminder commit:YES error:&error];
 		
@@ -169,9 +199,14 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 		NSBlockOperation *operationToFetchAllReminders = [NSBlockOperation blockOperationWithBlock:^{}];
 		(self.operationToFetchAllReminders) = operationToFetchAllReminders;
 		
-		[self performOnMainQueue:YES blockRequiringEventStore:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
+		// The fetching is handled by the event store on a background thread.
+		[self useEventStoreOnMainQueue:YES block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
 			NSPredicate *predicate = [eventStore predicateForRemindersInCalendars:(self.calendarsForFindingReminders)];
 			(reminderManager.fetchRemindersIdentifier) = [eventStore fetchRemindersMatchingPredicate:predicate completion:^(NSArray *reminders) {
+				// If all reminders has been invalidated in the mean time.
+				if (operationToFetchAllReminders != (reminderManager.operationToFetchAllReminders)) {
+					return;
+				}
 				(reminderManager.allReminders) = reminders;
 				(reminderManager.dateLastFetchedReminders) = [NSDate date];
 				(reminderManager.fetchRemindersIdentifier) = nil;
@@ -184,7 +219,7 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 	return (self.operationToFetchAllReminders);
 }
 
-- (NSOperation *)performOnMainQueue:(BOOL)onMainQueue blockRequiringEventStore:(void (^)(GLAReminderManager *reminderManager, EKEventStore *eventStore))block
+- (NSOperation *)useEventStoreOnMainQueue:(BOOL)onMainQueue block:(void (^)(GLAReminderManager *reminderManager, EKEventStore *eventStore))block
 {
 	__weak GLAReminderManager *weakSelf = self;
 		
@@ -206,7 +241,7 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 	return operation;
 }
 
-- (NSOperation *)performOnMainQueue:(BOOL)onMainQueue blockRequiringAllReminders:(void (^)(GLAReminderManager *reminderManager, EKEventStore *eventStore, NSArray *allReminders))block
+- (NSOperation *)useAllRemindersOnMainQueue:(BOOL)onMainQueue block:(void (^)(GLAReminderManager *reminderManager, EKEventStore *eventStore, NSArray *allReminders))block
 {
 	__weak GLAReminderManager *weakSelf = self;
 	

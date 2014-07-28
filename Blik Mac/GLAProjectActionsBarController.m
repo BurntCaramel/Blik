@@ -34,7 +34,7 @@
 
 - (void)setUpBaseUI
 {
-	NSColor *activeBarTextColor = ([GLAUIStyle styleA].activeBarTextColor);
+	NSColor *activeBarTextColor = ([GLAUIStyle activeStyle].activeBarTextColor);
 	(self.finishEditingItemsButton.textHighlightColor) = activeBarTextColor;
 	(self.finishEditingPlanButton.textHighlightColor) = activeBarTextColor;
 	
@@ -60,7 +60,7 @@
 	
 	(editingItemsView.wantsLayer) = YES;
 	//(editingItemsView.canDrawSubviewsIntoLayer) = YES;
-	(editingItemsView.layer.backgroundColor) = ([GLAUIStyle styleA].activeBarBackgroundColor.CGColor);
+	(editingItemsView.layer.backgroundColor) = ([GLAUIStyle activeStyle].activeBarBackgroundColor.CGColor);
 	
 	[self fillViewWithChildView:editingItemsView];
 	
@@ -74,7 +74,7 @@
 		return NO;
 	}
 	
-	(editingPlanView.layer.backgroundColor) = ([GLAUIStyle styleA].activeBarBackgroundColor.CGColor);
+	(editingPlanView.layer.backgroundColor) = ([GLAUIStyle activeStyle].activeBarBackgroundColor.CGColor);
 	[self fillViewWithChildView:editingPlanView];
 	
 	return YES;

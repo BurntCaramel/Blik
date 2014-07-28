@@ -12,7 +12,7 @@
 
 @interface GLAUIStyle : NSObject
 
-+ (instancetype)styleA;
++ (instancetype)activeStyle;
 
 
 #pragma mark Colors
@@ -38,6 +38,7 @@
 @property (nonatomic) NSColor *toggleInsideColor;
 
 @property (nonatomic) NSColor *projectTableRowHoverBackgroundColor;
+@property (nonatomic) NSColor *projectTableDividerColor;
 
 @property (nonatomic) NSColor *deleteProjectButtonColor;
 
@@ -50,6 +51,7 @@
 
 - (NSColor *)colorForProjectItemColorIdentifier:(GLACollectionColor)colorIdentifier;
 
+
 #pragma mark Fonts
 
 @property (nonatomic) NSFont *smallReminderFont;
@@ -59,5 +61,12 @@
 @property (nonatomic) NSFont *projectTitleFont;
 
 @property (nonatomic) NSFont *buttonFont;
+
+
+#pragma mark Drawing
+
+
+- (CGRect)drawingRectOfActiveHighlightForBounds:(CGRect)bounds time:(CGFloat)t;
+- (void)drawActiveHighlightForBounds:(CGRect)bounds withColor:(NSColor *)color time:(CGFloat)t;
 
 @end

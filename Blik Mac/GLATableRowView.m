@@ -89,11 +89,17 @@
 	
 	//[super drawBackgroundInRect:dirtyRect];
 	
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	
 	if (self.mouseIsInside) {
-		GLAUIStyle *uiStyle = [GLAUIStyle styleA];
 		[(uiStyle.projectTableRowHoverBackgroundColor) setFill];
 		NSRectFillUsingOperation(dirtyRect, NSCompositeSourceOver);
 	}
+	
+	[(uiStyle.projectTableDividerColor) setFill];
+	CGRect dividerRect, dividerElseRect;
+	CGRectDivide((self.bounds), &dividerRect, &dividerElseRect, 0.5, CGRectMaxYEdge);
+	NSRectFillUsingOperation(dividerRect, NSCompositeSourceOver);
 }
 
 @end

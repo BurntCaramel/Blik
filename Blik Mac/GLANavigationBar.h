@@ -8,6 +8,10 @@
 
 #import "GLAView.h"
 
-@interface GLAPrototypeBNavigationBar : GLAView
+@interface GLANavigationBar : GLAView
+
+@property(nonatomic) NSColor *highlightColor;
+
+- (void)highlightWithColor:(NSColor *)color animate:(BOOL)animate;
 
 @end

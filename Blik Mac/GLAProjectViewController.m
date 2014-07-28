@@ -18,6 +18,8 @@ NSString *GLAProjectViewControllerDidEndEditingItemsNotification = @"GLA.project
 NSString *GLAProjectViewControllerDidBeginEditingPlanNotification = @"GLA.projectViewController.didBeginEditingPlan";
 NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectViewController.didEndEditingPlan";
 
+NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.projectViewController.didEnterCollection";
+
 
 @interface GLAProjectViewController ()
 
@@ -41,7 +43,7 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 
 @implementation GLAProjectViewController
 
-- (GLAPrototypeBProjectView *)projectView
+- (GLAProjectView *)projectView
 {
 	return (id)(self.view);
 }
@@ -60,11 +62,15 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 {
 	[super loadView];
 	
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
 	(self.projectView.delegate) = self;
+	
+	[nc addObserver:self selector:@selector(collectionsViewControllerDidClickCollection:) name:GLAProjectCollectionsViewControllerDidClickCollectionNotification object:(self.itemsViewController)];
 	/*
 	NSTextField *nameTextField = (self.nameTextField);
 	(nameTextField.delegate) = self;
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
 	[nc addObserver:self selector:@selector(nameTextDidBeginEditing:) name:NSControlTextDidBeginEditingNotification object:nameTextField];
 	[nc addObserver:self selector:@selector(nameTextDidEndEditing:) name:NSControlTextDidEndEditingNotification object:nameTextField];
 	*/
@@ -76,7 +82,7 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	
 	GLAView *actionsBarView = (self.actionsBarController.view);
 	(actionsBarView.wantsLayer) = YES;
-	(actionsBarView.layer.backgroundColor) = ([GLAUIStyle styleA].contentBackgroundColor.CGColor);
+	(actionsBarView.layer.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor.CGColor);
 }
 
 - (GLAProject *)project
@@ -98,7 +104,19 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	}
 }
 
-- (void)editItems:(id)sender
+- (void)collectionsViewControllerDidClickCollection:(NSNotification *)note
+{
+	GLACollection *collection = (note.userInfo)[@"collection"];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidEnterCollectionNotification object:self userInfo:
+	 @{
+	   @"collection": collection
+	   }];
+}
+
+#pragma mark Actions
+
+- (IBAction)editItems:(id)sender
 {
 	if (self.animatingFocusChange) {
 		return;
@@ -118,7 +136,7 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	}
 }
 
-- (void)editPlan:(id)sender
+- (IBAction)editPlan:(id)sender
 {
 	if (self.animatingFocusChange) {
 		return;
@@ -163,7 +181,7 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 {
 	(self.animatingFocusChange) = YES;
 	
-	GLAPrototypeBProjectView *projectView = (self.projectView);
+	GLAProjectView *projectView = (self.projectView);
 	NSScrollView *itemsScrollView = [self itemsScrollView];
 	NSScrollView *planScrollView = [self planScrollView];
 	
@@ -233,7 +251,7 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 {
 	(self.animatingFocusChange) = YES;
 	
-	GLAPrototypeBProjectView *projectView = (self.projectView);
+	GLAProjectView *projectView = (self.projectView);
 	NSScrollView *itemsScrollView = [self itemsScrollView];
 	NSScrollView *planScrollView = [self planScrollView];
 	
@@ -306,12 +324,16 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	(self.focusedOnItemsView) = YES;
 	(self.focusedOnPlanView) = NO;
 	
+	[(self.nameTextField.window) makeFirstResponder:nil];
+	
 	[self animateItemsViewForFocusChange:YES];
 }
 
 - (void)endFocusingOnItemsView
 {
 	(self.focusedOnItemsView) = NO;
+	
+	[(self.nameTextField.window) makeFirstResponder:nil];
 	
 	[self animateItemsViewForFocusChange:NO];
 }
@@ -337,7 +359,7 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	}
 	else {
 		CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
-		[reminderManager fetchAllRemindersIfNeeded:^(NSArray *allReminders) {
+		[reminderManager useAllReminders:^(NSArray *allReminders) {
 			CFAbsoluteTime endTime = CFAbsoluteTimeGetCurrent();
 			NSLog(@"Took %f second to get all reminders", endTime - startTime);
 			NSLog(@"%lu %@", (allReminders.count), allReminders);
@@ -367,7 +389,7 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 {
 	NSLog(@"nameTextDidBeginEditing:");
 	NSTextField *nameTextField = (self.nameTextField);
-	GLAUIStyle *uiStyle = [GLAUIStyle styleA];
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	(nameTextField.textColor) = (uiStyle.editedTextColor);
 	(nameTextField.backgroundColor) = (uiStyle.editedTextBackgroundColor);
 }
@@ -388,13 +410,18 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 
 #pragma mark -
 
-@interface GLAProjectItemsViewController ()
+
+NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"GLA.projectCollectionsViewController.didClickCollection";
+
+@interface GLAProjectCollectionsViewController ()
 
 @property(nonatomic) GLAProject *private_project;
 
+- (IBAction)tableViewWasClicked:(id)sender;
+
 @end
 
-@implementation GLAProjectItemsViewController
+@implementation GLAProjectCollectionsViewController
 
 - (NSTableView *)tableView
 {
@@ -433,8 +460,11 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 - (void)prepareViews
 {
 	NSTableView *tableView = (self.tableView);
-	(tableView.backgroundColor) = ([GLAUIStyle styleA].contentBackgroundColor);
-	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle styleA].contentBackgroundColor);
+	(tableView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
+	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
+	
+	[tableView setTarget:self];
+	[tableView setAction:@selector(tableViewWasClicked:)];
 }
 
 - (void)loadView
@@ -450,6 +480,20 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	[self prepareDummyContent];
 }
 
+- (IBAction)tableViewWasClicked:(id)sender
+{
+	NSTableView *tableView = (self.tableView);
+	NSInteger clickedRow = (tableView.clickedRow);
+	
+	GLACollection *collection = (self.mutableItems)[clickedRow];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectCollectionsViewControllerDidClickCollectionNotification object:self userInfo:
+	 @{
+	   @"row": @(clickedRow),
+	   @"collection": collection
+	   }];
+}
+
 #pragma mark Table View Data Source
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
@@ -459,8 +503,8 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	GLACollection *item = (self.mutableItems)[row];
-	return item;
+	GLACollection *collection = (self.mutableItems)[row];
+	return collection;
 }
 
 #pragma mark Table View Delegate
@@ -475,21 +519,19 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	(cellView.canDrawSubviewsIntoLayer) = YES;
 	
-	GLACollection *item = (self.mutableItems)[row];
-	NSString *title = (item.title);
-	(cellView.objectValue) = item;
+	GLACollection *collection = (self.mutableItems)[row];
+	NSString *title = (collection.title);
+	(cellView.objectValue) = collection;
 	(cellView.textField.stringValue) = title;
 	
-	GLAUIStyle *uiStyle = [GLAUIStyle styleA];
-	(cellView.textField.textColor) = [uiStyle colorForProjectItemColorIdentifier:(item.colorIdentifier)];
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	(cellView.textField.textColor) = [uiStyle colorForProjectItemColorIdentifier:(collection.colorIdentifier)];
 	
 	return cellView;
 }
 
 @end
 
-
-#pragma mark -
 
 #pragma mark -
 
@@ -539,12 +581,12 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 - (void)prepareViews
 {
 	NSTableView *tableView = (self.tableView);
-	(tableView.backgroundColor) = ([GLAUIStyle styleA].contentBackgroundColor);
-	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle styleA].contentBackgroundColor);
+	(tableView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
+	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
 	
 	
 	GLAReminderManager *reminderManager = [GLAReminderManager sharedReminderManager];
-	[reminderManager createEventStore];
+	[reminderManager createEventStoreIfNeeded];
 }
 
 - (void)loadView
@@ -599,12 +641,12 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 	(paragraphStyle.alignment) = NSRightTextAlignment;
 	
 	if (row == 0) {
-		font = ([GLAUIStyle styleA]).highlightedReminderFont;
+		font = ([GLAUIStyle activeStyle]).highlightedReminderFont;
 		(paragraphStyle.maximumLineHeight) = 21.0; //(font.pointSize);
 		(paragraphStyle.lineSpacing) = 0.0;
 	}
 	else {
-		font = ([GLAUIStyle styleA]).smallReminderFont;
+		font = ([GLAUIStyle activeStyle]).smallReminderFont;
 		(paragraphStyle.maximumLineHeight) = 18.0; //(font.pointSize);
 	}
 	

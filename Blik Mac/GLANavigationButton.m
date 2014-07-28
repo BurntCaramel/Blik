@@ -42,29 +42,21 @@
 
 - (NSRect)highlightRectForBounds:(NSRect)bounds
 {
-	return [self highlightRectForBounds:bounds fraction:1.0];
+	return [self highlightRectForBounds:bounds time:1.0];
 }
 
-- (NSRect)highlightRectForBounds:(NSRect)bounds fraction:(CGFloat)fraction
+- (NSRect)highlightRectForBounds:(NSRect)bounds time:(CGFloat)t
 {
-	CGFloat height = 6.0 * fraction;
-	NSRect topBarRect, elseRect;
-	NSDivideRect(bounds, &topBarRect, &elseRect, height, CGRectMinYEdge);
-	
-	return topBarRect;
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	return [uiStyle drawingRectOfActiveHighlightForBounds:bounds time:t];
 }
 
 - (void)drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView
 {
-	//if ((self.isOnAndShowsOnState)) {
-	NSRect topBarRect = [self highlightRectForBounds:frame fraction:(self.highlightOpacity)];
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	
-	GLAUIStyle *uiStyle = [GLAUIStyle styleA];
 	NSColor *barColor = (self.isEnabled) ? (uiStyle.activeButtonHighlightColor) : (uiStyle.activeButtonDisabledHighlightColor);
-	barColor = [barColor colorWithAlphaComponent:(self.highlightOpacity) * (barColor.alphaComponent)];
-	[barColor setFill];
-	//[[([GLAUIStyle styleA].activeButtonHighlightColor) colorWithAlphaComponent:(self.highlightOpacity)] setFill];
-	NSRectFill(topBarRect);
+	[uiStyle drawActiveHighlightForBounds:frame withColor:barColor time:(self.highlightOpacity)];
 	//}
 }
 

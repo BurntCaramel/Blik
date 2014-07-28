@@ -8,7 +8,11 @@
 
 @import Cocoa;
 #import "GLAViewController.h"
-#import "GLAPrototypeBNavigationBar.h"
+#import "GLANavigationBar.h"
+#import "GLAButton.h"
+#import "GLANavigationButton.h"
+#import "GLAProject.h"
+#import "GLACollection.h"
 
 
 typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
@@ -22,19 +26,21 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 @interface GLAMainNavigationBarController : GLAViewController <GLAViewDelegate>
 
-@property(readonly, nonatomic) GLAPrototypeBNavigationBar *navigationBar;
+@property(readonly, nonatomic) GLANavigationBar *navigationBar;
 
-@property(nonatomic) IBOutlet NSButton *allButton;
-@property(nonatomic) IBOutlet NSButton *todayButton;
-@property(nonatomic) IBOutlet NSButton *plannedButton;
-@property(nonatomic) IBOutlet NSButton *addProjectButton;
+@property(nonatomic) IBOutlet GLANavigationButton *allButton;
+@property(nonatomic) IBOutlet GLANavigationButton *todayButton;
+@property(nonatomic) IBOutlet GLANavigationButton *plannedButton;
+@property(nonatomic) IBOutlet GLANavigationButton *addProjectButton;
 
-@property(nonatomic) IBOutlet NSButton *templateButton;
+@property(nonatomic) IBOutlet GLAButton *templateButton;
 
-@property(nonatomic) IBOutlet NSButton *editingProjectBackButton;
+@property(nonatomic) IBOutlet GLAButton *editingProjectBackButton;
 
-@property(nonatomic) IBOutlet NSButton *addingNewProjectCancelButton;
-@property(nonatomic) IBOutlet NSButton *addingNewProjectConfirmButton;
+@property(nonatomic) IBOutlet GLAButton *addingNewProjectCancelButton;
+@property(nonatomic) IBOutlet GLAButton *addingNewProjectConfirmButton;
+
+@property(nonatomic) IBOutlet GLAButton *collectionTitleButton;
 
 @property(nonatomic) IBOutlet NSLayoutConstraint *allButtonTopConstraint;
 @property(nonatomic) IBOutlet NSLayoutConstraint *todayButtonTopConstraint;
@@ -52,13 +58,29 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 - (IBAction)goToToday:(id)sender;
 - (IBAction)goToPlanned:(id)sender;
 
+#pragma mark Projects
+
 - (IBAction)addNewProject:(id)sender;
 
-- (void)enterProject:(id)project;
-- (void)enterAddedProject:(id)project;
-@property(nonatomic) id currentProject;
+- (void)enterProject:(GLAProject *)project;
+- (void)enterAddedProject:(GLAProject *)project;
+
+@property(nonatomic) GLAProject *currentProject;
 @property(nonatomic) BOOL currentProjectIsAddedNew;
+
 - (IBAction)exitCurrentProject:(id)sender;
+
+- (IBAction)cancelAddingNewProject:(id)sender;
+
+- (IBAction)confirmAddingNewProject:(id)sender;
+
+#pragma mark Collections
+
+- (void)enterProjectCollection:(GLACollection *)collection;
+
+@property(nonatomic) GLACollection *currentCollection;
+
+- (IBAction)exitCurrentCollection:(id)sender;
 
 @end
 
