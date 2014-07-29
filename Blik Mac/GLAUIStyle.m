@@ -44,6 +44,8 @@
 		
 		(style.lightTextColor) =  whiteAlmost;
 		(style.lightTextDisabledColor) = whiteAlmost30;
+		(style.lightTextSecondaryColor) = [whiteAlmost colorWithAlphaComponent:0.77];
+		
 		(style.activeTextColor) =  activeYellowText;
 		(style.activeTextDisabledColor) = whiteAlmost30;
 		
@@ -54,7 +56,7 @@
 		(style.toggleInsideColor) = whiteAlmost;
 		
 		(style.projectTableRowHoverBackgroundColor) = [whiteAlmost colorWithAlphaComponent:0.026];
-		(style.projectTableDividerColor) = [whiteAlmost colorWithAlphaComponent:0.067];
+		(style.projectTableDividerColor) = [whiteAlmost colorWithAlphaComponent:0.057];
 		
 		(style.deleteProjectButtonColor) = deleteRed;
 		

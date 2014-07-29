@@ -49,6 +49,8 @@
 
 @end
 
+// Notifications
+
 extern NSString *GLAProjectViewControllerDidBeginEditingItemsNotification;
 extern NSString *GLAProjectViewControllerDidEndEditingItemsNotification;
 
@@ -58,17 +60,17 @@ extern NSString *GLAProjectViewControllerDidEndEditingPlanNotification;
 extern NSString *GLAProjectViewControllerDidEnterCollectionNotification;
 
 
-
 @interface GLAProjectCollectionsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
 
 @property(readonly, nonatomic) NSTableView *tableView;
 
 @property(nonatomic) GLAProject *project;
+@property(copy, nonatomic) NSArray *collections;
+
+@property(nonatomic) BOOL editing;
 
 //- (void)collectionsDidChange;
 - (void)reloadCollections;
-
-@property(copy, nonatomic) NSMutableArray *mutableItems;
 
 @end
 
@@ -81,12 +83,12 @@ extern NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotificati
 @property(readonly, nonatomic) NSTableView *tableView;
 
 @property(nonatomic) GLAProject *project;
+@property(copy, nonatomic) NSMutableArray *mutableReminders;
+
+@property(nonatomic) BOOL editing;
+@property(nonatomic) BOOL showsDoesNotHaveAccessToReminders;
 
 //- (void)remindersDidChange;
 - (void)reloadReminders;
-
-@property(copy, nonatomic) NSMutableArray *mutableReminders;
-
-@property(nonatomic) BOOL showsDoesNotHaveAccessToReminders;
 
 @end

@@ -9,6 +9,7 @@
 #import "GLACollection.h"
 #import "NSValueTransformer+GLAModel.h"
 
+
 @implementation GLACollection
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey
@@ -56,6 +57,61 @@
     }
     return self;
 }
+
+@end
+
+
+@implementation GLACollection (PasteboardSupport)
+
+NSString *GLACollectionJSONPasteboardType = @"com.burntcaramel.GLACollection.JSONPasteboardType";
+
+- (NSPasteboardItem *)newPasteboardItem
+{
+	NSDictionary *selfAsJSON = [MTLJSONAdapter JSONDictionaryFromModel:self];
+	return [[NSPasteboardItem alloc] initWithPasteboardPropertyList:selfAsJSON ofType:GLACollectionJSONPasteboardType];
+}
+
++ (void)writeCollections:(NSArray *)collections toPasteboard:(NSPasteboard *)pboard
+{
+	[pboard declareTypes:@[GLACollectionJSONPasteboardType] owner:nil];
+	
+	NSArray *draggedCollectionsJSON = [MTLJSONAdapter JSONArrayFromModels:collections];
+	[pboard setPropertyList:draggedCollectionsJSON forType:GLACollectionJSONPasteboardType];
+}
+
++ (BOOL)canCopyCollectionsFromPasteboard:(NSPasteboard *)pboard
+{
+	NSString *pboardType = [pboard availableTypeFromArray:@[GLACollectionJSONPasteboardType]];
+	if (!pboardType) {
+		return NO;
+	}
+	
+	return YES;
+}
+
++ (NSArray *)copyCollectionsFromPasteboard:(NSPasteboard *)pboard
+{
+	NSString *pboardType = [pboard availableTypeFromArray:@[GLACollectionJSONPasteboardType]];
+	if (!pboardType) {
+		return nil;
+	}
+	
+	id possibleCollectionsJSON = [pboard propertyListForType:GLACollectionJSONPasteboardType];
+	if (![possibleCollectionsJSON isKindOfClass:[NSArray class]]) {
+		return nil;
+	}
+	
+	NSArray *collectionsJSON = possibleCollectionsJSON;
+	NSError *error = nil;
+	NSArray *collections = [MTLJSONAdapter modelsOfClass:[self class] fromJSONArray:collectionsJSON error:&error];
+	
+	return collections;
+}
+
+@end
+
+
+@implementation GLACollection (GLADummyContent)
 
 + (instancetype)dummyCollectionWithTitle:(NSString *)title colorIdentifier:(GLACollectionColor)colorIdentifier
 {

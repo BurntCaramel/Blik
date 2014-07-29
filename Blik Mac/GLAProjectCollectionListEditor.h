@@ -14,6 +14,4 @@
 
 - (instancetype)initWithCollections:(NSArray *)collections;
 
-@property(nonatomic) NSMutableArray *mutableCollections;
-
 @end

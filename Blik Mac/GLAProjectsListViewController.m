@@ -70,7 +70,8 @@ NSString *GLAProjectListViewControllerDidClickOnProjectNotification = @"GLA.proj
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	return (self.projects)[row];
+	GLAProject *project = (self.projects)[row];
+	return project;
 }
 
 #pragma mark Table View Delegate
@@ -79,9 +80,16 @@ NSString *GLAProjectListViewControllerDidClickOnProjectNotification = @"GLA.proj
 {
 	GLAProjectOverviewTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	
-	NSString *displayName = (self.projects)[row];
+	GLAUIStyle *activeStyle = [GLAUIStyle activeStyle];
+	
+	GLAProject *project = (self.projects)[row];
+	NSString *displayName = (project.name);
 	(cellView.objectValue) = displayName;
 	(cellView.textField.stringValue) = displayName;
+	
+	NSTextField *plannedDateTextField = (cellView.plannedDateTextField);
+	(plannedDateTextField.textColor) = (activeStyle.lightTextDisabledColor);
+	//(plannedDateTextField.textColor) = (activeStyle.lightTextSecondaryColor);
 	
 	GLANavigationButton *workOnNowButton = (cellView.workOnNowButton);
 	(workOnNowButton.alwaysHighlighted) = YES;

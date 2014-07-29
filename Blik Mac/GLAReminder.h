@@ -26,6 +26,20 @@
 //@property(nonatomic) NSUInteger priority; 1 (high) to low (9) - used to manually order in list
 
 - (void)setCreatedEventKitReminder:(EKReminder *)eventKitReminder;
+- (void)setFoundEventKitReminder:(EKReminder *)eventKitReminder;
+
+@end
+
+
+@interface GLAReminder (PasteboardSupport)
+
+extern NSString *GLAReminderJSONPasteboardType;
+
+- (NSPasteboardItem *)newPasteboardItem;
++ (void)writeReminders:(NSArray *)reminders toPasteboard:(NSPasteboard *)pboard;
+
++ (BOOL)canCopyRemindersFromPasteboard:(NSPasteboard *)pboard;
++ (NSArray *)copyRemindersFromPasteboard:(NSPasteboard *)pboard;
 
 @end
 
@@ -41,6 +55,8 @@
 
 - (void)addReminder:(GLAReminder *)reminder;
 - (void)removeReminder:(GLAReminder *)reminder;
+
+- (NSArray *)copyRemindersOrderedByPriority;
 
 // This would be synchronous, so no:
 //- (void)addReminderWithEventKitReminder:(EKReminder *)eventKitReminder;

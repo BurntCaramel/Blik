@@ -142,15 +142,24 @@
 
 #pragma mark Setting Up Content View Controllers
 
+- (GLAProject *)dummyProjectWithName:(NSString *)name
+{
+	GLAProject *project = [GLAProject new];
+	
+	(project.name) = name;
+	
+	return project;
+}
+
 - (NSArray *)allProjectsDummyContent
 {
 	return @[
-	  @"Project With Big Long Name That Goes On",
-	  @"Eat a thousand muffins in one day",
-	  @"Another, yet another project",
-	  @"The one that just won’t die",
-	  @"Could this be my favourite project ever?",
-	  @"Freelance project #82"
+	  [self dummyProjectWithName:@"Project With Big Long Name That Goes On"],
+	  [self dummyProjectWithName:@"Eat a thousand muffins in one day"],
+	  [self dummyProjectWithName:@"Another, yet another project"],
+	  [self dummyProjectWithName:@"The one that just won’t die"],
+	  [self dummyProjectWithName:@"Could this be my favourite project ever?"],
+	  [self dummyProjectWithName:@"Freelance project #82"]
 	  ];
 }
 
@@ -185,6 +194,9 @@
 	GLAProjectViewController *controller = [[GLAProjectViewController alloc] initWithNibName:@"GLAProjectViewController" bundle:nil];
 	(controller.view.identifier) = @"nowProject";
 	
+	GLAProject *dummyProject = (self.allProjectsDummyContent)[0];
+	(controller.project) = dummyProject;
+	
 	(self.nowProjectViewController) = controller;
 	
 	// Add it to the content view
@@ -194,11 +206,11 @@
 - (NSArray *)plannedProjectsDummyContent
 {
 	return @[
-			 @"Eat a thousand muffins in one day",
-			 @"Another, yet another project",
-			 @"The one that just won’t die",
-			 @"Could this be my favourite project ever?",
-			 @"Freelance project #82"
+			 [self dummyProjectWithName:@"Eat a thousand muffins in one day"],
+			 [self dummyProjectWithName:@"Another, yet another project"],
+			 [self dummyProjectWithName:@"The one that just won’t die"],
+			 [self dummyProjectWithName:@"Could this be my favourite project ever?"],
+			 [self dummyProjectWithName:@"Freelance project #82"]
 			 ];
 }
 

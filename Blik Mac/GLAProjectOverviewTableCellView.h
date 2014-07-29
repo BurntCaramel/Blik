@@ -12,5 +12,6 @@
 @interface GLAProjectOverviewTableCellView : NSTableCellView
 
 @property(weak, nonatomic) IBOutlet GLANavigationButton *workOnNowButton;
+@property(weak, nonatomic) IBOutlet NSTextField *plannedDateTextField;
 
 @end

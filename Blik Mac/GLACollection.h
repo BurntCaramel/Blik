@@ -27,17 +27,32 @@ typedef NS_ENUM(NSInteger, GLACollectionColor) {
 
 @property(nonatomic) GLACollectionColor colorIdentifier;
 
-
-+ (instancetype)dummyCollectionWithTitle:(NSString *)title colorIdentifier:(GLACollectionColor)colorIdentifier;
-
 + (NSValueTransformer *)colorIdentifierValueTransformer;
 
 @end
 
 
-@protocol GLACollectionListEditing <NSObject>
+@interface GLACollection (PasteboardSupport)
 
-//- (NSArray *)childCollectionsAtIndexes:(NSIndexSet *)indexes;
+extern NSString *GLACollectionJSONPasteboardType;
+
+- (NSPasteboardItem *)newPasteboardItem;
++ (void)writeCollections:(NSArray *)collections toPasteboard:(NSPasteboard *)pboard;
+
++ (BOOL)canCopyCollectionsFromPasteboard:(NSPasteboard *)pboard;
++ (NSArray *)copyCollectionsFromPasteboard:(NSPasteboard *)pboard;
+
+@end
+
+
+@interface GLACollection (GLADummyContent)
+
++ (instancetype)dummyCollectionWithTitle:(NSString *)title colorIdentifier:(GLACollectionColor)colorIdentifier;
+
+@end
+
+
+@protocol GLACollectionListEditing <NSObject>
 
 - (void)addChildCollections:(NSArray *)collections;
 - (void)insertChildCollections:(NSArray *)collections atIndexes:(NSIndexSet *)indexes;
@@ -45,6 +60,9 @@ typedef NS_ENUM(NSInteger, GLACollectionColor) {
 - (void)removeChildCollectionsAtIndexes:(NSIndexSet *)indexes;
 - (void)replaceChildCollectionsAtIndexes:(NSIndexSet *)indexes withChildCollections:(NSArray *)collections;
 - (void)moveChildCollectionsAtIndexes:(NSIndexSet *)indexes toIndex:(NSUInteger)toIndex;
+
+- (NSArray *)copyCollections;
+- (NSArray *)childCollectionsAtIndexes:(NSIndexSet *)indexes;
 
 - (void)addObserverForAnyChanges:(void(^)())block;
 

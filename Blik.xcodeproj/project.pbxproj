@@ -10,9 +10,9 @@
 		ACAA15FDD8554126A606F258 /* libPods-Blik.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 659FE625B2454CA095734DA4 /* libPods-Blik.a */; };
 		B219DAA2196AB65D007900DF /* GLAMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAA0196AB65D007900DF /* GLAMainWindowController.m */; };
 		B219DAA3196AB65D007900DF /* GLAMainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B219DAA1196AB65D007900DF /* GLAMainWindowController.xib */; };
-		B219DAA8196AB7D6007900DF /* GLAPrototypeBNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAA7196AB7D6007900DF /* GLAPrototypeBNavigationBar.m */; };
+		B219DAA8196AB7D6007900DF /* GLANavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAA7196AB7D6007900DF /* GLANavigationBar.m */; };
 		B219DAAB196AB8D1007900DF /* GLANavigationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAAA196AB8D1007900DF /* GLANavigationButton.m */; };
-		B219DAAE196ACE8D007900DF /* GLAPrototypeBProjectView.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAAD196ACE8D007900DF /* GLAPrototypeBProjectView.m */; };
+		B219DAAE196ACE8D007900DF /* GLAProjectView.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAAD196ACE8D007900DF /* GLAProjectView.m */; };
 		B219DAB2196AD462007900DF /* GLAProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAB0196AD462007900DF /* GLAProjectViewController.m */; };
 		B219DAB3196AD462007900DF /* GLAProjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B219DAB1196AD462007900DF /* GLAProjectViewController.xib */; };
 		B219DAB6196AD698007900DF /* GLAUIStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAB5196AD698007900DF /* GLAUIStyle.m */; };
@@ -67,12 +67,12 @@
 		B219DA9F196AB65D007900DF /* GLAMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainWindowController.h; sourceTree = "<group>"; };
 		B219DAA0196AB65D007900DF /* GLAMainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainWindowController.m; sourceTree = "<group>"; };
 		B219DAA1196AB65D007900DF /* GLAMainWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAMainWindowController.xib; sourceTree = "<group>"; };
-		B219DAA6196AB7D6007900DF /* GLAPrototypeBNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPrototypeBNavigationBar.h; sourceTree = "<group>"; };
-		B219DAA7196AB7D6007900DF /* GLAPrototypeBNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPrototypeBNavigationBar.m; sourceTree = "<group>"; };
+		B219DAA6196AB7D6007900DF /* GLANavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLANavigationBar.h; sourceTree = "<group>"; };
+		B219DAA7196AB7D6007900DF /* GLANavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLANavigationBar.m; sourceTree = "<group>"; };
 		B219DAA9196AB8D1007900DF /* GLANavigationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLANavigationButton.h; sourceTree = "<group>"; };
 		B219DAAA196AB8D1007900DF /* GLANavigationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLANavigationButton.m; sourceTree = "<group>"; };
-		B219DAAC196ACE8D007900DF /* GLAPrototypeBProjectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPrototypeBProjectView.h; sourceTree = "<group>"; };
-		B219DAAD196ACE8D007900DF /* GLAPrototypeBProjectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPrototypeBProjectView.m; sourceTree = "<group>"; };
+		B219DAAC196ACE8D007900DF /* GLAProjectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProjectView.h; sourceTree = "<group>"; };
+		B219DAAD196ACE8D007900DF /* GLAProjectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProjectView.m; sourceTree = "<group>"; };
 		B219DAAF196AD462007900DF /* GLAProjectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProjectViewController.h; sourceTree = "<group>"; };
 		B219DAB0196AD462007900DF /* GLAProjectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProjectViewController.m; sourceTree = "<group>"; };
 		B219DAB1196AD462007900DF /* GLAProjectViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAProjectViewController.xib; sourceTree = "<group>"; };
@@ -314,10 +314,10 @@
 				B2C7F2911970D5D3005780B4 /* GLAMainWindow.m */,
 				B2C7F285196FFFDF005780B4 /* GLAView.h */,
 				B2C7F286196FFFDF005780B4 /* GLAView.m */,
-				B219DAAC196ACE8D007900DF /* GLAPrototypeBProjectView.h */,
-				B219DAAD196ACE8D007900DF /* GLAPrototypeBProjectView.m */,
-				B219DAA6196AB7D6007900DF /* GLAPrototypeBNavigationBar.h */,
-				B219DAA7196AB7D6007900DF /* GLAPrototypeBNavigationBar.m */,
+				B219DAAC196ACE8D007900DF /* GLAProjectView.h */,
+				B219DAAD196ACE8D007900DF /* GLAProjectView.m */,
+				B219DAA6196AB7D6007900DF /* GLANavigationBar.h */,
+				B219DAA7196AB7D6007900DF /* GLANavigationBar.m */,
 				B23515311973BEAB00883FB3 /* GLAButton.h */,
 				B23515321973BEAB00883FB3 /* GLAButton.m */,
 				B219DAA9196AB8D1007900DF /* GLANavigationButton.h */,
@@ -503,7 +503,7 @@
 				B2C7F29D1973998C005780B4 /* GLAProjectActionsBarController.m in Sources */,
 				B219DAB6196AD698007900DF /* GLAUIStyle.m in Sources */,
 				B2ADDBDE1963DA2E0014EF84 /* main.m in Sources */,
-				B219DAAE196ACE8D007900DF /* GLAPrototypeBProjectView.m in Sources */,
+				B219DAAE196ACE8D007900DF /* GLAProjectView.m in Sources */,
 				B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */,
 				B29F8DD41980C82C00F58F59 /* GLAProjectCollectionListEditor.m in Sources */,
 				B23515331973BEAB00883FB3 /* GLAButton.m in Sources */,
@@ -517,7 +517,7 @@
 				B2C7F2921970D5D3005780B4 /* GLAMainWindow.m in Sources */,
 				B219DAB2196AD462007900DF /* GLAProjectViewController.m in Sources */,
 				B219DAAB196AB8D1007900DF /* GLANavigationButton.m in Sources */,
-				B219DAA8196AB7D6007900DF /* GLAPrototypeBNavigationBar.m in Sources */,
+				B219DAA8196AB7D6007900DF /* GLANavigationBar.m in Sources */,
 				B2ADDBE51963DA2E0014EF84 /* GLAAppDelegate.m in Sources */,
 				B284D5621978EC1F00157126 /* GLACollection.m in Sources */,
 			);

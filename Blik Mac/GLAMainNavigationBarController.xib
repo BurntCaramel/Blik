@@ -116,7 +116,7 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
                             <integer key="value" value="-2"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="cell.alwaysHighlighted" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="cell.alwaysHighlighted" value="NO"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="exitCurrentProject:" target="-2" id="77e-uv-dhf"/>

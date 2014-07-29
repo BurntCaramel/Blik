@@ -131,34 +131,36 @@
 - (void)showButtonsForEditingExistingProject
 {
 	NSString *backTitle = (self.titleForEditingProjectBackButton);
-	GLAButton *backButton = [self addLeadingButtonWithTitle:backTitle action:@selector(exitCurrentProject:) identifier:@"backEditingProject"];
+	GLAButton *backButton = [self addLeadingButtonWithTitle:backTitle action:@selector(exitCurrentProject:) identifier:@"back-editingProject"];
 	(self.editingProjectBackButton) = backButton;
 	
+	NSString *workOnNowTitle = NSLocalizedString(@"Work on Now", @"Title for Work on Now button in an edited project");
+	GLAButton *workOnNowButton = [self addTrailingButtonWithTitle:workOnNowTitle action:@selector(workOnCurrentProjectNow:) identifier:@"workOnNow-editingProject"];
+	(self.editingProjectWorkOnNowButton) = workOnNowButton;
+	
 	NSLayoutConstraint *backLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:backButton];
-	NSLog(@"showButtonsForEditingExistingProject %@", [(self.view.subviews) valueForKey:@"identifier"]);
 	
-	//(backButton.alphaValue) = 0.0;
-	//(backLeadingConstraint.constant) = -250.0;
-	
-	(backButton.alphaValue) = 1.0;
-	(backLeadingConstraint.constant) = 0.0;
-	
-	[(self.view) setNeedsLayout:YES];
-	[(self.view) layoutSubtreeIfNeeded];
-	
-	return;
+	NSLayoutConstraint *workOnNowTrailingConstraint = [self layoutConstraintWithIdentifier:@"trailing" forChildView:workOnNowButton];
 	
 	(self.animatingCounter)++;
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 		(context.duration) = 4.0 / 12.0;
 		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
 		
-		// Cancel button
+		// Back button
+		(backButton.alphaValue) = 0.0;
 		(backButton.animator.alphaValue) = 1.0;
 		// Constraint
+		(backLeadingConstraint.constant) = -250.0;
 		(backLeadingConstraint.animator.constant) = 0.0;
+		
+		// Back button
+		(workOnNowButton.alphaValue) = 0.0;
+		(workOnNowButton.animator.alphaValue) = 1.0;
+		// Constraint
+		(workOnNowTrailingConstraint.constant) = 250.0;
+		(workOnNowTrailingConstraint.animator.constant) = 0.0;
 	} completionHandler:^ {
-		NSLog(@"%f %f", (backButton.alphaValue), (backLeadingConstraint.constant));
 		(self.animatingCounter)--;
 	}];
 }
@@ -166,23 +168,33 @@
 - (void)hideButtonsForEditingExistingProject
 {
 	NSButton *backButton = (self.editingProjectBackButton);
+	NSButton *workOnNowButton = (self.editingProjectWorkOnNowButton);
 	
 	NSLayoutConstraint *backLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:backButton];
+	NSLayoutConstraint *workOnNowTrailingConstraint = [self layoutConstraintWithIdentifier:@"trailing" forChildView:workOnNowButton];
 	
 	(self.animatingCounter)++;
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 		(context.duration) = 4.0 / 12.0;
 		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
 		
-		// Cancel button
+		// Back button
 		(backButton.animator.alphaValue) = 0.0;
 		// Constraint
 		(backLeadingConstraint.animator.constant) = -250.0;
+		
+		// Work on Now button
+		(workOnNowButton.animator.alphaValue) = 0.0;
+		// Constraint
+		(workOnNowTrailingConstraint.animator.constant) = 250.0;
 	} completionHandler:^ {
 		(self.animatingCounter)--;
 		
 		[backButton removeFromSuperview];
 		(self.editingProjectBackButton) = nil;
+		
+		[workOnNowButton removeFromSuperview];
+		(self.editingProjectWorkOnNowButton) = nil;
 	}];
 }
 
@@ -294,8 +306,7 @@
 		return NSLocalizedString(@"Back to Planned Projects", @"Title for editing project back button to go back to planned projects");
 	}
 	else {
-		return nil;
-		//return NSLocalizedString(@"Back", @"Title for editing project back button to go back");
+		return NSLocalizedString(@"Back", @"Title for editing project back button to go back");
 	}
 }
 
@@ -345,6 +356,11 @@
 	(self.currentProject) = nil;
 }
 
+- (IBAction)workOnCurrentProjectNow:(id)sender
+{
+	
+}
+
 - (IBAction)cancelAddingNewProject:(id)sender
 {
 	if (self.isAnimating) {
@@ -360,10 +376,10 @@
 		return;
 	}
 	
-	//[self hideButtonsForAddingNewProject];
+	[self hideButtonsForAddingNewProject];
 	[self showButtonsForEditingExistingProject];
-	//[self showMainButtons];
-	//[self exitCurrentProject:sender];
+	
+	(self.currentProjectIsAddedNew) = NO;
 }
 
 #pragma mark Collections
@@ -460,16 +476,7 @@
 
 - (void)viewUpdateConstraints:(GLANavigationBar *)view
 {
-	/*
-	if (self.currentProject) {
-		(self.templateButton.alphaValue) = 1.0;
-		(self.editingProjectBackButtonLeadingConstraint.constant) = 0;
-	}
-	else {
-		(self.templateButton.alphaValue) = 0.0;
-		(self.editingProjectBackButtonLeadingConstraint.constant) = -250;
-	}
-	 */
+	
 }
 
 @end

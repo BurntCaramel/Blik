@@ -55,7 +55,17 @@
 	(self.eventKitReminder) = eventKitReminder;
 }
 
+- (void)setFoundEventKitReminder:(EKReminder *)eventKitReminder
+{
+	(self.eventKitReminder) = eventKitReminder;
+}
+
 #pragma mark Mantle specific properties
+
++ (NSValueTransformer *)highPriorityJSONTransformer
+{
+	return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
+}
 
 - (NSString *)calendarItemExternalIdentifier
 {
@@ -65,6 +75,56 @@
 - (NSString *)calendarTitle
 {
 	return (self.eventKitReminder.calendar.title);
+}
+
+@end
+
+
+@implementation GLAReminder (PasteboardSupport)
+
+NSString *GLAReminderJSONPasteboardType = @"com.burntcaramel.GLAReminder.JSONPasteboardType";
+
+- (NSPasteboardItem *)newPasteboardItem
+{
+	NSDictionary *selfAsJSON = [MTLJSONAdapter JSONDictionaryFromModel:self];
+	return [[NSPasteboardItem alloc] initWithPasteboardPropertyList:selfAsJSON ofType:GLAReminderJSONPasteboardType];
+}
+
++ (void)writeReminders:(NSArray *)reminders toPasteboard:(NSPasteboard *)pboard
+{
+	[pboard declareTypes:@[GLAReminderJSONPasteboardType] owner:nil];
+	
+	NSArray *draggedCollectionsJSON = [MTLJSONAdapter JSONArrayFromModels:reminders];
+	[pboard setPropertyList:draggedCollectionsJSON forType:GLAReminderJSONPasteboardType];
+}
+
++ (BOOL)canCopyRemindersFromPasteboard:(NSPasteboard *)pboard
+{
+	NSString *pboardType = [pboard availableTypeFromArray:@[GLAReminderJSONPasteboardType]];
+	if (!pboardType) {
+		return NO;
+	}
+	
+	return YES;
+}
+
++ (NSArray *)copyRemindersFromPasteboard:(NSPasteboard *)pboard
+{
+	NSString *pboardType = [pboard availableTypeFromArray:@[GLAReminderJSONPasteboardType]];
+	if (!pboardType) {
+		return nil;
+	}
+	
+	id possibleRemindersJSON = [pboard propertyListForType:GLAReminderJSONPasteboardType];
+	if (![possibleRemindersJSON isKindOfClass:[NSArray class]]) {
+		return nil;
+	}
+	
+	NSArray *remindersJSON = possibleRemindersJSON;
+	NSError *error = nil;
+	NSArray *reminders = [MTLJSONAdapter modelsOfClass:[self class] fromJSONArray:remindersJSON error:&error];
+	
+	return reminders;
 }
 
 @end

@@ -13,8 +13,10 @@
 
 @interface GLAProject ()
 
-@property(readwrite, copy, nonatomic) NSArray *collectionsForMantle;
-@property(readwrite, copy, nonatomic) NSArray *loadedCollections;
+@property(readwrite, nonatomic) NSUUID *UUID;
+
+@property(copy, nonatomic) NSArray *collectionsForMantle;
+@property(copy, nonatomic) NSArray *loadedCollections;
 @property(readonly, nonatomic) GLAProjectCollectionListEditor *collectionListEditor;
 
 @property(nonatomic) NSArray *mutableReminders;
@@ -52,7 +54,7 @@
 
 - (NSArray *)copyCollections
 {
-	return [(self.collectionListEditor.mutableCollections) copy];
+	return [(self.collectionListEditor) copyCollections];
 }
 
 - (void)setCollectionsForMantle:(NSArray *)collections
@@ -68,7 +70,11 @@
 - (id<GLACollectionListEditing>)collectionsEditing
 {
 	if (!_collectionListEditor) {
-		_collectionListEditor = [[GLAProjectCollectionListEditor alloc] initWithCollections:(self.loadedCollections)];
+		NSArray *collections = (self.loadedCollections);
+		if (!collections) {
+			collections = [NSArray array];
+		}
+		_collectionListEditor = [[GLAProjectCollectionListEditor alloc] initWithCollections:collections];
 	}
 	
 	return _collectionListEditor;

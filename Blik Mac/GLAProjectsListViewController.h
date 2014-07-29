@@ -7,6 +7,8 @@
 //
 
 #import "GLAViewController.h"
+#import "GLAProject.h"
+
 
 @interface GLAProjectsListViewController : GLAViewController
 

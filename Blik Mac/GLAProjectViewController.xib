@@ -40,7 +40,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="29" id="Yz5-N8-tKB"/>
                     </constraints>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Project With Big Long Name That Goes On" placeholderString="Enter project name" id="Dnf-Ks-NXt">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Project With Big Long Name That Goes On" placeholderString="Enter a project name" id="Dnf-Ks-NXt">
                         <font key="font" size="16" name="AvenirNext-DemiBold"/>
                         <color key="textColor" red="0.98812824489999995" green="0.98829692599999996" blue="0.98811751599999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -266,7 +266,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="RyI-AQ-d6Q"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" title="Edit Project Items" bezelStyle="shadowlessSquare" alignment="left" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="XD0-q2-jL3" customClass="GLAButtonCell">
+                    <buttonCell key="cell" type="square" title="Edit Collections" bezelStyle="shadowlessSquare" alignment="left" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="XD0-q2-jL3" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
                     </buttonCell>
@@ -288,7 +288,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="ZUS-dC-Lli"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" title="Edit Project Plan" bezelStyle="shadowlessSquare" alignment="right" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Bjc-C1-2DG" customClass="GLAButtonCell">
+                    <buttonCell key="cell" type="square" title="Edit Plan" bezelStyle="shadowlessSquare" alignment="right" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Bjc-C1-2DG" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
                     </buttonCell>
@@ -341,7 +341,7 @@
                 <button placeholderIntrinsicWidth="140" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="dcZ-cK-qd4" customClass="GLAButton">
                     <rect key="frame" x="0.0" y="0.0" width="500" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="square" title="Finish Editing Items" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Rab-Rf-U7k" customClass="GLAButtonCell">
+                    <buttonCell key="cell" type="square" title="Finish Editing Collections" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Rab-Rf-U7k" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-DemiBold"/>
                     </buttonCell>

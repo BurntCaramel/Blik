@@ -100,6 +100,7 @@
                                                     <constraint firstItem="RUk-GO-gyx" firstAttribute="leading" secondItem="rPy-bU-lu1" secondAttribute="trailing" priority="250" constant="8" id="x3Y-q3-QFm"/>
                                                 </constraints>
                                                 <connections>
+                                                    <outlet property="plannedDateTextField" destination="rPy-bU-lu1" id="4ux-3e-gac"/>
                                                     <outlet property="textField" destination="UnQ-Ry-Bvo" id="Mh6-f5-4sP"/>
                                                     <outlet property="workOnNowButton" destination="RUk-GO-gyx" id="lzW-2K-hog"/>
                                                 </connections>

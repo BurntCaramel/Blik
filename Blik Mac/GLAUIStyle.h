@@ -28,6 +28,8 @@
 
 @property (nonatomic) NSColor *lightTextColor;
 @property (nonatomic) NSColor *lightTextDisabledColor;
+@property (nonatomic) NSColor *lightTextSecondaryColor;
+
 @property (nonatomic) NSColor *activeTextColor;
 @property (nonatomic) NSColor *activeTextDisabledColor;
 

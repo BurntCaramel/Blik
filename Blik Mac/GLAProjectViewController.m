@@ -106,6 +106,10 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 
 - (void)collectionsViewControllerDidClickCollection:(NSNotification *)note
 {
+	if (self.focusedOnItemsView) {
+		return;
+	}
+	
 	GLACollection *collection = (note.userInfo)[@"collection"];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidEnterCollectionNotification object:self userInfo:
@@ -215,6 +219,9 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 			
 			(planScrollView.animator.alphaValue) = 0.0;
 		} completionHandler:nil];
+		
+		
+		[self didBeginEditingInnerSection];
 	}
 	else {
 		// Remove centering constraint
@@ -227,6 +234,8 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 			[projectView layoutSubtreeIfNeeded];
 		} completionHandler:^ {
 			(self.animatingFocusChange) = NO;
+			
+			[self didFinishEditingInnerSection];
 		}];
 		
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -319,12 +328,25 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 	}
 }
 
+- (void)didBeginEditingInnerSection
+{
+	NSTextField *nameTextField = (self.nameTextField);
+	(nameTextField.editable) = NO;
+	[(nameTextField.window) makeFirstResponder:nil];
+}
+
+- (void)didFinishEditingInnerSection
+{
+	NSTextField *nameTextField = (self.nameTextField);
+	(nameTextField.editable) = YES;
+}
+
 - (void)focusOnItemsView
 {
 	(self.focusedOnItemsView) = YES;
 	(self.focusedOnPlanView) = NO;
 	
-	[(self.nameTextField.window) makeFirstResponder:nil];
+	(self.itemsViewController.editing) = YES;
 	
 	[self animateItemsViewForFocusChange:YES];
 }
@@ -333,7 +355,7 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 {
 	(self.focusedOnItemsView) = NO;
 	
-	[(self.nameTextField.window) makeFirstResponder:nil];
+	(self.itemsViewController.editing) = NO;
 	
 	[self animateItemsViewForFocusChange:NO];
 }
@@ -343,18 +365,17 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 	(self.focusedOnItemsView) = NO;
 	(self.focusedOnPlanView) = YES;
 	
+	(self.planViewController.editing) = YES;
+	
 	[self animatePlanViewForFocusChange:YES];
 	//[self updateConstraintsWithAnimatedDuration:7.0 / 12.0];
 	
 	GLAReminderManager *reminderManager = [GLAReminderManager sharedReminderManager];
 	if (!(reminderManager.isAuthorized)) {
 		[reminderManager requestAccessToReminders:^(BOOL granted, NSError *error) {
-			if (!granted) {
-				(self.planViewController.showsDoesNotHaveAccessToReminders) = YES;
-			}
-			else {
-				(self.planViewController.showsDoesNotHaveAccessToReminders) = NO;
-			}
+			BOOL hasNoAccess = !granted;
+			
+			(self.planViewController.showsDoesNotHaveAccessToReminders) = hasNoAccess;
 		}];
 	}
 	else {
@@ -370,6 +391,8 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 - (void)endFocusingOnPlanView
 {
 	(self.focusedOnPlanView) = NO;
+	
+	(self.planViewController.editing) = NO;
 	
 	[self animatePlanViewForFocusChange:NO];
 	//[self updateConstraintsWithAnimatedDuration:7.0 / 12.0];
@@ -417,6 +440,8 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 @property(nonatomic) GLAProject *private_project;
 
+@property(nonatomic) NSIndexSet *draggedRowIndexes;
+
 - (IBAction)tableViewWasClicked:(id)sender;
 
 @end
@@ -438,22 +463,30 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	if ((self.private_project) != project) {
 		(self.private_project) = project;
 		
-		
+		[self prepareDummyContent];
 	}
 }
 
 - (void)prepareDummyContent
 {
-	(self.mutableItems) =
-	[
+	GLAProject *project = (self.project);
+	id<GLACollectionListEditing> collectionListEditing = (project.collectionsEditing);
+	
+	[collectionListEditing addChildCollections:
 	 @[
-	   [GLACollection dummyCollectionWithTitle:@"Working Items" colorIdentifier:GLACollectionColorLightBlue],
+	   [GLACollection dummyCollectionWithTitle:@"Working Files" colorIdentifier:GLACollectionColorLightBlue],
 	   [GLACollection dummyCollectionWithTitle:@"Briefs" colorIdentifier:GLACollectionColorGreen],
 	   [GLACollection dummyCollectionWithTitle:@"Contacts" colorIdentifier:GLACollectionColorPinkyPurple],
 	   [GLACollection dummyCollectionWithTitle:@"Apps" colorIdentifier:GLACollectionColorRed],
 	   [GLACollection dummyCollectionWithTitle:@"Research" colorIdentifier:GLACollectionColorYellow]
-	   ] mutableCopy];
+	   ]];
 	
+	[self reloadCollections];
+}
+
+- (void)reloadCollections
+{
+	(self.collections) = (self.project.copyCollections);
 	[(self.tableView) reloadData];
 }
 
@@ -463,8 +496,12 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	(tableView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
 	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
 	
-	[tableView setTarget:self];
-	[tableView setAction:@selector(tableViewWasClicked:)];
+	(tableView.target) = self;
+	(tableView.action) = @selector(tableViewWasClicked:);
+	
+	[tableView registerForDraggedTypes:@[GLACollectionJSONPasteboardType]];
+	
+	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
 }
 
 - (void)loadView
@@ -477,7 +514,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 - (void)awakeFromNib
 {
 	[self prepareViews];
-	[self prepareDummyContent];
+	//[self prepareDummyContent];
 }
 
 - (IBAction)tableViewWasClicked:(id)sender
@@ -485,7 +522,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	NSTableView *tableView = (self.tableView);
 	NSInteger clickedRow = (tableView.clickedRow);
 	
-	GLACollection *collection = (self.mutableItems)[clickedRow];
+	GLACollection *collection = (self.collections)[clickedRow];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectCollectionsViewControllerDidClickCollectionNotification object:self userInfo:
 	 @{
@@ -498,13 +535,113 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	return (self.mutableItems.count);
+	return (self.collections.count);
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	GLACollection *collection = (self.mutableItems)[row];
+	GLACollection *collection = (self.collections)[row];
 	return collection;
+}
+
+/*
+- (BOOL)tableView:(NSTableView *)aTableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard
+{NSLog(@"writeRowsWithIndexes");
+	NSArray *collections = (self.collections);
+	NSArray *draggedCollections = [collections objectsAtIndexes:rowIndexes];
+	
+	[GLACollection writeCollections:draggedCollections toPasteboard:pboard];
+	
+	return YES;
+}*/
+
+- (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row
+{
+	GLACollection *collection = (self.collections)[row];
+	return [collection newPasteboardItem];
+}
+
+- (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forRowIndexes:(NSIndexSet *)rowIndexes
+{
+	(self.draggedRowIndexes) = rowIndexes;
+	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
+}
+
+- (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation
+{
+	// Does not work for some reason.
+	if (operation == NSDragOperationDelete) {
+		id<GLACollectionListEditing> collectionListEditing = (self.project.collectionsEditing);
+		
+		NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
+		(self.draggedRowIndexes) = nil;
+		
+		[collectionListEditing removeChildCollectionsAtIndexes:sourceRowIndexes];
+		
+		[self reloadCollections];
+	}
+}
+
+- (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
+{
+	//NSLog(@"proposed row %ld %ld", (long)row, (long)dropOperation);
+	
+	NSPasteboard *pboard = (info.draggingPasteboard);
+	if (![GLACollection canCopyCollectionsFromPasteboard:pboard]) {
+		return NSDragOperationNone;
+	}
+	
+	if (dropOperation == NSTableViewDropOn) {
+		[tableView setDropRow:row dropOperation:NSTableViewDropAbove];
+	}
+	
+	NSDragOperation sourceOperation = (info.draggingSourceOperationMask);
+	if (sourceOperation & NSDragOperationMove) {
+		return NSDragOperationMove;
+	}
+	else if (sourceOperation & NSDragOperationCopy) {
+		return NSDragOperationCopy;
+	}
+	else if (sourceOperation & NSDragOperationDelete) {
+		return NSDragOperationDelete;
+	}
+	else {
+		return NSDragOperationNone;
+	}
+}
+
+- (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation
+{
+	NSPasteboard *pboard = (info.draggingPasteboard);
+	if (![GLACollection canCopyCollectionsFromPasteboard:pboard]) {
+		return NO;
+	}
+	
+	id<GLACollectionListEditing> collectionListEditing = (self.project.collectionsEditing);
+	
+	NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
+	(self.draggedRowIndexes) = nil;
+	
+	NSDragOperation sourceOperation = (info.draggingSourceOperationMask);
+	if (sourceOperation & NSDragOperationMove) {
+		// The row index is the final destination, so reduce it by the number of rows being moved before it.
+		row -= [sourceRowIndexes countOfIndexesInRange:NSMakeRange(0, row)];
+		
+		[collectionListEditing moveChildCollectionsAtIndexes:sourceRowIndexes toIndex:row];
+	}
+	else if (sourceOperation & NSDragOperationCopy) {
+		[collectionListEditing insertChildCollections:[collectionListEditing childCollectionsAtIndexes:sourceRowIndexes] atIndexes:[NSIndexSet indexSetWithIndex:row]];
+	}
+	else if (sourceOperation & NSDragOperationDelete) {
+		[collectionListEditing removeChildCollectionsAtIndexes:sourceRowIndexes];
+	}
+	else {
+		return NO;
+	}
+	
+	[self reloadCollections];
+	
+	return YES;
 }
 
 #pragma mark Table View Delegate
@@ -519,7 +656,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	(cellView.canDrawSubviewsIntoLayer) = YES;
 	
-	GLACollection *collection = (self.mutableItems)[row];
+	GLACollection *collection = (self.collections)[row];
 	NSString *title = (collection.title);
 	(cellView.objectValue) = collection;
 	(cellView.textField.stringValue) = title;
@@ -538,6 +675,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 @interface GLAProjectPlanViewController ()
 
 @property(nonatomic) GLAProject *private_project;
+@property(nonatomic) BOOL private_editing;
 
 @end
 
@@ -558,8 +696,20 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	if ((self.private_project) != project) {
 		(self.private_project) = project;
 		
-		
+		[self prepareDummyContent];
 	}
+}
+
+- (BOOL)editing
+{
+	return (self.private_editing);
+}
+
+- (void)setEditing:(BOOL)editing
+{
+	(self.private_editing) = editing;
+	
+	[self reloadReminders];
 }
 
 - (void)prepareDummyContent
@@ -575,6 +725,11 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	   [GLAReminder dummyReminderWithTitle:@"Brief Stage F completed blah blah blah longer name blah blah"],
 	   ] mutableCopy];
 	
+	[self reloadReminders];
+}
+
+- (void)reloadReminders
+{
 	[(self.tableView) reloadData];
 }
 
@@ -599,7 +754,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 - (void)awakeFromNib
 {
 	[self prepareViews];
-	[self prepareDummyContent];
+	//[self prepareDummyContent];
 }
 
 #pragma mark Table View Data Source
@@ -635,25 +790,37 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	//(cellView.objectValue) = displayText;
 	//(cellView.textField.stringValue) = displayText;
 	
+	GLAUIStyle *activeStyle = [GLAUIStyle activeStyle];
+	
 	NSFont *font;
+	NSColor *textColor;
 	
 	NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
 	(paragraphStyle.alignment) = NSRightTextAlignment;
 	
 	if (row == 0) {
-		font = ([GLAUIStyle activeStyle]).highlightedReminderFont;
+		font = (activeStyle.highlightedReminderFont);
 		(paragraphStyle.maximumLineHeight) = 21.0; //(font.pointSize);
 		(paragraphStyle.lineSpacing) = 0.0;
+		textColor = (activeStyle.lightTextColor);
 	}
 	else {
-		font = ([GLAUIStyle activeStyle]).smallReminderFont;
+		font = (activeStyle.smallReminderFont);
 		(paragraphStyle.maximumLineHeight) = 18.0; //(font.pointSize);
+		
+		if (self.editing) {
+			textColor = (activeStyle.lightTextColor);
+		}
+		else {
+			textColor = (activeStyle.lightTextSecondaryColor);
+		}
 	}
 	
 	NSDictionary *attributes =
   @{
 	NSFontAttributeName: font,
-	NSParagraphStyleAttributeName: paragraphStyle
+	NSParagraphStyleAttributeName: paragraphStyle,
+	NSForegroundColorAttributeName: textColor
 	};
 	(cellView.textField.attributedStringValue) = [[NSMutableAttributedString alloc] initWithString:displayText attributes:attributes];
 	//(cellView.textField.font) = font;

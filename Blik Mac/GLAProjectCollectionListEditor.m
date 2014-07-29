@@ -12,6 +12,12 @@
 NSString *const GLAProjectCollectionListEditorDidChangeNotification = @"GLAProjectCollectionListEditorDidChangeNotification";
 
 
+@interface GLAProjectCollectionListEditor ()
+
+@property(nonatomic) NSMutableArray *mutableCollections;
+
+@end
+
 @implementation GLAProjectCollectionListEditor
 
 - (instancetype)initWithCollections:(NSArray *)collections
@@ -21,6 +27,17 @@ NSString *const GLAProjectCollectionListEditorDidChangeNotification = @"GLAProje
         _mutableCollections = [NSMutableArray arrayWithArray:collections];
     }
     return self;
+}
+
+- (NSArray *)childCollectionsAtIndexes:(NSIndexSet *)indexes
+{
+	NSMutableArray *mutableCollections = (self.mutableCollections);
+	return [mutableCollections objectsAtIndexes:indexes];
+}
+
+- (NSArray *)copyCollections
+{
+	return [(self.mutableCollections) copy];
 }
 
 - (void)addChildCollections:(NSArray *)collections
@@ -67,6 +84,7 @@ NSString *const GLAProjectCollectionListEditorDidChangeNotification = @"GLAProje
 {
 	NSMutableArray *mutableCollections = (self.mutableCollections);
 	NSArray *collectionsToMove = [mutableCollections objectsAtIndexes:indexes];
+	[mutableCollections removeObjectsAtIndexes:indexes];
 	[mutableCollections insertObjects:collectionsToMove atIndexes:[NSIndexSet indexSetWithIndex:toIndex]];
 	
 	[self postChangeNotification];
@@ -75,6 +93,13 @@ NSString *const GLAProjectCollectionListEditorDidChangeNotification = @"GLAProje
 - (void)postChangeNotification
 {
 	//[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectCollectionListEditorDidChangeNotification object:self];
+}
+
+- (void)addObserverForAnyChanges:(void (^)())block
+{
+	[[NSNotificationCenter defaultCenter] addObserverForName:GLAProjectCollectionListEditorDidChangeNotification object:self queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+		block();
+	}];
 }
 
 @end
