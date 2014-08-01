@@ -8,6 +8,7 @@
 
 @import Foundation;
 #import "Mantle/Mantle.h"
+@class GLAProject;
 
 
 typedef NS_ENUM(NSInteger, GLACollectionColor) {
@@ -21,6 +22,8 @@ typedef NS_ENUM(NSInteger, GLACollectionColor) {
 
 
 @interface GLACollection : MTLModel <MTLJSONSerializing>
+
+@property(weak, nonatomic) GLAProject *project;
 
 @property(readonly, nonatomic) NSUUID *UUID;
 @property(copy, nonatomic) NSString *title;
@@ -64,7 +67,7 @@ extern NSString *GLACollectionJSONPasteboardType;
 - (NSArray *)copyCollections;
 - (NSArray *)childCollectionsAtIndexes:(NSIndexSet *)indexes;
 
-- (void)addObserverForAnyChanges:(void(^)())block;
+//- (void)addObserverForAnyChanges:(void(^)(void))block;
 
 /*
 - (void)addObserverForInsertedCollections:(void(^)(NSIndexSet *indexesInserted))block;

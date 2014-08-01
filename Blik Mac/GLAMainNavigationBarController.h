@@ -48,12 +48,13 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 @property(nonatomic) IBOutlet NSLayoutConstraint *plannedButtonTopConstraint;
 @property(nonatomic) IBOutlet NSLayoutConstraint *addProjectButtonTopConstraint;
 
-@property(nonatomic) GLAMainNavigationSection currentSection;
+@property(readonly, nonatomic) GLAMainNavigationSection currentSection;
 
 @property(weak, nonatomic) id<GLAMainNavigationBarControllerDelegate> delegate;
 
 @property(nonatomic, getter = isEnabled) BOOL enabled;
 
+- (void)changeCurrentSectionTo:(GLAMainNavigationSection)newSection;
 - (IBAction)goToAll:(id)sender;
 - (IBAction)goToToday:(id)sender;
 - (IBAction)goToPlanned:(id)sender;
@@ -71,7 +72,6 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 - (IBAction)exitCurrentProject:(id)sender;
 
 - (IBAction)cancelAddingNewProject:(id)sender;
-
 - (IBAction)confirmAddingNewProject:(id)sender;
 
 #pragma mark Collections
@@ -91,5 +91,7 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performAddNewProject:(id)sender;
 
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didExitProject:(id)project;
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didExitProject:(GLAProject *)project;
+
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performWorkOnProjectNow:(GLAProject *)project;
 @end

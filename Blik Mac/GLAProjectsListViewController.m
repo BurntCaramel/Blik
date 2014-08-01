@@ -12,6 +12,7 @@
 
 
 NSString *GLAProjectListViewControllerDidClickOnProjectNotification = @"GLA.projectListViewController.didClickOnProject";
+NSString *GLAProjectListViewControllerDidPerformWorkOnProjectNowNotification = @"GLA.projectListViewController.didPerformWorkOnProjectNow";
 
 
 @interface GLAProjectsListViewController ()
@@ -34,6 +35,9 @@ NSString *GLAProjectListViewControllerDidClickOnProjectNotification = @"GLA.proj
 	NSTableView *tableView = (self.tableView);
 	(tableView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
 	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
+	
+	NSScrollView *scrollView = [tableView enclosingScrollView];
+	(scrollView.wantsLayer) = YES;
 }
 
 - (void)loadView
@@ -48,6 +52,17 @@ NSString *GLAProjectListViewControllerDidClickOnProjectNotification = @"GLA.proj
 	//[self prepareViews];
 }
 
+- (void)viewDidAppear
+{
+	if ([(self.superclass) instancesRespondToSelector:@selector(viewDidAppear)]) {
+		[super viewDidAppear];
+	}
+	
+	NSTableView *tableView = (self.tableView);
+	NSScrollView *scrollView = [tableView enclosingScrollView];
+	[scrollView flashScrollers];
+}
+
 #pragma mark Actions
 
 - (IBAction)tableViewClicked:(id)sender
@@ -59,6 +74,17 @@ NSString *GLAProjectListViewControllerDidClickOnProjectNotification = @"GLA.proj
 	
 	id project = (self.projects)[clickedRow];
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectListViewControllerDidClickOnProjectNotification object:self userInfo:@{@"project": project}];
+}
+
+- (IBAction)workOnProjectNowClicked:(NSButton *)senderButton
+{
+	NSInteger projectIndex = (senderButton.tag);
+	if (projectIndex == -1) {
+		return;
+	}
+	
+	id project = (self.projects)[projectIndex];
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectListViewControllerDidPerformWorkOnProjectNowNotification object:self userInfo:@{@"project": project}];
 }
 
 #pragma mark Table View Data Source
@@ -93,6 +119,9 @@ NSString *GLAProjectListViewControllerDidClickOnProjectNotification = @"GLA.proj
 	
 	GLANavigationButton *workOnNowButton = (cellView.workOnNowButton);
 	(workOnNowButton.alwaysHighlighted) = YES;
+	(workOnNowButton.target) = self;
+	(workOnNowButton.action) = @selector(workOnProjectNowClicked:);
+	(workOnNowButton.tag) = row;
 	//(workOnNowButton.textHighlightColor) = ([GLAUIStyle activeStyle].deleteProjectButtonColor);
 	
 	return cellView;

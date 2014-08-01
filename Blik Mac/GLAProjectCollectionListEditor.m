@@ -94,12 +94,12 @@ NSString *const GLAProjectCollectionListEditorDidChangeNotification = @"GLAProje
 {
 	//[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectCollectionListEditorDidChangeNotification object:self];
 }
-
-- (void)addObserverForAnyChanges:(void (^)())block
+/*
+- (id)addObserverForAnyChanges:(void (^)(void))block
 {
-	[[NSNotificationCenter defaultCenter] addObserverForName:GLAProjectCollectionListEditorDidChangeNotification object:self queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+	return [[NSNotificationCenter defaultCenter] addObserverForName:GLAProjectCollectionListEditorDidChangeNotification object:self queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
 		block();
 	}];
 }
-
+*/
 @end

@@ -287,10 +287,33 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Project" id="GOh-Jg-v8R">
                         <items>
-                            <menuItem title="Work on Now" id="4nS-Jh-Kfd">
+                            <menuItem title="Now" keyEquivalent="1" id="nqk-On-ocM">
+                                <connections>
+                                    <action selector="toggleShowingPrototypeA:" target="Voe-Tx-rLC" id="qE4-8x-HlR"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Planned Projects" keyEquivalent="2" id="bzg-Bt-vsR">
+                                <connections>
+                                    <action selector="toggleShowingPrototypeA:" target="Voe-Tx-rLC" id="Wwb-a5-cHS"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="All Projects" keyEquivalent="3" id="lyC-ZA-xy1">
+                                <connections>
+                                    <action selector="toggleShowingPrototypeA:" target="Voe-Tx-rLC" id="RxN-i7-MB2"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="SmP-nQ-mkB"/>
+                            <menuItem title="Work on This Project Now" id="3Gh-mI-doL">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="workOnActiveProjectNow:" target="-1" id="RhS-eg-iIn"/>
+                                    <action selector="workOnActiveProjectNow:" target="-1" id="doZ-6q-GO2"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="4t1-vK-tMY"/>
+                            <menuItem title="Create Zip Archive Of…" id="1xt-yh-0dZ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="workOnActiveProjectNow:" target="-1" id="aoY-7q-1RK"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -316,6 +339,14 @@
                             <menuItem title="Add New Reminder…" id="cHO-vO-C6E">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="cXS-le-q1k"/>
+                            <menuItem title="Schedule Tomorrow…" id="ZKR-GR-Bt8">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem title="Clear Due Dates for Project" id="ZQG-Ib-g27">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="xy5-yP-QlA"/>
                             <menuItem title="Late is After" id="wXo-kK-QIc">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Late is After" id="e8S-Pr-fJy">
@@ -357,12 +388,14 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Prototype" id="HyV-fh-RgO">
                         <items>
-                            <menuItem title="Show Prototype A" keyEquivalent="1" id="snW-S8-Cw5">
+                            <menuItem title="Show Prototype A" id="snW-S8-Cw5">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleShowingPrototypeA:" target="Voe-Tx-rLC" id="PhB-p7-Bya"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Prototype B" keyEquivalent="2" id="HIr-Z5-ajm">
+                            <menuItem title="Show Prototype B" id="HIr-Z5-ajm">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleShowingPrototypeB:" target="Voe-Tx-rLC" id="odJ-hM-N2S"/>
                                 </connections>

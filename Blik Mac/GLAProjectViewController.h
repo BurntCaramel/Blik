@@ -69,7 +69,6 @@ extern NSString *GLAProjectViewControllerDidEnterCollectionNotification;
 
 @property(nonatomic) BOOL editing;
 
-//- (void)collectionsDidChange;
 - (void)reloadCollections;
 
 @end

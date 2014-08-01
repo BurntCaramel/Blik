@@ -13,6 +13,8 @@
 
 @property(readonly, nonatomic) GLAView *view;
 
+- (void)viewDidAppear;
+
 #pragma mark Auto Layout
 
 - (void)updateConstraintsWithAnimatedDuration:(NSTimeInterval)duration;

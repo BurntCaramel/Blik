@@ -13,6 +13,8 @@
 
 @interface GLAMainNavigationBarController ()
 
+@property(readwrite, nonatomic) GLAMainNavigationSection currentSection;
+
 @property(nonatomic) BOOL private_enabled;
 
 @property(readonly, getter = isAnimating, nonatomic) BOOL animating;
@@ -69,7 +71,19 @@
 		return;
 	}
 	
+	//GLAMainNavigationSection previousSection = (self.currentSection);
+	
 	(self.currentSection) = newSection;
+	
+	if (self.currentProject) {
+		if (self.currentProjectIsAddedNew) {
+			[self hideButtonsForAddingNewProject];
+		}
+		else {
+			[self hideButtonsForEditingExistingProject];
+		}
+		[self showMainButtons];
+	}
 	
 	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
@@ -358,7 +372,10 @@
 
 - (IBAction)workOnCurrentProjectNow:(id)sender
 {
-	
+	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
+	if (delegate) {
+		[delegate mainNavigationBarController:self performWorkOnProjectNow:(self.currentProject)];
+	}
 }
 
 - (IBAction)cancelAddingNewProject:(id)sender

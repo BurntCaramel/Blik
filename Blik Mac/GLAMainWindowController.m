@@ -22,7 +22,7 @@
 {
     self = [super initWithWindow:window];
     if (self) {
-        (self.currentSection) = GLAMainWindowControllerSectionToday;
+        (self.currentSection) = GLAMainWindowControllerSectionUnknown;
     }
     return self;
 }
@@ -38,7 +38,10 @@
 	[self setUpContentViewController];
 	[self setUpMainNavigationBarController];
 	[self setUpNowProjectViewControllerIfNeeded];
-	[self projectViewControllerDidBecomeActive:(self.nowProjectViewController)];
+	//[self projectViewControllerDidBecomeActive:(self.nowProjectViewController)];
+	
+	GLAProject *dummyProject = (self.allProjectsDummyContent)[0];
+	[self workOnProjectNow:dummyProject];
 }
 
 #pragma mark Setting Up View Controllers
@@ -182,7 +185,9 @@
 	// Put it into position
 	//[self hideChildContentView:(controller.view) offsetBy:-500.0 animate:NO];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(projectListViewControllerDidClickOnProjectNotification:) name:GLAProjectListViewControllerDidClickOnProjectNotification object:controller];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver:self selector:@selector(projectListViewControllerDidClickOnProjectNotification:) name:GLAProjectListViewControllerDidClickOnProjectNotification object:controller];
+	[nc addObserver:self selector:@selector(projectListViewControllerDidPerformWorkOnProjectNowNotification:) name:GLAProjectListViewControllerDidPerformWorkOnProjectNowNotification object:controller];
 }
 
 - (void)setUpNowProjectViewControllerIfNeeded
@@ -193,9 +198,6 @@
 	
 	GLAProjectViewController *controller = [[GLAProjectViewController alloc] initWithNibName:@"GLAProjectViewController" bundle:nil];
 	(controller.view.identifier) = @"nowProject";
-	
-	GLAProject *dummyProject = (self.allProjectsDummyContent)[0];
-	(controller.project) = dummyProject;
 	
 	(self.nowProjectViewController) = controller;
 	
@@ -261,19 +263,25 @@
 
 #pragma mark Editing Projects
 
+- (void)workOnProjectNow:(GLAProject *)project
+{
+	(self.nowProjectViewController.project) = project;
+	
+	[(self.mainNavigationBarController) changeCurrentSectionTo:GLAMainNavigationSectionToday];
+	[self transitionContentToSection:GLAMainWindowControllerSectionToday animate:YES];
+}
+
 - (void)editProject:(id)project
 {
 	[self setUpEditedProjectViewControllerIfNeeded];
 	(self.editedProjectViewController.project) = project;
 	
-	[self projectViewControllerDidBecomeActive:(self.editedProjectViewController)];
-	
 	GLAMainWindowControllerSection currentSection = (self.currentSection);
 	if (currentSection == GLAMainWindowControllerSectionAll) {
-		[self transitionToSection:GLAMainWindowControllerSectionAllEditProject animate:YES];
+		[self transitionContentToSection:GLAMainWindowControllerSectionAllEditProject animate:YES];
 	}
 	else if (currentSection == GLAMainWindowControllerSectionPlanned) {
-		[self transitionToSection:GLAMainWindowControllerSectionPlannedEditProject animate:YES];
+		[self transitionContentToSection:GLAMainWindowControllerSectionPlannedEditProject animate:YES];
 	}
 	
 	[(self.mainNavigationBarController) enterProject:project];
@@ -283,19 +291,15 @@
 {
 	GLAMainWindowControllerSection currentSection = (self.currentSection);
 	if (currentSection == GLAMainWindowControllerSectionAddNewProject) {
-		[self projectViewControllerDidBecomeInactive:(self.addedProjectViewController)];
-		
-		GLAMainWindowControllerSection section = [self sectionForNavigationSection:(self.mainNavigationBarController.currentSection)];
-		[self transitionToSection:section animate:YES];
+		GLAMainWindowControllerSection navSection = [self sectionForNavigationSection:(self.mainNavigationBarController.currentSection)];
+		[self transitionContentToSection:navSection animate:YES];
 	}
 	else {
-		[self projectViewControllerDidBecomeInactive:(self.editedProjectViewController)];
-		
 		if (currentSection == GLAMainWindowControllerSectionAllEditProject) {
-			[self transitionToSection:GLAMainWindowControllerSectionAll animate:YES];
+			[self transitionContentToSection:GLAMainWindowControllerSectionAll animate:YES];
 		}
 		else if (currentSection == GLAMainWindowControllerSectionPlannedEditProject) {
-			[self transitionToSection:GLAMainWindowControllerSectionPlanned animate:YES];
+			[self transitionContentToSection:GLAMainWindowControllerSectionPlanned animate:YES];
 		}
 	}
 }
@@ -312,9 +316,7 @@
 	(viewController.project) = project;
 	[viewController clearName];
 	
-	[self projectViewControllerDidBecomeActive:viewController];
-	
-	[self transitionToSection:GLAMainWindowControllerSectionAddNewProject animate:YES];
+	[self transitionContentToSection:GLAMainWindowControllerSectionAddNewProject animate:YES];
 	
 	[(self.mainNavigationBarController) enterAddedProject:project];
 	[viewController focusNameTextField];
@@ -324,8 +326,14 @@
 
 - (void)projectListViewControllerDidClickOnProjectNotification:(NSNotification *)note
 {
-	id project = (note.userInfo)[@"project"];
+	GLAProject *project = (note.userInfo)[@"project"];
 	[self editProject:project];
+}
+
+- (void)projectListViewControllerDidPerformWorkOnProjectNowNotification:(NSNotification *)note
+{
+	GLAProject *project = (note.userInfo)[@"project"];
+	[self workOnProjectNow:project];
 }
 
 #pragma mark Working with Project View Controllers
@@ -351,16 +359,15 @@
 - (IBAction)workOnEditedProjectNow:(id)sender
 {
 	GLAProjectViewController *projectViewController = (self.editedProjectViewController);
-	if (projectViewController) {
-		(self.nowProjectViewController) = projectViewController;
-		[self transitionToSection:GLAMainWindowControllerSectionToday animate:YES];
+	if ((projectViewController) && (projectViewController.project)) {
+		[self workOnProjectNow:(projectViewController.project)];
 	}
 }
 
 - (BOOL)canWorkOnEditedProjectNow
 {
 	GLAProjectViewController *projectViewController = (self.editedProjectViewController);
-	if (projectViewController) {
+	if ((projectViewController) && (projectViewController.project)) {
 		return YES;
 	}
 	else {
@@ -432,7 +439,7 @@
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didChangeCurrentSection:(GLAMainNavigationSection)newNavigationSection
 {
 	GLAMainWindowControllerSection newSection = [self sectionForNavigationSection:newNavigationSection];
-	[self transitionToSection:newSection animate:YES];
+	[self transitionContentToSection:newSection animate:YES];
 }
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performAddNewProject:(id)sender
@@ -440,9 +447,14 @@
 	[self addNewProject:sender];
 }
 
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didExitProject:(id)project
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didExitProject:(GLAProject *)project
 {
 	[self endEditingProject:project];
+}
+
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performWorkOnProjectNow:(GLAProject *)project
+{
+	[self workOnProjectNow:project];
 }
 
 #pragma mark Content Transitioning
@@ -471,12 +483,14 @@
 	}
 }
 
-- (void)transitionToSection:(GLAMainWindowControllerSection)newSection animate:(BOOL)animate
+- (void)transitionContentToSection:(GLAMainWindowControllerSection)newSection animate:(BOOL)animate
 {
 	GLAMainWindowControllerSection previousSection = (self.currentSection);
 	if (previousSection == newSection) {
 		return;
 	}
+	
+	[self didBeginTransitionAwayFromViewController:[self viewControllerForSection:previousSection]];
 	
 	if (newSection == GLAMainWindowControllerSectionAll) {
 		[self setUpAllProjectsViewControllerIfNeeded];
@@ -501,6 +515,8 @@
 	else if (newSection == GLAMainWindowControllerSectionToday) {
 		[self setUpNowProjectViewControllerIfNeeded];
 		
+		BOOL animateNowIn = YES;
+		
 		if (previousSection == GLAMainWindowControllerSectionAll) {
 			[self hideChildContentView:(self.allProjectsViewController.view) moveLeadingTo:-500.0 animate:YES];
 			[self hideChildContentView:(self.nowProjectViewController.view) moveLeadingTo:500.0 animate:NO];
@@ -513,8 +529,14 @@
 			[self hideChildContentView:(self.addedProjectViewController.view) moveLeadingTo:500.0 animate:YES];
 			[self hideChildContentView:(self.nowProjectViewController.view) moveLeadingTo:-500.0 animate:NO];
 		}
+		else if (previousSection == GLAMainWindowControllerSectionAllEditProject || previousSection == GLAMainWindowControllerSectionPlannedEditProject) {
+			NSViewController *vc = [self viewControllerForSection:previousSection];
+			[(vc.view) removeFromSuperview];
+			
+			animateNowIn = NO;
+		}
 		
-		[self showChildContentViewMovingLeading:(self.nowProjectViewController.view) animate:YES];
+		[self showChildContentViewMovingLeading:(self.nowProjectViewController.view) animate:animateNowIn];
 	}
 	else if (newSection == GLAMainWindowControllerSectionPlanned) {
 		[self setUpPlannedProjectsViewControllerIfNeeded];
@@ -569,6 +591,30 @@
 	}
 	
 	(self.currentSection) = newSection;
+	
+	[self didBeginTransitionToViewController:[self viewControllerForSection:newSection]];
+}
+
+- (void)didBeginTransitionToViewController:(NSViewController *)viewController
+{
+	if (viewController == (self.nowProjectViewController) || viewController == (self.addedProjectViewController) || viewController == (self.editedProjectViewController)) {
+		GLAProjectViewController *projectVC = (GLAProjectViewController *)viewController;
+		
+		[self projectViewControllerDidBecomeActive:projectVC];
+	}
+	else if (viewController == (self.allProjectsViewController) || viewController == (self.plannedProjectsViewController)) {
+		GLAProjectsListViewController *projectListVC = (GLAProjectsListViewController *)viewController;
+		
+		[projectListVC viewDidAppear];
+	}
+}
+
+- (void)didBeginTransitionAwayFromViewController:(NSViewController *)viewController
+{
+	if (viewController == (self.nowProjectViewController) || viewController == (self.addedProjectViewController) || viewController == (self.editedProjectViewController)) {
+		GLAProjectViewController *projectVC = (GLAProjectViewController *)viewController;
+		[self projectViewControllerDidBecomeInactive:projectVC];
+	}
 }
 
 - (NSTimeInterval)contentViewTransitionDurationGoingInNotOut:(BOOL)inNotOut
@@ -582,6 +628,8 @@
 		return 4.0 / 12.0;
 	}
 }
+
+#pragma mark Adjusting Individual Content Views
 
 - (void)hideChildContentView:(NSView *)view adjustingConstraint:(NSLayoutConstraint *)constraint toValue:(CGFloat)constraintValue animate:(BOOL)animate
 {
@@ -603,11 +651,6 @@
 			(constraint.constant) = constraintValue;
 		}
 	} completionHandler:^ {
-		// If the current section hasn't been changed back before the animation finishes:
-		if ((self.currentSection) != GLAMainWindowControllerSectionToday) {
-			//(view.hidden) = YES;
-		}
-		
 		NSTableView *tableView = nil;
 		if (view == (self.allProjectsViewController.view)) {
 			tableView = (self.allProjectsViewController.tableView);

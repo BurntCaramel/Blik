@@ -18,8 +18,11 @@
 @property (copy, nonatomic) NSArray *projects;
 
 
+- (void)viewDidAppear;
+
 - (IBAction)tableViewClicked:(id)sender;
 
 @end
 
 extern NSString *GLAProjectListViewControllerDidClickOnProjectNotification;
+extern NSString *GLAProjectListViewControllerDidPerformWorkOnProjectNowNotification;

@@ -501,6 +501,9 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	
 	[tableView registerForDraggedTypes:@[GLACollectionJSONPasteboardType]];
 	
+	// I think Apple says this is better for scrolling performance.
+	(tableView.enclosingScrollView.wantsLayer) = YES;
+	
 	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
 }
 
@@ -738,6 +741,9 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	NSTableView *tableView = (self.tableView);
 	(tableView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
 	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
+	
+	// I think Apple says this is better for scrolling performance.
+	(tableView.enclosingScrollView.wantsLayer) = YES;
 	
 	
 	GLAReminderManager *reminderManager = [GLAReminderManager sharedReminderManager];

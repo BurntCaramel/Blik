@@ -31,6 +31,11 @@
 	return (id)[super view];
 }
 
+- (void)viewDidAppear
+{
+	
+}
+
 - (void)updateConstraintsWithAnimatedDuration:(NSTimeInterval)duration
 {
 	NSView *view = (self.view);
