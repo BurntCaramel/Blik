@@ -47,6 +47,11 @@
 - (void)clearName;
 - (void)focusNameTextField;
 
+@property(readonly, nonatomic) NSScrollView *itemsScrollView;
+@property(readonly, nonatomic) NSScrollView *planScrollView;
+
+- (void)matchWithOtherProjectViewController:(GLAProjectViewController *)otherController;
+
 @end
 
 // Notifications

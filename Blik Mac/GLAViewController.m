@@ -31,6 +31,11 @@
 	return (id)[super view];
 }
 
+- (void)viewWillAppear
+{
+	
+}
+
 - (void)viewDidAppear
 {
 	

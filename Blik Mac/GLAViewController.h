@@ -13,6 +13,7 @@
 
 @property(readonly, nonatomic) GLAView *view;
 
+- (void)viewWillAppear;
 - (void)viewDidAppear;
 
 #pragma mark Auto Layout

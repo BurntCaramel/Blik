@@ -85,6 +85,14 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 	(actionsBarView.layer.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor.CGColor);
 }
 
+- (void)viewWillAppear
+{
+	[super viewWillAppear];
+	
+	[(self.itemsScrollView.contentView) scrollToPoint:NSZeroPoint];
+	[(self.planScrollView.contentView) scrollToPoint:NSZeroPoint];
+}
+
 - (GLAProject *)project
 {
 	return (self.private_project);
@@ -170,7 +178,6 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 	[(self.view.window) makeFirstResponder:(self.nameTextField)];
 }
 
-
 - (NSScrollView *)itemsScrollView
 {
 	return (self.itemsViewController.tableView.enclosingScrollView);
@@ -179,6 +186,14 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 - (NSScrollView *)planScrollView
 {
 	return (self.planViewController.tableView.enclosingScrollView);
+}
+
+- (void)matchWithOtherProjectViewController:(GLAProjectViewController *)otherController
+{
+	[(self.itemsScrollView.contentView) scrollToPoint:(otherController.itemsScrollView.contentView.bounds).origin];
+	
+	[(self.planScrollView.contentView) scrollToPoint:(otherController.planScrollView.contentView.bounds).origin];
+	
 }
 
 - (void)animateItemsViewForFocusChange:(BOOL)isFocused

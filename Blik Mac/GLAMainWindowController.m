@@ -530,8 +530,9 @@
 			[self hideChildContentView:(self.nowProjectViewController.view) moveLeadingTo:-500.0 animate:NO];
 		}
 		else if (previousSection == GLAMainWindowControllerSectionAllEditProject || previousSection == GLAMainWindowControllerSectionPlannedEditProject) {
-			NSViewController *vc = [self viewControllerForSection:previousSection];
-			[(vc.view) removeFromSuperview];
+			[(self.nowProjectViewController) matchWithOtherProjectViewController:(self.editedProjectViewController)];
+			
+			[(self.editedProjectViewController.view) removeFromSuperview];
 			
 			animateNowIn = NO;
 		}
@@ -595,22 +596,21 @@
 	[self didBeginTransitionToViewController:[self viewControllerForSection:newSection]];
 }
 
-- (void)didBeginTransitionToViewController:(NSViewController *)viewController
+- (void)didBeginTransitionToViewController:(GLAViewController *)viewController
 {
+	[viewController viewWillAppear];
+	
 	if (viewController == (self.nowProjectViewController) || viewController == (self.addedProjectViewController) || viewController == (self.editedProjectViewController)) {
 		GLAProjectViewController *projectVC = (GLAProjectViewController *)viewController;
 		
 		[self projectViewControllerDidBecomeActive:projectVC];
 	}
-	else if (viewController == (self.allProjectsViewController) || viewController == (self.plannedProjectsViewController)) {
-		GLAProjectsListViewController *projectListVC = (GLAProjectsListViewController *)viewController;
-		
-		[projectListVC viewDidAppear];
-	}
 }
 
-- (void)didBeginTransitionAwayFromViewController:(NSViewController *)viewController
+- (void)didBeginTransitionAwayFromViewController:(GLAViewController *)viewController
 {
+	[viewController viewDidAppear];
+	
 	if (viewController == (self.nowProjectViewController) || viewController == (self.addedProjectViewController) || viewController == (self.editedProjectViewController)) {
 		GLAProjectViewController *projectVC = (GLAProjectViewController *)viewController;
 		[self projectViewControllerDidBecomeInactive:projectVC];
@@ -712,6 +712,8 @@
 		//(context.allowsImplicitAnimation) = YES;
 		//[view layoutSubtreeIfNeeded];
 	} completionHandler:^ {
+		GLAViewController *vc = [self viewControllerForSection:(self.currentSection)];
+		[vc viewDidAppear];
 		//NSLog(@"SHOW COMPLETED %@", (view.identifier));
 	}];
 }

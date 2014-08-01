@@ -54,9 +54,7 @@ NSString *GLAProjectListViewControllerDidPerformWorkOnProjectNowNotification = @
 
 - (void)viewDidAppear
 {
-	if ([(self.superclass) instancesRespondToSelector:@selector(viewDidAppear)]) {
-		[super viewDidAppear];
-	}
+	[super viewDidAppear];
 	
 	NSTableView *tableView = (self.tableView);
 	NSScrollView *scrollView = [tableView enclosingScrollView];
