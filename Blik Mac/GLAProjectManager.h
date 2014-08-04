@@ -13,7 +13,7 @@
 
 @interface GLAProjectManager : NSObject
 
-+ (instancetype)sharedProjectManager;
++ (instancetype)sharedProjectManager; // Works on the main queue
 
 #pragma mark Using Projects
 

@@ -485,9 +485,9 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 - (void)prepareDummyContent
 {
 	GLAProject *project = (self.project);
-	id<GLACollectionListEditing> collectionListEditing = (project.collectionsEditing);
+	id<GLAArrayEditing> collectionListEditing = (project.collectionsEditing);
 	
-	[collectionListEditing addChildCollections:
+	[collectionListEditing addChildren:
 	 @[
 	   [GLACollection dummyCollectionWithTitle:@"Working Files" colorIdentifier:GLACollectionColorLightBlue],
 	   [GLACollection dummyCollectionWithTitle:@"Briefs" colorIdentifier:GLACollectionColorGreen],
@@ -576,7 +576,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 - (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row
 {
 	GLACollection *collection = (self.collections)[row];
-	return [collection newPasteboardItem];
+	return collection;
 }
 
 - (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forRowIndexes:(NSIndexSet *)rowIndexes
@@ -589,12 +589,12 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 {
 	// Does not work for some reason.
 	if (operation == NSDragOperationDelete) {
-		id<GLACollectionListEditing> collectionListEditing = (self.project.collectionsEditing);
+		id<GLAArrayEditing> collectionListEditing = (self.project.collectionsEditing);
 		
 		NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
 		(self.draggedRowIndexes) = nil;
 		
-		[collectionListEditing removeChildCollectionsAtIndexes:sourceRowIndexes];
+		[collectionListEditing removeChildrenAtIndexes:sourceRowIndexes];
 		
 		[self reloadCollections];
 	}
@@ -635,7 +635,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 		return NO;
 	}
 	
-	id<GLACollectionListEditing> collectionListEditing = (self.project.collectionsEditing);
+	id<GLAArrayEditing> collectionListEditing = (self.project.collectionsEditing);
 	
 	NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
 	(self.draggedRowIndexes) = nil;
@@ -645,13 +645,15 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 		// The row index is the final destination, so reduce it by the number of rows being moved before it.
 		row -= [sourceRowIndexes countOfIndexesInRange:NSMakeRange(0, row)];
 		
-		[collectionListEditing moveChildCollectionsAtIndexes:sourceRowIndexes toIndex:row];
+		[collectionListEditing moveChildrenAtIndexes:sourceRowIndexes toIndex:row];
 	}
 	else if (sourceOperation & NSDragOperationCopy) {
-		[collectionListEditing insertChildCollections:[collectionListEditing childCollectionsAtIndexes:sourceRowIndexes] atIndexes:[NSIndexSet indexSetWithIndex:row]];
+		//TODO: actually make copies.
+		NSArray *childrenToCopy = [collectionListEditing childrenAtIndexes:sourceRowIndexes];
+		[collectionListEditing insertChildren:childrenToCopy atIndexes:[NSIndexSet indexSetWithIndex:row]];
 	}
 	else if (sourceOperation & NSDragOperationDelete) {
-		[collectionListEditing removeChildCollectionsAtIndexes:sourceRowIndexes];
+		[collectionListEditing removeChildrenAtIndexes:sourceRowIndexes];
 	}
 	else {
 		return NO;

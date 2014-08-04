@@ -7,7 +7,7 @@
 //
 
 #import "GLAProject.h"
-#import "GLAProjectCollectionListEditor.h"
+#import "GLAArrayEditor.h"
 #import "NSValueTransformer+GLAModel.h"
 
 
@@ -17,7 +17,7 @@
 
 @property(copy, nonatomic) NSArray *collectionsForMantle;
 @property(copy, nonatomic) NSArray *loadedCollections;
-@property(readonly, nonatomic) GLAProjectCollectionListEditor *collectionListEditor;
+@property(readonly, nonatomic) GLAArrayEditor *collectionListEditor;
 
 @property(nonatomic) NSArray *mutableReminders;
 
@@ -54,7 +54,7 @@
 
 - (NSArray *)copyCollections
 {
-	return [(self.collectionListEditor) copyCollections];
+	return [(self.collectionListEditor) copyChildren];
 }
 
 - (void)setCollectionsForMantle:(NSArray *)collections
@@ -67,14 +67,14 @@
 	return [self copyCollections];
 }
 
-- (id<GLACollectionListEditing>)collectionsEditing
+- (id<GLAArrayEditing>)collectionsEditing
 {
 	if (!_collectionListEditor) {
 		NSArray *collections = (self.loadedCollections);
 		if (!collections) {
 			collections = [NSArray array];
 		}
-		_collectionListEditor = [[GLAProjectCollectionListEditor alloc] initWithCollections:collections];
+		_collectionListEditor = [[GLAArrayEditor alloc] initWithObjects:collections];
 	}
 	
 	return _collectionListEditor;

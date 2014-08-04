@@ -9,6 +9,7 @@
 @import Foundation;
 #import "GLACollection.h"
 #import "GLAReminder.h"
+#import "GLAArrayEditing.h"
 #import "Mantle/Mantle.h"
 
 
@@ -19,7 +20,7 @@
 @property(copy, nonatomic) NSString *name;
 
 @property(readonly, copy, nonatomic) NSArray *copyCollections;
-- (id<GLACollectionListEditing>)collectionsEditing;
+- (id<GLAArrayEditing>)collectionsEditing;
 
 //@property(readonly, copy, nonatomic) NSSet *copyReminders;
 @property(readonly, copy, nonatomic) NSArray *copyRemindersOrderedByPriority;

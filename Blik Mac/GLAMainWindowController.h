@@ -51,7 +51,7 @@ typedef NS_ENUM(NSInteger, GLAMainWindowControllerSection) {
 
 - (void)transitionContentToSection:(GLAMainWindowControllerSection)newSection animate:(BOOL)animate;
 //- (void)goToSection:(GLAMainWindowControllerSection)newSection animate:(BOOL)animate;
-- (void)didTransitionContentToViewController:(NSViewController *)viewController;
+//- (void)didTransitionContentToViewController:(NSViewController *)viewController;
 
 
 - (void)projectListViewControllerDidClickOnProjectNotification:(NSNotification *)note;

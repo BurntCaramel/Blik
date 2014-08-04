@@ -46,7 +46,9 @@
 {
 	[super loadView];
 	
-	(self.navigationBar.delegate) = self;
+	GLANavigationBar *navigationBar = (self.navigationBar);
+	(navigationBar.delegate) = self;
+	(navigationBar.showBottomEdgeLine) = YES;
 	
 	(self.templateButton.canDrawSubviewsIntoLayer) = YES;
 	[(self.templateButton) removeFromSuperview];

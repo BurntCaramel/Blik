@@ -9,6 +9,7 @@
 @import Foundation;
 #import "Mantle/Mantle.h"
 @class GLAProject;
+@class GLACollectionContent;
 
 
 typedef NS_ENUM(NSInteger, GLACollectionColor) {
@@ -21,9 +22,11 @@ typedef NS_ENUM(NSInteger, GLACollectionColor) {
 };
 
 
-@interface GLACollection : MTLModel <MTLJSONSerializing>
+@interface GLACollection : MTLModel <MTLJSONSerializing, NSPasteboardReading, NSPasteboardWriting>
 
 @property(weak, nonatomic) GLAProject *project;
+
+@property(nonatomic) GLACollectionContent *content;
 
 @property(readonly, nonatomic) NSUUID *UUID;
 @property(copy, nonatomic) NSString *title;

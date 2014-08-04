@@ -21,6 +21,9 @@
 		B226E95A1988D00C00D607CC /* GLAFileCollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B226E9581988D00C00D607CC /* GLAFileCollectionViewController.xib */; };
 		B226E95D1988D35E00D607CC /* GLACollectionContent.m in Sources */ = {isa = PBXBuildFile; fileRef = B226E95C1988D35E00D607CC /* GLACollectionContent.m */; };
 		B226E9611988D3A600D607CC /* GLACollectionFilesListContent.m in Sources */ = {isa = PBXBuildFile; fileRef = B226E9601988D3A600D607CC /* GLACollectionFilesListContent.m */; };
+		B22E80C4198CAE38005C4108 /* GLACollectedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B22E80C3198CAE38005C4108 /* GLACollectedFile.m */; };
+		B22E80C7198F654E005C4108 /* GLAArrayEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = B22E80C6198F654E005C4108 /* GLAArrayEditor.m */; };
+		B22E80CB198F8971005C4108 /* GLAFileURLInfoRetriever.m in Sources */ = {isa = PBXBuildFile; fileRef = B22E80CA198F8971005C4108 /* GLAFileURLInfoRetriever.m */; };
 		B23515331973BEAB00883FB3 /* GLAButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B23515321973BEAB00883FB3 /* GLAButton.m */; };
 		B24B3607196D1F720094FA1F /* GLAReminder.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3606196D1F720094FA1F /* GLAReminder.m */; };
 		B24B360B196E336E0094FA1F /* GLAMainNavigationBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */; };
@@ -29,7 +32,6 @@
 		B284D5621978EC1F00157126 /* GLACollection.m in Sources */ = {isa = PBXBuildFile; fileRef = B284D5611978EC1F00157126 /* GLACollection.m */; };
 		B28D217F1977C24000A12C6D /* GLAToggleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B28D217E1977C24000A12C6D /* GLAToggleButton.m */; };
 		B28D21821977D6E600A12C6D /* GLATableRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = B28D21811977D6E600A12C6D /* GLATableRowView.m */; };
-		B29F8DD41980C82C00F58F59 /* GLAProjectCollectionListEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = B29F8DD31980C82C00F58F59 /* GLAProjectCollectionListEditor.m */; };
 		B29F8DDA1980D45400F58F59 /* NSValueTransformer+GLAModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B29F8DD91980D45400F58F59 /* NSValueTransformer+GLAModel.m */; };
 		B29F8DDD1981139300F58F59 /* GLAReminderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B29F8DDC1981139300F58F59 /* GLAReminderManager.m */; };
 		B2ADDBD21963DA2E0014EF84 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */; };
@@ -93,6 +95,14 @@
 		B226E95C1988D35E00D607CC /* GLACollectionContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLACollectionContent.m; sourceTree = "<group>"; };
 		B226E95F1988D3A600D607CC /* GLACollectionFilesListContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLACollectionFilesListContent.h; sourceTree = "<group>"; };
 		B226E9601988D3A600D607CC /* GLACollectionFilesListContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLACollectionFilesListContent.m; sourceTree = "<group>"; };
+		B22E80C2198CAE38005C4108 /* GLACollectedFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLACollectedFile.h; sourceTree = "<group>"; };
+		B22E80C3198CAE38005C4108 /* GLACollectedFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLACollectedFile.m; sourceTree = "<group>"; };
+		B22E80C5198F654E005C4108 /* GLAArrayEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAArrayEditor.h; sourceTree = "<group>"; };
+		B22E80C6198F654E005C4108 /* GLAArrayEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAArrayEditor.m; sourceTree = "<group>"; };
+		B22E80C8198F65A9005C4108 /* GLAArrayEditing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLAArrayEditing.h; sourceTree = "<group>"; };
+		B22E80C9198F8971005C4108 /* GLAFileURLInfoRetriever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAFileURLInfoRetriever.h; sourceTree = "<group>"; };
+		B22E80CA198F8971005C4108 /* GLAFileURLInfoRetriever.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAFileURLInfoRetriever.m; sourceTree = "<group>"; };
+		B22E80CC198F8B13005C4108 /* Blik.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Blik.entitlements; sourceTree = "<group>"; };
 		B23515311973BEAB00883FB3 /* GLAButton.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = GLAButton.h; sourceTree = "<group>"; tabWidth = 4; usesTabs = 1; wrapsLines = 1; };
 		B23515321973BEAB00883FB3 /* GLAButton.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = GLAButton.m; sourceTree = "<group>"; tabWidth = 4; usesTabs = 1; wrapsLines = 1; };
 		B24B3605196D1F720094FA1F /* GLAReminder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAReminder.h; sourceTree = "<group>"; };
@@ -108,8 +118,6 @@
 		B28D217E1977C24000A12C6D /* GLAToggleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAToggleButton.m; sourceTree = "<group>"; };
 		B28D21801977D6E600A12C6D /* GLATableRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLATableRowView.h; sourceTree = "<group>"; };
 		B28D21811977D6E600A12C6D /* GLATableRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLATableRowView.m; sourceTree = "<group>"; };
-		B29F8DD21980C82C00F58F59 /* GLAProjectCollectionListEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProjectCollectionListEditor.h; sourceTree = "<group>"; };
-		B29F8DD31980C82C00F58F59 /* GLAProjectCollectionListEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProjectCollectionListEditor.m; sourceTree = "<group>"; };
 		B29F8DD81980D45400F58F59 /* NSValueTransformer+GLAModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSValueTransformer+GLAModel.h"; sourceTree = "<group>"; };
 		B29F8DD91980D45400F58F59 /* NSValueTransformer+GLAModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSValueTransformer+GLAModel.m"; sourceTree = "<group>"; };
 		B29F8DDB1981139300F58F59 /* GLAReminderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAReminderManager.h; sourceTree = "<group>"; };
@@ -237,6 +245,10 @@
 				B226E95C1988D35E00D607CC /* GLACollectionContent.m */,
 				B226E95F1988D3A600D607CC /* GLACollectionFilesListContent.h */,
 				B226E9601988D3A600D607CC /* GLACollectionFilesListContent.m */,
+				B22E80C2198CAE38005C4108 /* GLACollectedFile.h */,
+				B22E80C3198CAE38005C4108 /* GLACollectedFile.m */,
+				B22E80C9198F8971005C4108 /* GLAFileURLInfoRetriever.h */,
+				B22E80CA198F8971005C4108 /* GLAFileURLInfoRetriever.m */,
 			);
 			name = "Collection Content";
 			sourceTree = "<group>";
@@ -246,8 +258,9 @@
 			children = (
 				B2841B3119809E15005BB6A3 /* GLAProject.h */,
 				B2841B3219809E15005BB6A3 /* GLAProject.m */,
-				B29F8DD21980C82C00F58F59 /* GLAProjectCollectionListEditor.h */,
-				B29F8DD31980C82C00F58F59 /* GLAProjectCollectionListEditor.m */,
+				B22E80C8198F65A9005C4108 /* GLAArrayEditing.h */,
+				B22E80C5198F654E005C4108 /* GLAArrayEditor.h */,
+				B22E80C6198F654E005C4108 /* GLAArrayEditor.m */,
 				B284D5601978EC1F00157126 /* GLACollection.h */,
 				B284D5611978EC1F00157126 /* GLACollection.m */,
 				B226E95E1988D36300D607CC /* Collection Content */,
@@ -262,6 +275,7 @@
 		B2ADDBC51963DA2E0014EF84 = {
 			isa = PBXGroup;
 			children = (
+				B22E80CC198F8B13005C4108 /* Blik.entitlements */,
 				B2ADDBD71963DA2E0014EF84 /* Blik Mac */,
 				B2ADDBF51963DA2E0014EF84 /* Blik Tests */,
 				B2ADDBD01963DA2E0014EF84 /* Frameworks */,
@@ -456,6 +470,13 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Burnt Caramel";
 				TargetAttributes = {
+					B2ADDBCD1963DA2E0014EF84 = {
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
+					};
 					B2ADDBEE1963DA2E0014EF84 = {
 						TestTargetID = B2ADDBCD1963DA2E0014EF84;
 					};
@@ -562,7 +583,8 @@
 				B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */,
 				B226E9591988D00C00D607CC /* GLAFileCollectionViewController.m in Sources */,
 				B226E9611988D3A600D607CC /* GLACollectionFilesListContent.m in Sources */,
-				B29F8DD41980C82C00F58F59 /* GLAProjectCollectionListEditor.m in Sources */,
+				B22E80C7198F654E005C4108 /* GLAArrayEditor.m in Sources */,
+				B22E80C4198CAE38005C4108 /* GLACollectedFile.m in Sources */,
 				B23515331973BEAB00883FB3 /* GLAButton.m in Sources */,
 				B2C7F28F19704A2C005780B4 /* GLAProjectOverviewTableCellView.m in Sources */,
 				B2C7F29819739239005780B4 /* GLAViewController.m in Sources */,
@@ -571,6 +593,7 @@
 				B24B3607196D1F720094FA1F /* GLAReminder.m in Sources */,
 				B2C7F28B197023EF005780B4 /* GLAProjectsListViewController.m in Sources */,
 				B28D217F1977C24000A12C6D /* GLAToggleButton.m in Sources */,
+				B22E80CB198F8971005C4108 /* GLAFileURLInfoRetriever.m in Sources */,
 				B2C7F2921970D5D3005780B4 /* GLAMainWindow.m in Sources */,
 				B219DAB2196AD462007900DF /* GLAProjectViewController.m in Sources */,
 				B219DAAB196AB8D1007900DF /* GLANavigationButton.m in Sources */,
@@ -713,6 +736,8 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = Blik.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
@@ -730,6 +755,8 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = Blik.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";

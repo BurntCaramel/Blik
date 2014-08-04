@@ -8,7 +8,7 @@
 
 #import "MTLModel.h"
 
-
+// Subclassed
 @interface GLACollectionContent : MTLModel
 
 @end

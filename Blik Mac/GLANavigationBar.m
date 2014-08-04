@@ -37,10 +37,18 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	
 	NSColor *highlightColor = (self.highlightColor);
 	if (highlightColor) {
-		GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 		[uiStyle drawActiveHighlightForBounds:(self.bounds) withColor:highlightColor time:1.0];
+	}
+	
+	if (self.showBottomEdgeLine) {
+		[(uiStyle.projectTableDividerColor) setFill];
+		CGRect dividerRect, dividerElseRect;
+		CGRectDivide((self.bounds), &dividerRect, &dividerElseRect, 0.5, CGRectMaxYEdge);
+		NSRectFillUsingOperation(dividerRect, NSCompositeSourceOver);
 	}
 }
 

@@ -13,7 +13,7 @@
 
 @interface GLAReminderManager : NSObject
 
-+ (instancetype)sharedReminderManager;
++ (instancetype)sharedReminderManager; // Work on the main queue
 
 @property (nonatomic) EKCalendar *calendarForNewReminders;
 @property (nonatomic) NSArray *calendarsForFindingReminders;

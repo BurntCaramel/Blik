@@ -11,21 +11,15 @@
 
 @interface GLACollectionFilesListContent ()
 
-@property(nonatomic) NSMutableArray *URLs;
-@property(nonatomic) NSMutableArray *bookmarkDataArray;
+@property(nonatomic) NSMutableArray *files;
 
 @end
 
 @implementation GLACollectionFilesListContent
 
-- (NSArray *)copyURLs
+- (NSArray *)copyFiles
 {
-	return (self.URLs.copy);
-}
-
-- (NSArray *)copyBookmarkDataArray
-{
-	return (self.bookmarkDataArray.copy);
+	return (self.files.copy);
 }
 
 @end

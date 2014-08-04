@@ -8,11 +8,12 @@
 
 #import "GLACollectionContent.h"
 
+@class GLACollectedFile;
+
 
 @interface GLACollectionFilesListContent : GLACollectionContent
 
-- (NSArray *)copyURLs;
-- (NSArray *)copyBookmarkDataArray;
+- (NSArray *)copyFiles; // [GLACollectedFile]
 
 
 
