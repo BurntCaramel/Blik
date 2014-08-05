@@ -16,6 +16,9 @@
 - (void)viewWillAppear;
 - (void)viewDidAppear;
 
+- (void)viewWillDisappear;
+- (void)viewDidDisappear;
+
 #pragma mark Auto Layout
 
 - (void)updateConstraintsWithAnimatedDuration:(NSTimeInterval)duration;

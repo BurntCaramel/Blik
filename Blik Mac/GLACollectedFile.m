@@ -26,6 +26,11 @@
 	return self;
 }
 
++ (instancetype)collectedFileWithFileURL:(NSURL *)URL
+{
+	return [[self alloc] initWithFileURL:URL];
+}
+
 @end
 
 

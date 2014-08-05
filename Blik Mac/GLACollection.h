@@ -53,7 +53,7 @@ extern NSString *GLACollectionJSONPasteboardType;
 
 @interface GLACollection (GLADummyContent)
 
-+ (instancetype)dummyCollectionWithTitle:(NSString *)title colorIdentifier:(GLACollectionColor)colorIdentifier;
++ (instancetype)dummyCollectionWithTitle:(NSString *)title colorIdentifier:(GLACollectionColor)colorIdentifier content:(GLACollectionContent *)content;
 
 @end
 

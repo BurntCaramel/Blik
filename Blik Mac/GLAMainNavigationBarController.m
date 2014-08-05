@@ -144,6 +144,50 @@
 	}];
 }
 
+- (void)hideLeadingButton:(NSButton *)leadingButton trailingButton:(NSButton *)trailingButton centerButton:(NSButton *)centerButton completionHandler:(dispatch_block_t)completionHandler
+{
+	(self.animatingCounter)++;
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 4.0 / 12.0;
+		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+		
+		if (leadingButton) {
+			(leadingButton.animator.alphaValue) = 0.0;
+			
+			NSLayoutConstraint *leadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:leadingButton];
+			(leadingConstraint.animator.constant) = -250.0;
+		}
+		
+		if (trailingButton) {
+			(trailingButton.animator.alphaValue) = 0.0;
+			
+			NSLayoutConstraint *trailingConstraint = [self layoutConstraintWithIdentifier:@"trailing" forChildView:trailingButton];
+			(trailingConstraint.animator.constant) = 250.0;
+		}
+		
+		if (centerButton) {
+			(centerButton.animator.alphaValue) = 0.0;
+			
+			NSLayoutConstraint *topConstraint = [self layoutConstraintWithIdentifier:@"top" forChildView:centerButton];
+			(topConstraint.animator.constant) = 50.0;
+		}
+	} completionHandler:^ {
+		(self.animatingCounter)--;
+		
+		if (leadingButton) {
+			[leadingButton removeFromSuperview];
+		}
+		if (trailingButton) {
+			[trailingButton removeFromSuperview];
+		}
+		if (centerButton) {
+			[centerButton removeFromSuperview];
+		}
+		
+		completionHandler();
+	}];
+}
+
 - (void)showButtonsForEditingExistingProject
 {
 	NSString *backTitle = (self.titleForEditingProjectBackButton);
@@ -183,33 +227,8 @@
 
 - (void)hideButtonsForEditingExistingProject
 {
-	NSButton *backButton = (self.editingProjectBackButton);
-	NSButton *workOnNowButton = (self.editingProjectWorkOnNowButton);
-	
-	NSLayoutConstraint *backLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:backButton];
-	NSLayoutConstraint *workOnNowTrailingConstraint = [self layoutConstraintWithIdentifier:@"trailing" forChildView:workOnNowButton];
-	
-	(self.animatingCounter)++;
-	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-		(context.duration) = 4.0 / 12.0;
-		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-		
-		// Back button
-		(backButton.animator.alphaValue) = 0.0;
-		// Constraint
-		(backLeadingConstraint.animator.constant) = -250.0;
-		
-		// Work on Now button
-		(workOnNowButton.animator.alphaValue) = 0.0;
-		// Constraint
-		(workOnNowTrailingConstraint.animator.constant) = 250.0;
-	} completionHandler:^ {
-		(self.animatingCounter)--;
-		
-		[backButton removeFromSuperview];
+	[self hideLeadingButton:(self.editingProjectBackButton) trailingButton:(self.editingProjectWorkOnNowButton) centerButton:nil completionHandler:^{
 		(self.editingProjectBackButton) = nil;
-		
-		[workOnNowButton removeFromSuperview];
 		(self.editingProjectWorkOnNowButton) = nil;
 	}];
 }
@@ -252,32 +271,7 @@
 
 - (void)hideButtonsForAddingNewProject
 {
-	NSButton *cancelButton = (self.addingNewProjectCancelButton);
-	NSButton *confirmButton = (self.addingNewProjectConfirmButton);
-	
-	NSLayoutConstraint *cancelLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:cancelButton];
-	NSLayoutConstraint *confirmTrailingConstraint = [self layoutConstraintWithIdentifier:@"trailing" forChildView:confirmButton];
-	
-	(self.animatingCounter)++;
-	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-		(context.duration) = 4.0 / 12.0;
-		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-		
-		// Cancel button
-		(cancelButton.animator.alphaValue) = 0.0;
-		// Constraint
-		(cancelLeadingConstraint.animator.constant) = -250.0;
-		
-		// Confirm button
-		(confirmButton.animator.alphaValue) = 0.0;
-		// Constraint
-		(confirmTrailingConstraint.animator.constant) = 250.0;
-	} completionHandler:^ {
-		(self.animatingCounter)--;
-		
-		[cancelButton removeFromSuperview];
-		[confirmButton removeFromSuperview];
-		
+	[self hideLeadingButton:(self.addingNewProjectCancelButton) trailingButton:(self.addingNewProjectConfirmButton) centerButton:nil completionHandler:^{
 		(self.addingNewProjectCancelButton) = nil;
 		(self.addingNewProjectConfirmButton) = nil;
 	}];
@@ -288,17 +282,49 @@
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	GLACollection *collection = (self.currentCollection);
 	
+	// Back
+	NSString *backTitle = NSLocalizedString(@"Back", @"Title for collection back button to go back");
+	GLAButton *backButton = [self addLeadingButtonWithTitle:backTitle action:@selector(exitCurrentCollection:) identifier:@"back-collection"];
+	(self.collectionBackButton) = backButton;
+	NSLayoutConstraint *backLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:backButton];
+	
+	// Collection title
 	NSString *collectionTitle = (collection.title);
-	GLAButton *collectionButton = [self addCenterButtonWithTitle:collectionTitle action:nil identifier:@"collectionTitle"];
-	(collectionButton.textHighlightColor) = [uiStyle colorForProjectItemColorIdentifier:(collection.colorIdentifier)];
-	(self.collectionTitleButton) = collectionButton;
+	GLAButton *titleButton = [self addCenterButtonWithTitle:collectionTitle action:nil identifier:@"collectionTitle"];
+	(titleButton.textHighlightColor) = [uiStyle colorForProjectItemColorIdentifier:(collection.colorIdentifier)];
+	(self.collectionTitleButton) = titleButton;
+	NSLayoutConstraint *titleTopConstraint = [self layoutConstraintWithIdentifier:@"top" forChildView:titleButton];
+	
+	
+	(self.animatingCounter)++;
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 4.0 / 12.0;
+		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+		
+		// Back button
+		(backButton.alphaValue) = 0.0;
+		(backButton.animator.alphaValue) = 1.0;
+		// Constraint
+		(backLeadingConstraint.constant) = -250.0;
+		(backLeadingConstraint.animator.constant) = 0.0;
+		
+		// Confirm button
+		(titleButton.alphaValue) = 0.0;
+		(titleButton.animator.alphaValue) = 1.0;
+		// Constraint
+		(titleTopConstraint.constant) = 50.0;
+		(titleTopConstraint.animator.constant) = 0.0;
+	} completionHandler:^ {
+		(self.animatingCounter)--;
+	}];
 }
 
 - (void)hideButtonsForCurrentCollection
 {
-	NSButton *collectionTitleButton = (self.collectionTitleButton);
-	[collectionTitleButton removeFromSuperview];
-	(self.collectionTitleButton) = nil;
+	[self hideLeadingButton:(self.collectionBackButton) trailingButton:nil centerButton:(self.collectionTitleButton) completionHandler:^{
+		(self.collectionBackButton) = nil;
+		(self.collectionTitleButton) = nil;
+	}];
 }
 
 #pragma mark Projects
@@ -408,20 +434,29 @@
 	(self.currentCollection) = collection;
 	
 	[self hideMainButtons];
-	[self hideButtonsForCurrentCollection];
+	//[self hideButtonsForCurrentCollection];
 	[self showButtonsForCurrentCollection];
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	NSColor *collectionColor = [uiStyle colorForProjectItemColorIdentifier:(collection.colorIdentifier)];
 	//[self animateBackgroundColorTo:collectionColor];
-	GLANavigationBar *view = (self.navigationBar);
-	[view highlightWithColor:collectionColor animate:YES];
+	[(self.navigationBar) highlightWithColor:collectionColor animate:YES];
 }
 
 - (void)exitCurrentCollection:(id)sender
 {
 	if (self.isAnimating) {
 		return;
+	}
+	
+	[self hideButtonsForCurrentCollection];
+	[self showMainButtons];
+	
+	[(self.navigationBar) highlightWithColor:nil animate:YES];
+	
+	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
+	if (delegate) {
+		[delegate mainNavigationBarController:self didExitCollection:(self.currentCollection)];
 	}
 	
 	(self.currentCollection) = nil;
@@ -432,6 +467,7 @@
 - (void)setEnabled:(BOOL)enabled
 {
 	if (enabled != (self.private_enabled)) {
+		NSLog(@"SET ENABLED %@", enabled ? @"y" : @"n");
 		(self.private_enabled) = enabled;
 		
 		(self.allButton.enabled) = enabled;
@@ -439,6 +475,8 @@
 		(self.plannedButton.enabled) = enabled;
 		(self.addProjectButton.enabled) = enabled;
 		(self.templateButton.enabled) = enabled;
+		
+		//[(self.view) setNeedsDisplay:YES];
 	}
 }
 
@@ -461,7 +499,8 @@
 	[navigationBar addSubview:button];
 	
 	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:button identifier:@"top"];
-	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeBottom withChildView:button identifier:@"bottom"];
+	//[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeBottom withChildView:button identifier:@"bottom"];
+	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeHeight withChildView:button identifier:@"height"];
 	
 	return button;
 }

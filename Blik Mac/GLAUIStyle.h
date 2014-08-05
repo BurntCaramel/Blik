@@ -44,6 +44,8 @@
 
 @property (nonatomic) NSColor *deleteProjectButtonColor;
 
+@property (nonatomic) NSColor *splitViewDividerColor;
+
 
 @property (nonatomic) NSColor *lightBlueItemColor;
 @property (nonatomic) NSColor *greenItemColor;
@@ -65,8 +67,12 @@
 @property (nonatomic) NSFont *buttonFont;
 
 
-#pragma mark Drawing
+#pragma mark Preparing Views
 
+- (void)prepareContentTableView:(NSTableView *)tableView;
+
+
+#pragma mark Drawing
 
 - (CGRect)drawingRectOfActiveHighlightForBounds:(CGRect)bounds time:(CGFloat)t;
 - (void)drawActiveHighlightForBounds:(CGRect)bounds withColor:(NSColor *)color time:(CGFloat)t;

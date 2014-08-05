@@ -42,6 +42,7 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 @property(nonatomic) IBOutlet GLAButton *addingNewProjectConfirmButton;
 
 @property(nonatomic) IBOutlet GLAButton *collectionTitleButton;
+@property(nonatomic) IBOutlet GLAButton *collectionBackButton;
 
 @property(nonatomic) IBOutlet NSLayoutConstraint *allButtonTopConstraint;
 @property(nonatomic) IBOutlet NSLayoutConstraint *todayButtonTopConstraint;
@@ -94,4 +95,7 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didExitProject:(GLAProject *)project;
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performWorkOnProjectNow:(GLAProject *)project;
+
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didExitCollection:(GLACollection *)collection;
+
 @end

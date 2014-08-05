@@ -20,6 +20,7 @@
 @interface GLACollectedFile : MTLModel
 
 - (instancetype)initWithFileURL:(NSURL *)URL;
++ (instancetype)collectedFileWithFileURL:(NSURL *)URL;
 
 @property(readonly, nonatomic) NSURL *URL;
 

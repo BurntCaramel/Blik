@@ -10,6 +10,7 @@
 #import "GLAProjectViewController.h"
 #import "GLAUIStyle.h"
 #import "GLAReminderManager.h"
+#import "GLACollectionFilesListContent.h"
 
 
 NSString *GLAProjectViewControllerDidBeginEditingItemsNotification = @"GLA.projectViewController.didBeginEditingItems";
@@ -487,13 +488,15 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	GLAProject *project = (self.project);
 	id<GLAArrayEditing> collectionListEditing = (project.collectionsEditing);
 	
+	GLACollectionFilesListContent *filesListContent = [GLACollectionFilesListContent new];
+	
 	[collectionListEditing addChildren:
 	 @[
-	   [GLACollection dummyCollectionWithTitle:@"Working Files" colorIdentifier:GLACollectionColorLightBlue],
-	   [GLACollection dummyCollectionWithTitle:@"Briefs" colorIdentifier:GLACollectionColorGreen],
-	   [GLACollection dummyCollectionWithTitle:@"Contacts" colorIdentifier:GLACollectionColorPinkyPurple],
-	   [GLACollection dummyCollectionWithTitle:@"Apps" colorIdentifier:GLACollectionColorRed],
-	   [GLACollection dummyCollectionWithTitle:@"Research" colorIdentifier:GLACollectionColorYellow]
+	   [GLACollection dummyCollectionWithTitle:@"Working Files" colorIdentifier:GLACollectionColorLightBlue content:filesListContent],
+	   [GLACollection dummyCollectionWithTitle:@"Briefs" colorIdentifier:GLACollectionColorGreen content:filesListContent],
+	   [GLACollection dummyCollectionWithTitle:@"Contacts" colorIdentifier:GLACollectionColorPinkyPurple content:filesListContent],
+	   [GLACollection dummyCollectionWithTitle:@"Apps" colorIdentifier:GLACollectionColorRed content:filesListContent],
+	   [GLACollection dummyCollectionWithTitle:@"Research" colorIdentifier:GLACollectionColorYellow content:filesListContent]
 	   ]];
 	
 	[self reloadCollections];
@@ -508,15 +511,14 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 - (void)prepareViews
 {
 	NSTableView *tableView = (self.tableView);
-	(tableView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
-	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
+	[[GLAUIStyle activeStyle] prepareContentTableView:tableView];
 	
 	(tableView.target) = self;
 	(tableView.action) = @selector(tableViewWasClicked:);
 	
 	[tableView registerForDraggedTypes:@[GLACollectionJSONPasteboardType]];
 	
-	// I think Apple says this is better for scrolling performance.
+	// I think Apple (from a WWDC video) says this is better for scrolling performance.
 	(tableView.enclosingScrollView.wantsLayer) = YES;
 	
 	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
@@ -756,8 +758,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 - (void)prepareViews
 {
 	NSTableView *tableView = (self.tableView);
-	(tableView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
-	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
+	[[GLAUIStyle activeStyle] prepareContentTableView:tableView];
 	
 	// I think Apple says this is better for scrolling performance.
 	(tableView.enclosingScrollView.wantsLayer) = YES;
@@ -776,6 +777,8 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 - (void)awakeFromNib
 {
+	//[super awakeFromNib];
+	
 	[self prepareViews];
 	//[self prepareDummyContent];
 }

@@ -138,5 +138,4 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	return cellView;
 }
 
-
 @end

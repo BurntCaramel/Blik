@@ -287,30 +287,30 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Project" id="GOh-Jg-v8R">
                         <items>
-                            <menuItem title="Now" keyEquivalent="1" id="nqk-On-ocM">
+                            <menuItem title="All Projects" keyEquivalent="1" id="lyC-ZA-xy1">
                                 <connections>
-                                    <action selector="toggleShowingPrototypeA:" target="Voe-Tx-rLC" id="qE4-8x-HlR"/>
+                                    <action selector="goToAll:" target="-1" id="ccn-5J-0qi"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Planned Projects" keyEquivalent="2" id="bzg-Bt-vsR">
+                            <menuItem title="Now" keyEquivalent="2" id="nqk-On-ocM">
                                 <connections>
-                                    <action selector="toggleShowingPrototypeA:" target="Voe-Tx-rLC" id="Wwb-a5-cHS"/>
+                                    <action selector="goToToday:" target="-1" id="W9P-UV-Nvg"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="All Projects" keyEquivalent="3" id="lyC-ZA-xy1">
+                            <menuItem title="Planned Projects" keyEquivalent="3" id="bzg-Bt-vsR">
                                 <connections>
-                                    <action selector="toggleShowingPrototypeA:" target="Voe-Tx-rLC" id="RxN-i7-MB2"/>
+                                    <action selector="goToPlanned:" target="-1" id="TCH-KT-UyY"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="SmP-nQ-mkB"/>
                             <menuItem title="Work on This Project Now" id="3Gh-mI-doL">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="workOnActiveProjectNow:" target="-1" id="doZ-6q-GO2"/>
+                                    <action selector="workOnEditedProjectNow:" target="-1" id="pHZ-FL-9kL"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="4t1-vK-tMY"/>
-                            <menuItem title="Create Zip Archive Of…" id="1xt-yh-0dZ">
+                            <menuItem title="Create Zip Archive of Items…" id="1xt-yh-0dZ">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="workOnActiveProjectNow:" target="-1" id="aoY-7q-1RK"/>

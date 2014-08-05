@@ -29,6 +29,7 @@
 		B24B3607196D1F720094FA1F /* GLAReminder.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3606196D1F720094FA1F /* GLAReminder.m */; };
 		B24B360B196E336E0094FA1F /* GLAMainNavigationBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */; };
 		B24B360C196E336E0094FA1F /* GLAMainNavigationBarController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B24B360A196E336E0094FA1F /* GLAMainNavigationBarController.xib */; };
+		B268C2561990EACC000BF39B /* GLASplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = B268C2551990EACC000BF39B /* GLASplitView.m */; };
 		B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */ = {isa = PBXBuildFile; fileRef = B2841B3219809E15005BB6A3 /* GLAProject.m */; };
 		B284D5621978EC1F00157126 /* GLACollection.m in Sources */ = {isa = PBXBuildFile; fileRef = B284D5611978EC1F00157126 /* GLACollection.m */; };
 		B28D217F1977C24000A12C6D /* GLAToggleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B28D217E1977C24000A12C6D /* GLAToggleButton.m */; };
@@ -113,6 +114,8 @@
 		B24B3608196E336E0094FA1F /* GLAMainNavigationBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainNavigationBarController.h; sourceTree = "<group>"; };
 		B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainNavigationBarController.m; sourceTree = "<group>"; };
 		B24B360A196E336E0094FA1F /* GLAMainNavigationBarController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAMainNavigationBarController.xib; sourceTree = "<group>"; };
+		B268C2541990EACC000BF39B /* GLASplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLASplitView.h; sourceTree = "<group>"; };
+		B268C2551990EACC000BF39B /* GLASplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLASplitView.m; sourceTree = "<group>"; };
 		B2841B3119809E15005BB6A3 /* GLAProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProject.h; sourceTree = "<group>"; };
 		B2841B3219809E15005BB6A3 /* GLAProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProject.m; sourceTree = "<group>"; };
 		B284D5601978EC1F00157126 /* GLACollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLACollection.h; sourceTree = "<group>"; };
@@ -397,6 +400,8 @@
 				B28D217E1977C24000A12C6D /* GLAToggleButton.m */,
 				B28D21801977D6E600A12C6D /* GLATableRowView.h */,
 				B28D21811977D6E600A12C6D /* GLATableRowView.m */,
+				B268C2541990EACC000BF39B /* GLASplitView.h */,
+				B268C2551990EACC000BF39B /* GLASplitView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -606,6 +611,7 @@
 				B219DAA8196AB7D6007900DF /* GLANavigationBar.m in Sources */,
 				B2C5FD2D1988AB0200AEFBAF /* GLAProjectManager.m in Sources */,
 				B2ADDBE51963DA2E0014EF84 /* GLAAppDelegate.m in Sources */,
+				B268C2561990EACC000BF39B /* GLASplitView.m in Sources */,
 				B284D5621978EC1F00157126 /* GLACollection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

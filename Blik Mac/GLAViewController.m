@@ -33,12 +33,18 @@
 
 - (void)viewWillAppear
 {
-	
 }
 
 - (void)viewDidAppear
 {
-	
+}
+
+- (void)viewWillDisappear
+{
+}
+
+- (void)viewDidDisappear
+{
 }
 
 - (void)updateConstraintsWithAnimatedDuration:(NSTimeInterval)duration
@@ -100,21 +106,22 @@
 
 - (void)fillViewWithChildView:(NSView *)innerView
 {
-	NSView *holderView = (self.view);
-	
-	if (holderView) {
-		[holderView addSubview:innerView];
-		
-		// Interface Builder's default is to have this on for new view controllers in 10.9 for some reason.
-		// I have disabled it where I remember to in the xib file, but no harm in just setting it off here too.
-		(innerView.translatesAutoresizingMaskIntoConstraints) = NO;
-		
-		// By setting width and height constraints, we can move the view around whilst keeping it the same size.
-		[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeWidth withChildView:innerView identifier:@"width"];
-		[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeHeight withChildView:innerView identifier:@"height"];
-		[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:innerView identifier:@"leading"];
-		[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:innerView identifier:@"top"];
+	if (!(innerView.identifier)) {
+		NSUUID *UUID = [NSUUID UUID];
+		(innerView.identifier) = [NSString stringWithFormat:@"(%@)", (UUID.UUIDString)];
 	}
+	
+	[(self.view) addSubview:innerView];
+	
+	// Interface Builder's default is to have this on for new view controllers in 10.9 for some reason.
+	// I have disabled it where I remember to in the xib file, but no harm in just setting it off here too.
+	(innerView.translatesAutoresizingMaskIntoConstraints) = NO;
+	
+	// By setting width and height constraints, we can move the view around whilst keeping it the same size.
+	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeWidth withChildView:innerView identifier:@"width"];
+	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeHeight withChildView:innerView identifier:@"height"];
+	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:innerView identifier:@"leading"];
+	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:innerView identifier:@"top"];
 }
 
 #pragma mark Colors

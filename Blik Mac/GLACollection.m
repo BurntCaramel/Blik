@@ -150,11 +150,12 @@ NSString *GLACollectionJSONPasteboardType = @"com.burntcaramel.GLACollection.JSO
 
 @implementation GLACollection (GLADummyContent)
 
-+ (instancetype)dummyCollectionWithTitle:(NSString *)title colorIdentifier:(GLACollectionColor)colorIdentifier
++ (instancetype)dummyCollectionWithTitle:(NSString *)title colorIdentifier:(GLACollectionColor)colorIdentifier content:(GLACollectionContent *)content
 {
 	GLACollection *item = [self new];
 	(item.title) = title;
 	(item.colorIdentifier) = colorIdentifier;
+	(item.content) = content;
 	
 	return item;
 }

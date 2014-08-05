@@ -12,10 +12,10 @@
 
 @interface GLAProjectsListViewController : GLAViewController
 
-@property (nonatomic) IBOutlet NSTableView *tableView;
+@property(nonatomic) IBOutlet NSTableView *tableView;
 
-//@property (copy, nonatomic) NSMutableArray *mutableProjects;
-@property (copy, nonatomic) NSArray *projects;
+//@property(copy, nonatomic) NSMutableArray *mutableProjects;
+@property(copy, nonatomic) NSArray *projects;
 
 
 - (IBAction)tableViewClicked:(id)sender;

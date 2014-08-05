@@ -7,19 +7,38 @@
 //
 
 #import "GLACollectionFilesListContent.h"
+#import "GLACollectedFile.h"
+#import "GLAArrayEditor.h"
 
 
 @interface GLACollectionFilesListContent ()
 
-@property(nonatomic) NSMutableArray *files;
+@property(readonly, nonatomic) GLAArrayEditor *filesListEditor;
 
 @end
 
 @implementation GLACollectionFilesListContent
 
+- (instancetype)init
+{
+	self = [super init];
+	if (self) {
+		_filesListEditor = [[GLAArrayEditor alloc] initWithObjects:
+							@[
+							  [GLACollectedFile collectedFileWithFileURL:[NSURL fileURLWithPath:NSHomeDirectory()]]
+							  ]];
+	}
+	return self;
+}
+
 - (NSArray *)copyFiles
 {
-	return (self.files.copy);
+	return [(self.filesListEditor) copyChildren];
+}
+
+- (id<GLAArrayEditing>)filesListEditing
+{
+	return (self.filesListEditor);
 }
 
 @end

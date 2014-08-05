@@ -9,6 +9,7 @@
 #import "GLAViewController.h"
 #import "GLAProjectsListViewController.h"
 #import "GLAProjectViewController.h"
+#import "GLACollectionViewController.h"
 @class GLAProject;
 @protocol GLAMainContentViewControllerDelegate;
 
@@ -20,7 +21,8 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 	GLAMainContentSectionPlanned,
 	GLAMainContentSectionAllEditProject,
 	GLAMainContentSectionPlannedEditProject,
-	GLAMainContentSectionAddNewProject
+	GLAMainContentSectionAddNewProject,
+	GLAMainContentSectionCollection
 };
 
 
@@ -37,6 +39,8 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 @property(nonatomic) GLAProjectViewController *nowProjectViewController;
 @property(nonatomic) GLAProjectViewController *editedProjectViewController;
 @property(nonatomic) GLAProjectViewController *addedProjectViewController;
+
+@property(nonatomic) GLACollectionViewController *activeCollectionViewController;
 
 - (void)setUpAllProjectsViewControllerIfNeeded;
 - (void)setUpPlannedProjectsViewControllerIfNeeded;
@@ -55,6 +59,10 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 - (void)endEditingProject:(GLAProject *)project previousSection:(GLAMainContentSection)section;
 
 - (void)transitionToSection:(GLAMainContentSection)newSection animate:(BOOL)animate;
+
+#pragma mark -
+
+- (void)enterCollection:(GLACollection *)collection;
 
 #pragma mark -
 

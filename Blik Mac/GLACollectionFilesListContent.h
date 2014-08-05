@@ -7,14 +7,13 @@
 //
 
 #import "GLACollectionContent.h"
-
+#import "GLAArrayEditing.h"
 @class GLACollectedFile;
 
 
 @interface GLACollectionFilesListContent : GLACollectionContent
 
-- (NSArray *)copyFiles; // [GLACollectedFile]
-
-
+- (NSArray/*[GLACollectedFile]*/ *)copyFiles;
+- (id<GLAArrayEditing>)filesListEditing;
 
 @end

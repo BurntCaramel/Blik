@@ -60,6 +60,8 @@
 		
 		(style.deleteProjectButtonColor) = deleteRed;
 		
+		(style.splitViewDividerColor) = [whiteAlmost colorWithAlphaComponent:0.057];
+		
 		// Item colors
 		(style.lightBlueItemColor) = [NSColor colorWithSRGBRed:168.0/255.0 green:227.0/255.0 blue:255.0/255.0 alpha:1.0];
 		(style.greenItemColor) = [NSColor colorWithSRGBRed:191.0/255.0 green:218.0/255.0 blue:126.0/255.0 alpha:1.0];
@@ -101,6 +103,16 @@
 		default:
 			return (self.lightTextColor);
 	}
+}
+
+
+#pragma mark Preparing Views
+
+- (void)prepareContentTableView:(NSTableView *)tableView
+{
+	NSColor *backgroundColor = (self.contentBackgroundColor);
+	(tableView.backgroundColor) = backgroundColor;
+	(tableView.enclosingScrollView.backgroundColor) = backgroundColor;
 }
 
 

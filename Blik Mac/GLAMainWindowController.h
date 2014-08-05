@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, GLAMainWindowControllerSection) {
 };
 
 
-@interface GLAMainWindowController : NSWindowController <GLAMainNavigationBarControllerDelegate, GLAMainContentViewControllerDelegate>
+@interface GLAMainWindowController : NSWindowController <GLAMainNavigationBarControllerDelegate, GLAMainContentViewControllerDelegate, NSUserInterfaceValidations>
 
 @property (nonatomic) GLAMainNavigationBarController *mainNavigationBarController;
 @property (nonatomic) GLAMainContentViewController *mainContentViewController;
@@ -55,6 +55,11 @@ typedef NS_ENUM(NSInteger, GLAMainWindowControllerSection) {
 //- (void)didTransitionContentToViewController:(NSViewController *)viewController;
 
 - (GLAMainContentSection)contentSectionForNavigationSection:(GLAMainNavigationSection)navigationSection;
+
+- (IBAction)goToAll:(id)sender;
+- (IBAction)goToToday:(id)sender;
+- (IBAction)goToPlanned:(id)sender;
+- (IBAction)workOnEditedProjectNow:(id)sender;
 
 
 - (void)projectListViewControllerDidClickOnProjectNotification:(NSNotification *)note;
