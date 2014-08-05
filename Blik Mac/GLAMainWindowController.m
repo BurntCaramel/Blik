@@ -69,7 +69,7 @@
 	(controller.view) = (self.contentView);
 	(controller.view.identifier) = @"contentView";
 	
-	(self.contentViewController) = controller;
+	(self.mainContentViewController) = controller;
 }
 
 - (NSString *)layoutConstraintIdentifierWithBase:(NSString *)baseIdentifier inView:(NSView *)view
@@ -116,10 +116,10 @@
 - (void)addViewToContentViewIfNeeded:(NSView *)view layout:(BOOL)layout
 {
 	if (!(view.superview)) {
-		[(self.contentViewController) fillViewWithChildView:view];
+		[(self.mainContentViewController) fillViewWithChildView:view];
 		
 		if (layout) {
-			[(self.contentViewController.view) layoutSubtreeIfNeeded];
+			[(self.mainContentViewController.view) layoutSubtreeIfNeeded];
 		}
 	}
 }
@@ -304,7 +304,7 @@
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	[projectManager changeNowProject:project];
 	
-	[(self.contentViewController) workOnProjectNow:project];
+	[(self.mainContentViewController) workOnProjectNow:project];
 	[(self.mainNavigationBarController) changeCurrentSectionTo:GLAMainNavigationSectionToday];
 #else
 	[self setUpNowProjectViewControllerIfNeeded];
@@ -319,14 +319,14 @@
 
 - (void)editProject:(GLAProject *)project
 {
-	[(self.contentViewController) editProject:project];
+	[(self.mainContentViewController) editProject:project];
 	[(self.mainNavigationBarController) enterProject:project];
 }
 
 - (void)endEditingProject:(GLAProject *)project
 {
 	GLAMainContentSection navSection = [self contentSectionForNavigationSection:(self.mainNavigationBarController.currentSection)];
-	[(self.contentViewController) endEditingProject:project previousSection:navSection];
+	[(self.mainContentViewController) endEditingProject:project previousSection:navSection];
 }
 
 #pragma mark New Project
@@ -334,7 +334,7 @@
 - (IBAction)addNewProject:(id)sender
 {
 	id project = nil;
-	[(self.contentViewController) enterAddedProject:project];
+	[(self.mainContentViewController) enterAddedProject:project];
 	[(self.mainNavigationBarController) enterAddedProject:project];
 }
 
@@ -457,7 +457,7 @@
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didChangeCurrentSection:(GLAMainNavigationSection)newNavigationSection
 {
 	GLAMainContentSection newSection = [self contentSectionForNavigationSection:newNavigationSection];
-	[(self.contentViewController) transitionToSection:newSection animate:YES];
+	[(self.mainContentViewController) transitionToSection:newSection animate:YES];
 }
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performAddNewProject:(id)sender

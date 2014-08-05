@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, GLAMainWindowControllerSection) {
 @interface GLAMainWindowController : NSWindowController <GLAMainNavigationBarControllerDelegate, GLAMainContentViewControllerDelegate>
 
 @property (nonatomic) GLAMainNavigationBarController *mainNavigationBarController;
-@property (nonatomic) GLAMainContentViewController *contentViewController;
+@property (nonatomic) GLAMainContentViewController *mainContentViewController;
 
 @property (nonatomic) GLAProjectsListViewController *allProjectsViewController;
 @property (nonatomic) GLAProjectsListViewController *plannedProjectsViewController;
