@@ -24,6 +24,7 @@
 		B22E80C4198CAE38005C4108 /* GLACollectedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B22E80C3198CAE38005C4108 /* GLACollectedFile.m */; };
 		B22E80C7198F654E005C4108 /* GLAArrayEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = B22E80C6198F654E005C4108 /* GLAArrayEditor.m */; };
 		B22E80CB198F8971005C4108 /* GLAFileURLInfoRetriever.m in Sources */ = {isa = PBXBuildFile; fileRef = B22E80CA198F8971005C4108 /* GLAFileURLInfoRetriever.m */; };
+		B22E80CF198F98B2005C4108 /* GLAMainContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B22E80CE198F98B2005C4108 /* GLAMainContentViewController.m */; };
 		B23515331973BEAB00883FB3 /* GLAButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B23515321973BEAB00883FB3 /* GLAButton.m */; };
 		B24B3607196D1F720094FA1F /* GLAReminder.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3606196D1F720094FA1F /* GLAReminder.m */; };
 		B24B360B196E336E0094FA1F /* GLAMainNavigationBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */; };
@@ -103,6 +104,8 @@
 		B22E80C9198F8971005C4108 /* GLAFileURLInfoRetriever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAFileURLInfoRetriever.h; sourceTree = "<group>"; };
 		B22E80CA198F8971005C4108 /* GLAFileURLInfoRetriever.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAFileURLInfoRetriever.m; sourceTree = "<group>"; };
 		B22E80CC198F8B13005C4108 /* Blik.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Blik.entitlements; sourceTree = "<group>"; };
+		B22E80CD198F98B2005C4108 /* GLAMainContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainContentViewController.h; sourceTree = "<group>"; };
+		B22E80CE198F98B2005C4108 /* GLAMainContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainContentViewController.m; sourceTree = "<group>"; };
 		B23515311973BEAB00883FB3 /* GLAButton.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = GLAButton.h; sourceTree = "<group>"; tabWidth = 4; usesTabs = 1; wrapsLines = 1; };
 		B23515321973BEAB00883FB3 /* GLAButton.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = GLAButton.m; sourceTree = "<group>"; tabWidth = 4; usesTabs = 1; wrapsLines = 1; };
 		B24B3605196D1F720094FA1F /* GLAReminder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAReminder.h; sourceTree = "<group>"; };
@@ -194,6 +197,8 @@
 				B219DA9F196AB65D007900DF /* GLAMainWindowController.h */,
 				B219DAA0196AB65D007900DF /* GLAMainWindowController.m */,
 				B219DAA1196AB65D007900DF /* GLAMainWindowController.xib */,
+				B22E80CD198F98B2005C4108 /* GLAMainContentViewController.h */,
+				B22E80CE198F98B2005C4108 /* GLAMainContentViewController.m */,
 				B24B3608196E336E0094FA1F /* GLAMainNavigationBarController.h */,
 				B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */,
 				B24B360A196E336E0094FA1F /* GLAMainNavigationBarController.xib */,
@@ -570,6 +575,7 @@
 			files = (
 				B2C7F287196FFFDF005780B4 /* GLAView.m in Sources */,
 				B2ADDC081963DA970014EF84 /* GLAPrototypeAWindowController.m in Sources */,
+				B22E80CF198F98B2005C4108 /* GLAMainContentViewController.m in Sources */,
 				B29F8DDD1981139300F58F59 /* GLAReminderManager.m in Sources */,
 				B226E9551988CFF500D607CC /* GLACollectionViewController.m in Sources */,
 				B28D21821977D6E600A12C6D /* GLATableRowView.m in Sources */,

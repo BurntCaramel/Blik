@@ -19,6 +19,9 @@
 
 - (void)useAllProjects:(void(^)(NSArray *allProjects))allProjectsReceiver;
 - (void)usePlannedProjects:(void(^)(NSArray *plannedProjects))plannedProjectsReceiver;
+- (void)useNowProject:(void(^)(GLAProject *nowProject))nowProjectReceiver;
+
+- (void)changeNowProject:(GLAProject *)project;
 
 #pragma mark Project Changes
 

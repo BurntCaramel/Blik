@@ -57,9 +57,10 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 
 - (void)createEventStoreIfNeeded
 {
-	[self useEventStoreOnMainQueue:YES block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
+	/*[self useEventStoreOnMainQueue:NO block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
 		// Do nothing, just set off the creation.
-	}];
+	}];*/
+	[self operationToCreateEventStoreSetUpIfNeeded];
 }
 
 #pragma mark Requesting Access from the User
@@ -93,6 +94,7 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 
 - (void)useAllReminders:(void(^)(NSArray *allReminders))allRemindersReceiver
 {
+	[self invalidateAllReminders];
 	[self useAllRemindersOnMainQueue:YES block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore, NSArray *allReminders) {
 		allRemindersReceiver(allReminders);
 	}];
@@ -205,11 +207,14 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 			(reminderManager.fetchRemindersIdentifier) = [eventStore fetchRemindersMatchingPredicate:predicate completion:^(NSArray *reminders) {
 				// If all reminders has been invalidated in the mean time.
 				if (operationToFetchAllReminders != (reminderManager.operationToFetchAllReminders)) {
-					return;
+					//return;
+					// Actually this could block a queue is something is dependant??
 				}
 				(reminderManager.allReminders) = reminders;
 				(reminderManager.dateLastFetchedReminders) = [NSDate date];
 				(reminderManager.fetchRemindersIdentifier) = nil;
+				
+				//sleep(1);
 				
 				[operationToFetchAllReminders start];
 			}];
@@ -220,48 +225,59 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 }
 
 - (NSOperation *)useEventStoreOnMainQueue:(BOOL)onMainQueue block:(void (^)(GLAReminderManager *reminderManager, EKEventStore *eventStore))block
-{
+{NSLog(@"ES GO");
 	__weak GLAReminderManager *weakSelf = self;
 		
-	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+	NSBlockOperation *useOperation = [NSBlockOperation blockOperationWithBlock:^{
+		NSLog(@"ES USE");
 		GLAReminderManager *reminderManager = weakSelf;
 		EKEventStore *eventStore = (reminderManager.eventStore);
 		block(reminderManager, eventStore);
 	}];
-	// Event Store must be created first.
-	[operation addDependency:[self operationToCreateEventStoreSetUpIfNeeded]];
 	
-	if (onMainQueue) {
-		[[NSOperationQueue mainQueue] addOperation:operation];
-	}
-	else {
-		[(self.backgroundOperationQueue) addOperation:operation];
-	}
+	NSBlockOperation *readyOperation = [NSBlockOperation blockOperationWithBlock:^{
+		NSLog(@"ES READY");
+		if (onMainQueue) {
+			[[NSOperationQueue mainQueue] addOperation:useOperation];
+		}
+		else {
+			[useOperation start];
+		}
+	}];
+	// All Reminders must have been fetched first.
+	[readyOperation addDependency:[self operationToCreateEventStoreSetUpIfNeeded]];
+	[(self.backgroundOperationQueue) addOperation:readyOperation];
 	
-	return operation;
+	return useOperation;
 }
 
 - (NSOperation *)useAllRemindersOnMainQueue:(BOOL)onMainQueue block:(void (^)(GLAReminderManager *reminderManager, EKEventStore *eventStore, NSArray *allReminders))block
 {
 	__weak GLAReminderManager *weakSelf = self;
-	
-	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+	NSLog(@"GO");
+	NSBlockOperation *useOperation = [NSBlockOperation blockOperationWithBlock:^{
+		NSLog(@"USE");
 		GLAReminderManager *reminderManager = weakSelf;
 		EKEventStore *eventStore = (reminderManager.eventStore);
 		NSArray *allReminders = (reminderManager.allReminders);
 		block(reminderManager, eventStore, allReminders);
 	}];
+	
+	NSBlockOperation *readyOperation = [NSBlockOperation blockOperationWithBlock:^{
+		NSLog(@"READY");
+		//sleep(3);
+		if (onMainQueue) {
+			[[NSOperationQueue mainQueue] addOperation:useOperation];
+		}
+		else {
+			[useOperation start];
+		}
+	}];
 	// All Reminders must have been fetched first.
-	[operation addDependency:[self operationToFetchAllRemindersSetUpIfNeeded]];
+	[readyOperation addDependency:[self operationToFetchAllRemindersSetUpIfNeeded]];
+	[(self.backgroundOperationQueue) addOperation:readyOperation];
 	
-	if (onMainQueue) {
-		[[NSOperationQueue mainQueue] addOperation:operation];
-	}
-	else {
-		[(self.backgroundOperationQueue) addOperation:operation];
-	}
-	
-	return operation;
+	return useOperation;
 }
 
 - (void)performBlockOnMainQueue:(void(^)(void))block

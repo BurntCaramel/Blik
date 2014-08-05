@@ -11,11 +11,13 @@
 #import "GLAProjectOverviewTableCellView.h"
 
 
-NSString *GLAProjectListViewControllerDidClickOnProjectNotification = @"GLA.projectListViewController.didClickOnProject";
-NSString *GLAProjectListViewControllerDidPerformWorkOnProjectNowNotification = @"GLA.projectListViewController.didPerformWorkOnProjectNow";
+NSString *GLAProjectsListViewControllerDidClickOnProjectNotification = @"GLA.projectListViewController.didClickOnProject";
+NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = @"GLA.projectListViewController.didPerformWorkOnProjectNow";
 
 
 @interface GLAProjectsListViewController ()
+
+@property(nonatomic) NSArray *private_projects;
 
 @end
 
@@ -63,6 +65,17 @@ NSString *GLAProjectListViewControllerDidPerformWorkOnProjectNowNotification = @
 
 #pragma mark Actions
 
+- (NSArray *)projects
+{
+	return (self.private_projects);
+}
+
+- (void)setProjects:(NSArray *)projects
+{
+	(self.private_projects) = projects;
+	[(self.tableView) reloadData];
+}
+
 - (IBAction)tableViewClicked:(id)sender
 {
 	NSInteger clickedRow = (self.tableView.clickedRow);
@@ -71,7 +84,7 @@ NSString *GLAProjectListViewControllerDidPerformWorkOnProjectNowNotification = @
 	}
 	
 	id project = (self.projects)[clickedRow];
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectListViewControllerDidClickOnProjectNotification object:self userInfo:@{@"project": project}];
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectsListViewControllerDidClickOnProjectNotification object:self userInfo:@{@"project": project}];
 }
 
 - (IBAction)workOnProjectNowClicked:(NSButton *)senderButton
@@ -82,7 +95,7 @@ NSString *GLAProjectListViewControllerDidPerformWorkOnProjectNowNotification = @
 	}
 	
 	id project = (self.projects)[projectIndex];
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectListViewControllerDidPerformWorkOnProjectNowNotification object:self userInfo:@{@"project": project}];
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification object:self userInfo:@{@"project": project}];
 }
 
 #pragma mark Table View Data Source

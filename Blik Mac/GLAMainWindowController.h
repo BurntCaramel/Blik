@@ -12,6 +12,7 @@
 #import "GLAProjectsListViewController.h"
 #import "GLAProjectViewController.h"
 #import "GLAMainNavigationBarController.h"
+#import "GLAMainContentViewController.h"
 #import "GLAView.h"
 
 
@@ -26,10 +27,10 @@ typedef NS_ENUM(NSInteger, GLAMainWindowControllerSection) {
 };
 
 
-@interface GLAMainWindowController : NSWindowController <GLAMainNavigationBarControllerDelegate>
+@interface GLAMainWindowController : NSWindowController <GLAMainNavigationBarControllerDelegate, GLAMainContentViewControllerDelegate>
 
 @property (nonatomic) GLAMainNavigationBarController *mainNavigationBarController;
-@property (nonatomic) GLAViewController *contentViewController;
+@property (nonatomic) GLAMainContentViewController *contentViewController;
 
 @property (nonatomic) GLAProjectsListViewController *allProjectsViewController;
 @property (nonatomic) GLAProjectsListViewController *plannedProjectsViewController;
@@ -45,13 +46,15 @@ typedef NS_ENUM(NSInteger, GLAMainWindowControllerSection) {
 @property (nonatomic) IBOutlet NSView *contentView;
 
 
-- (void)projectViewControllerDidBecomeActive:(GLAProjectViewController *)projectViewController;
-- (void)projectViewControllerDidBecomeInactive:(GLAProjectViewController *)projectViewController;
+//- (void)projectViewControllerDidBecomeActive:(GLAProjectViewController *)projectViewController;
+//- (void)projectViewControllerDidBecomeInactive:(GLAProjectViewController *)projectViewController;
 
 
-- (void)transitionContentToSection:(GLAMainWindowControllerSection)newSection animate:(BOOL)animate;
+//- (void)transitionContentToSection:(GLAMainWindowControllerSection)newSection animate:(BOOL)animate;
 //- (void)goToSection:(GLAMainWindowControllerSection)newSection animate:(BOOL)animate;
 //- (void)didTransitionContentToViewController:(NSViewController *)viewController;
+
+- (GLAMainContentSection)contentSectionForNavigationSection:(GLAMainNavigationSection)navigationSection;
 
 
 - (void)projectListViewControllerDidClickOnProjectNotification:(NSNotification *)note;

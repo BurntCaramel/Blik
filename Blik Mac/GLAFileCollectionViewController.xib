@@ -20,14 +20,14 @@
                     <autoresizingMask key="autoresizingMask"/>
                     <subviews>
                         <scrollView verticalHuggingPriority="750" fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" id="tfH-M0-yVk">
-                            <rect key="frame" x="0.0" y="0.0" width="172.5" height="272"/>
+                            <rect key="frame" x="0.0" y="0.0" width="173" height="272"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Njf-Kp-haE">
-                                <rect key="frame" x="0.0" y="0.0" width="172.5" height="272"/>
+                                <rect key="frame" x="0.0" y="0.0" width="173" height="272"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="none" selectionHighlightStyle="none" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="32" viewBased="YES" id="c1y-ic-1X0">
-                                        <rect key="frame" x="0.0" y="0.0" width="172.5" height="272"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="173" height="272"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <size key="intercellSpacing" width="3" height="2"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -98,7 +98,7 @@
                             </scroller>
                         </scrollView>
                         <customView fixedFrame="YES" id="3CV-3s-0jt">
-                            <rect key="frame" x="173.5" y="0.0" width="306.5" height="272"/>
+                            <rect key="frame" x="174" y="0.0" width="306" height="272"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         </customView>
                     </subviews>

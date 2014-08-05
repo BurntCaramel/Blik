@@ -398,7 +398,7 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 		[reminderManager useAllReminders:^(NSArray *allReminders) {
 			CFAbsoluteTime endTime = CFAbsoluteTimeGetCurrent();
 			NSLog(@"Took %f second to get all reminders", endTime - startTime);
-			NSLog(@"%lu %@", (allReminders.count), allReminders);
+			//NSLog(@"%lu %@", (allReminders.count), allReminders);
 		}];
 	}
 }

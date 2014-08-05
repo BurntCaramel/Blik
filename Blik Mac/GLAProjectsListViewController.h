@@ -22,5 +22,5 @@
 
 @end
 
-extern NSString *GLAProjectListViewControllerDidClickOnProjectNotification;
-extern NSString *GLAProjectListViewControllerDidPerformWorkOnProjectNowNotification;
+extern NSString *GLAProjectsListViewControllerDidClickOnProjectNotification;
+extern NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification;

@@ -9,7 +9,11 @@
 #import "GLAMainWindowController.h"
 #import "GLAUIStyle.h"
 #import "GLATableRowView.h"
+#import "GLAProjectManager.h"
 @import QuartzCore;
+
+
+#define USE_MAIN_CONTENT_VIEW_CONTROLLER 1
 
 
 @interface GLAMainWindowController ()
@@ -37,11 +41,13 @@
 	
 	[self setUpContentViewController];
 	[self setUpMainNavigationBarController];
-	[self setUpNowProjectViewControllerIfNeeded];
-	//[self projectViewControllerDidBecomeActive:(self.nowProjectViewController)];
 	
-	GLAProject *dummyProject = (self.allProjectsDummyContent)[0];
-	[self workOnProjectNow:dummyProject];
+	//TODO: add waiting to load animation
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	[projectManager useAllProjects:^(NSArray *allProjects) {
+		GLAProject *dummyProject = allProjects[0];
+		[self workOnProjectNow:dummyProject];
+	}];
 }
 
 #pragma mark Setting Up View Controllers
@@ -58,7 +64,8 @@
 
 - (void)setUpContentViewController
 {
-	GLAViewController *controller = [[GLAViewController alloc] init];
+	GLAMainContentViewController *controller = [[GLAMainContentViewController alloc] init];
+	(controller.delegate) = self;
 	(controller.view) = (self.contentView);
 	(controller.view.identifier) = @"contentView";
 	
@@ -145,6 +152,8 @@
 
 #pragma mark Setting Up Content View Controllers
 
+#if !USE_MAIN_CONTENT_VIEW_CONTROLLER
+
 - (GLAProject *)dummyProjectWithName:(NSString *)name
 {
 	GLAProject *project = [GLAProject new];
@@ -190,21 +199,6 @@
 	[nc addObserver:self selector:@selector(projectListViewControllerDidPerformWorkOnProjectNowNotification:) name:GLAProjectListViewControllerDidPerformWorkOnProjectNowNotification object:controller];
 }
 
-- (void)setUpNowProjectViewControllerIfNeeded
-{
-	if (self.nowProjectViewController) {
-		return;
-	}
-	
-	GLAProjectViewController *controller = [[GLAProjectViewController alloc] initWithNibName:@"GLAProjectViewController" bundle:nil];
-	(controller.view.identifier) = @"nowProject";
-	
-	(self.nowProjectViewController) = controller;
-	
-	// Add it to the content view
-	[(self.contentViewController) fillViewWithChildView:(controller.view)];
-}
-
 - (NSArray *)plannedProjectsDummyContent
 {
 	return @[
@@ -231,6 +225,21 @@
 	[self addViewToContentViewIfNeeded:(controller.view) layout:YES];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(projectListViewControllerDidClickOnProjectNotification:) name:GLAProjectListViewControllerDidClickOnProjectNotification object:controller];
+}
+
+- (void)setUpNowProjectViewControllerIfNeeded
+{
+	if (self.nowProjectViewController) {
+		return;
+	}
+	
+	GLAProjectViewController *controller = [[GLAProjectViewController alloc] initWithNibName:@"GLAProjectViewController" bundle:nil];
+	(controller.view.identifier) = @"nowProject";
+	
+	(self.nowProjectViewController) = controller;
+	
+	// Add it to the content view
+	[(self.contentViewController) fillViewWithChildView:(controller.view)];
 }
 
 - (void)setUpEditedProjectViewControllerIfNeeded
@@ -261,79 +270,72 @@
 	[self addViewToContentViewIfNeeded:(controller.view) layout:YES];
 }
 
+- (GLAViewController *)viewControllerForSection:(GLAMainWindowControllerSection)section
+{
+	switch (section) {
+		case GLAMainWindowControllerSectionAll:
+			return (self.allProjectsViewController);
+			
+		case GLAMainWindowControllerSectionToday:
+			return (self.nowProjectViewController);
+			
+		case GLAMainWindowControllerSectionPlanned:
+			return (self.plannedProjectsViewController);
+			
+		case GLAMainWindowControllerSectionAllEditProject:
+		case GLAMainWindowControllerSectionPlannedEditProject:
+			return (self.editedProjectViewController);
+			
+		case GLAMainWindowControllerSectionAddNewProject:
+			return (self.addedProjectViewController);
+			
+		default:
+			return nil;
+	}
+}
+
+#endif
+
 #pragma mark Editing Projects
 
 - (void)workOnProjectNow:(GLAProject *)project
 {
+#if USE_MAIN_CONTENT_VIEW_CONTROLLER
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	[projectManager changeNowProject:project];
+	
+	[(self.contentViewController) workOnProjectNow:project];
+	[(self.mainNavigationBarController) changeCurrentSectionTo:GLAMainNavigationSectionToday];
+#else
+	[self setUpNowProjectViewControllerIfNeeded];
+	
 	(self.nowProjectViewController.project) = project;
 	
 	[(self.mainNavigationBarController) changeCurrentSectionTo:GLAMainNavigationSectionToday];
-	[self transitionContentToSection:GLAMainWindowControllerSectionToday animate:YES];
+	//[self transitionContentToSection:GLAMainWindowControllerSectionToday animate:YES];
+	[(self.contentViewController) transitionToSection:GLAMainContentSectionToday animate:YES];
+#endif
 }
 
-- (void)editProject:(id)project
+- (void)editProject:(GLAProject *)project
 {
-	[self setUpEditedProjectViewControllerIfNeeded];
-	(self.editedProjectViewController.project) = project;
-	
-	GLAMainWindowControllerSection currentSection = (self.currentSection);
-	if (currentSection == GLAMainWindowControllerSectionAll) {
-		[self transitionContentToSection:GLAMainWindowControllerSectionAllEditProject animate:YES];
-	}
-	else if (currentSection == GLAMainWindowControllerSectionPlanned) {
-		[self transitionContentToSection:GLAMainWindowControllerSectionPlannedEditProject animate:YES];
-	}
-	
+	[(self.contentViewController) editProject:project];
 	[(self.mainNavigationBarController) enterProject:project];
 }
 
-- (void)endEditingProject:(id)project
+- (void)endEditingProject:(GLAProject *)project
 {
-	GLAMainWindowControllerSection currentSection = (self.currentSection);
-	if (currentSection == GLAMainWindowControllerSectionAddNewProject) {
-		GLAMainWindowControllerSection navSection = [self sectionForNavigationSection:(self.mainNavigationBarController.currentSection)];
-		[self transitionContentToSection:navSection animate:YES];
-	}
-	else {
-		if (currentSection == GLAMainWindowControllerSectionAllEditProject) {
-			[self transitionContentToSection:GLAMainWindowControllerSectionAll animate:YES];
-		}
-		else if (currentSection == GLAMainWindowControllerSectionPlannedEditProject) {
-			[self transitionContentToSection:GLAMainWindowControllerSectionPlanned animate:YES];
-		}
-	}
+	GLAMainContentSection navSection = [self contentSectionForNavigationSection:(self.mainNavigationBarController.currentSection)];
+	[(self.contentViewController) endEditingProject:project previousSection:navSection];
 }
 
 #pragma mark New Project
 
 - (IBAction)addNewProject:(id)sender
 {
-	[self setUpAddedProjectViewControllerIfNeeded];
-	
-	GLAProjectViewController *viewController = (self.addedProjectViewController);
-	
 	id project = nil;
-	(viewController.project) = project;
-	[viewController clearName];
-	
-	[self transitionContentToSection:GLAMainWindowControllerSectionAddNewProject animate:YES];
-	
+	[(self.contentViewController) enterAddedProject:project];
 	[(self.mainNavigationBarController) enterAddedProject:project];
-	[viewController focusNameTextField];
-}
-
-#pragma mark Working with Project List View Controllers
-
-- (void)projectListViewControllerDidClickOnProjectNotification:(NSNotification *)note
-{
-	GLAProject *project = (note.userInfo)[@"project"];
-	[self editProject:project];
-}
-
-- (void)projectListViewControllerDidPerformWorkOnProjectNowNotification:(NSNotification *)note
-{
-	GLAProject *project = (note.userInfo)[@"project"];
-	[self workOnProjectNow:project];
 }
 
 #pragma mark Working with Project View Controllers
@@ -375,31 +377,10 @@
 	}
 }
 
-- (void)projectViewControllerDidBecomeActive:(GLAProjectViewController *)projectViewController
-{
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	// Begin editing items
-	[nc addObserver:self selector:@selector(activeProjectViewControllerDidBeginEditing:) name:GLAProjectViewControllerDidBeginEditingItemsNotification object:projectViewController];
-	// Begin editing plan
-	[nc addObserver:self selector:@selector(activeProjectViewControllerDidBeginEditing:) name:GLAProjectViewControllerDidBeginEditingPlanNotification object:projectViewController];
-	// End editing items
-	[nc addObserver:self selector:@selector(activeProjectViewControllerDidEndEditing:) name:GLAProjectViewControllerDidEndEditingItemsNotification object:projectViewController];
-	// End editing plan
-	[nc addObserver:self selector:@selector(activeProjectViewControllerDidEndEditing:) name:GLAProjectViewControllerDidEndEditingPlanNotification object:projectViewController];
-	
-	// Enter collection
-	[nc addObserver:self selector:@selector(activeProjectViewControllerDidEnterCollection:) name:GLAProjectViewControllerDidEnterCollectionNotification object:projectViewController];
-}
-
-- (void)projectViewControllerDidBecomeInactive:(GLAProjectViewController *)projectViewController
-{
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	// Remove all that were added in -projectViewControllerDidBecomeActive:
-	[nc removeObserver:self name:nil object:projectViewController];
-}
+#pragma mark Project View Controller Notifications
 
 - (void)activeProjectViewControllerDidBeginEditing:(NSNotification *)note
-{
+{NSLog(@"activeProjectViewControllerDidBeginEditing");
 	(self.mainNavigationBarController.enabled) = NO;
 }
 
@@ -417,20 +398,57 @@
 	[(self.mainNavigationBarController) enterProjectCollection:collection];
 }
 
-- (GLAMainWindowControllerSection)sectionForNavigationSection:(GLAMainNavigationSection)navigationSection
+#pragma mark GLAMainContentViewControllerDelegate
+
+- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController projectViewControllerDidBecomeActive:(GLAProjectViewController *)projectViewController
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	// Begin editing items
+	[nc addObserver:self selector:@selector(activeProjectViewControllerDidBeginEditing:) name:GLAProjectViewControllerDidBeginEditingItemsNotification object:projectViewController];
+	// Begin editing plan
+	[nc addObserver:self selector:@selector(activeProjectViewControllerDidBeginEditing:) name:GLAProjectViewControllerDidBeginEditingPlanNotification object:projectViewController];
+	// End editing items
+	[nc addObserver:self selector:@selector(activeProjectViewControllerDidEndEditing:) name:GLAProjectViewControllerDidEndEditingItemsNotification object:projectViewController];
+	// End editing plan
+	[nc addObserver:self selector:@selector(activeProjectViewControllerDidEndEditing:) name:GLAProjectViewControllerDidEndEditingPlanNotification object:projectViewController];
+	
+	// Enter collection
+	[nc addObserver:self selector:@selector(activeProjectViewControllerDidEnterCollection:) name:GLAProjectViewControllerDidEnterCollectionNotification object:projectViewController];
+}
+
+- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController projectViewControllerDidBecomeInactive:(GLAProjectViewController *)projectViewController
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	// Remove all that were added in -projectViewControllerDidBecomeActive:
+	[nc removeObserver:self name:nil object:projectViewController];
+}
+
+- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController projectsListViewController:(GLAProjectsListViewController *)projectsListViewController didClickOnProject:(GLAProject *)project
+{
+	[self editProject:project];
+}
+
+- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController projectsListViewController:(GLAProjectsListViewController *)projectsListViewController didPerformWorkOnProject:(GLAProject *)project
+{
+	[self workOnProjectNow:project];
+}
+
+#pragma mark -
+
+- (GLAMainContentSection)contentSectionForNavigationSection:(GLAMainNavigationSection)navigationSection
 {
 	switch (navigationSection) {
 		case GLAMainNavigationSectionAll:
-			return GLAMainWindowControllerSectionAll;
+			return GLAMainContentSectionAll;
 			
 		case GLAMainNavigationSectionPlanned:
-			return GLAMainWindowControllerSectionPlanned;
+			return GLAMainContentSectionPlanned;
 			
 		case GLAMainNavigationSectionToday:
-			return GLAMainWindowControllerSectionToday;
+			return GLAMainContentSectionToday;
 			
 		default:
-			return GLAMainWindowControllerSectionUnknown;
+			return GLAMainContentSectionUnknown;
 	}
 }
 
@@ -438,8 +456,8 @@
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didChangeCurrentSection:(GLAMainNavigationSection)newNavigationSection
 {
-	GLAMainWindowControllerSection newSection = [self sectionForNavigationSection:newNavigationSection];
-	[self transitionContentToSection:newSection animate:YES];
+	GLAMainContentSection newSection = [self contentSectionForNavigationSection:newNavigationSection];
+	[(self.contentViewController) transitionToSection:newSection animate:YES];
 }
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performAddNewProject:(id)sender
@@ -459,29 +477,7 @@
 
 #pragma mark Content Transitioning
 
-- (GLAViewController *)viewControllerForSection:(GLAMainWindowControllerSection)section
-{
-	switch (section) {
-		case GLAMainWindowControllerSectionAll:
-			return (self.allProjectsViewController);
-			
-		case GLAMainWindowControllerSectionToday:
-			return (self.nowProjectViewController);
-		
-		case GLAMainWindowControllerSectionPlanned:
-			return (self.plannedProjectsViewController);
-		
-		case GLAMainWindowControllerSectionAllEditProject:
-		case GLAMainWindowControllerSectionPlannedEditProject:
-			return (self.editedProjectViewController);
-		
-		case GLAMainWindowControllerSectionAddNewProject:
-			return (self.addedProjectViewController);
-			
-		default:
-			return nil;
-	}
-}
+#if !USE_MAIN_CONTENT_VIEW_CONTROLLER
 
 - (void)transitionContentToSection:(GLAMainWindowControllerSection)newSection animate:(BOOL)animate
 {
@@ -602,7 +598,6 @@
 	
 	if (viewController == (self.nowProjectViewController) || viewController == (self.addedProjectViewController) || viewController == (self.editedProjectViewController)) {
 		GLAProjectViewController *projectVC = (GLAProjectViewController *)viewController;
-		
 		[self projectViewControllerDidBecomeActive:projectVC];
 	}
 }
@@ -617,6 +612,8 @@
 	}
 }
 
+#pragma mark Adjusting Individual Content Views
+
 - (NSTimeInterval)contentViewTransitionDurationGoingInNotOut:(BOOL)inNotOut
 {
 	// IN
@@ -628,8 +625,6 @@
 		return 4.0 / 12.0;
 	}
 }
-
-#pragma mark Adjusting Individual Content Views
 
 - (void)hideChildContentView:(NSView *)view adjustingConstraint:(NSLayoutConstraint *)constraint toValue:(CGFloat)constraintValue animate:(BOOL)animate
 {
@@ -729,5 +724,7 @@
 	NSLayoutConstraint *leadingConstraint = [self layoutConstraintWithIdentifier:@"top" inContentInnerView:view];
 	[self showChildContentView:view adjustingConstraint:leadingConstraint toValue:0.0 animate:animate];
 }
+
+#endif
 
 @end

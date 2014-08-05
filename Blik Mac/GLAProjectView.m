@@ -22,6 +22,7 @@
 		(self.wantsLayer) = YES;
 		CALayer *layer = (self.layer);
 		(layer.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor.CGColor);
+		//(layer.backgroundColor) = ([GLAUIStyle activeStyle].activeButtonHighlightColor.CGColor);
     }
     return self;
 }
