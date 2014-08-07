@@ -310,10 +310,23 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="4t1-vK-tMY"/>
+                            <menuItem title="Copy Items To…" id="8ks-1n-RD1">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="workOnActiveProjectNow:" target="-1" id="eCb-DV-M8d"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Create Zip Archive of Items…" id="1xt-yh-0dZ">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="workOnActiveProjectNow:" target="-1" id="aoY-7q-1RK"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="7gd-3B-k1s"/>
+                            <menuItem title="Delete Project…" id="K4Z-7H-ScL">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="workOnActiveProjectNow:" target="-1" id="9ZP-fP-39w"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -340,10 +353,10 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="cXS-le-q1k"/>
-                            <menuItem title="Schedule Tomorrow…" id="ZKR-GR-Bt8">
+                            <menuItem title="Schedule for Tomorrow…" id="ZKR-GR-Bt8">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
-                            <menuItem title="Clear Due Dates for Project" id="ZQG-Ib-g27">
+                            <menuItem title="Clear All Due Dates for Project" id="ZQG-Ib-g27">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="xy5-yP-QlA"/>

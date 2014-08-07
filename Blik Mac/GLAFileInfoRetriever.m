@@ -1,15 +1,15 @@
 //
-//  GLAFileURLInfoRetriever.m
+//  GLAFileInfoRetriever.m
 //  Blik
 //
 //  Created by Patrick Smith on 4/08/2014.
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-#import "GLAFileURLInfoRetriever.h"
+#import "GLAFileInfoRetriever.h"
 
 
-@interface GLAFileURLInfoRetriever ()
+@interface GLAFileInfoRetriever ()
 
 @property(readonly, nonatomic) NSOperationQueue *backgroundOperationQueue;
 @property(readonly, nonatomic) dispatch_queue_t inputDispatchQueue;
@@ -22,14 +22,15 @@
 
 @end
 
-@implementation GLAFileURLInfoRetriever
+@implementation GLAFileInfoRetriever
 
 - (instancetype)init
 {
 	self = [super init];
 	if (self) {
 		_backgroundOperationQueue = [NSOperationQueue new];
-		_inputDispatchQueue = dispatch_queue_create("com.burntcaramel.GLACollectionFile.input", DISPATCH_QUEUE_SERIAL);
+		(_backgroundOperationQueue.name) = @"com.burntcaramel.GLAFileInfoRetriever.background";
+		_inputDispatchQueue = dispatch_queue_create("com.burntcaramel.GLAFileInfoRetriever.input", DISPATCH_QUEUE_SERIAL);
 		
 		_URLsToMutableSetOfRequestedResourceKeys = [NSMutableDictionary new];
 		_URLsToMutableSetOfLoadingResourceKeys = [NSMutableDictionary new];
@@ -42,30 +43,62 @@
 
 + (instancetype)sharedFileInfoRetrieverForMainQueue
 {
-	static GLAFileURLInfoRetriever *instance = nil;
+	static GLAFileInfoRetriever *instance = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		instance = [GLAFileURLInfoRetriever new];
+		instance = [GLAFileInfoRetriever new];
 	});
 	
 	return instance;
 }
 
+#pragma mark -
+
+- (void)setDelegate:(id<GLAFileInfoRetrieverDelegate>)delegate
+{
+	__weak GLAFileInfoRetriever *weakSelf = self;
+	dispatch_async((self.inputDispatchQueue), ^{
+		GLAFileInfoRetriever *self = weakSelf;
+		if (!self) {
+			return;
+		}
+		
+		self->_delegate = delegate;
+	});
+}
+
 - (void)addRequestedResourceKeys:(NSArray *)resourceKeys forURL:(NSURL *)URL
 {
+	__weak GLAFileInfoRetriever *weakSelf = self;
 	dispatch_async((self.inputDispatchQueue), ^{
+		GLAFileInfoRetriever *self = weakSelf;
+		if (!self) {
+			return;
+		}
+		
 		NSMutableSet *set = (self.URLsToMutableSetOfRequestedResourceKeys)[URL];
+		if (!set) {
+			set = [NSMutableSet new];
+			(self.URLsToMutableSetOfRequestedResourceKeys)[URL] = set;
+		}
+		
 		[set addObjectsFromArray:resourceKeys];
 	});
 }
 
 - (NSSet *)requestedResourceKeysNeedingLoadingForURL:(NSURL *)URL setAreLoading:(BOOL)setAreLoading
 {
+	__weak GLAFileInfoRetriever *weakSelf = self;
 	__block NSMutableSet *resourceKeysToLoad = nil;
 	
 	dispatch_sync((self.inputDispatchQueue), ^{
-		NSMutableSet *requestedResourceKeysSet = (self.URLsToMutableSetOfRequestedResourceKeys)[URL];
+		GLAFileInfoRetriever *self = weakSelf;
+		if (!self) {
+			return;
+		}
 		
+		NSMutableSet *requestedResourceKeysSet = (self.URLsToMutableSetOfRequestedResourceKeys)[URL];
+		NSLog(@"requestedResourceKeysSet %@", requestedResourceKeysSet);
 		resourceKeysToLoad = [requestedResourceKeysSet mutableCopy];
 		
 		NSMutableSet *loadingResourceKeys = (self.URLsToMutableSetOfLoadingResourceKeys)[URL];
@@ -89,25 +122,27 @@
 
 - (void)loadMissingResourceValuesInBackgroundForURL:(NSURL *)URL
 {
-	__weak GLAFileURLInfoRetriever *weakSelf = self;
+	__weak GLAFileInfoRetriever *weakSelf = self;
 	
 	[(self.backgroundOperationQueue) addOperationWithBlock:^{
-		GLAFileURLInfoRetriever *self = weakSelf;
+		GLAFileInfoRetriever *self = weakSelf;
 		if (!self) {
 			return;
 		}
 		
 		NSSet *resourceKeysToLoad = [self requestedResourceKeysNeedingLoadingForURL:URL setAreLoading:YES];
+		NSLog(@"resourceKeysToLoad %@", resourceKeysToLoad);
 		if (!resourceKeysToLoad || (resourceKeysToLoad.count) == 0) {
 			return;
 		}
 		
 		NSError *error = nil;
+		NSLog(@"LAODING %@", URL);
 		// This blocks, the whole reason why this is all in a background queue.
 		NSDictionary *loadedResourceValues = [URL resourceValuesForKeys:[resourceKeysToLoad allObjects] error:&error];
 		
 		dispatch_async((self.inputDispatchQueue), ^{
-			GLAFileURLInfoRetriever *self = weakSelf;
+			GLAFileInfoRetriever *self = weakSelf;
 			if (!self) {
 				return;
 			}
@@ -127,11 +162,23 @@
 				URLsToLoadingErrors[URL] = error;
 			}
 			
+			id<GLAFileInfoRetrieverDelegate> delegate = (self.delegate);
+			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+				NSLog(@"SENDING TO DELEGATE");
+				if (delegate) {
+					if (loadedResourceValues) {
+						[delegate fileInfoRetriever:self didLoadResourceValuesForURL:URL];
+					}
+					else {
+						[delegate fileInfoRetriever:self didFailWithError:error loadingResourceValuesForURL:URL];
+					}
+				}
+			}];
 			// Call the callback;
-			GLAFileURLInfoRetrieverLoadedCallback loadedCallback = (self.loadedCallback);
-			if (loadedCallback) {
-				(loadedCallback)(self, URL, error);
-			}
+			//GLAFileInfoRetrieverLoadedCallback loadedCallback = (self.loadedCallback);
+			//if (loadedCallback) {
+			//	(loadedCallback)(self, URL, error);
+			//}
 		});
 	}];
 }
@@ -139,14 +186,18 @@
 #pragma mark
 
 - (void)requestResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL
-{
+{NSLog(@"requestResourceValuesForKeys");
 	[self addRequestedResourceKeys:keys forURL:URL];
 	[self loadMissingResourceValuesInBackgroundForURL:URL];
 }
 
-- (NSDictionary *)loadedResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL
+- (NSDictionary *)loadedResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL requestIfNeed:(BOOL)request
 {
 	__block NSDictionary *returnedDictionary = nil;
+	
+	if (request) {
+		[self requestResourceValuesForKeys:keys forURL:URL];
+	}
 	
 	dispatch_sync((self.inputDispatchQueue), ^{
 		NSCache *cache = (self.cacheOfURLsToMutableDictionaryOfResourceValues);

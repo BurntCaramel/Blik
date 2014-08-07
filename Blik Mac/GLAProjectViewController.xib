@@ -305,17 +305,14 @@
                     </connections>
                 </button>
                 <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="SUp-2J-5hc">
-                    <rect key="frame" x="230" y="4" width="40" height="22"/>
+                    <rect key="frame" x="210" y="4" width="80" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="40" id="VVA-g5-aNu"/>
-                    </constraints>
-                    <popUpButtonCell key="cell" type="square" title="Item 1" bezelStyle="shadowlessSquare" imagePosition="only" alignment="left" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" arrowPosition="noArrow" altersStateOfSelectedItem="NO" selectedItem="J57-RP-Rwc" id="QvB-cY-VJL">
+                    <popUpButtonCell key="cell" type="square" title="Actions" bezelStyle="shadowlessSquare" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" arrowPosition="noArrow" altersStateOfSelectedItem="NO" selectedItem="J57-RP-Rwc" id="QvB-cY-VJL">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
                         <menu key="menu" title="OtherViews" id="PiQ-la-8zz">
                             <items>
-                                <menuItem title="Item 1" state="on" image="NSActionTemplate" hidden="YES" id="J57-RP-Rwc"/>
+                                <menuItem title="Actions" state="on" hidden="YES" id="J57-RP-Rwc"/>
                                 <menuItem title="Delete Project…" id="2PY-mS-4DH"/>
                             </items>
                         </menu>
@@ -389,7 +386,4 @@
             </constraints>
         </customView>
     </objects>
-    <resources>
-        <image name="NSActionTemplate" width="14" height="14"/>
-    </resources>
 </document>

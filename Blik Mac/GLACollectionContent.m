@@ -11,4 +11,9 @@
 
 @implementation GLACollectionContent
 
++ (NSDictionary *)JSONKeyPathsByPropertyKey
+{
+	return nil;
+}
+
 @end

@@ -26,7 +26,7 @@
 {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	if (self) {
-		(self.currentSection) = GLAMainContentSectionUnknown;
+		
 	}
 	return self;
 }
@@ -126,7 +126,7 @@
 #pragma mark Edited Project
 
 - (void)setUpEditedProjectViewControllerIfNeeded
-{
+{NSLog(@"setUpEditedProjectViewControllerIfNeeded");
 	if (self.editedProjectViewController) {
 		return;
 	}
@@ -159,52 +159,94 @@
 
 #pragma mark - Accessing View Controllers
 
-- (GLAViewController *)viewControllerForSection:(GLAMainContentSection)section
+- (GLAViewController *)setUpViewControllerForSection:(GLAMainContentSection *)section
 {
-	switch (section) {
-		case GLAMainContentSectionAll:
-			return (self.allProjectsViewController);
-			
-		case GLAMainContentSectionToday:
-			return (self.nowProjectViewController);
-			
-		case GLAMainContentSectionPlanned:
-			return (self.plannedProjectsViewController);
-			
-		case GLAMainContentSectionAllEditProject:
-		case GLAMainContentSectionPlannedEditProject:
-			return (self.editedProjectViewController);
-			
-		case GLAMainContentSectionAddNewProject:
-			return (self.addedProjectViewController);
+	if (section.isAllProjects) {
+		[self setUpAllProjectsViewControllerIfNeeded];
+		return (self.allProjectsViewController);
+	}
+	else if (section.isNow) {
+		[self setUpNowProjectViewControllerIfNeeded];
+		return (self.nowProjectViewController);
+	}
+	else if (section.isPlannedProjects) {
+		[self setUpPlannedProjectsViewControllerIfNeeded];
+		return (self.plannedProjectsViewController);
+	}
+	else if (section.isEditProject) {
+		GLAMainContentEditProjectSection *editProjectSection = (GLAMainContentEditProjectSection *)(section);
+		[self setUpEditedProjectViewControllerIfNeeded];
 		
-		case GLAMainContentSectionCollection:
-			return (self.activeCollectionViewController);
-			
-		default:
-			return nil;
+		(self.editedProjectViewController.project) = (editProjectSection.project);
+		
+		return (self.editedProjectViewController);
+	}
+	else if (section.isAddNewProject) {
+		[self setUpAddedProjectViewControllerIfNeeded];
+		return (self.addedProjectViewController);
+	}
+	else if (section.isEditCollection) {
+		GLAMainContentEditCollectionSection *editCollectionSection = (GLAMainContentEditCollectionSection *)section;
+		[self setUpEditedCollectionViewControllerForSection:editCollectionSection];
+		
+		return (self.activeCollectionViewController);
+	}
+	else {
+		return nil;
+	}
+}
+
+- (GLAViewController *)viewControllerForSection:(GLAMainContentSection *)section
+{
+	if (section.isAllProjects) {
+		return (self.allProjectsViewController);
+	}
+	else if (section.isNow) {
+		return (self.nowProjectViewController);
+	}
+	else if (section.isPlannedProjects) {
+		return (self.plannedProjectsViewController);
+	}
+	else if (section.isEditProject) {
+		return (self.editedProjectViewController);
+	}
+	else if (section.isAddNewProject) {
+		return (self.addedProjectViewController);
+	}
+	else if (section.isEditCollection) {
+		return (self.activeCollectionViewController);
+	}
+	else {
+		return nil;
 	}
 }
 
 - (GLAProjectViewController *)activeProjectViewController
 {
-	switch (self.currentSection) {
-		case GLAMainContentSectionToday:
-			return (self.nowProjectViewController);
-			
-		case GLAMainContentSectionAllEditProject:
-		case GLAMainContentSectionPlannedEditProject:
-			return (self.editedProjectViewController);
-			
-		case GLAMainContentSectionAddNewProject:
-			return (self.addedProjectViewController);
-			
-		default:
-			return nil;
+	GLAMainContentSection *currentSection = (self.currentSection);
+	
+	if (currentSection.isNow) {
+		return (self.nowProjectViewController);
+	}
+	else if (currentSection.isEditProject) {
+		return (self.editedProjectViewController);
+	}
+	else if (currentSection.isAddNewProject) {
+		return (self.addedProjectViewController);
+	}
+	else {
+		return nil;
 	}
 }
 
 #pragma mark - Editing Projects
+
+- (void)changeNowProject:(GLAProject *)project
+{
+	[self setUpNowProjectViewControllerIfNeeded];
+	
+	(self.nowProjectViewController.project) = project;
+}
 
 - (void)workOnProjectNow:(GLAProject *)project
 {
@@ -213,7 +255,7 @@
 	(self.nowProjectViewController.project) = project;
 	
 	//[(self.mainNavigationBarController) changeCurrentSectionTo:GLAMainNavigationSectionToday];
-	[self transitionToSection:GLAMainContentSectionToday animate:YES];
+	[self goToSection:[GLAMainContentSection nowSection]];
 }
 
 - (void)editProject:(GLAProject *)project;
@@ -221,29 +263,7 @@
 	[self setUpEditedProjectViewControllerIfNeeded];
 	(self.editedProjectViewController.project) = project;
 	
-	GLAMainContentSection currentSection = (self.currentSection);
-	if (currentSection == GLAMainContentSectionAll) {
-		[self transitionToSection:GLAMainContentSectionAllEditProject animate:YES];
-	}
-	else if (currentSection == GLAMainContentSectionPlanned) {
-		[self transitionToSection:GLAMainContentSectionPlannedEditProject animate:YES];
-	}
-}
-
-- (void)endEditingProject:(GLAProject *)project previousSection:(GLAMainContentSection)previousSection
-{
-	GLAMainContentSection currentSection = (self.currentSection);
-	if (currentSection == GLAMainContentSectionAddNewProject) {
-		[self transitionToSection:previousSection animate:YES];
-	}
-	else {
-		if (currentSection == GLAMainContentSectionAllEditProject) {
-			[self transitionToSection:GLAMainContentSectionAll animate:YES];
-		}
-		else if (currentSection == GLAMainContentSectionPlannedEditProject) {
-			[self transitionToSection:GLAMainContentSectionPlanned animate:YES];
-		}
-	}
+	[self goToSection:[GLAMainContentEditProjectSection editProjectSectionWithProject:project previousSection:(self.currentSection)]];
 }
 
 - (void)enterAddedProject:(GLAProject *)project
@@ -254,7 +274,7 @@
 	(viewController.project) = project;
 	[viewController clearName];
 	
-	[self transitionToSection:GLAMainContentSectionAddNewProject animate:YES];
+	[self goToSection:[GLAMainContentSection addNewProjectSectionWithPreviousSection:(self.currentSection)]];
 	
 	[viewController focusNameTextField];
 
@@ -278,15 +298,30 @@
 	return controller;
 }
 
-- (void)enterCollection:(GLACollection *)collection
+- (void)setUpEditedCollectionViewControllerForSection:(GLAMainContentEditCollectionSection *)section
 {
-	GLACollectionViewController *collectionViewController = [self createViewControllerForCollection:collection];
+	// Remove old view
+	GLACollectionViewController *oldCollectionViewController = (self.activeCollectionViewController);
+	[oldCollectionViewController viewWillDisappear];
+	[(oldCollectionViewController.view) removeFromSuperview];
+	[oldCollectionViewController viewDidDisappear];
+	
+	// Set up new view
+	GLACollectionViewController *collectionViewController = [self createViewControllerForCollection:(section.collection)];
 	(collectionViewController.view.identifier) = @"activeCollection";
 	
-	(self.activeCollectionViewController) = collectionViewController;
 	[self fillViewWithChildView:(collectionViewController.view)];
 	
-	[self transitionToSection:GLAMainContentSectionCollection animate:YES];
+	(self.activeCollectionViewController) = collectionViewController;
+}
+
+- (void)enterCollection:(GLACollection *)collection
+{
+	GLAMainContentEditCollectionSection *section = [GLAMainContentEditCollectionSection editCollectionSectionWithCollection:collection previousSection:(self.currentSection)];
+	
+	[self setUpEditedCollectionViewControllerForSection:section];
+	
+	[self goToSection:section];
 }
 
 #pragma mark Active/Inactive Project View Controller
@@ -333,140 +368,111 @@
 
 #pragma mark Transition
 
-- (void)transitionToSection:(GLAMainContentSection)newSection animate:(BOOL)animate
+- (void)transitionToSection:(GLAMainContentSection *)newSection animate:(BOOL)animate
 {
-	GLAMainContentSection previousSection = (self.currentSection);
-	if (previousSection == newSection) {
+	GLAMainContentSection *outSection = (self.currentSection);
+	if ([outSection isEqual:newSection]) {
 		return;
 	}
 	
-	GLAViewController *outViewController = [self viewControllerForSection:previousSection];
+	GLAViewController *outViewController = [self viewControllerForSection:outSection];
 	GLAViewController *inViewController = [self viewControllerForSection:newSection];
 	
-	[self didBeginTransitionAwayFromViewController:outViewController];
+	NSAssert(outSection ? (outViewController != nil) : (outViewController == nil), @"There must be an appropriate view controller for an out section, or no view controller for no section");
+	NSAssert(newSection ? (inViewController != nil) : (inViewController == nil), @"There must be an appropriate view controller for an in section, or no view controller for no section");
 	
-	if (newSection == GLAMainContentSectionAll) {
-		[self setUpAllProjectsViewControllerIfNeeded];
+	if (outViewController) {
+		[self didBeginTransitioningOutViewController:outViewController];
+	}
+	else {
+		// If this is the first view in, just make it appear instantly.
+		animate = NO;
+	}
+	
+	CGFloat outLeading = NAN, inLeading = NAN;
+	
+	if (newSection.isAllProjects) {
+		//[self setUpAllProjectsViewControllerIfNeeded];
 		//[(self.allProjectsViewController.tableView) sizeLastColumnToFit];
 		
-		if (previousSection == GLAMainContentSectionAllEditProject) {
-			[self hideChildView:(self.editedProjectViewController.view) moveLeadingTo:500.0 animate:YES];
-		}
-		else if (previousSection == GLAMainContentSectionAddNewProject) {
-			[self hideChildView:(self.addedProjectViewController.view) moveLeadingTo:500.0 animate:YES];
-		}
-		else if (previousSection == GLAMainContentSectionToday) {
-			[self hideChildView:(self.nowProjectViewController.view) moveLeadingTo:500.0 animate:YES];
-		}
-		else if (previousSection == GLAMainContentSectionPlanned) {
-			[self hideChildView:(self.plannedProjectsViewController.view) moveLeadingTo:1000.0 animate:YES];
-		}
-		else if (previousSection == GLAMainContentSectionPlannedEditProject) {
-			[self hideChildView:(self.editedProjectViewController.view) moveLeadingTo:500.0 animate:YES];
-		}
+		outLeading = 500.0;
+		inLeading = -500.0;
 		
-		[self hideChildView:(self.allProjectsViewController.view) moveLeadingTo:-500.0 animate:NO];
-		[self showChildViewMovingLeading:(self.allProjectsViewController.view) animate:YES];
-	}
-	else if (newSection == GLAMainContentSectionToday) {
-		[self setUpNowProjectViewControllerIfNeeded];
-		
-		BOOL animateNowIn = YES;
-		
-		if (previousSection == GLAMainContentSectionAll) {
-			[self hideChildView:(self.allProjectsViewController.view) moveLeadingTo:-500.0 animate:YES];
-			[self hideChildView:(self.nowProjectViewController.view) moveLeadingTo:500.0 animate:NO];
-		}
-		else if (previousSection == GLAMainContentSectionPlanned) {
-			[self hideChildView:(self.plannedProjectsViewController.view) moveLeadingTo:500.0 animate:YES];
-			[self hideChildView:(self.nowProjectViewController.view) moveLeadingTo:-500.0 animate:NO];
-		}
-		else if (previousSection == GLAMainContentSectionAddNewProject) {
-			[self hideChildView:(self.addedProjectViewController.view) moveLeadingTo:500.0 animate:YES];
-			[self hideChildView:(self.nowProjectViewController.view) moveLeadingTo:-500.0 animate:NO];
-		}
-		else if (previousSection == GLAMainContentSectionAllEditProject || previousSection == GLAMainContentSectionPlannedEditProject) {
-			GLAProject *nowProject = (self.nowProjectViewController.project);
-			GLAProject *editedProject = (self.editedProjectViewController.project);
-			
-			if (nowProject == editedProject) {
-				[(self.nowProjectViewController) matchWithOtherProjectViewController:(self.editedProjectViewController)];
-				
-				[(self.editedProjectViewController.view) removeFromSuperview];
-				
-				animateNowIn = NO;
-			}
-			else {
-				[self hideChildView:(self.editedProjectViewController.view) moveLeadingTo:500.0 animate:YES];
-				[self hideChildView:(self.nowProjectViewController.view) moveLeadingTo:-500.0 animate:NO];
+		if (outSection) {
+			if (outSection.isPlannedProjects) {
+				outLeading = 1000.0;
+				//inLeading = -1000.0;
 			}
 		}
-		else if (previousSection == GLAMainContentSectionCollection) {
-			[self hideChildView:(outViewController.view) moveLeadingTo:500.0 animate:YES];
-			[self hideChildView:(inViewController.view) moveLeadingTo:-500.0 animate:NO];
-		}
-		
-		[self showChildViewMovingLeading:(self.nowProjectViewController.view) animate:animateNowIn];
 	}
-	else if (newSection == GLAMainContentSectionPlanned) {
-		[self setUpPlannedProjectsViewControllerIfNeeded];
-		//[(self.plannedProjectsViewController.tableView) sizeLastColumnToFit];
+	else if (newSection.isNow) {
+		//[self setUpNowProjectViewControllerIfNeeded];
 		
-		if (previousSection == GLAMainContentSectionPlannedEditProject) {
-			[self hideChildView:(self.editedProjectViewController.view) moveLeadingTo:500.0 animate:YES];
-		}
-		else if (previousSection == GLAMainContentSectionAddNewProject) {
-			[self hideChildView:(self.addedProjectViewController.view) moveLeadingTo:500.0 animate:YES];
-		}
-		else if (previousSection == GLAMainContentSectionToday) {
-			[self hideChildView:(self.nowProjectViewController.view) moveLeadingTo:-500.0 animate:YES];
-		}
-		else if (previousSection == GLAMainContentSectionAll) {
-			[self hideChildView:(self.allProjectsViewController.view) moveLeadingTo:-1000.0 animate:YES];
-		}
-		else if (previousSection == GLAMainContentSectionAllEditProject) {
-			[self hideChildView:(self.editedProjectViewController.view) moveLeadingTo:500.0 animate:YES];
-		}
+		outLeading = 500.0;
+		inLeading = -500.0;
 		
-		if (previousSection == GLAMainContentSectionToday || previousSection == GLAMainContentSectionAll) {
-			[self hideChildView:(self.plannedProjectsViewController.view) moveLeadingTo:500.0 animate:NO];
+		if (outSection) {
+			if (outSection.isAllProjects) {
+				outLeading = -500.0;
+				inLeading = 500.0;
+			}
+			else if (outSection.isEditProject) {
+				GLAProject *nowProject = (self.nowProjectViewController.project);
+				GLAProject *editedProject = (self.editedProjectViewController.project);
+				
+				if (nowProject == editedProject) {
+					[(self.nowProjectViewController) matchWithOtherProjectViewController:(self.editedProjectViewController)];
+					//[(outViewController.view) removeFromSuperview];
+					
+					animate = NO;
+				}
+			}
 		}
-		else {
-			[self hideChildView:(self.plannedProjectsViewController.view) moveLeadingTo:-500.0 animate:NO];
-		}
-		[self showChildViewMovingLeading:(self.plannedProjectsViewController.view) animate:YES];
 	}
-	else if (newSection == GLAMainContentSectionAllEditProject || newSection == GLAMainContentSectionPlannedEditProject) {
-		[self setUpEditedProjectViewControllerIfNeeded];
+	else if (newSection.isPlannedProjects) {
+		outLeading = 500.0;
+		inLeading = -500.0;
 		
-		[self hideChildView:(outViewController.view) moveLeadingTo:-500.0 animate:YES];
-		
-		[self hideChildView:(inViewController.view) moveLeadingTo:500.0 animate:NO];
-		[self showChildViewMovingLeading:(inViewController.view) animate:YES];
+		if (outSection) {
+			if (outSection.isNow) {
+				outLeading = -500.0;
+				inLeading = 500.0;
+			}
+			else if (outSection.isAllProjects) {
+				outLeading = -1000.0;
+				inLeading = 500.0;
+			}
+		}
 	}
-	else if (newSection == GLAMainContentSectionAddNewProject) {
-		[self setUpAddedProjectViewControllerIfNeeded];
-		
-		[self hideChildView:(outViewController.view) moveLeadingTo:-500.0 animate:YES];
-		
-		[self hideChildView:(self.addedProjectViewController.view) moveLeadingTo:500.0 animate:NO];
-		//[self hideChildView:(self.addedProjectViewController.view) moveTopTo:-700.0 animate:NO];
-		[self showChildViewMovingLeading:(self.addedProjectViewController.view) animate:YES];
-		//[self showChildViewMovingTop:(self.addedProjectViewController.view) animate:YES];
+	else if (newSection.isEditProject) {
+		outLeading = -500.0;
+		inLeading = 500.0;
 	}
-	else if (newSection == GLAMainContentSectionCollection) {
-		[self hideChildView:(outViewController.view) moveLeadingTo:-500.0 animate:YES];
-		
-		[self hideChildView:(self.activeCollectionViewController.view) moveLeadingTo:500.0 animate:NO];
-		[self showChildViewMovingLeading:(self.activeCollectionViewController.view) animate:YES];
+	else if (newSection.isAddNewProject) {
+		outLeading = -500.0;
+		inLeading = 500.0;
 	}
+	else if (newSection.isEditCollection) {
+		outLeading = -500.0;
+		inLeading = 500.0;
+	}
+	
+	// HIDE OUT
+	if (outViewController && !isnan(outLeading)) {
+		[self hideChildView:(outViewController.view) movingLeadingTo:outLeading animate:animate];
+	}
+	// SHOW IN
+	if (!isnan(inLeading)) {
+		[self showChildView:(inViewController.view) movingLeadingFrom:inLeading animate:animate];
+	}
+	
 	
 	(self.currentSection) = newSection;
 	
-	[self didBeginTransitionToViewController:inViewController];
+	[self didBeginTransitioningInViewController:inViewController];
 }
 
-- (void)didBeginTransitionToViewController:(GLAViewController *)viewController
+- (void)didBeginTransitioningInViewController:(GLAViewController *)viewController
 {
 	[viewController viewWillAppear];
 	
@@ -476,12 +482,18 @@
 	}
 }
 
-- (void)didBeginTransitionAwayFromViewController:(GLAViewController *)viewController
+- (void)didBeginTransitioningOutViewController:(GLAViewController *)viewController
 {
 	if (viewController == (self.nowProjectViewController) || viewController == (self.addedProjectViewController) || viewController == (self.editedProjectViewController)) {
 		GLAProjectViewController *projectVC = (GLAProjectViewController *)viewController;
 		[self projectViewControllerDidBecomeInactive:projectVC];
 	}
+}
+
+- (void)goToSection:(GLAMainContentSection *)newSection
+{
+	[self setUpViewControllerForSection:newSection];
+	[self transitionToSection:newSection animate:YES];
 }
 
 #pragma mark Adjusting Individual Content Views
@@ -502,7 +514,7 @@
 {
 	//[self addViewIfNeeded:view layout:YES];
 	
-	GLAMainContentSection currentSection = (self.currentSection);
+	GLAMainContentSection *currentSection = (self.currentSection);
 	GLAViewController *vc = [self viewControllerForSection:currentSection];
 	
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -535,7 +547,7 @@
 		}
 		
 		if (animate) {
-			if (currentSection != (self.currentSection)) {
+			if (![currentSection isEqual:(self.currentSection)]) {
 				[vc viewWillDisappear];
 				[view removeFromSuperview];
 			}
@@ -543,7 +555,7 @@
 	}];
 }
 
-- (void)hideChildView:(NSView *)view moveLeadingTo:(CGFloat)offset animate:(BOOL)animate
+- (void)hideChildView:(NSView *)view movingLeadingTo:(CGFloat)offset animate:(BOOL)animate
 {
 	NSLayoutConstraint *leadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:view];
 	[self hideChildView:view adjustingConstraint:leadingConstraint toValue:offset animate:animate];
@@ -588,11 +600,17 @@
 	}];
 }
 
-- (void)showChildViewMovingLeading:(NSView *)view animate:(BOOL)animate
+- (void)showChildView:(NSView *)view movingLeadingFrom:(CGFloat)leadingInitialValue animate:(BOOL)animate
 {
 	[self addViewIfNeeded:view layout:YES];
 	
 	NSLayoutConstraint *leadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:view];
+	
+	if (animate) {
+		// Move view to initial position.
+		[self hideChildView:view adjustingConstraint:leadingConstraint toValue:leadingInitialValue animate:NO];
+	}
+	
 	[self showChildView:view adjustingConstraint:leadingConstraint toValue:0.0 animate:animate];
 }
 

@@ -10,6 +10,7 @@
 #import "GLAUIStyle.h"
 #import "GLACollectionFilesListContent.h"
 #import "GLACollectedFile.h"
+#import "GLAFileInfoRetriever.h"
 
 
 @interface GLAFileCollectionViewController ()
@@ -18,6 +19,9 @@
 @property(copy, nonatomic) NSArray *collectedFiles;
 
 @property(nonatomic) NSMutableSet *accessedSecurityScopedURLs;
+@property(nonatomic) NSMutableDictionary *usedURLsToCollectedFiles;
+
+@property(nonatomic) BOOL doNotUpdateViews;
 
 @end
 
@@ -39,9 +43,21 @@
 	NSTableView *tableView = (self.sourceFilesListTableView);
 	(tableView.dataSource) = self;
 	(tableView.delegate) = self;
+	(tableView.identifier) = @"filesCollectionViewController.sourceFilesListTableView";
 	[[GLAUIStyle activeStyle] prepareContentTableView:tableView];
 	
+	[self setUpFileInfoRetriever];
+	
 	[self reloadSourceFiles];
+}
+
+- (void)setUpFileInfoRetriever
+{
+	GLAFileInfoRetriever *fileInfoRetriever = [GLAFileInfoRetriever new];
+	(fileInfoRetriever.delegate) = self;
+	
+	(self.fileInfoRetriever) = fileInfoRetriever;
+	
 }
 
 - (GLACollectionFilesListContent *)filesListContent
@@ -139,8 +155,49 @@
 	}
 }
 
+- (void)addUsedURLForCollectedFile:(GLACollectedFile *)collectedFile
+{
+	if (!(self.usedURLsToCollectedFiles)) {
+		(self.usedURLsToCollectedFiles) = [NSMutableDictionary new];
+	}
+	
+	NSURL *fileURL = (collectedFile.URL);
+	
+	NSMutableDictionary *usedURLsToCollectedFiles = (self.usedURLsToCollectedFiles);
+	if (!usedURLsToCollectedFiles[fileURL]) {
+		usedURLsToCollectedFiles[fileURL] = [NSMutableSet new];
+	}
+	
+	NSMutableSet *collectedFiles = usedURLsToCollectedFiles[fileURL];
+	[collectedFiles addObject:collectedFile];
+	
+	[self addAccessedSecurityScopedFileURL:fileURL];
+}
+
+- (NSSet *)collectedFilesUsingURL:(NSURL *)fileURL
+{
+	NSMutableDictionary *usedURLsToCollectedFiles = (self.usedURLsToCollectedFiles);
+	if (!usedURLsToCollectedFiles) {
+		return nil;
+	}
+	
+	NSMutableSet *collectedFiles = usedURLsToCollectedFiles[fileURL];
+	return collectedFiles;
+}
+
+- (void)viewWillAppear
+{
+	[super viewWillAppear];
+	
+	(self.doNotUpdateViews) = NO;
+	[self reloadSourceFiles];
+}
+
 - (void)viewWillDisappear
 {
+	[super viewWillDisappear];
+	
+	(self.doNotUpdateViews) = YES;
 	[self stopObservingPreviewFrameChanges];
 	[self finishAccessingSecurityScopedFileURLs];
 }
@@ -186,7 +243,8 @@
 {
 	GLACollectedFile *collectedFile = (self.collectedFiles)[row];
 	
-	[self addAccessedSecurityScopedFileURL:(collectedFile.URL)];
+	[self addUsedURLForCollectedFile:collectedFile];
+	//[self addAccessedSecurityScopedFileURL:(collectedFile.URL)];
 	
 	return collectedFile;
 }
@@ -198,12 +256,26 @@
 	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	
 	GLACollectedFile *collectedFile = (self.collectedFiles)[row];
-	//NSString *displayName = (project.name);
-	NSString *displayName = @"hello";
 	(cellView.objectValue) = collectedFile;
-	//(cellView.textField.stringValue) = displayName;
-	(cellView.textField.stringValue) = (collectedFile.URL.path);
 	
+	GLAFileInfoRetriever *fileInfoRetriever = (self.fileInfoRetriever);
+	NSURL *fileURL = (collectedFile.URL);
+	
+	NSArray *resourceValueKeys =
+	@[
+	  NSURLLocalizedNameKey,
+	  NSURLEffectiveIconKey
+	  ];
+	//[fileInfoRetriever requestResourceValuesForKeys:resourceValueKeys forURL:fileURL];
+	NSDictionary *resourceValues = [fileInfoRetriever loadedResourceValuesForKeys:resourceValueKeys forURL:fileURL requestIfNeed:YES];
+	
+	NSString *displayName = resourceValues[NSURLLocalizedNameKey];
+	(cellView.textField.stringValue) = displayName ?: @"";
+	
+	NSImage *iconImage = resourceValues[NSURLEffectiveIconKey];
+	(cellView.imageView.image) = iconImage;
+	
+	//(cellView.textField.stringValue) = (collectedFile.URL.path);
 	return cellView;
 }
 /*
@@ -215,6 +287,30 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
 	[self updateQuickLookPreview];
+}
+
+#pragma mark File Info Retriever Delegate
+
+- (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didLoadResourceValuesForURL:(NSURL *)fileURL
+{
+	if (self.doNotUpdateViews) {
+		return;
+	}
+	
+	NSSet *collectedFilesToUpdate = [self collectedFilesUsingURL:fileURL];
+	NSIndexSet *indexesToUpdate = [(self.collectedFiles) indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+		return [collectedFilesToUpdate containsObject:obj];
+	}];
+	
+	//[(self.sourceFilesListTableView) reloadData];
+	[(self.sourceFilesListTableView) reloadDataForRowIndexes:indexesToUpdate columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+}
+
+- (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didFailWithError:(NSError *)error loadingResourceValuesForURL:(NSURL *)URL
+{
+	if (self.doNotUpdateViews) {
+		return;
+	}
 }
 
 @end

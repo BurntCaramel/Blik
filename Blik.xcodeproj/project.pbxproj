@@ -23,7 +23,7 @@
 		B226E9611988D3A600D607CC /* GLACollectionFilesListContent.m in Sources */ = {isa = PBXBuildFile; fileRef = B226E9601988D3A600D607CC /* GLACollectionFilesListContent.m */; };
 		B22E80C4198CAE38005C4108 /* GLACollectedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B22E80C3198CAE38005C4108 /* GLACollectedFile.m */; };
 		B22E80C7198F654E005C4108 /* GLAArrayEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = B22E80C6198F654E005C4108 /* GLAArrayEditor.m */; };
-		B22E80CB198F8971005C4108 /* GLAFileURLInfoRetriever.m in Sources */ = {isa = PBXBuildFile; fileRef = B22E80CA198F8971005C4108 /* GLAFileURLInfoRetriever.m */; };
+		B22E80CB198F8971005C4108 /* GLAFileInfoRetriever.m in Sources */ = {isa = PBXBuildFile; fileRef = B22E80CA198F8971005C4108 /* GLAFileInfoRetriever.m */; };
 		B22E80CF198F98B2005C4108 /* GLAMainContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B22E80CE198F98B2005C4108 /* GLAMainContentViewController.m */; };
 		B23515331973BEAB00883FB3 /* GLAButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B23515321973BEAB00883FB3 /* GLAButton.m */; };
 		B24B3607196D1F720094FA1F /* GLAReminder.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3606196D1F720094FA1F /* GLAReminder.m */; };
@@ -59,6 +59,10 @@
 		B2C7F2921970D5D3005780B4 /* GLAMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C7F2911970D5D3005780B4 /* GLAMainWindow.m */; };
 		B2C7F29819739239005780B4 /* GLAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C7F29719739239005780B4 /* GLAViewController.m */; };
 		B2C7F29D1973998C005780B4 /* GLAProjectActionsBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C7F29C1973998C005780B4 /* GLAProjectActionsBarController.m */; };
+		B2F0DBB219923887001AB5EE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2F0DBB119923887001AB5EE /* Foundation.framework */; };
+		B2F0DBB819923887001AB5EE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2F0DBB619923887001AB5EE /* InfoPlist.strings */; };
+		B2F0DBBB19923887001AB5EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B2F0DBBA19923887001AB5EE /* main.m */; };
+		B2F0DBC11992607B001AB5EE /* GLAMainContentSection.m in Sources */ = {isa = PBXBuildFile; fileRef = B2F0DBC01992607B001AB5EE /* GLAMainContentSection.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,8 +106,8 @@
 		B22E80C5198F654E005C4108 /* GLAArrayEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAArrayEditor.h; sourceTree = "<group>"; };
 		B22E80C6198F654E005C4108 /* GLAArrayEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAArrayEditor.m; sourceTree = "<group>"; };
 		B22E80C8198F65A9005C4108 /* GLAArrayEditing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLAArrayEditing.h; sourceTree = "<group>"; };
-		B22E80C9198F8971005C4108 /* GLAFileURLInfoRetriever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAFileURLInfoRetriever.h; sourceTree = "<group>"; };
-		B22E80CA198F8971005C4108 /* GLAFileURLInfoRetriever.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAFileURLInfoRetriever.m; sourceTree = "<group>"; };
+		B22E80C9198F8971005C4108 /* GLAFileInfoRetriever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAFileInfoRetriever.h; sourceTree = "<group>"; };
+		B22E80CA198F8971005C4108 /* GLAFileInfoRetriever.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAFileInfoRetriever.m; sourceTree = "<group>"; };
 		B22E80CC198F8B13005C4108 /* Blik.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Blik.entitlements; sourceTree = "<group>"; };
 		B22E80CD198F98B2005C4108 /* GLAMainContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainContentViewController.h; sourceTree = "<group>"; };
 		B22E80CE198F98B2005C4108 /* GLAMainContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainContentViewController.m; sourceTree = "<group>"; };
@@ -168,6 +172,14 @@
 		B2C7F29719739239005780B4 /* GLAViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAViewController.m; sourceTree = "<group>"; };
 		B2C7F29B1973998C005780B4 /* GLAProjectActionsBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProjectActionsBarController.h; sourceTree = "<group>"; };
 		B2C7F29C1973998C005780B4 /* GLAProjectActionsBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProjectActionsBarController.m; sourceTree = "<group>"; };
+		B2F0DBB019923887001AB5EE /* com.burntcaramel.Blik.Mac.QuickLook-Preview.xpc */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "com.burntcaramel.Blik.Mac.QuickLook-Preview.xpc"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B2F0DBB119923887001AB5EE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		B2F0DBB519923887001AB5EE /* QuickLook Preview-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "QuickLook Preview-Info.plist"; sourceTree = "<group>"; };
+		B2F0DBB719923887001AB5EE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B2F0DBB919923887001AB5EE /* QuickLook Preview-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QuickLook Preview-Prefix.pch"; sourceTree = "<group>"; };
+		B2F0DBBA19923887001AB5EE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B2F0DBBF1992607B001AB5EE /* GLAMainContentSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainContentSection.h; sourceTree = "<group>"; };
+		B2F0DBC01992607B001AB5EE /* GLAMainContentSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainContentSection.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +201,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B2F0DBAD19923887001AB5EE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B2F0DBB219923887001AB5EE /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -200,6 +220,7 @@
 				B219DA9F196AB65D007900DF /* GLAMainWindowController.h */,
 				B219DAA0196AB65D007900DF /* GLAMainWindowController.m */,
 				B219DAA1196AB65D007900DF /* GLAMainWindowController.xib */,
+				B2F0DBC2199327D9001AB5EE /* State */,
 				B22E80CD198F98B2005C4108 /* GLAMainContentViewController.h */,
 				B22E80CE198F98B2005C4108 /* GLAMainContentViewController.m */,
 				B24B3608196E336E0094FA1F /* GLAMainNavigationBarController.h */,
@@ -255,8 +276,8 @@
 				B226E9601988D3A600D607CC /* GLACollectionFilesListContent.m */,
 				B22E80C2198CAE38005C4108 /* GLACollectedFile.h */,
 				B22E80C3198CAE38005C4108 /* GLACollectedFile.m */,
-				B22E80C9198F8971005C4108 /* GLAFileURLInfoRetriever.h */,
-				B22E80CA198F8971005C4108 /* GLAFileURLInfoRetriever.m */,
+				B22E80C9198F8971005C4108 /* GLAFileInfoRetriever.h */,
+				B22E80CA198F8971005C4108 /* GLAFileInfoRetriever.m */,
 			);
 			name = "Collection Content";
 			sourceTree = "<group>";
@@ -286,6 +307,7 @@
 				B22E80CC198F8B13005C4108 /* Blik.entitlements */,
 				B2ADDBD71963DA2E0014EF84 /* Blik Mac */,
 				B2ADDBF51963DA2E0014EF84 /* Blik Tests */,
+				B2F0DBB319923887001AB5EE /* QuickLook Preview */,
 				B2ADDBD01963DA2E0014EF84 /* Frameworks */,
 				B2ADDBCF1963DA2E0014EF84 /* Products */,
 				0B4ACAFDF5CB4F2F9F98B3F3 /* Pods-Blik.xcconfig */,
@@ -297,6 +319,7 @@
 			children = (
 				B2ADDBCE1963DA2E0014EF84 /* Blik.app */,
 				B2ADDBEF1963DA2E0014EF84 /* BlikTests.xctest */,
+				B2F0DBB019923887001AB5EE /* com.burntcaramel.Blik.Mac.QuickLook-Preview.xpc */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -306,6 +329,7 @@
 			children = (
 				B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */,
 				B2ADDBF01963DA2E0014EF84 /* XCTest.framework */,
+				B2F0DBB119923887001AB5EE /* Foundation.framework */,
 				B2ADDBD31963DA2E0014EF84 /* Other Frameworks */,
 				659FE625B2454CA095734DA4 /* libPods-Blik.a */,
 			);
@@ -430,6 +454,34 @@
 			name = "Projects List";
 			sourceTree = "<group>";
 		};
+		B2F0DBB319923887001AB5EE /* QuickLook Preview */ = {
+			isa = PBXGroup;
+			children = (
+				B2F0DBBA19923887001AB5EE /* main.m */,
+				B2F0DBB419923887001AB5EE /* Supporting Files */,
+			);
+			path = "QuickLook Preview";
+			sourceTree = "<group>";
+		};
+		B2F0DBB419923887001AB5EE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B2F0DBB519923887001AB5EE /* QuickLook Preview-Info.plist */,
+				B2F0DBB619923887001AB5EE /* InfoPlist.strings */,
+				B2F0DBB919923887001AB5EE /* QuickLook Preview-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B2F0DBC2199327D9001AB5EE /* State */ = {
+			isa = PBXGroup;
+			children = (
+				B2F0DBBF1992607B001AB5EE /* GLAMainContentSection.h */,
+				B2F0DBC01992607B001AB5EE /* GLAMainContentSection.m */,
+			);
+			name = State;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -470,6 +522,23 @@
 			productReference = B2ADDBEF1963DA2E0014EF84 /* BlikTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		B2F0DBAF19923887001AB5EE /* QuickLook Preview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B2F0DBBE19923887001AB5EE /* Build configuration list for PBXNativeTarget "QuickLook Preview" */;
+			buildPhases = (
+				B2F0DBAC19923887001AB5EE /* Sources */,
+				B2F0DBAD19923887001AB5EE /* Frameworks */,
+				B2F0DBAE19923887001AB5EE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "QuickLook Preview";
+			productName = "QuickLook Preview";
+			productReference = B2F0DBB019923887001AB5EE /* com.burntcaramel.Blik.Mac.QuickLook-Preview.xpc */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -507,6 +576,7 @@
 			targets = (
 				B2ADDBCD1963DA2E0014EF84 /* Blik */,
 				B2ADDBEE1963DA2E0014EF84 /* BlikTests */,
+				B2F0DBAF19923887001AB5EE /* QuickLook Preview */,
 			);
 		};
 /* End PBXProject section */
@@ -535,6 +605,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2ADDBFA1963DA2E0014EF84 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B2F0DBAE19923887001AB5EE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B2F0DBB819923887001AB5EE /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -589,6 +667,7 @@
 				B2C7F29D1973998C005780B4 /* GLAProjectActionsBarController.m in Sources */,
 				B226E95D1988D35E00D607CC /* GLACollectionContent.m in Sources */,
 				B219DAB6196AD698007900DF /* GLAUIStyle.m in Sources */,
+				B2F0DBC11992607B001AB5EE /* GLAMainContentSection.m in Sources */,
 				B2ADDBDE1963DA2E0014EF84 /* main.m in Sources */,
 				B219DAAE196ACE8D007900DF /* GLAProjectView.m in Sources */,
 				B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */,
@@ -604,7 +683,7 @@
 				B24B3607196D1F720094FA1F /* GLAReminder.m in Sources */,
 				B2C7F28B197023EF005780B4 /* GLAProjectsListViewController.m in Sources */,
 				B28D217F1977C24000A12C6D /* GLAToggleButton.m in Sources */,
-				B22E80CB198F8971005C4108 /* GLAFileURLInfoRetriever.m in Sources */,
+				B22E80CB198F8971005C4108 /* GLAFileInfoRetriever.m in Sources */,
 				B2C7F2921970D5D3005780B4 /* GLAMainWindow.m in Sources */,
 				B219DAB2196AD462007900DF /* GLAProjectViewController.m in Sources */,
 				B219DAAB196AB8D1007900DF /* GLANavigationButton.m in Sources */,
@@ -621,6 +700,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2ADDBFC1963DA2E0014EF84 /* Glance_Prototype_ATests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B2F0DBAC19923887001AB5EE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B2F0DBBB19923887001AB5EE /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -663,6 +750,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				B2ADDBF91963DA2E0014EF84 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		B2F0DBB619923887001AB5EE /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B2F0DBB719923887001AB5EE /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -781,7 +876,7 @@
 		B2ADDC031963DA2E0014EF84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Glance Prototype A.app/Contents/MacOS/Glance Prototype A";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Blik.app/Contents/MacOS/Blik";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -803,7 +898,7 @@
 		B2ADDC041963DA2E0014EF84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Glance Prototype A.app/Contents/MacOS/Glance Prototype A";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Blik.app/Contents/MacOS/Blik";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -815,6 +910,36 @@
 				PRODUCT_NAME = BlikTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+		B2F0DBBC19923887001AB5EE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "QuickLook Preview/QuickLook Preview-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "QuickLook Preview/QuickLook Preview-Info.plist";
+				MACH_O_TYPE = mh_execute;
+				PRODUCT_NAME = "com.burntcaramel.Blik.Mac.$(TARGET_NAME:rfc1034identifier)";
+				WRAPPER_EXTENSION = xpc;
+			};
+			name = Debug;
+		};
+		B2F0DBBD19923887001AB5EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "QuickLook Preview/QuickLook Preview-Prefix.pch";
+				INFOPLIST_FILE = "QuickLook Preview/QuickLook Preview-Info.plist";
+				MACH_O_TYPE = mh_execute;
+				PRODUCT_NAME = "com.burntcaramel.Blik.Mac.$(TARGET_NAME:rfc1034identifier)";
+				WRAPPER_EXTENSION = xpc;
 			};
 			name = Release;
 		};
@@ -847,6 +972,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		B2F0DBBE19923887001AB5EE /* Build configuration list for PBXNativeTarget "QuickLook Preview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B2F0DBBC19923887001AB5EE /* Debug */,
+				B2F0DBBD19923887001AB5EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-#import "MTLModel.h"
+#import "Mantle/Mantle.h"
 
 // Subclassed
-@interface GLACollectionContent : MTLModel
+@interface GLACollectionContent : MTLModel <MTLJSONSerializing>
 
 @end

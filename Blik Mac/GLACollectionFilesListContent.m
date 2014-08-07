@@ -15,6 +15,8 @@
 
 @property(readonly, nonatomic) GLAArrayEditor *filesListEditor;
 
+@property(readonly, nonatomic) NSArray *filesListForJSON;
+
 @end
 
 @implementation GLACollectionFilesListContent
@@ -31,6 +33,11 @@
 	return self;
 }
 
+/*- (instancetype)copyWithZone:(NSZone *)zone
+{
+	
+}*/
+
 - (NSArray *)copyFiles
 {
 	return [(self.filesListEditor) copyChildren];
@@ -39,6 +46,28 @@
 - (id<GLAArrayEditing>)filesListEditing
 {
 	return (self.filesListEditor);
+}
+
+#pragma mark - JSON
+
+- (NSArray *)filesListForJSON
+{
+	return [self copyFiles];
+}
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey
+{
+	return
+	@{
+	  @"filesListForJSON": @"filesList",
+	  @"filesListEditing": (NSNull.null),
+	  @"filesListEditor": (NSNull.null)
+	  };
+}
+
++ (NSValueTransformer *)filesListForJSONJSONTransformer
+{
+	return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:[GLACollectedFile class]];
 }
 
 @end

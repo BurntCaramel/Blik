@@ -13,6 +13,7 @@
 #import "GLANavigationButton.h"
 #import "GLAProject.h"
 #import "GLACollection.h"
+#import "GLAMainContentSection.h"
 
 
 typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
@@ -35,6 +36,8 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 @property(nonatomic) IBOutlet GLAButton *templateButton;
 
+@property(nonatomic) IBOutlet NSArray *allVisibleButtons;
+
 @property(nonatomic) IBOutlet GLAButton *editingProjectBackButton;
 @property(nonatomic) IBOutlet GLAButton *editingProjectWorkOnNowButton;
 
@@ -49,13 +52,15 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 @property(nonatomic) IBOutlet NSLayoutConstraint *plannedButtonTopConstraint;
 @property(nonatomic) IBOutlet NSLayoutConstraint *addProjectButtonTopConstraint;
 
-@property(readonly, nonatomic) GLAMainNavigationSection currentSection;
+@property(readonly, nonatomic) GLAMainContentSection *currentSection;
 
 @property(weak, nonatomic) id<GLAMainNavigationBarControllerDelegate> delegate;
 
 @property(nonatomic, getter = isEnabled) BOOL enabled;
 
-- (void)changeCurrentSectionTo:(GLAMainNavigationSection)newSection;
+- (void)changeCurrentSectionTo:(GLAMainContentSection *)newSection;
+
+- (void)performChangeCurrentSectionTo:(GLAMainContentSection *)newSection;
 - (IBAction)goToAll:(id)sender;
 - (IBAction)goToToday:(id)sender;
 - (IBAction)goToPlanned:(id)sender;
@@ -64,38 +69,29 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 - (IBAction)addNewProject:(id)sender;
 
-- (void)enterProject:(GLAProject *)project;
-- (void)enterAddedProject:(GLAProject *)project;
-
-@property(nonatomic) GLAProject *currentProject;
-@property(nonatomic) BOOL currentProjectIsAddedNew;
-
-- (IBAction)exitCurrentProject:(id)sender;
+- (IBAction)exitEditedProject:(id)sender;
 
 - (IBAction)cancelAddingNewProject:(id)sender;
 - (IBAction)confirmAddingNewProject:(id)sender;
 
-#pragma mark Collections
-
-- (void)enterProjectCollection:(GLACollection *)collection;
-
-@property(nonatomic) GLACollection *currentCollection;
-
-- (IBAction)exitCurrentCollection:(id)sender;
+- (IBAction)exitEditedCollection:(id)sender;
 
 @end
 
 
 @protocol GLAMainNavigationBarControllerDelegate <NSObject>
 
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didChangeCurrentSection:(GLAMainNavigationSection)newSection;
+//- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller wantsToChangeSection:(GLAMainContentSection *)newSection;
+
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performChangeCurrentSectionTo:(GLAMainContentSection *)newSection;
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performAddNewProject:(id)sender;
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performConfirmNewProject:(id)sender;
 
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didExitProject:(GLAProject *)project;
+- (void)mainNavigationBarControllerDidExitEditedProject:(GLAMainNavigationBarController *)controller;
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performWorkOnProjectNow:(GLAProject *)project;
 
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didExitCollection:(GLACollection *)collection;
+- (void)mainNavigationBarControllerDidExitEditedCollection:(GLAMainNavigationBarController *)controller;
 
 @end

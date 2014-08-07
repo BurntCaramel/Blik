@@ -27,7 +27,7 @@
 {
     self = [super initWithWindow:window];
     if (self) {
-        (self.currentSection) = GLAMainWindowControllerSectionUnknown;
+        
     }
     return self;
 }
@@ -153,48 +153,59 @@
 
 #pragma mark Editing Projects
 
+- (void)goToSection:(GLAMainContentSection *)newSection
+{
+	if ([newSection isEqual:(self.currentSection)]) {
+		return;
+	}
+	
+	(self.currentSection) = newSection;
+	
+	[(self.mainContentViewController) goToSection:newSection];
+	[(self.mainNavigationBarController) changeCurrentSectionTo:newSection];
+}
+
+- (void)goToPreviousSection
+{
+	NSLog(@"-goToPreviousSection %@", (self.currentSection.previousSection));
+	[self goToSection:(self.currentSection.previousSection)];
+}
+
 - (void)workOnProjectNow:(GLAProject *)project
 {
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	[projectManager changeNowProject:project];
+	[[GLAProjectManager sharedProjectManager] changeNowProject:project];
 	
-	[(self.mainContentViewController) workOnProjectNow:project];
-	[(self.mainNavigationBarController) changeCurrentSectionTo:GLAMainNavigationSectionToday];
+	[(self.mainContentViewController) changeNowProject:project];
+	
+	[self goToSection:[GLAMainContentSection nowSection]];
 }
 
 - (void)editProject:(GLAProject *)project
 {
-	[(self.mainContentViewController) editProject:project];
-	[(self.mainNavigationBarController) enterProject:project];
-}
-
-- (void)endEditingProject:(GLAProject *)project
-{
-	GLAMainContentSection navSection = [self contentSectionForNavigationSection:(self.mainNavigationBarController.currentSection)];
-	[(self.mainContentViewController) endEditingProject:project previousSection:navSection];
+	NSLog(@"editProject; %@", (self.currentSection));
+	[self goToSection:[GLAMainContentEditProjectSection editProjectSectionWithProject:project previousSection:(self.currentSection)]];
 }
 
 #pragma mark New Project
 
 - (IBAction)addNewProject:(id)sender
 {
-	id project = nil;
-	[(self.mainContentViewController) enterAddedProject:project];
-	[(self.mainNavigationBarController) enterAddedProject:project];
+	[self goToSection:[GLAMainContentSection addNewProjectSectionWithPreviousSection:(self.currentSection)]];
+}
+
+- (void)confirmAddingNewProject
+{
+	
 }
 
 #pragma mark Collections
 
 - (void)enterCollection:(GLACollection *)collection
 {
-	[(self.mainNavigationBarController) enterProjectCollection:collection];
-	[(self.mainContentViewController) enterCollection:collection];
-}
-
-- (void)exitCollection:(GLACollection *)collection
-{
-	GLAMainContentSection navSection = [self contentSectionForNavigationSection:(self.mainNavigationBarController.currentSection)];
-	[(self.mainContentViewController) transitionToSection:navSection animate:YES];
+	GLAMainContentSection *currentSection = (self.currentSection);
+	NSAssert1((currentSection.isNow) || [currentSection isKindOfClass:[GLAMainContentEditProjectSection class]], @"When entering a collection, the previously current section (%@) must be now or an edit project section", currentSection);
+	
+	[self goToSection:[GLAMainContentEditCollectionSection editCollectionSectionWithCollection:collection previousSection:currentSection]];
 }
 
 #pragma mark Actions
@@ -233,6 +244,8 @@
 		return NO;
 	}
 }
+
+#pragma mark Validating UI Items
 
 - (BOOL)validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)anItem
 {
@@ -300,31 +313,11 @@
 	[self workOnProjectNow:project];
 }
 
-#pragma mark -
-
-- (GLAMainContentSection)contentSectionForNavigationSection:(GLAMainNavigationSection)navigationSection
-{
-	switch (navigationSection) {
-		case GLAMainNavigationSectionAll:
-			return GLAMainContentSectionAll;
-			
-		case GLAMainNavigationSectionPlanned:
-			return GLAMainContentSectionPlanned;
-			
-		case GLAMainNavigationSectionToday:
-			return GLAMainContentSectionToday;
-			
-		default:
-			return GLAMainContentSectionUnknown;
-	}
-}
-
 #pragma mark Main Navigation
 
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didChangeCurrentSection:(GLAMainNavigationSection)newNavigationSection
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performChangeCurrentSectionTo:(GLAMainContentSection *)newSection
 {
-	GLAMainContentSection newSection = [self contentSectionForNavigationSection:newNavigationSection];
-	[(self.mainContentViewController) transitionToSection:newSection animate:YES];
+	[self goToSection:newSection];
 }
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performAddNewProject:(id)sender
@@ -332,9 +325,14 @@
 	[self addNewProject:sender];
 }
 
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didExitProject:(GLAProject *)project
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performConfirmNewProject:(id)sender
 {
-	[self endEditingProject:project];
+	[self confirmAddingNewProject];
+}
+
+- (void)mainNavigationBarControllerDidExitEditedProject:(GLAProject *)project
+{
+	[self goToPreviousSection];
 }
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performWorkOnProjectNow:(GLAProject *)project
@@ -342,9 +340,9 @@
 	[self workOnProjectNow:project];
 }
 
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller didExitCollection:(GLACollection *)collection
+- (void)mainNavigationBarControllerDidExitEditedCollection:(GLAMainNavigationBarController *)controller
 {
-	[self exitCollection:collection];
+	[self goToPreviousSection];
 }
 
 @end

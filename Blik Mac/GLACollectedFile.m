@@ -7,6 +7,7 @@
 //
 
 #import "GLACollectedFile.h"
+#import "NSValueTransformer+GLAModel.h"
 
 
 @interface GLACollectedFile ()
@@ -31,10 +32,23 @@
 	return [[self alloc] initWithFileURL:URL];
 }
 
-@end
+#pragma mark -
 
+- (NSUInteger)hash
+{
+	return (self.URL.hash);
+}
 
-@implementation GLACollectedFile (URLBookmarkData)
+- (BOOL)isEqual:(id)object
+{
+	if (self == object) return YES;
+	if (![object isKindOfClass:self.class]) return NO;
+	
+	GLACollectedFile *other = object;
+	return [(self.URL) isEqual:(other.URL)];
+}
+
+#pragma mark Bookmark Data
 
 + (NSArray *)resourceValuesForCreatingBookmarkData
 {
@@ -51,6 +65,28 @@
 	NSURL *URL = (self.URL);
 	NSArray *resourceValues = [[self class] resourceValuesForCreatingBookmarkData];
 	return [URL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys:resourceValues relativeToURL:nil error:error];
+}
+
+- (NSData *)bookmarkData
+{
+	NSError *error = nil;
+	return [self bookmarkDataWithError:&error];
+}
+
+#pragma mark JSON
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey
+{
+	return
+	@{
+	  @"URL": (NSNull.null),
+	  @"bookmarkData": @"bookmarkData"
+	  };
+}
+
++ (NSValueTransformer *)bookmarkDataJSONTransformer
+{
+	return [NSValueTransformer GLA_DataBase64ValueTransformer];
 }
 
 @end

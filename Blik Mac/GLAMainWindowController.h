@@ -8,6 +8,7 @@
 
 @import Cocoa;
 #import "GLAViewController.h"
+#import "GLAMainContentSection.h"
 #import "GLAMainNavigationBarController.h"
 #import "GLAProjectsListViewController.h"
 #import "GLAProjectViewController.h"
@@ -16,34 +17,24 @@
 #import "GLAView.h"
 
 
-typedef NS_ENUM(NSInteger, GLAMainWindowControllerSection) {
-	GLAMainWindowControllerSectionUnknown,
-	GLAMainWindowControllerSectionAll,
-	GLAMainWindowControllerSectionToday,
-	GLAMainWindowControllerSectionPlanned,
-	GLAMainWindowControllerSectionAllEditProject,
-	GLAMainWindowControllerSectionPlannedEditProject,
-	GLAMainWindowControllerSectionAddNewProject
-};
-
-
 @interface GLAMainWindowController : NSWindowController <GLAMainNavigationBarControllerDelegate, GLAMainContentViewControllerDelegate, NSUserInterfaceValidations>
 
-@property (nonatomic) GLAMainNavigationBarController *mainNavigationBarController;
-@property (nonatomic) GLAMainContentViewController *mainContentViewController;
+@property(nonatomic) IBOutlet NSView *barHolderView;
+@property(nonatomic) GLAViewController *mainNavigationHolderViewController;
+@property(nonatomic) GLAMainNavigationBarController *mainNavigationBarController;
 
-@property (nonatomic) GLAProjectsListViewController *allProjectsViewController;
-@property (nonatomic) GLAProjectsListViewController *plannedProjectsViewController;
+@property(nonatomic) IBOutlet NSView *contentView;
+@property(nonatomic) GLAMainContentViewController *mainContentViewController;
 
-@property (nonatomic) GLAProjectViewController *nowProjectViewController;
-@property (nonatomic) GLAProjectViewController *editedProjectViewController;
-@property (nonatomic) GLAProjectViewController *addedProjectViewController;
+@property(nonatomic) GLAProjectsListViewController *allProjectsViewController;
+@property(nonatomic) GLAProjectsListViewController *plannedProjectsViewController;
 
-@property (nonatomic) GLAMainWindowControllerSection currentSection;
-@property (readonly, nonatomic) GLAProjectViewController *activeProjectViewController;
+@property(nonatomic) GLAProjectViewController *nowProjectViewController;
+@property(nonatomic) GLAProjectViewController *editedProjectViewController;
+@property(nonatomic) GLAProjectViewController *addedProjectViewController;
+@property(readonly, nonatomic) GLAProjectViewController *activeProjectViewController;
 
-@property (nonatomic) IBOutlet NSView *barHolderView;
-@property (nonatomic) IBOutlet NSView *contentView;
+@property(nonatomic) GLAMainContentSection *currentSection;
 
 
 //- (void)projectViewControllerDidBecomeActive:(GLAProjectViewController *)projectViewController;
@@ -54,7 +45,8 @@ typedef NS_ENUM(NSInteger, GLAMainWindowControllerSection) {
 //- (void)goToSection:(GLAMainWindowControllerSection)newSection animate:(BOOL)animate;
 //- (void)didTransitionContentToViewController:(NSViewController *)viewController;
 
-- (GLAMainContentSection)contentSectionForNavigationSection:(GLAMainNavigationSection)navigationSection;
+- (void)goToSection:(GLAMainContentSection *)newSection;
+- (void)goToPreviousSection;
 
 - (IBAction)goToAll:(id)sender;
 - (IBAction)goToToday:(id)sender;

@@ -10,11 +10,13 @@
 #import "Mantle/Mantle.h"
 
 
-extern NSString * const GLAUUIDValueTransformerName;
+extern NSString *const GLAUUIDValueTransformerName;
+extern NSString *const GLADataBase64ValueTransformerName;
 
 
 @interface NSValueTransformer (GLAModel)
 
 + (instancetype)GLA_UUIDValueTransformer;
++ (instancetype)GLA_DataBase64ValueTransformer;
 
 @end

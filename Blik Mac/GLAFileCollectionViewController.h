@@ -7,11 +7,12 @@
 //
 
 #import "GLACollectionViewController.h"
+#import "GLAFileInfoRetriever.h"
 @class GLACollectionFilesListContent;
 @import Quartz;
 
 
-@interface GLAFileCollectionViewController : GLACollectionViewController <NSTableViewDataSource, NSTableViewDelegate>
+@interface GLAFileCollectionViewController : GLACollectionViewController <NSTableViewDataSource, NSTableViewDelegate, GLAFileInfoRetrieverDelegate>
 
 @property(nonatomic) IBOutlet NSTableView *sourceFilesListTableView;
 
@@ -20,5 +21,6 @@
 @property(nonatomic) QLPreviewView *quickLookPreviewView;
 
 @property(nonatomic) GLACollectionFilesListContent *filesListContent;
+@property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
 
 @end

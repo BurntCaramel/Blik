@@ -10,7 +10,6 @@
                 <outlet property="addProjectButtonTopConstraint" destination="M09-u9-UXM" id="bsh-Ya-72t"/>
                 <outlet property="allButton" destination="qAd-jv-zj2" id="z1C-Vc-7xC"/>
                 <outlet property="allButtonTopConstraint" destination="YS1-If-gMJ" id="NXf-82-B8c"/>
-                <outlet property="editingProjectBackButtonLeadingConstraint" destination="gpz-tb-53A" id="hSy-ko-iDx"/>
                 <outlet property="plannedButton" destination="46L-fD-wEe" id="Me1-Uf-jzr"/>
                 <outlet property="plannedButtonTopConstraint" destination="Lso-2X-pgH" id="6Bp-fV-nJg"/>
                 <outlet property="templateButton" destination="WcU-G7-cKy" id="uvW-oO-VTV"/>
@@ -118,9 +117,6 @@
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="cell.alwaysHighlighted" value="NO"/>
                     </userDefinedRuntimeAttributes>
-                    <connections>
-                        <action selector="exitCurrentProject:" target="-2" id="77e-uv-dhf"/>
-                    </connections>
                 </button>
             </subviews>
             <constraints>

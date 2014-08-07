@@ -7,13 +7,14 @@
 //
 
 #import "GLAViewController.h"
+#import "GLAMainContentSection.h"
 #import "GLAProjectsListViewController.h"
 #import "GLAProjectViewController.h"
 #import "GLACollectionViewController.h"
 @class GLAProject;
 @protocol GLAMainContentViewControllerDelegate;
 
-
+/*
 typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 	GLAMainContentSectionUnknown,
 	GLAMainContentSectionAll,
@@ -24,13 +25,13 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 	GLAMainContentSectionAddNewProject,
 	GLAMainContentSectionCollection
 };
-
+*/
 
 @interface GLAMainContentViewController : GLAViewController
 
 @property(nonatomic) id<GLAMainContentViewControllerDelegate> delegate;
 
-@property(nonatomic) GLAMainContentSection currentSection;
+@property(nonatomic) GLAMainContentSection *currentSection;
 @property(readonly, nonatomic) GLAProjectViewController *activeProjectViewController;
 
 @property(nonatomic) GLAProjectsListViewController *allProjectsViewController;
@@ -48,17 +49,21 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 - (void)setUpEditedProjectViewControllerIfNeeded;
 - (void)setUpAddedProjectViewControllerIfNeeded;
 
-- (GLAViewController *)viewControllerForSection:(GLAMainContentSection)section;
+- (GLAViewController *)viewControllerForSection:(GLAMainContentSection *)section;
 
 #pragma mark -
+
+- (void)changeNowProject:(GLAProject *)project;
 
 - (void)workOnProjectNow:(GLAProject *)project;
 
 - (void)editProject:(GLAProject *)project;
 - (void)enterAddedProject:(GLAProject *)project;
-- (void)endEditingProject:(GLAProject *)project previousSection:(GLAMainContentSection)section;
+- (void)endEditingProject:(GLAProject *)project;
 
-- (void)transitionToSection:(GLAMainContentSection)newSection animate:(BOOL)animate;
+- (void)transitionToSection:(GLAMainContentSection *)newSection animate:(BOOL)animate;
+
+- (void)goToSection:(GLAMainContentSection *)newSection;
 
 #pragma mark -
 

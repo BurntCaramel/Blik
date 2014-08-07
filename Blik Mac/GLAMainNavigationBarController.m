@@ -13,7 +13,7 @@
 
 @interface GLAMainNavigationBarController ()
 
-@property(readwrite, nonatomic) GLAMainNavigationSection currentSection;
+@property(readwrite, nonatomic) GLAMainContentSection *currentSection;
 
 @property(nonatomic) BOOL private_enabled;
 
@@ -35,7 +35,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-		(self.currentSection) = GLAMainNavigationSectionToday;
 		[self updateSelectedSectionUI];
 		(self.private_enabled) = YES;
     }
@@ -61,53 +60,107 @@
 
 - (void)updateSelectedSectionUI
 {
-	GLAMainNavigationSection currentSection = (self.currentSection);
-	(self.allButton.state) = (currentSection == GLAMainNavigationSectionAll) ? NSOnState : NSOffState;
-	(self.todayButton.state) = (currentSection == GLAMainNavigationSectionToday) ? NSOnState : NSOffState;
-	(self.plannedButton.state) = (currentSection == GLAMainNavigationSectionPlanned) ? NSOnState : NSOffState;
+	GLAMainContentSection *currentSection = (self.currentSection);
+	(self.allButton.state) = (currentSection.isAllProjects) ? NSOnState : NSOffState;
+	(self.todayButton.state) = (currentSection.isNow) ? NSOnState : NSOffState;
+	(self.plannedButton.state) = (currentSection.isPlannedProjects) ? NSOnState : NSOffState;
 }
 
-- (void)changeCurrentSectionTo:(GLAMainNavigationSection)newSection
+- (void)didChangeCurrentSectionFrom:(GLAMainContentSection *)previousSection to:(GLAMainContentSection *)newSection
 {
-	if (self.isAnimating) {
-		return;
+	if ((previousSection.isAllProjects) || (previousSection.isPlannedProjects) || (previousSection.isNow)) {
+		[self hideMainButtons];
+	}
+	else if (previousSection.isAddNewProject) {
+		[self hideButtonsForAddingNewProject];
+	}
+	else if (previousSection.isEditProject) {
+		[self hideButtonsForEditingExistingProject];
+	}
+	else if (previousSection.isEditCollection) {
+		[self hideButtonsForCurrentCollection];
 	}
 	
-	//GLAMainNavigationSection previousSection = (self.currentSection);
-	
-	(self.currentSection) = newSection;
-	
-	if (self.currentProject) {
-		if (self.currentProjectIsAddedNew) {
-			[self hideButtonsForAddingNewProject];
-		}
-		else {
-			[self hideButtonsForEditingExistingProject];
-		}
+	if ((newSection.isAllProjects) || (newSection.isPlannedProjects) || (newSection.isNow)) {
 		[self showMainButtons];
 	}
-	
-	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
-	if (delegate) {
-		[delegate mainNavigationBarController:self didChangeCurrentSection:newSection];
+	else if (newSection.isAddNewProject) {
+		[self showButtonsForAddingNewProject];
+	}
+	else if (newSection.isEditProject) {
+		[self showButtonsForEditingExistingProject];
+	}
+	else if (newSection.isEditCollection) {
+		[self showButtonsForCurrentCollection];
 	}
 	
 	[self updateSelectedSectionUI];
 }
 
+- (void)changeCurrentSectionTo:(GLAMainContentSection *)newSection
+{
+	GLAMainContentSection *previousSection = (self.currentSection);
+	if ([previousSection isEqual:newSection]) {
+		return;
+	}
+	
+	(self.currentSection) = newSection;
+	
+	[self didChangeCurrentSectionFrom:previousSection to:newSection];
+}
+
+- (void)performChangeCurrentSectionTo:(GLAMainContentSection *)newSection
+{
+	/*if (self.isAnimating) {
+		return;
+	}*/
+	
+	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
+	if (delegate) {
+		[delegate mainNavigationBarController:self performChangeCurrentSectionTo:newSection];
+	}
+	
+	[self updateSelectedSectionUI];
+	
+	//[self changeCurrentSectionTo:newSection];
+}
+
 - (IBAction)goToAll:(id)sender
 {
-	[self changeCurrentSectionTo:GLAMainNavigationSectionAll];
+	[self performChangeCurrentSectionTo:[GLAMainContentSection allProjectsSection]];
 }
 
 - (IBAction)goToToday:(id)sender
 {
-	[self changeCurrentSectionTo:GLAMainNavigationSectionToday];
+	[self performChangeCurrentSectionTo:[GLAMainContentSection nowSection]];
 }
 
 - (IBAction)goToPlanned:(id)sender
 {
-	[self changeCurrentSectionTo:GLAMainNavigationSectionPlanned];
+	[self performChangeCurrentSectionTo:[GLAMainContentSection plannedProjectsSection]];
+}
+
+- (NSArray *)allVisibleButtons
+{
+	NSArray *subviews = (self.view.subviews);
+	return [subviews filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSView *view, NSDictionary *bindings) {
+		return [view isKindOfClass:[NSButton class]] && !(view.isHidden);
+	}]];
+}
+
+- (void)setEnabled:(BOOL)enabled
+{
+	if (enabled != (self.private_enabled)) {
+		(self.private_enabled) = enabled;
+		
+		NSArray *buttons = (self.allVisibleButtons);
+		[buttons setValue:@(enabled) forKey:@"enabled"];
+	}
+}
+
+- (BOOL)isEnabled
+{
+	return (self.private_enabled);
 }
 
 #pragma mark Hiding and Showing Buttons
@@ -191,7 +244,7 @@
 - (void)showButtonsForEditingExistingProject
 {
 	NSString *backTitle = (self.titleForEditingProjectBackButton);
-	GLAButton *backButton = [self addLeadingButtonWithTitle:backTitle action:@selector(exitCurrentProject:) identifier:@"back-editingProject"];
+	GLAButton *backButton = [self addLeadingButtonWithTitle:backTitle action:@selector(exitEditedProject:) identifier:@"back-editingProject"];
 	(self.editingProjectBackButton) = backButton;
 	
 	NSString *workOnNowTitle = NSLocalizedString(@"Work on Now", @"Title for Work on Now button in an edited project");
@@ -280,11 +333,15 @@
 - (void)showButtonsForCurrentCollection
 {
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
-	GLACollection *collection = (self.currentCollection);
+	GLAMainContentSection *currentSection = (self.currentSection);
+	NSAssert1([currentSection isKindOfClass:[GLAMainContentEditCollectionSection class]], @"Current section (%@) must be a GLAMainContentEditCollectedSection when calling -showButtonsForCurrentCollection", currentSection);
+	
+	GLAMainContentEditCollectionSection *editCollectionSection = (GLAMainContentEditCollectionSection *)currentSection;
+	GLACollection *collection = (editCollectionSection.collection);
 	
 	// Back
 	NSString *backTitle = NSLocalizedString(@"Back", @"Title for collection back button to go back");
-	GLAButton *backButton = [self addLeadingButtonWithTitle:backTitle action:@selector(exitCurrentCollection:) identifier:@"back-collection"];
+	GLAButton *backButton = [self addLeadingButtonWithTitle:backTitle action:@selector(exitEditedCollection:) identifier:@"back-collection"];
 	(self.collectionBackButton) = backButton;
 	NSLayoutConstraint *backLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:backButton];
 	
@@ -317,6 +374,10 @@
 	} completionHandler:^ {
 		(self.animatingCounter)--;
 	}];
+	
+	NSColor *collectionColor = [uiStyle colorForProjectItemColorIdentifier:(collection.colorIdentifier)];
+	//[self animateBackgroundColorTo:collectionColor];
+	[(self.navigationBar) highlightWithColor:collectionColor animate:YES];
 }
 
 - (void)hideButtonsForCurrentCollection
@@ -325,6 +386,8 @@
 		(self.collectionBackButton) = nil;
 		(self.collectionTitleButton) = nil;
 	}];
+	
+	[(self.navigationBar) highlightWithColor:nil animate:YES];
 }
 
 #pragma mark Projects
@@ -339,70 +402,40 @@
 
 - (NSString *)titleForEditingProjectBackButton
 {
-	GLAMainNavigationSection currentSection = (self.currentSection);
+	GLAMainContentSection *currentSection = (self.currentSection);
 	
-	if (currentSection == GLAMainNavigationSectionAll) {
-		return NSLocalizedString(@"Back to All Projects", @"Title for editing project back button to go back to all projects");
+	if (currentSection.isAllProjects) {
+		return NSLocalizedString(@"Back to All Projects", @"Title for editing project back button to all projects");
 	}
-	else if (currentSection == GLAMainNavigationSectionPlanned) {
-		return NSLocalizedString(@"Back to Planned Projects", @"Title for editing project back button to go back to planned projects");
+	else if (currentSection.isPlannedProjects) {
+		return NSLocalizedString(@"Back to Planned Projects", @"Title for editing project back button to planned projects");
 	}
 	else {
-		return NSLocalizedString(@"Back", @"Title for editing project back button to go back");
+		return NSLocalizedString(@"Back", @"Title for editing project back button");
 	}
 }
 
-- (void)setCurrentProject:(id)project isAddedNew:(BOOL)isAddedNew
-{
-	(self.currentProject) = project;
-	(self.currentProjectIsAddedNew) = isAddedNew;
-}
-
-- (void)enterProject:(id)project
-{
-	[self setCurrentProject:project isAddedNew:NO];
-	
-	[self hideMainButtons];
-	[self showButtonsForEditingExistingProject];
-}
-
-- (void)enterAddedProject:(id)project
-{
-	[self setCurrentProject:project isAddedNew:YES];
-	
-	[self hideMainButtons];
-	[self showButtonsForAddingNewProject];
-}
-
-- (IBAction)exitCurrentProject:(id)sender
+- (IBAction)exitEditedProject:(id)sender
 {
 	if (self.isAnimating) {
 		return;
 	}
 	
-	[self showMainButtons];
-	
-	if (self.currentProjectIsAddedNew) {
-		[self hideButtonsForAddingNewProject];
-	}
-	else {
-		[self hideButtonsForEditingExistingProject];
-	}
-	
-	
 	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
-		[delegate mainNavigationBarController:self didExitProject:(self.currentProject)];
+		[delegate mainNavigationBarControllerDidExitEditedProject:self];
 	}
-	
-	(self.currentProject) = nil;
 }
 
 - (IBAction)workOnCurrentProjectNow:(id)sender
 {
 	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
-		[delegate mainNavigationBarController:self performWorkOnProjectNow:(self.currentProject)];
+		GLAMainContentSection *currentSection = (self.currentSection);
+		NSAssert1([currentSection isKindOfClass:[GLAMainContentEditProjectSection class]], @"Current section (%@) must be a GLAMainContentEditProjectSection when calling -workOnCurrentProjectNow: action", currentSection);
+		
+		GLAMainContentEditProjectSection *editProjectSection = (GLAMainContentEditProjectSection *)currentSection;
+		[delegate mainNavigationBarController:self performWorkOnProjectNow:(editProjectSection.project)];
 	}
 }
 
@@ -412,7 +445,7 @@
 		return;
 	}
 	
-	[self exitCurrentProject:sender];
+	[self exitEditedProject:sender];
 }
 
 - (IBAction)confirmAddingNewProject:(id)sender
@@ -421,69 +454,32 @@
 		return;
 	}
 	
+	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
+	if (delegate) {
+		[delegate mainNavigationBarController:self performConfirmNewProject:sender];
+	}
+	
+	//TODO remove these:
+	
 	[self hideButtonsForAddingNewProject];
 	[self showButtonsForEditingExistingProject];
-	
-	(self.currentProjectIsAddedNew) = NO;
 }
 
 #pragma mark Collections
 
-- (void)enterProjectCollection:(GLACollection *)collection
-{
-	(self.currentCollection) = collection;
-	
-	[self hideMainButtons];
-	//[self hideButtonsForCurrentCollection];
-	[self showButtonsForCurrentCollection];
-	
-	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
-	NSColor *collectionColor = [uiStyle colorForProjectItemColorIdentifier:(collection.colorIdentifier)];
-	//[self animateBackgroundColorTo:collectionColor];
-	[(self.navigationBar) highlightWithColor:collectionColor animate:YES];
-}
-
-- (void)exitCurrentCollection:(id)sender
+- (void)exitEditedCollection:(id)sender
 {
 	if (self.isAnimating) {
 		return;
 	}
 	
-	[self hideButtonsForCurrentCollection];
-	[self showMainButtons];
-	
-	[(self.navigationBar) highlightWithColor:nil animate:YES];
-	
 	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
-		[delegate mainNavigationBarController:self didExitCollection:(self.currentCollection)];
-	}
-	
-	(self.currentCollection) = nil;
-}
-
-#pragma mark -
-
-- (void)setEnabled:(BOOL)enabled
-{
-	if (enabled != (self.private_enabled)) {
-		NSLog(@"SET ENABLED %@", enabled ? @"y" : @"n");
-		(self.private_enabled) = enabled;
-		
-		(self.allButton.enabled) = enabled;
-		(self.todayButton.enabled) = enabled;
-		(self.plannedButton.enabled) = enabled;
-		(self.addProjectButton.enabled) = enabled;
-		(self.templateButton.enabled) = enabled;
-		
-		//[(self.view) setNeedsDisplay:YES];
+		[delegate mainNavigationBarControllerDidExitEditedCollection:self];
 	}
 }
 
-- (BOOL)isEnabled
-{
-	return (self.private_enabled);
-}
+#pragma mark Creating Buttons
 
 - (GLAButton *)addButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier
 {

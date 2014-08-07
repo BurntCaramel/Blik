@@ -17,18 +17,14 @@
 @end
 */
 
-@interface GLACollectedFile : MTLModel
+@interface GLACollectedFile : MTLModel <MTLJSONSerializing>
 
 - (instancetype)initWithFileURL:(NSURL *)URL;
 + (instancetype)collectedFileWithFileURL:(NSURL *)URL;
 
 @property(readonly, nonatomic) NSURL *URL;
 
-@end
-
-
-@interface GLACollectedFile (URLBookmarkData)
-
 - (NSData *)bookmarkDataWithError:(NSError *__autoreleasing *)error;
+@property(readonly, nonatomic) NSData *bookmarkData;
 
 @end

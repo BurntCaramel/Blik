@@ -13,7 +13,7 @@
 
 @interface GLACollectionFilesListContent : GLACollectionContent
 
+@property(nonatomic) id<GLAArrayEditing> filesListEditing;
 - (NSArray/*[GLACollectedFile]*/ *)copyFiles;
-- (id<GLAArrayEditing>)filesListEditing;
 
 @end

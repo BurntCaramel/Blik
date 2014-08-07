@@ -31,8 +31,11 @@
 	@{
 	  @"UUID": @"UUID",
 	  @"name": @"name",
-	  @"collections": @"collectionsForMantle",
-	  @"reminders": @"remindersForMantle"
+	  @"collectionsForMantle": @"collections",
+	  @"remindersForMantle": @"reminders",
+	  @"loadedCollections": (NSNull.null),
+	  @"collectionListEditor": (NSNull.null),
+	  @"mutableReminders": (NSNull.null)
 	  };
 }
 

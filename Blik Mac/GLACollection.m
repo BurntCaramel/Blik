@@ -17,10 +17,17 @@
 {
 	return
 	@{
+	  @"project": (NSNull.null),
+	  @"content": @"content",
 	  @"UUID": @"UUID",
 	  @"title": @"title",
 	  @"colorIdentifier": @"colorIdentifier"
 	};
+}
+
++ (NSValueTransformer *)contentJSONTransformer
+{
+	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLACollectionContent class]];
 }
 
 + (NSValueTransformer *)UUIDJSONTransformer
@@ -35,7 +42,7 @@
 	dispatch_once(&onceToken, ^{
 		NSDictionary *stringToColorIdentifiers =
 		@{
-		  [NSNull null]: @(GLACollectionColorUnknown),
+		  (NSNull.null): @(GLACollectionColorUnknown),
 		  @"lightBlue": @(GLACollectionColorLightBlue),
 		  @"green": @(GLACollectionColorGreen),
 		  @"pinkyPurple": @(GLACollectionColorPinkyPurple),
