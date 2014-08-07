@@ -84,12 +84,12 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 		}];
 	}];
 }
-
+/*
 - (NSArray *)calendarsForFindingReminders
 {
 	return @[(self.calendarForNewReminders)];
 }
-
+*/
 #pragma mark All Reminders
 
 - (void)useAllReminders:(void(^)(NSArray *allReminders))allRemindersReceiver
@@ -124,6 +124,7 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 - (void)useCurrentAllReminderCalendars:(void(^)(NSArray *allReminderCalendars))allReminderCalendarsReceiver
 {
 	[self useEventStoreOnMainQueue:YES block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
+		//NSArray *allReminderCalendars = [eventStore calendarsForEntityType:EKEntityTypeReminder];
 		NSArray *allReminderCalendars = [eventStore calendarsForEntityType:EKEntityTypeReminder];
 		allReminderCalendarsReceiver(allReminderCalendars);
 	}];
@@ -171,6 +172,10 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 	if (!(self.calendarForNewReminders)) {
 		(self.calendarForNewReminders) = (eventStore.defaultCalendarForNewReminders);
 	}
+	
+	if (!(self.calendarsForFindingReminders)) {
+		(self.calendarsForFindingReminders) = [eventStore calendarsForEntityType:EKEntityTypeReminder];
+	}
 }
 
 - (NSOperation *)operationToCreateEventStoreSetUpIfNeeded
@@ -203,7 +208,9 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 		
 		// The fetching is handled by the event store on a background thread.
 		[self useEventStoreOnMainQueue:YES block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
-			NSPredicate *predicate = [eventStore predicateForRemindersInCalendars:(self.calendarsForFindingReminders)];
+			//NSArray *allReminderCalendars = [eventStore calendarsForEntityType:EKEntityTypeReminder];
+			NSArray *calendars = (self.calendarsForFindingReminders);
+			NSPredicate *predicate = [eventStore predicateForRemindersInCalendars:calendars];
 			(reminderManager.fetchRemindersIdentifier) = [eventStore fetchRemindersMatchingPredicate:predicate completion:^(NSArray *reminders) {
 				// If all reminders has been invalidated in the mean time.
 				if (operationToFetchAllReminders != (reminderManager.operationToFetchAllReminders)) {

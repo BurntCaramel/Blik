@@ -16,6 +16,7 @@
 
 @class GLAProjectCollectionsViewController;
 @class GLAProjectPlanViewController;
+@class GLAChooseRemindersMainViewController;
 
 
 @interface GLAProjectViewController : GLAViewController <GLAViewDelegate, NSTextFieldDelegate>
@@ -44,6 +45,9 @@
 - (IBAction)editItems:(id)sender;
 - (IBAction)editPlan:(id)sender;
 
+- (IBAction)chooseExistingReminders:(id)sender;
+@property(nonatomic) GLAChooseRemindersMainViewController *chooseRemindersMainViewController;
+
 - (void)clearName;
 - (void)focusNameTextField;
 
@@ -65,9 +69,12 @@ extern NSString *GLAProjectViewControllerDidEndEditingPlanNotification;
 extern NSString *GLAProjectViewControllerDidEnterCollectionNotification;
 
 
+
 @interface GLAProjectCollectionsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
 
 @property(readonly, nonatomic) NSTableView *tableView;
+
+@property(weak) IBOutlet GLAProjectViewController *parentViewController;
 
 @property(nonatomic) GLAProject *project;
 @property(copy, nonatomic) NSArray *collections;
@@ -84,7 +91,18 @@ extern NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotificati
 
 @interface GLAProjectPlanViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
 
-@property(readonly, nonatomic) NSTableView *tableView;
+@property(nonatomic) IBOutlet NSTableView *tableView;
+@property(nonatomic) IBOutlet NSLayoutConstraint *scrollLeadingConstraint;
+
+@property(weak) IBOutlet GLAProjectViewController *parentViewController;
+
+@property(nonatomic) GLAViewController *editingActionsViewController;
+@property(nonatomic) IBOutlet NSView *editingActionsView;
+@property(nonatomic) IBOutlet NSLayoutConstraint *actionsHeightConstraint;
+@property(nonatomic) IBOutlet NSLayoutConstraint *scrollToActionsConstraint;
+@property(nonatomic) IBOutlet NSLayoutConstraint *actionsBottomConstraint;
+@property(nonatomic) IBOutlet GLAButton *chooseExistingRemindersButton;
+@property(nonatomic) IBOutlet GLAButton *makeNewReminderButton;
 
 @property(nonatomic) GLAProject *project;
 @property(copy, nonatomic) NSMutableArray *mutableReminders;
@@ -94,5 +112,8 @@ extern NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotificati
 
 //- (void)remindersDidChange;
 - (void)reloadReminders;
+
+- (IBAction)chooseExistingReminders:(id)sender;
+- (IBAction)makeNewReminder:(id)sender;
 
 @end

@@ -63,6 +63,8 @@
 		B2F0DBB819923887001AB5EE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2F0DBB619923887001AB5EE /* InfoPlist.strings */; };
 		B2F0DBBB19923887001AB5EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B2F0DBBA19923887001AB5EE /* main.m */; };
 		B2F0DBC11992607B001AB5EE /* GLAMainContentSection.m in Sources */ = {isa = PBXBuildFile; fileRef = B2F0DBC01992607B001AB5EE /* GLAMainContentSection.m */; };
+		B2F0DBC619936321001AB5EE /* GLAChooseRemindersMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2F0DBC419936321001AB5EE /* GLAChooseRemindersMainViewController.m */; };
+		B2F0DBC719936321001AB5EE /* GLAChooseRemindersMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2F0DBC519936321001AB5EE /* GLAChooseRemindersMainViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -180,6 +182,9 @@
 		B2F0DBBA19923887001AB5EE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B2F0DBBF1992607B001AB5EE /* GLAMainContentSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainContentSection.h; sourceTree = "<group>"; };
 		B2F0DBC01992607B001AB5EE /* GLAMainContentSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainContentSection.m; sourceTree = "<group>"; };
+		B2F0DBC319936321001AB5EE /* GLAChooseRemindersMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAChooseRemindersMainViewController.h; sourceTree = "<group>"; };
+		B2F0DBC419936321001AB5EE /* GLAChooseRemindersMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAChooseRemindersMainViewController.m; sourceTree = "<group>"; };
+		B2F0DBC519936321001AB5EE /* GLAChooseRemindersMainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAChooseRemindersMainViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -438,6 +443,9 @@
 				B219DAB1196AD462007900DF /* GLAProjectViewController.xib */,
 				B2C7F29B1973998C005780B4 /* GLAProjectActionsBarController.h */,
 				B2C7F29C1973998C005780B4 /* GLAProjectActionsBarController.m */,
+				B2F0DBC319936321001AB5EE /* GLAChooseRemindersMainViewController.h */,
+				B2F0DBC419936321001AB5EE /* GLAChooseRemindersMainViewController.m */,
+				B2F0DBC519936321001AB5EE /* GLAChooseRemindersMainViewController.xib */,
 			);
 			name = "Single Project";
 			sourceTree = "<group>";
@@ -588,6 +596,7 @@
 			files = (
 				B2ADDC091963DA970014EF84 /* GLAPrototypeAWindowController.xib in Resources */,
 				B219DAB3196AD462007900DF /* GLAProjectViewController.xib in Resources */,
+				B2F0DBC719936321001AB5EE /* GLAChooseRemindersMainViewController.xib in Resources */,
 				B24B360C196E336E0094FA1F /* GLAMainNavigationBarController.xib in Resources */,
 				B2ADDBDC1963DA2E0014EF84 /* InfoPlist.strings in Resources */,
 				B2ADDC0E1964E3E10014EF84 /* GLAPrototypeAFilesViewController.xib in Resources */,
@@ -660,6 +669,7 @@
 				B2ADDC081963DA970014EF84 /* GLAPrototypeAWindowController.m in Sources */,
 				B22E80CF198F98B2005C4108 /* GLAMainContentViewController.m in Sources */,
 				B29F8DDD1981139300F58F59 /* GLAReminderManager.m in Sources */,
+				B2F0DBC619936321001AB5EE /* GLAChooseRemindersMainViewController.m in Sources */,
 				B226E9551988CFF500D607CC /* GLACollectionViewController.m in Sources */,
 				B28D21821977D6E600A12C6D /* GLATableRowView.m in Sources */,
 				B219DAA2196AB65D007900DF /* GLAMainWindowController.m in Sources */,

@@ -7,6 +7,7 @@
 //
 
 @import Cocoa;
+@import QuartzCore;
 #import "GLAView.h"
 
 @interface GLAViewController : NSViewController <GLAViewDelegate>
@@ -24,10 +25,22 @@
 - (void)updateConstraintsWithAnimatedDuration:(NSTimeInterval)duration;
 - (void)updateConstraintsNow;
 
+- (NSLayoutConstraint *)layoutConstraintWithIdentifier:(NSString *)constraintIdentifier;
+
++ (NSString *)layoutConstraintIdentifierWithBaseIdentifier:(NSString *)baseIdentifier forChildView:(NSView *)innerView;
+- (NSLayoutConstraint *)layoutConstraintWithIdentifier:(NSString *)baseIdentifier forChildView:(NSView *)innerView;
+
 - (void)fillViewWithChildView:(NSView *)innerView;
+- (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier priority:(NSLayoutPriority)priority;
 - (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier;
 
-- (NSLayoutConstraint *)layoutConstraintWithIdentifier:(NSString *)baseIdentifier forChildView:(NSView *)innerView;
+//- (NSLayoutConstraint *)addLayoutConstraintForAttribute:(NSLayoutAttribute)attribute withValue:(CGFloat)value;
+
+- (NSArray *)allLayoutConstraintsWithChildView:(NSView *)innerView;
+
++ (NSArray *)copyLayoutConstraints:(NSArray *)oldConstraints replacingUsesOf:(id)originalItem with:(id)replacementItem;
+
+- (void)wrapChildViewKeepingOutsideConstraints:(NSView *)childView withView:(NSView *)replacementView;
 
 #pragma mark Colors
 
