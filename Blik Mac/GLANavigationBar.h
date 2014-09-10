@@ -11,8 +11,10 @@
 @interface GLANavigationBar : GLAView
 
 @property(nonatomic) NSColor *highlightColor;
-@property(nonatomic) BOOL showBottomEdgeLine;
+@property(nonatomic) CGFloat highlightAmount;
 
 - (void)highlightWithColor:(NSColor *)color animate:(BOOL)animate;
+
+@property(nonatomic) BOOL showBottomEdgeLine;
 
 @end

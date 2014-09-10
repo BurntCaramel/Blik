@@ -32,6 +32,12 @@
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
                             <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
+                            <menuItem title="Show Status Menu Item" id="ZUB-Aa-pTP">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleShowingStatusItem:" target="Voe-Tx-rLC" id="Xo5-0D-ois"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                             <menuItem title="Services" id="NMo-om-nkz">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -59,6 +65,61 @@
                             <menuItem title="Quit Blik" keyEquivalent="q" id="4sb-4s-VLi">
                                 <connections>
                                     <action selector="terminate:" target="-1" id="Te7-pn-YzF"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Project" id="gkX-JG-KpA">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Project" id="GOh-Jg-v8R">
+                        <items>
+                            <menuItem title="New Project…" keyEquivalent="n" id="krU-zm-gaq">
+                                <connections>
+                                    <action selector="addNewProject:" target="-1" id="ldK-fa-5TL"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="SmP-nQ-mkB"/>
+                            <menuItem title="Work on This Project Now" id="3Gh-mI-doL">
+                                <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                                <connections>
+                                    <action selector="workOnEditedProjectNow:" target="-1" id="vVn-lX-HWC"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="YWM-TE-tpN"/>
+                            <menuItem title="Create Copy of…" keyEquivalent="b" id="8ks-1n-RD1">
+                                <connections>
+                                    <action selector="workOnActiveProjectNow:" target="-1" id="eCb-DV-M8d"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Create Zip Archive of…" keyEquivalent="B" id="1xt-yh-0dZ">
+                                <connections>
+                                    <action selector="workOnActiveProjectNow:" target="-1" id="aoY-7q-1RK"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="7gd-3B-k1s"/>
+                            <menuItem title="Delete Project Permanently…" id="K4Z-7H-ScL">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="workOnActiveProjectNow:" target="-1" id="9ZP-fP-39w"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="4t1-vK-tMY"/>
+                            <menuItem title="Now" keyEquivalent="0" id="nqk-On-ocM">
+                                <connections>
+                                    <action selector="goToToday:" target="-1" id="W9P-UV-Nvg"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="All Projects" keyEquivalent="1" id="lyC-ZA-xy1">
+                                <connections>
+                                    <action selector="goToAll:" target="-1" id="ccn-5J-0qi"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Planned Projects" keyEquivalent="2" id="bzg-Bt-vsR">
+                                <connections>
+                                    <action selector="goToPlanned:" target="-1" id="TCH-KT-UyY"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -283,65 +344,12 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Project" id="gkX-JG-KpA">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Project" id="GOh-Jg-v8R">
-                        <items>
-                            <menuItem title="All Projects" keyEquivalent="1" id="lyC-ZA-xy1">
-                                <connections>
-                                    <action selector="goToAll:" target="-1" id="ccn-5J-0qi"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Now" keyEquivalent="2" id="nqk-On-ocM">
-                                <connections>
-                                    <action selector="goToToday:" target="-1" id="W9P-UV-Nvg"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Planned Projects" keyEquivalent="3" id="bzg-Bt-vsR">
-                                <connections>
-                                    <action selector="goToPlanned:" target="-1" id="TCH-KT-UyY"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="SmP-nQ-mkB"/>
-                            <menuItem title="Work on This Project Now" id="3Gh-mI-doL">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="workOnEditedProjectNow:" target="-1" id="pHZ-FL-9kL"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="4t1-vK-tMY"/>
-                            <menuItem title="Copy Items To…" id="8ks-1n-RD1">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="workOnActiveProjectNow:" target="-1" id="eCb-DV-M8d"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Create Zip Archive of Items…" id="1xt-yh-0dZ">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="workOnActiveProjectNow:" target="-1" id="aoY-7q-1RK"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="7gd-3B-k1s"/>
-                            <menuItem title="Delete Project…" id="K4Z-7H-ScL">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="workOnActiveProjectNow:" target="-1" id="9ZP-fP-39w"/>
-                                </connections>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
                 <menuItem title="Collections" id="Vc8-OF-5QR">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Collections" id="y5R-d6-Gfj">
                         <items>
-                            <menuItem title="Add Files Collection…" id="jfO-Ol-vRE">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                            <menuItem title="Add Contacts Collection…" id="McO-7U-HxW">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
+                            <menuItem title="Add Files Collection…" keyEquivalent="N" id="jfO-Ol-vRE"/>
+                            <menuItem title="Add Contacts Collection…" keyEquivalent="C" id="McO-7U-HxW"/>
                         </items>
                     </menu>
                 </menuItem>
@@ -349,22 +357,26 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Plan" id="5cF-uk-BG1">
                         <items>
-                            <menuItem title="Add New Reminder…" id="cHO-vO-C6E">
+                            <menuItem title="New Item…" id="cHO-vO-C6E">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="TJJ-Gc-NSV"/>
+                            <menuItem title="Choose Existing Reminders…" id="X7c-qw-MSe">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="cXS-le-q1k"/>
-                            <menuItem title="Schedule for Tomorrow…" id="ZKR-GR-Bt8">
+                            <menuItem title="Schedule Tomorrow…" id="ZKR-GR-Bt8">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
-                            <menuItem title="Clear All Due Dates for Project" id="ZQG-Ib-g27">
+                            <menuItem title="Clear All Due Dates for Project…" id="ZQG-Ib-g27">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="xy5-yP-QlA"/>
-                            <menuItem title="Late is After" id="wXo-kK-QIc">
+                            <menuItem title="Label Due Times After as Late" id="wXo-kK-QIc">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Late is After" id="e8S-Pr-fJy">
+                                <menu key="submenu" title="Label Due Times After as Late" id="e8S-Pr-fJy">
                                     <items>
-                                        <menuItem title="4PM" id="z3F-jB-jnU">
+                                        <menuItem title="4PM" id="EWL-oe-RTh">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                         <menuItem title="5PM" id="JYe-ET-yk2">
@@ -391,6 +403,9 @@
                                         <menuItem title="12AM" id="gfd-TE-PvH">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
+                                        <menuItem title="Always Show The Time" id="z3F-jB-jnU">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -410,7 +425,7 @@
                             <menuItem title="Show Prototype B" id="HIr-Z5-ajm">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="toggleShowingPrototypeB:" target="Voe-Tx-rLC" id="odJ-hM-N2S"/>
+                                    <action selector="toggleShowingMainWindow:" target="Voe-Tx-rLC" id="SAT-QC-zMy"/>
                                 </connections>
                             </menuItem>
                         </items>

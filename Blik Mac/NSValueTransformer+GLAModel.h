@@ -12,11 +12,13 @@
 
 extern NSString *const GLAUUIDValueTransformerName;
 extern NSString *const GLADataBase64ValueTransformerName;
+extern NSString *const GLADateRFC3339ValueTransformerName;
 
 
 @interface NSValueTransformer (GLAModel)
 
 + (instancetype)GLA_UUIDValueTransformer;
 + (instancetype)GLA_DataBase64ValueTransformer;
++ (instancetype)GLA_DateRFC3339ValueTransformer;
 
 @end

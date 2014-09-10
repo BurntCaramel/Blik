@@ -1,5 +1,5 @@
 //
-//  GLAChooseRemindersMainViewController.h
+//  GLAChooseRemindersViewController.h
 //  Blik
 //
 //  Created by Patrick Smith on 7/08/2014.
@@ -9,29 +9,23 @@
 #import "GLAViewController.h"
 #import "GLAButton.h"
 #import "GLAReminderManager.h"
-@class GLAChooseRemindersTableViewController;
 
 
 
-@interface GLAChooseRemindersMainViewController : GLAViewController
-
-@property(nonatomic) IBOutlet GLAChooseRemindersTableViewController *remindersTableViewController;
-
-- (void)showRemindersTable;
-
-@end
-
-
-@interface GLAChooseRemindersTableViewController : GLAViewController <NSTableViewDataSource, NSTableViewDelegate, NSUserInterfaceValidations>
+@interface GLAChooseRemindersViewController : GLAViewController <NSTableViewDataSource, NSTableViewDelegate, NSUserInterfaceValidations>
 
 @property(nonatomic) IBOutlet NSTableView *tableView;
 
 @property(nonatomic) IBOutlet GLAButton *backButton;
-@property(nonatomic) IBOutlet NSTextField *titleField;
+@property(nonatomic) IBOutlet NSTextField *instructionsTextField;
 @property(nonatomic) IBOutlet NSPopUpButton *calendarPopUpButton;
 
 @property(nonatomic) NSArray *reminders;
 @property(nonatomic) NSArray *filteredReminders;
 @property(nonatomic) EKCalendar *calendarToFilterWith;
 
+- (IBAction)exit:(id)sender;
+
 @end
+
+extern NSString *GLAChooseRemindersViewControllerDidPerformExitNotification;

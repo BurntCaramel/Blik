@@ -45,10 +45,10 @@
 	
 	//TODO: add waiting to load animation
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	[projectManager useAllProjects:^(NSArray *allProjects) {
-		GLAProject *dummyProject = allProjects[0];
-		[self workOnProjectNow:dummyProject];
-	}];
+	[projectManager requestNowProject];
+	[projectManager requestAllProjects];
+	
+	[self goToToday:nil];
 }
 
 #pragma mark Setting Up View Controllers
@@ -254,13 +254,58 @@
 		return [self canWorkOnEditedProjectNow];
 	}
 	
+	if ([(NSObject *)anItem isKindOfClass:[NSMenuItem class]]) {
+		NSMenuItem *menuItem = (NSMenuItem *)anItem;
+		BOOL stateAsBool = NO;
+		GLAMainContentSection *currentSection = (self.mainNavigationBarController.currentSection);
+		
+		if (sel_isEqual(@selector(goToAll:), action)) {
+			stateAsBool = (currentSection.isAllProjects);
+		}
+		else if (sel_isEqual(@selector(goToPlanned:), action)) {
+			stateAsBool = (currentSection.isPlannedProjects);
+		}
+		else if (sel_isEqual(@selector(goToToday:), action)) {
+			stateAsBool = (currentSection.isNow);
+		}
+		
+		(menuItem.state) = stateAsBool ? NSOnState : NSOffState;
+	}
+	
 	return YES;
 }
+
+#pragma mark Window Delegate
+
+#if 1
+- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)client
+{
+	if (!(self.fieldEditor)) {
+		NSTextView *fieldEditor = [NSTextView new];
+		(fieldEditor.fieldEditor) = YES;
+		(fieldEditor.richText) = NO;
+		(self.fieldEditor) = fieldEditor;
+	}
+	
+	NSTextView *fieldEditor = (self.fieldEditor);
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	
+	(fieldEditor.insertionPointColor) = (uiStyle.lightTextColor);
+	
+#if 0
+	(fieldEditor.textColor) = (uiStyle.editedTextColor);
+	//(nameTextField.drawsBackground) = YES;
+	(fieldEditor.backgroundColor) = (uiStyle.editedTextBackgroundColor);
+#endif
+	
+	return fieldEditor;
+}
+#endif
 
 #pragma mark Project View Controller Notifications
 
 - (void)activeProjectViewControllerDidBeginEditing:(NSNotification *)note
-{NSLog(@"activeProjectViewControllerDidBeginEditing");
+{
 	(self.mainNavigationBarController.enabled) = NO;
 }
 

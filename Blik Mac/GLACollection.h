@@ -22,7 +22,14 @@ typedef NS_ENUM(NSInteger, GLACollectionColor) {
 };
 
 
-@interface GLACollection : MTLModel <MTLJSONSerializing, NSPasteboardReading, NSPasteboardWriting>
+@protocol GLACollectedItem <NSObject>
+
+@property(copy, readonly, nonatomic) NSString *title;
+
+@end
+
+
+@interface GLACollection : MTLModel <GLACollectedItem, MTLJSONSerializing, NSPasteboardReading, NSPasteboardWriting>
 
 @property(weak, nonatomic) GLAProject *project;
 

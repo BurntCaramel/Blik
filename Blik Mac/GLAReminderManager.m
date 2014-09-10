@@ -8,6 +8,7 @@
 
 #import "GLAReminderManager.h"
 
+#define NSLog(a) ;
 
 NSString *GLAReminderDidSaveEventKitReminderNotification = @"GLAReminderDidSaveEventKitReminderNotification";
 NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCouldNotSaveEventKitReminderNotification";
@@ -36,6 +37,7 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
     self = [super init];
     if (self) {
         _backgroundOperationQueue = [NSOperationQueue new];
+		(_backgroundOperationQueue.maxConcurrentOperationCount) = 1;
 		
 		[self updateAuthorizationStatus];
 	}
@@ -94,7 +96,7 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 
 - (void)useAllReminders:(void(^)(NSArray *allReminders))allRemindersReceiver
 {
-	[self invalidateAllReminders];
+	//[self invalidateAllReminders];
 	[self useAllRemindersOnMainQueue:YES block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore, NSArray *allReminders) {
 		allRemindersReceiver(allReminders);
 	}];
@@ -206,24 +208,19 @@ NSString *GLAReminderCouldNotSaveEventKitReminderNotification = @"GLAReminderCou
 		NSBlockOperation *operationToFetchAllReminders = [NSBlockOperation blockOperationWithBlock:^{}];
 		(self.operationToFetchAllReminders) = operationToFetchAllReminders;
 		
-		// The fetching is handled by the event store on a background thread.
-		[self useEventStoreOnMainQueue:YES block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
+		[self useEventStoreOnMainQueue:NO block:^(GLAReminderManager *reminderManager, EKEventStore *eventStore) {
 			//NSArray *allReminderCalendars = [eventStore calendarsForEntityType:EKEntityTypeReminder];
 			NSArray *calendars = (self.calendarsForFindingReminders);
 			NSPredicate *predicate = [eventStore predicateForRemindersInCalendars:calendars];
+			// -fetchRemindersMatchingPredicate runs the current run loop which affects our animations.
 			(reminderManager.fetchRemindersIdentifier) = [eventStore fetchRemindersMatchingPredicate:predicate completion:^(NSArray *reminders) {
-				// If all reminders has been invalidated in the mean time.
-				if (operationToFetchAllReminders != (reminderManager.operationToFetchAllReminders)) {
-					//return;
-					// Actually this could block a queue is something is dependant??
-				}
-				(reminderManager.allReminders) = reminders;
-				(reminderManager.dateLastFetchedReminders) = [NSDate date];
-				(reminderManager.fetchRemindersIdentifier) = nil;
-				
-				//sleep(1);
-				
-				[operationToFetchAllReminders start];
+				[reminderManager performBlockOnMainQueue:^{
+					(reminderManager.allReminders) = reminders;
+					(reminderManager.dateLastFetchedReminders) = [NSDate date];
+					(reminderManager.fetchRemindersIdentifier) = nil;
+					
+					[operationToFetchAllReminders start];
+				}];
 			}];
 		}];
 	}

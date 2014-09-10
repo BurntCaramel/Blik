@@ -7,8 +7,9 @@
 //
 
 @import Cocoa;
-
+@import QuartzCore;
 #import "GLACollection.h"
+
 
 @interface GLAUIStyle : NSObject
 
@@ -28,7 +29,8 @@
 
 @property (nonatomic) NSColor *lightTextColor;
 @property (nonatomic) NSColor *lightTextDisabledColor;
-@property (nonatomic) NSColor *lightTextSecondaryColor;
+@property (strong, nonatomic) NSColor *(^lightTextColorAtLevelBlock)(GLAUIStyle *style, NSUInteger level);
+- (NSColor *)lightTextColorAtLevel:(NSUInteger)level;
 
 @property (nonatomic) NSColor *activeTextColor;
 @property (nonatomic) NSColor *activeTextDisabledColor;
@@ -58,17 +60,22 @@
 
 #pragma mark Fonts
 
-@property (nonatomic) NSFont *smallReminderFont;
-@property (nonatomic) NSFont *highlightedReminderFont;
-
-@property (nonatomic) NSFont *itemFont;
 @property (nonatomic) NSFont *projectTitleFont;
+
+@property (nonatomic) NSFont *collectionFont;
+
+@property (nonatomic) NSFont *smallReminderFont;
+@property (nonatomic) NSFont *smallReminderDueDateFont;
+
+@property (nonatomic) NSFont *highlightedReminderFont;
+@property (nonatomic) NSFont *highlightedReminderDueDateFont;
 
 @property (nonatomic) NSFont *buttonFont;
 
 
 #pragma mark Preparing Views
 
+- (void)prepareContentTextField:(NSTextField *)textField;
 - (void)prepareContentTableView:(NSTableView *)tableView;
 
 

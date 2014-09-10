@@ -103,13 +103,13 @@
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                 </scrollView>
-                                <button identifier="template" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="nP5-Bs-Exh" customClass="GLANavigationButton">
+                                <button identifier="template" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="nP5-Bs-Exh" customClass="GLAButton">
                                     <rect key="frame" x="0.0" y="0.0" width="171" height="32"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="32" id="gBf-ry-0vu"/>
                                     </constraints>
-                                    <buttonCell key="cell" type="square" title="Choose File Or Folder" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="g8u-or-1o2" customClass="GLANavigationButtonCell">
+                                    <buttonCell key="cell" type="square" title="Choose File Or Folder" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="g8u-or-1o2" customClass="GLAButtonCell">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" size="13" name="AvenirNext-Medium"/>
                                     </buttonCell>

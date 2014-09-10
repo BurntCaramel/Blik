@@ -11,7 +11,7 @@
 #import "GLAProjectOverviewTableCellView.h"
 
 
-NSString *GLAProjectsListViewControllerDidClickOnProjectNotification = @"GLA.projectListViewController.didClickOnProject";
+NSString *GLAProjectsListViewControllerDidChooseProjectNotification = @"GLA.projectListViewController.didChooseProject";
 NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = @"GLA.projectListViewController.didPerformWorkOnProjectNow";
 
 
@@ -84,7 +84,7 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	}
 	
 	id project = (self.projects)[clickedRow];
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectsListViewControllerDidClickOnProjectNotification object:self userInfo:@{@"project": project}];
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectsListViewControllerDidChooseProjectNotification object:self userInfo:@{@"project": project}];
 }
 
 - (IBAction)workOnProjectNowClicked:(NSButton *)senderButton

@@ -137,6 +137,21 @@ NSString *GLAReminderJSONPasteboardType = @"com.burntcaramel.GLAReminder.JSONPas
 	GLAReminder *reminderItem = [self new];
 	(reminderItem.title) = title;
 	
+	BOOL hasDueDate = (arc4random_uniform(3) > 0); // 2/3 chance of a due date
+	if (hasDueDate) {
+		NSDate *today = [NSDate date];
+		NSCalendar *calender = [NSCalendar currentCalendar];
+		NSCalendarUnit calendarUnits = NSCalendarUnitCalendar | NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSTimeZoneCalendarUnit;
+		NSDateComponents *dateComponents = [calender components:calendarUnits fromDate:today];
+		
+		(dateComponents.day) += arc4random_uniform(7); // Up to seven days ahead
+		(dateComponents.hour) = 8 + arc4random_uniform(10); // Between 8am and 6pm
+		(dateComponents.minute) = 0;
+		(dateComponents.second) = 0;
+		
+		(reminderItem.dueDateComponents) = dateComponents;
+	}
+	
 	return reminderItem;
 }
 

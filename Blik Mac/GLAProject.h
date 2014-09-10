@@ -13,11 +13,24 @@
 #import "Mantle/Mantle.h"
 
 
-@interface GLAProject : MTLModel
+@protocol GLAProjectBaseReading <NSObject>
 
 @property(readonly, nonatomic) NSUUID *UUID;
+@property(readonly, copy, nonatomic) NSString *name;
 
-@property(copy, nonatomic) NSString *name;
+@property(readonly, nonatomic) NSDate *dateCreated;
+
+@end
+
+
+@interface GLAProject : MTLModel <MTLJSONSerializing>
+
+// Designated init
+- (instancetype)initWithUUID:(NSUUID *)UUID name:(NSString *)name dateCreated:(NSDate *)dateCreated;
+
+@property(readonly, nonatomic) NSUUID *UUID;
+@property(readonly, copy, nonatomic) NSString *name;
+@property(readonly, nonatomic) NSDate *dateCreated;
 
 @property(readonly, copy, nonatomic) NSArray *copyCollections;
 - (id<GLAArrayEditing>)collectionsEditing;

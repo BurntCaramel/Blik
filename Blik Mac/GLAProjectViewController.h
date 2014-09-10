@@ -7,23 +7,27 @@
 //
 
 @import Cocoa;
+#import "GLAViewController.h"
+// VIEW
 #import "GLAView.h"
 #import "GLAProjectActionsBarController.h"
 #import "GLAProjectView.h"
+#import "GLATextField.h"
+// MODEL
 #import "GLAProject.h"
 #import "GLACollection.h"
 #import "GLAReminder.h"
 
 @class GLAProjectCollectionsViewController;
 @class GLAProjectPlanViewController;
-@class GLAChooseRemindersMainViewController;
+@class GLAChooseRemindersViewController;
 
 
 @interface GLAProjectViewController : GLAViewController <GLAViewDelegate, NSTextFieldDelegate>
 
 @property(readonly, nonatomic) GLAProjectView *projectView;
 
-@property(strong, nonatomic) IBOutlet GLAProjectCollectionsViewController *itemsViewController;
+@property(strong, nonatomic) IBOutlet GLAProjectCollectionsViewController *collectionsViewController;
 @property(strong, nonatomic) IBOutlet GLAProjectPlanViewController *planViewController;
 
 @property(strong, nonatomic) IBOutlet NSLayoutConstraint *itemsViewLeadingConstraint;
@@ -38,15 +42,19 @@
 @property(strong, nonatomic) IBOutlet GLAView *actionsBarHolder;
 @property(strong, nonatomic) IBOutlet NSLayoutConstraint *actionsBarHolderBottomConstraint;
 
-@property(strong, nonatomic) IBOutlet NSTextField *nameTextField;
+@property(strong, nonatomic) IBOutlet GLATextField *nameTextField;
 
 @property(nonatomic) GLAProject *project;
 
-- (IBAction)editItems:(id)sender;
+- (IBAction)editCollections:(id)sender;
+@property(readonly, nonatomic) BOOL editingCollections;
+
 - (IBAction)editPlan:(id)sender;
+@property(readonly, nonatomic) BOOL editingPlan;
 
 - (IBAction)chooseExistingReminders:(id)sender;
-@property(nonatomic) GLAChooseRemindersMainViewController *chooseRemindersMainViewController;
+@property(readonly, nonatomic) BOOL choosingExistingReminders;
+@property(nonatomic) GLAChooseRemindersViewController *chooseRemindersViewController;
 
 - (void)clearName;
 - (void)focusNameTextField;
@@ -75,6 +83,8 @@ extern NSString *GLAProjectViewControllerDidEnterCollectionNotification;
 @property(readonly, nonatomic) NSTableView *tableView;
 
 @property(weak) IBOutlet GLAProjectViewController *parentViewController;
+
+@property(strong, nonatomic) IBOutlet NSMenu *contextualMenu;
 
 @property(nonatomic) GLAProject *project;
 @property(copy, nonatomic) NSArray *collections;
@@ -106,6 +116,8 @@ extern NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotificati
 
 @property(nonatomic) GLAProject *project;
 @property(copy, nonatomic) NSMutableArray *mutableReminders;
+
+@property(nonatomic) NSDateFormatter *dueDateFormatter;
 
 @property(nonatomic) BOOL editing;
 @property(nonatomic) BOOL showsDoesNotHaveAccessToReminders;

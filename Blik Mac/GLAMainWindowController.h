@@ -17,7 +17,7 @@
 #import "GLAView.h"
 
 
-@interface GLAMainWindowController : NSWindowController <GLAMainNavigationBarControllerDelegate, GLAMainContentViewControllerDelegate, NSUserInterfaceValidations>
+@interface GLAMainWindowController : NSWindowController <GLAMainNavigationBarControllerDelegate, GLAMainContentViewControllerDelegate, NSWindowDelegate, NSUserInterfaceValidations>
 
 @property(nonatomic) IBOutlet NSView *barHolderView;
 @property(nonatomic) GLAViewController *mainNavigationHolderViewController;
@@ -35,6 +35,8 @@
 @property(readonly, nonatomic) GLAProjectViewController *activeProjectViewController;
 
 @property(nonatomic) GLAMainContentSection *currentSection;
+
+@property(nonatomic) NSTextView *fieldEditor;
 
 
 //- (void)projectViewControllerDidBecomeActive:(GLAProjectViewController *)projectViewController;

@@ -32,7 +32,7 @@
 	[[NSBezierPath bezierPathWithOvalInRect:NSInsetRect(ellipseRect, 0.5, 0.5)] stroke];
 	
 	if (self.isOnAndShowsOnState) {
-		CGFloat inset = 4.0; // OR 2.0
+		CGFloat inset = 3.0; // OR 2.0
 		NSRect insideEllipseRect = NSInsetRect(ellipseRect, inset, inset);
 		[(uiStyle.toggleInsideColor) setFill];
 		[[NSBezierPath bezierPathWithOvalInRect:insideEllipseRect] fill];

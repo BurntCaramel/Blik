@@ -249,6 +249,7 @@
 	
 	NSString *workOnNowTitle = NSLocalizedString(@"Work on Now", @"Title for Work on Now button in an edited project");
 	GLAButton *workOnNowButton = [self addTrailingButtonWithTitle:workOnNowTitle action:@selector(workOnCurrentProjectNow:) identifier:@"workOnNow-editingProject"];
+	(workOnNowButton.alwaysHighlighted) = YES;
 	(self.editingProjectWorkOnNowButton) = workOnNowButton;
 	
 	NSLayoutConstraint *backLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:backButton];
@@ -355,15 +356,8 @@
 	
 	(self.animatingCounter)++;
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-		(context.duration) = 4.0 / 12.0;
+		(context.duration) = 2.1 / 12.0;
 		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-		
-		// Back button
-		(backButton.alphaValue) = 0.0;
-		(backButton.animator.alphaValue) = 1.0;
-		// Constraint
-		(backLeadingConstraint.constant) = -250.0;
-		(backLeadingConstraint.animator.constant) = 0.0;
 		
 		// Confirm button
 		(titleButton.alphaValue) = 0.0;
@@ -374,6 +368,23 @@
 	} completionHandler:^ {
 		(self.animatingCounter)--;
 	}];
+	
+	
+	(self.animatingCounter)++;
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 2.9 / 12.0;
+		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+		
+		// Back button
+		(backButton.alphaValue) = 0.0;
+		(backButton.animator.alphaValue) = 1.0;
+		// Constraint
+		(backLeadingConstraint.constant) = -250.0;
+		(backLeadingConstraint.animator.constant) = 0.0;
+	} completionHandler:^ {
+		(self.animatingCounter)--;
+	}];
+	
 	
 	NSColor *collectionColor = [uiStyle colorForProjectItemColorIdentifier:(collection.colorIdentifier)];
 	//[self animateBackgroundColorTo:collectionColor];

@@ -6,11 +6,13 @@
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+@import Cocoa;
 #import "GLAPrototypeAWindowController.h"
 #import "GLAMainWindowController.h"
+#import "GLAStatusItemController.h"
 
-@interface GLAAppDelegate : NSObject <NSApplicationDelegate>
+
+@interface GLAAppDelegate : NSObject <NSApplicationDelegate, NSUserInterfaceValidations>
 
 //@property (assign) IBOutlet NSWindow *window;
 
@@ -18,9 +20,13 @@
 @property (nonatomic) GLAPrototypeAWindowController *prototypeAWindowController;
 
 @property (assign, nonatomic) IBOutlet NSMenuItem *prototypeBMenuItem;
-@property (nonatomic) GLAMainWindowController *prototypeBWindowController;
+@property (nonatomic) GLAMainWindowController *mainWindowController;
+
+@property (nonatomic) GLAStatusItemController *statusItemController;
 
 - (IBAction)toggleShowingPrototypeA:(id)sender;
-- (IBAction)toggleShowingPrototypeB:(id)sender;
+- (IBAction)toggleShowingMainWindow:(id)sender;
+
+- (IBAction)toggleShowingStatusItem:(id)sender;
 
 @end

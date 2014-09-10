@@ -11,6 +11,12 @@
 #import "GLAUIStyle.h"
 
 
+@interface GLAButton ()
+
+@property(nonatomic) NSTrackingArea *mainTrackingArea;
+
+@end
+
 @implementation GLAButton
 
 /*+ (BOOL)requiresConstraintBasedLayout
@@ -31,7 +37,7 @@
 - (void)awakeFromNib
 {
 	if ((self.state) == NSOnState) {
-		(self.highlightOpacity) = 1.0;
+		(self.highlightAmount) = 1.0;
 	}
 }
 
@@ -119,8 +125,10 @@
 
 + (id)defaultAnimationForKey:(NSString *)key
 {
-	if ([key isEqualToString:@"highlightOpacity"]) {
-		return [CABasicAnimation animation];
+	if ([key isEqualToString:@"highlightAmount"]) {
+		CABasicAnimation *animation = [CABasicAnimation animation];
+		(animation.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+		return animation;
 	}
 	else {
 		return [super defaultAnimationForKey:key];
@@ -129,25 +137,52 @@
 
 - (void)setState:(NSInteger)newState
 {
-	if (newState == NSOffState) {
+	if (newState == NSOnState) {
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-			(context.duration) = 3.0 / 36.0;
-			(self.animator.highlightOpacity) = 0.0;
-		} completionHandler:^{
-			
-		}];
-		
+			(context.duration) = 5.0 / 36.0;
+			(self.animator.highlightAmount) = 1.0;
+		} completionHandler:nil];
 	}
-	else if (newState == NSOnState) {
+	else if (newState == NSOffState) {
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 			(context.duration) = 3.0 / 36.0;
-			(self.animator.highlightOpacity) = 1.0;
-		} completionHandler:^{
-			
-		}];
+			(self.animator.highlightAmount) = 0.0;
+		} completionHandler:nil];
+		
 	}
 	
 	[super setState:newState];
+}
+
+- (void)updateTrackingAreas
+{
+	if (self.mainTrackingArea) {
+		[self removeTrackingArea:(self.mainTrackingArea)];
+	}
+	
+	NSTrackingArea *mainTrackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:NSTrackingInVisibleRect | NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited owner:self userInfo:nil];
+	[self addTrackingArea:mainTrackingArea];
+	(self.mainTrackingArea) = mainTrackingArea;
+}
+
+- (void)mouseEntered:(NSEvent *)theEvent
+{
+	if ((self.isEnabled) && (self.state) == NSOffState) {
+		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+			(context.duration) = 5.0 / 36.0;
+			(self.animator.highlightAmount) = 3.0 / 6.0;
+		} completionHandler:nil];
+	}
+}
+
+- (void)mouseExited:(NSEvent *)theEvent
+{
+	if ((self.isEnabled) && (self.state) == NSOffState) {
+		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+			(context.duration) = 5.0 / 36.0;
+			(self.animator.highlightAmount) = 0.0;
+		} completionHandler:nil];
+	}
 }
 
 - (BOOL)isOnAndShowsOnState
@@ -189,7 +224,7 @@
 	(copy.secondary) = (self.secondary);
 	
 	(copy.textHighlightColor) = (self.textHighlightColor);
-	(copy.highlightOpacity) = (self.highlightOpacity);
+	(copy.highlightAmount) = (self.highlightAmount);
 	
 	return copy;
 }

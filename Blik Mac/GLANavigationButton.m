@@ -22,15 +22,15 @@
 	[super setCell:cell];
 }
 
-- (CGFloat)highlightOpacity
+- (CGFloat)highlightAmount
 {
-	return (self.cell.highlightOpacity);
+	return (self.cell.highlightAmount);
 }
 
-- (void)setHighlightOpacity:(CGFloat)highlightOpacity
+- (void)setHighlightAmount:(CGFloat)highlightAmount
 {
 	GLANavigationButtonCell *cell = (self.cell);
-	(cell.highlightOpacity) = highlightOpacity;
+	(cell.highlightAmount) = highlightAmount;
 	
 	[self setNeedsDisplayInRect:[cell highlightRectForBounds:[self bounds]]];
 }
@@ -56,7 +56,7 @@
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	
 	NSColor *barColor = (self.isEnabled) ? (uiStyle.activeButtonHighlightColor) : (uiStyle.activeButtonDisabledHighlightColor);
-	[uiStyle drawActiveHighlightForBounds:frame withColor:barColor time:(self.highlightOpacity)];
+	[uiStyle drawActiveHighlightForBounds:frame withColor:barColor time:(self.highlightAmount)];
 	//}
 }
 

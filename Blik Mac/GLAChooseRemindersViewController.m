@@ -1,56 +1,16 @@
 //
-//  GLAChooseRemindersMainViewController.m
+//  GLAChooseRemindersViewController.m
 //  Blik
 //
 //  Created by Patrick Smith on 7/08/2014.
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-#import "GLAChooseRemindersMainViewController.h"
+#import "GLAChooseRemindersViewController.h"
 #import "GLAUIStyle.h"
 
 
-@interface GLAChooseRemindersMainViewController ()
-
-@end
-
-@implementation GLAChooseRemindersMainViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Initialization code here.
-    }
-    return self;
-}
-
-- (void)showRemindersTable
-{
-	GLAChooseRemindersTableViewController *remindersTableViewController = (self.remindersTableViewController);
-	NSView *holderView = (remindersTableViewController.view);
-	[remindersTableViewController viewWillAppear];
-	[self fillViewWithChildView:holderView];
-	[remindersTableViewController viewDidAppear];
-	
-	NSLayoutConstraint *constraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:holderView];
-	
-	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-		(context.duration) = 6.0 / 12.0;
-		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-		
-		(holderView.alphaValue) = 0.0;
-		(holderView.animator.alphaValue) = 1.0;
-		
-		(constraint.constant) = 500.0;
-		(constraint.animator.constant) = 0.0;
-	} completionHandler:nil];
-}
-
-@end
-
-
-@interface GLAChooseRemindersTableViewController ()
+@interface GLAChooseRemindersViewController ()
 
 @property(nonatomic) BOOL loadingReminders;
 
@@ -58,7 +18,7 @@
 
 @end
 
-@implementation GLAChooseRemindersTableViewController
+@implementation GLAChooseRemindersViewController
 
 - (void)loadView
 {
@@ -69,13 +29,17 @@
 
 - (void)awakeFromNib
 {
+	GLAUIStyle *activeStyle = [GLAUIStyle activeStyle];
+	
 	NSTableView *tableView = (self.tableView);
 	(tableView.dataSource) = self;
 	(tableView.delegate) = self;
-	[[GLAUIStyle activeStyle] prepareContentTableView:tableView];
+	[activeStyle prepareContentTableView:tableView];
 	
 	NSTableColumn *tableColumn = (tableView.tableColumns)[0];
 	(self.heightMeasuringTableViewCell) = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
+	
+	[activeStyle prepareContentTextField:(self.instructionsTextField)];
 }
 
 - (void)reloadReminders
@@ -88,12 +52,20 @@
 	
 	[self updateCalendarChoiceUI];
 	
+	//return;
 	GLAReminderManager *reminderManager = [GLAReminderManager sharedReminderManager];
+	CFAbsoluteTime startTimeUse = CFAbsoluteTimeGetCurrent();
 	[reminderManager useAllReminders:^(NSArray *allReminders) {
+		CFAbsoluteTime endTimeUse = CFAbsoluteTimeGetCurrent();
+		NSLog(@"Took %fs to get all reminders", endTimeUse - startTimeUse);
+#if 0
 		CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
 		NSArray *incompleteReminders = [allReminders filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"completed = NO"]];
 		CFAbsoluteTime endTime = CFAbsoluteTimeGetCurrent();
 		NSLog(@"Took %fs to filter reminders", endTime - startTime);
+#else
+		NSArray *incompleteReminders = allReminders;
+#endif
 		
 		(self.reminders) = incompleteReminders;
 		
@@ -174,6 +146,13 @@
 	[self reloadReminders];
 }
 
+#pragma mark Actions
+
+- (void)exit:(id)sender
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAChooseRemindersViewControllerDidPerformExitNotification object:self];
+}
+
 #pragma mark Table View Data Source
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
@@ -251,3 +230,5 @@
 }
 
 @end
+
+NSString *GLAChooseRemindersViewControllerDidPerformExitNotification = @"GLAChooseRemindersViewControllerDidPerformExitNotification";

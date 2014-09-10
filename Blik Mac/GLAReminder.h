@@ -9,6 +9,7 @@
 @import Foundation;
 @import EventKit;
 #import "Mantle/Mantle.h"
+#import "GLAArrayEditing.h"
 
 
 @interface GLAReminder : MTLModel <MTLJSONSerializing>
@@ -22,8 +23,11 @@
 
 @property(nonatomic) BOOL highPriority;
 
-//@property(copy, nonatomic) NSDateComponents *dueDateComponents;
+@property(copy, nonatomic) NSDateComponents *dueDateComponents;
 //@property(nonatomic) NSUInteger priority; 1 (high) to low (9) - used to manually order in list
+
+@property(nonatomic) id<GLAArrayEditing> associatedCollectedItemsEditing;
+- (NSArray/*[<GLACollectedItem>]*/ *)copyAssociatedCollectedItems;
 
 - (void)setCreatedEventKitReminder:(EKReminder *)eventKitReminder;
 - (void)setFoundEventKitReminder:(EKReminder *)eventKitReminder;

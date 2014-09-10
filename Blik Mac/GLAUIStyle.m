@@ -7,6 +7,8 @@
 //
 
 #import "GLAUIStyle.h"
+#import "NSColor+GLAExtras.h"
+
 
 @implementation GLAUIStyle
 
@@ -19,10 +21,15 @@
 		
 		// COLORS
 		
+#if 0
 		//NSColor *grayDark = [NSColor colorWithSRGBRed:43.0/255.0 green:43.0/255.0 blue:43.0/255.0 alpha:1.0];
-		NSColor *grayDark = [NSColor colorWithSRGBRed:50.0/255.0 green:50.0/255.0 blue:50.0/255.0 alpha:1.0];
-		//NSColor *grayMid = [NSColor colorWithSRGBRed:58.0/255.0 green:58.0/255.0 blue:58.0/255.0 alpha:1.0];
-		NSColor *grayMid = [NSColor colorWithSRGBRed:46.0/255.0 green:46.0/255.0 blue:46.0/255.0 alpha:1.0];
+		NSColor *grayDark = [NSColor gla_colorWithSRGBGray:50.0/255.0 alpha:1.0];
+		//NSColor *grayExtraDark = [NSColor colorWithSRGBRed:58.0/255.0 green:58.0/255.0 blue:58.0/255.0 alpha:1.0];
+		NSColor *grayExtraDark = [NSColor gla_colorWithSRGBGray:46.0/255.0 alpha:1.0];
+#else
+		NSColor *grayDark = [NSColor gla_colorWithSRGBGray:43.0/255.0 alpha:1.0];
+		NSColor *grayExtraDark = [NSColor gla_colorWithSRGBGray:41.0/255.0 alpha:1.0];
+#endif
 		NSColor *whiteAlmost = [NSColor colorWithSRGBRed:252.0/255.0 green:252.0/255.0 blue:252.0/255.0 alpha:1.0];
 		NSColor *activeYellow = [NSColor colorWithSRGBRed:236.0/255.0 green:206.0/255.0 blue:4.0/255.0 alpha:1.0];
 		NSColor *activeYellowText = [NSColor colorWithSRGBRed:255.0/255.0 green:222.0/255.0 blue:0.0/255.0 alpha:1.0];
@@ -32,8 +39,8 @@
 		
 		
 		//(style.barBackgroundColor) = grayDark;
-		//(style.contentBackgroundColor) = grayMid;
-		(style.barBackgroundColor) = grayMid;
+		//(style.contentBackgroundColor) = grayExtraDark;
+		(style.barBackgroundColor) = grayExtraDark;
 		(style.contentBackgroundColor) = grayDark;
 		
 		(style.activeBarBackgroundColor) = activeYellow;
@@ -44,7 +51,15 @@
 		
 		(style.lightTextColor) =  whiteAlmost;
 		(style.lightTextDisabledColor) = whiteAlmost30;
-		(style.lightTextSecondaryColor) = [whiteAlmost colorWithAlphaComponent:0.77];
+		//(style.lightTextSecondaryColor) = [whiteAlmost colorWithAlphaComponent:0.77];
+		(style.lightTextColorAtLevelBlock) = ^ (GLAUIStyle *style, NSUInteger level) {
+			// Reduce by 1/10 for each level
+			CGFloat reduction = 1.0/8.0 * (CGFloat)level;
+			CGFloat minAlpha = 0.5;
+			CGFloat alpha = fmax(1.0 - reduction, minAlpha);
+			
+			return [(style.lightTextColor) colorWithAlphaComponent:alpha];
+		};
 		
 		(style.activeTextColor) =  activeYellowText;
 		(style.activeTextDisabledColor) = whiteAlmost30;
@@ -72,8 +87,32 @@
 		
 		// FONTS
 		
-		(style.smallReminderFont) = [NSFont fontWithName:@"AvenirNext-MediumItalic" size:13.0];
-		(style.highlightedReminderFont) = [NSFont fontWithName:@"AvenirNext-MediumItalic" size:16.0];
+		NSString *fontNameAvenirNextRegular = @"AvenirNext-Regular";
+		NSString *fontNameAvenirNextMedium = @"AvenirNext-Medium";
+		NSString *fontNameAvenirNextMediumItalic = @"AvenirNext-MediumItalic";
+		NSString *fontNameAvenirNextItalic = @"AvenirNext-Italic";
+		
+		(style.projectTitleFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:18.0];
+		
+#if 0
+		(style.smallReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
+		(style.smallReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextRegular size:13.0];
+		
+		(style.highlightedReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:16.0];
+		(style.highlightedReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextRegular size:16.0];
+#elif 1
+		(style.smallReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
+		(style.smallReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:11.0];
+		
+		(style.highlightedReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:16.0];
+		(style.highlightedReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:11.0];
+#else
+		(style.smallReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
+		(style.smallReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:13.0];
+		
+		(style.highlightedReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:16.0];
+		(style.highlightedReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:16.0];
+#endif
 	});
 	
 	return style;
@@ -81,6 +120,17 @@
 
 
 #pragma mark Colors
+
+- (NSColor *)lightTextColorAtLevel:(NSUInteger)level
+{
+	NSColor *(^lightTextColorAtLevelBlock)(GLAUIStyle *style, NSUInteger level) = (self.lightTextColorAtLevelBlock);
+	if (lightTextColorAtLevelBlock) {
+		return lightTextColorAtLevelBlock(self, level);
+	}
+	else {
+		return (self.lightTextColor);
+	}
+}
 
 - (NSColor *)colorForProjectItemColorIdentifier:(GLACollectionColor)colorIdentifier
 {
@@ -107,6 +157,11 @@
 
 
 #pragma mark Preparing Views
+
+- (void)prepareContentTextField:(NSTextField *)textField
+{
+	(textField.textColor) = (self.lightTextColor);
+}
 
 - (void)prepareContentTableView:(NSTableView *)tableView
 {

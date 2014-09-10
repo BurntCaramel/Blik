@@ -67,10 +67,10 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 #pragma mark Projects
 
-- (IBAction)addNewProject:(id)sender;
-
+- (IBAction)workOnCurrentProjectNow:(id)sender;
 - (IBAction)exitEditedProject:(id)sender;
 
+- (IBAction)addNewProject:(id)sender;
 - (IBAction)cancelAddingNewProject:(id)sender;
 - (IBAction)confirmAddingNewProject:(id)sender;
 

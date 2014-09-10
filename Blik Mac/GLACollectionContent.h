@@ -7,8 +7,17 @@
 //
 
 #import "Mantle/Mantle.h"
+#import "GLACollection.h"
+
 
 // Subclassed
 @interface GLACollectionContent : MTLModel <MTLJSONSerializing>
+
+@end
+
+
+@interface GLACollectionContentItem : MTLModel <GLACollectedItem, MTLJSONSerializing>
+
+@property (copy, readonly, nonatomic) NSString *title;
 
 @end

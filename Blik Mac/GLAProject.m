@@ -14,6 +14,8 @@
 @interface GLAProject ()
 
 @property(readwrite, nonatomic) NSUUID *UUID;
+@property(readwrite, copy, nonatomic) NSString *name;
+@property(readwrite, nonatomic) NSDate *dateCreated;
 
 @property(copy, nonatomic) NSArray *collectionsForMantle;
 @property(copy, nonatomic) NSArray *loadedCollections;
@@ -31,6 +33,7 @@
 	@{
 	  @"UUID": @"UUID",
 	  @"name": @"name",
+	  @"dateCreated": @"dateCreated",
 	  @"collectionsForMantle": @"collections",
 	  @"remindersForMantle": @"reminders",
 	  @"loadedCollections": (NSNull.null),
@@ -44,6 +47,11 @@
 	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
 }
 
++ (NSValueTransformer *)dateCreatedJSONTransformer
+{
+	return [NSValueTransformer valueTransformerForName:GLADateRFC3339ValueTransformerName];
+}
+
 + (NSValueTransformer *)collectionsForMantleJSONTransformer
 {
 	return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:[GLACollection class]];
@@ -54,6 +62,29 @@
 	return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:[GLAReminder class]];
 }
 
+- (instancetype)initWithUUID:(NSUUID *)UUID name:(NSString *)name dateCreated:(NSDate *)dateCreated
+{
+	self = [super init];
+	if (self) {
+		if (!UUID) {
+			UUID = [NSUUID UUID];
+		}
+		
+		if (!dateCreated) {
+			dateCreated = [NSDate date];
+		}
+		
+		_UUID = UUID;
+		_name = name;
+		_dateCreated = dateCreated;
+	}
+	return self;
+}
+
+- (instancetype)init
+{
+	return [self initWithUUID:nil name:nil dateCreated:nil];
+}
 
 - (NSArray *)copyCollections
 {

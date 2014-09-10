@@ -11,7 +11,8 @@
 #import "GLAUIStyle.h"
 #import "GLAReminderManager.h"
 #import "GLACollectionFilesListContent.h"
-#import "GLAChooseRemindersMainViewController.h"
+#import "GLAChooseRemindersViewController.h"
+#import <objc/runtime.h>
 
 
 NSString *GLAProjectViewControllerDidBeginEditingItemsNotification = @"GLA.projectViewController.didBeginEditingItems";
@@ -27,8 +28,9 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 
 @property(nonatomic) GLAProject *private_project;
 
-@property(nonatomic) BOOL focusedOnItemsView;
-@property(nonatomic) BOOL focusedOnPlanView;
+@property(readwrite, nonatomic) BOOL editingCollections;
+@property(readwrite, nonatomic) BOOL editingPlan;
+@property(readwrite, nonatomic) BOOL choosingExistingReminders;
 
 @property(nonatomic, getter = isAnimatingFocusChange) BOOL animatingFocusChange;
 
@@ -65,35 +67,52 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 	[super loadView];
 	
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	GLAUIStyle *activeStyle = [GLAUIStyle activeStyle];
 	
 	(self.projectView.delegate) = self;
 	
-	[nc addObserver:self selector:@selector(collectionsViewControllerDidClickCollection:) name:GLAProjectCollectionsViewControllerDidClickCollectionNotification object:(self.itemsViewController)];
+	[nc addObserver:self selector:@selector(collectionsViewControllerDidClickCollection:) name:GLAProjectCollectionsViewControllerDidClickCollectionNotification object:(self.collectionsViewController)];
 	
-	//(self.itemsViewController.parentViewController) = self;
-	//(self.planViewController.parentViewController) = self;
 	
-	/*
 	NSTextField *nameTextField = (self.nameTextField);
 	(nameTextField.delegate) = self;
-	
+	(nameTextField.font) = (activeStyle.projectTitleFont);
+	/*
 	[nc addObserver:self selector:@selector(nameTextDidBeginEditing:) name:NSControlTextDidBeginEditingNotification object:nameTextField];
 	[nc addObserver:self selector:@selector(nameTextDidEndEditing:) name:NSControlTextDidEndEditingNotification object:nameTextField];
+	[nc addObserver:self selector:@selector(nameTextDidBecomeFirstResponder:) name:GLATextFieldDidBecomeFirstResponder object:nameTextField];
+	[nc addObserver:self selector:@selector(nameTextDidResignFirstResponder:) name:GLATextFieldDidResignFirstResponder object:nameTextField];
 	*/
+	//GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	//(nameTextField.textColor) = (uiStyle.editedTextColor);
+	//(nameTextField.drawsBackground) = YES;
+	//(nameTextField.backgroundColor) = (uiStyle.editedTextBackgroundColor);
+	//(nameTextField.backgroundColor) = [NSColor redColor];
+	//[nameTextField setNeedsDisplay:YES];
+	
+	CGFloat defaultListsHeight = 174.0;
+	(self.itemsViewHeightConstraint.constant) = defaultListsHeight;
+	(self.planViewHeightConstraint.constant) = defaultListsHeight;
+	
+	
 	(self.itemsViewLeadingConstraintDefaultConstant) = (self.itemsViewLeadingConstraint.constant);
 	(self.itemsViewHeightConstraintDefaultConstant) = (self.itemsViewHeightConstraint.constant);
 	
 	(self.planViewTrailingConstraintDefaultConstant) = (self.planViewTrailingConstraint.constant);
 	(self.planViewHeightConstraintDefaultConstant) = (self.planViewHeightConstraint.constant);
 	
+	
 	GLAView *actionsBarView = (self.actionsBarController.view);
 	(actionsBarView.wantsLayer) = YES;
-	(actionsBarView.layer.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor.CGColor);
+	(actionsBarView.layer.backgroundColor) = (activeStyle.contentBackgroundColor.CGColor);
+	
+	
+	[activeStyle prepareContentTextField:(self.nameTextField)];
 }
 
-- (void)viewWillAppear
+- (void)viewDidAppear
 {
-	[super viewWillAppear];
+	[super viewDidAppear];
 	
 	[(self.itemsScrollView.contentView) scrollToPoint:NSZeroPoint];
 	[(self.planScrollView.contentView) scrollToPoint:NSZeroPoint];
@@ -105,11 +124,11 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 }
 
 - (void)setProject:(GLAProject *)project
-{
+{NSLog(@"SET PROJECT %@", project);
 	if ((self.private_project) != project) {
 		(self.private_project) = project;
 		
-		(self.itemsViewController.project) = project;
+		(self.collectionsViewController.project) = project;
 		(self.planViewController.project) = project;
 		
 		(self.nameTextField.stringValue) = (project.name);
@@ -118,36 +137,22 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 	}
 }
 
-- (void)collectionsViewControllerDidClickCollection:(NSNotification *)note
-{
-	if (self.focusedOnItemsView) {
-		return;
-	}
-	
-	GLACollection *collection = (note.userInfo)[@"collection"];
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidEnterCollectionNotification object:self userInfo:
-	 @{
-	   @"collection": collection
-	   }];
-}
-
 #pragma mark Actions
 
-- (IBAction)editItems:(id)sender
+- (IBAction)editCollections:(id)sender
 {
 	if (self.animatingFocusChange) {
 		return;
 	}
 	
-	if (!(self.focusedOnItemsView)) {
-		[self focusOnItemsView];
+	if (!(self.editingCollections)) {
+		[self beginEditingCollections];
 		[(self.actionsBarController) showBarForEditingItems];
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidBeginEditingItemsNotification object:self];
 	}
 	else {
-		[self endFocusingOnItemsView];
+		[self endEditingCollections];
 		[(self.actionsBarController) hideBarForEditingItems];
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidEndEditingItemsNotification object:self];
@@ -160,14 +165,14 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 		return;
 	}
 	
-	if (!(self.focusedOnPlanView)) {
-		[self focusOnPlanView];
+	if (!(self.editingPlan)) {
+		[self beginEditingPlan];
 		[(self.actionsBarController) showBarForEditingPlan];
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidBeginEditingPlanNotification object:self];
 	}
 	else {
-		[self endFocusingOnPlanView];
+		[self endEditingPlan];
 		[(self.actionsBarController) hideBarForEditingPlan];
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidEndEditingPlanNotification object:self];
@@ -184,9 +189,27 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 	[(self.view.window) makeFirstResponder:(self.nameTextField)];
 }
 
-- (NSScrollView *)itemsScrollView
+#pragma mark Notifications
+
+- (void)collectionsViewControllerDidClickCollection:(NSNotification *)note
 {
-	return (self.itemsViewController.tableView.enclosingScrollView);
+	if (self.editingCollections) {
+		return;
+	}
+	
+	GLACollection *collection = (note.userInfo)[@"collection"];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidEnterCollectionNotification object:self userInfo:
+	 @{
+	   @"collection": collection
+	   }];
+}
+
+#pragma mark -
+
+- (NSScrollView *)collectionsScrollView
+{
+	return (self.collectionsViewController.tableView.enclosingScrollView);
 }
 
 - (NSScrollView *)planScrollView
@@ -202,15 +225,55 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 	
 }
 
-- (void)animateItemsViewForFocusChange:(BOOL)isFocused
+#pragma mark - Editing Sections
+
+- (CGFloat)opacityOfNameTextFieldWhenEditingInnerSection
+{
+	return 4.0 / 12.0;
+}
+
+- (void)didBeginEditingInnerSection
+{
+	NSTextField *nameTextField = (self.nameTextField);
+	
+	//(nameTextField.editable) = NO;
+	(nameTextField.selectable) = NO;
+	[(nameTextField.window) makeFirstResponder:nil];
+	
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 4.0 / 12.0;
+		
+		(nameTextField.animator.alphaValue) = (self.opacityOfNameTextFieldWhenEditingInnerSection);
+	} completionHandler:nil];
+}
+
+- (void)didFinishEditingInnerSection
+{
+	NSTextField *nameTextField = (self.nameTextField);
+	
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 4.0 / 12.0;
+		
+		(nameTextField.animator.alphaValue) = 1.0;
+	} completionHandler:^ {
+		(nameTextField.editable) = YES;
+		//(nameTextField.selectable) = YES;
+	}];
+}
+
+#pragma mark Editing Collections
+
+- (void)animateCollectionsViewForEditingChange:(BOOL)isEditing
 {
 	(self.animatingFocusChange) = YES;
 	
 	GLAProjectView *projectView = (self.projectView);
-	NSScrollView *itemsScrollView = [self itemsScrollView];
+	NSScrollView *itemsScrollView = [self collectionsScrollView];
 	NSScrollView *planScrollView = [self planScrollView];
 	
-	if (isFocused) {
+	if (isEditing) {
+		[self didBeginEditingInnerSection];
+		
 		// Center items view
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 			(context.duration) = 6.0 / 12.0;
@@ -243,11 +306,10 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 			(self.planViewController.view.animator.alphaValue) = 0.0;
 			//(planScrollView.animator.alphaValue) = 0.0;
 		} completionHandler:nil];
-		
-		
-		[self didBeginEditingInnerSection];
 	}
 	else {
+		[self didFinishEditingInnerSection];
+		
 		// Remove centering constraint
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 			(context.duration) = 6.0 / 12.0;
@@ -258,8 +320,6 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 			[projectView layoutSubtreeIfNeeded];
 		} completionHandler:^ {
 			(self.animatingFocusChange) = NO;
-			
-			[self didFinishEditingInnerSection];
 		}];
 		
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -281,15 +341,38 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 	}
 }
 
-- (void)animatePlanViewForFocusChange:(BOOL)isFocused
+- (void)beginEditingCollections
+{
+	(self.editingCollections) = YES;
+	//(self.editingPlan) = NO;
+	
+	(self.collectionsViewController.editing) = YES;
+	
+	[self animateCollectionsViewForEditingChange:YES];
+}
+
+- (void)endEditingCollections
+{
+	(self.editingCollections) = NO;
+	
+	(self.collectionsViewController.editing) = NO;
+	
+	[self animateCollectionsViewForEditingChange:NO];
+}
+
+#pragma mark Editing Plan
+
+- (void)animatePlanViewForEditingChange:(BOOL)isEditing
 {
 	(self.animatingFocusChange) = YES;
 	
 	GLAProjectView *projectView = (self.projectView);
-	NSScrollView *itemsScrollView = [self itemsScrollView];
+	NSScrollView *itemsScrollView = [self collectionsScrollView];
 	NSScrollView *planScrollView = [self planScrollView];
 	
-	if (isFocused) {
+	if (isEditing) {
+		[self didBeginEditingInnerSection];
+		
 		// Center items view
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 			(context.duration) = 6.0 / 12.0;
@@ -323,6 +406,8 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 		} completionHandler:nil];
 	}
 	else {
+		[self didFinishEditingInnerSection];
+		
 		// Remove centering constraint
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 			(context.duration) = 6.0 / 12.0;
@@ -353,46 +438,14 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 	}
 }
 
-- (void)didBeginEditingInnerSection
+- (void)beginEditingPlan
 {
-	NSTextField *nameTextField = (self.nameTextField);
-	(nameTextField.editable) = NO;
-	[(nameTextField.window) makeFirstResponder:nil];
-}
-
-- (void)didFinishEditingInnerSection
-{
-	NSTextField *nameTextField = (self.nameTextField);
-	(nameTextField.editable) = YES;
-}
-
-- (void)focusOnItemsView
-{
-	(self.focusedOnItemsView) = YES;
-	(self.focusedOnPlanView) = NO;
-	
-	(self.itemsViewController.editing) = YES;
-	
-	[self animateItemsViewForFocusChange:YES];
-}
-
-- (void)endFocusingOnItemsView
-{
-	(self.focusedOnItemsView) = NO;
-	
-	(self.itemsViewController.editing) = NO;
-	
-	[self animateItemsViewForFocusChange:NO];
-}
-
-- (void)focusOnPlanView
-{
-	(self.focusedOnItemsView) = NO;
-	(self.focusedOnPlanView) = YES;
+	//(self.editingCollections) = NO;
+	(self.editingPlan) = YES;
 	
 	(self.planViewController.editing) = YES;
 	
-	[self animatePlanViewForFocusChange:YES];
+	[self animatePlanViewForEditingChange:YES];
 	//[self updateConstraintsWithAnimatedDuration:7.0 / 12.0];
 	
 	GLAReminderManager *reminderManager = [GLAReminderManager sharedReminderManager];
@@ -404,36 +457,36 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 		}];
 	}
 	else {
-		CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
-		[reminderManager useAllReminders:^(NSArray *allReminders) {
-			CFAbsoluteTime endTime = CFAbsoluteTimeGetCurrent();
-			NSLog(@"Took %f second to get all reminders", endTime - startTime);
-			//NSLog(@"%lu %@", (allReminders.count), allReminders);
-		}];
+		if (YES) {
+			CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
+			[reminderManager useAllReminders:^(NSArray *allReminders) {
+				CFAbsoluteTime endTime = CFAbsoluteTimeGetCurrent();
+				NSLog(@"Took %f seconds to get all reminders", endTime - startTime);
+				//NSLog(@"%lu %@", (allReminders.count), allReminders);
+			}];
+		}
 	}
 }
 
-- (void)endFocusingOnPlanView
+- (void)endEditingPlan
 {
-	(self.focusedOnPlanView) = NO;
+	(self.editingPlan) = NO;
 	
 	(self.planViewController.editing) = NO;
 	
-	[self animatePlanViewForFocusChange:NO];
+	if (self.choosingExistingReminders) {
+		[self endChoosingExistingReminders];
+	}
+	
+	[self animatePlanViewForEditingChange:NO];
+	
 	//[self updateConstraintsWithAnimatedDuration:7.0 / 12.0];
 }
 
-- (IBAction)chooseExistingReminders:(id)sender
+#pragma mark Choosing Existing Reminders
+
+- (void)animatePlanViewLeft
 {
-	if (!(self.chooseRemindersMainViewController)) {
-		GLAChooseRemindersMainViewController *chooseRemindersMainViewController = [[GLAChooseRemindersMainViewController alloc] initWithNibName:@"GLAChooseRemindersMainViewController" bundle:nil];
-		
-		(chooseRemindersMainViewController.view.identifier) = @"chooseRemindersMainView";
-		(chooseRemindersMainViewController.view.wantsLayer) = YES;
-		(self.chooseRemindersMainViewController) = chooseRemindersMainViewController;
-	}
-	
-	//NSLayoutConstraint *scrollLeadingConstraint = (self.planViewController.scrollLeadingConstraint);
 	GLAProjectView *projectView = (self.projectView);
 	
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -443,6 +496,7 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
 		
 		[projectView removeConstraint:(self.planViewXConstraint)];
+		//(self.planViewXConstraint.priority) = 250;
 		(self.planViewTrailingConstraint.constant) = 500;
 		(self.nameTextField.alphaValue) = 0.0;
 		
@@ -451,60 +505,187 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 	} completionHandler:^ {
 		(self.nameTextField.hidden) = YES;
 	}];
+}
+
+- (IBAction)chooseExistingReminders:(id)sender
+{
+	if (self.choosingExistingReminders) {
+		return;
+	}
 	
-	GLAChooseRemindersMainViewController *chooseRemindersMainViewController = (self.chooseRemindersMainViewController);
-	[chooseRemindersMainViewController viewWillAppear];
+	if (!(self.chooseRemindersViewController)) {
+		GLAChooseRemindersViewController *chooseRemindersViewController = [[GLAChooseRemindersViewController alloc] initWithNibName:@"GLAChooseRemindersViewController" bundle:nil];
+		
+		(chooseRemindersViewController.view.identifier) = @"chooseRemindersView";
+		(chooseRemindersViewController.view.wantsLayer) = YES;
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chooseExistingRemindersDidExit:) name:GLAChooseRemindersViewControllerDidPerformExitNotification object:chooseRemindersViewController];
+		
+		(self.chooseRemindersViewController) = chooseRemindersViewController;
+	}
 	
-	NSView *chooseRemindersMainView = (chooseRemindersMainViewController.view);
-	[self fillViewWithChildView:chooseRemindersMainView];
+	(self.choosingExistingReminders) = YES;
 	
-	NSLog(@"%@", [(self.view.constraints) valueForKey:@"identifier"]);
+	//NSLayoutConstraint *scrollLeadingConstraint = (self.planViewController.scrollLeadingConstraint);
 	
+	GLAChooseRemindersViewController *chooseRemindersViewController = (self.chooseRemindersViewController);
+	[chooseRemindersViewController viewWillAppear];
+	
+	NSView *chooseRemindersView = (chooseRemindersViewController.view);
+	[self fillViewWithChildView:chooseRemindersView];
+	
+	// Copy bottom constraint from plan view to choose reminders view
+	GLAProjectView *projectView = (self.projectView);
 	NSLayoutConstraint *planViewBottomConstraint = (self.planViewBottomConstraint);
-	NSArray *adjustedConstraints = [GLAViewController copyLayoutConstraints:@[planViewBottomConstraint] replacingUsesOf:(self.planViewController.view) with:chooseRemindersMainView];
+	NSArray *adjustedConstraints = [GLAViewController copyLayoutConstraints:@[planViewBottomConstraint] replacingUsesOf:(self.planViewController.view) with:chooseRemindersView];
 	NSLayoutConstraint *newBottomConstraint = adjustedConstraints[0];
-	(newBottomConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"bottom" forChildView:chooseRemindersMainView];
-	[projectView removeConstraint:[self layoutConstraintWithIdentifier:@"height" forChildView:chooseRemindersMainView]];
+	(newBottomConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"bottom" forChildView:chooseRemindersView];
+	[projectView removeConstraint:[self layoutConstraintWithIdentifier:@"height" forChildView:chooseRemindersView]];
 	[projectView addConstraint:newBottomConstraint];
 	
-	NSLog(@"newBottomConstraint %@", newBottomConstraint);
+	[chooseRemindersViewController viewDidAppear];
 	
-	[chooseRemindersMainViewController viewDidAppear];
 	
-	[chooseRemindersMainViewController showRemindersTable];
+	NSLayoutConstraint *chooseRemindersLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:chooseRemindersView];
+	
+	(chooseRemindersView.alphaValue) = 0.0;
+	(chooseRemindersLeadingConstraint.constant) = 300.0;
+	
+	[projectView layoutSubtreeIfNeeded];
+	
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 6.0 / 12.0;
+		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+		//(context.allowsImplicitAnimation) = NO;
+		
+		//(chooseRemindersView.alphaValue) = 0.0;
+		(chooseRemindersView.animator.alphaValue) = 1.0;
+		
+		//(chooseRemindersLeadingConstraint.constant) = 300.0;
+		(chooseRemindersLeadingConstraint.animator.constant) = 0.0;
+		
+		//[projectView layoutSubtreeIfNeeded];
+	} completionHandler:nil];
+	
+	
+	[self animatePlanViewLeft];
+	//[chooseRemindersViewController showRemindersTable];
+}
+
+- (void)endChoosingExistingReminders
+{
+	GLAProjectView *projectView = (self.projectView);
+	
+	GLAChooseRemindersViewController *chooseRemindersViewController = (self.chooseRemindersViewController);
+	
+	NSView *chooseRemindersView = (chooseRemindersViewController.view);
+	
+	// Animate choose view out
+	NSLayoutConstraint *chooseRemindersLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:chooseRemindersView];
+	
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 6.0 / 12.0;
+		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+		
+		//(chooseRemindersView.alphaValue) = 1.0;
+		(chooseRemindersView.animator.alphaValue) = 1.0;
+		
+		//(chooseRemindersLeadingConstraint.constant) = 500.0;
+		(chooseRemindersLeadingConstraint.animator.constant) = 500.0;
+	} completionHandler:^ {
+		[chooseRemindersViewController viewWillDisappear];
+		[chooseRemindersView removeFromSuperview];
+		[chooseRemindersViewController viewDidDisappear];
+	}];
+	
+	// Animate plan view back in
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 6.0 / 12.0;
+		(context.allowsImplicitAnimation) = YES;
+		
+		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+		
+		(self.nameTextField.hidden) = NO;
+		(self.nameTextField.alphaValue) = (self.opacityOfNameTextFieldWhenEditingInnerSection);
+		
+		[projectView addConstraint:(self.planViewXConstraint)];
+		(self.planViewTrailingConstraint.constant) = 0;
+		
+		[projectView layoutSubtreeIfNeeded];
+		
+	} completionHandler:^ {
+		//(self.nameTextField.hidden) = YES;
+	}];
+	
+	(self.choosingExistingReminders) = NO;
+}
+
+- (void)chooseExistingRemindersDidExit:(NSNotification *)note
+{
+	[self endChoosingExistingReminders];
 }
 
 - (NSLayoutConstraint *)addConstraintForCenteringView:(NSView *)view inView:(NSView *)holderView
 {
 	return [self addLayoutConstraintToMatchAttribute:NSLayoutAttributeCenterX withChildView:view identifier:@"centerX" priority:999];
-	
-	NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:holderView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
-	[holderView addConstraint:constraint];
-	
-	return constraint;
 }
 
 /*
-- (void)nameTextDidBeginEditing:(NSNotification *)obj
+- (void)styleNameFieldForEditing:(BOOL)isEditing
 {
-	NSLog(@"nameTextDidBeginEditing:");
 	NSTextField *nameTextField = (self.nameTextField);
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
-	(nameTextField.textColor) = (uiStyle.editedTextColor);
-	(nameTextField.backgroundColor) = (uiStyle.editedTextBackgroundColor);
+	if (isEditing) {
+		(nameTextField.textColor) = (uiStyle.editedTextColor);
+		//(nameTextField.drawsBackground) = YES;
+		(nameTextField.backgroundColor) = (uiStyle.editedTextBackgroundColor);
+		
+		NSText *fieldEditor = [(nameTextField.window) fieldEditor:YES forObject:nameTextField];
+		(fieldEditor.textColor) = (nameTextField.textColor);
+	}
+	else {
+		(nameTextField.textColor) = (uiStyle.lightTextColor);
+		//(nameTextField.drawsBackground) = NO;
+		(nameTextField.backgroundColor) = (uiStyle.contentBackgroundColor);
+	}
 }
 
-- (void)nameTextDidEndEditing:(NSNotification *)obj
+- (void)nameTextDidBeginEditing:(NSNotification *)note
 {
 	
 }
 
-- (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)command
+
+
+- (void)nameTextDidBecomeFirstResponder:(NSNotification *)note
+{NSLog(@"nameTextDidBecomeFirstResponder");
+	[self styleNameFieldForEditing:YES];
+}
+
+- (void)nameTextDidResignFirstResponder:(NSNotification *)note
 {
-	NSLog(@"%@", NSStringFromSelector(command));
-	return NO;
 }
 */
+/*
+- (void)nameTextDidEndEditing:(NSNotification *)note
+{
+	(self.nameTextField);
+}
+*/
+- (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)command
+{
+	// Return or Enter
+	if (sel_isEqual(@selector(insertNewline:), command)) {
+		[(textView.window) makeFirstResponder:nil];
+		return YES;
+	}
+	// Option-Return
+	else if (sel_isEqual(@selector(insertNewlineIgnoringFieldEditor:), command)) {
+		return YES;
+	}
+	
+	return NO;
+}
+
 @end
 
 
@@ -576,6 +757,8 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	
 	(tableView.target) = self;
 	(tableView.action) = @selector(tableViewWasClicked:);
+	
+	(tableView.menu) = (self.contextualMenu);
 	
 	[tableView registerForDraggedTypes:@[GLACollectionJSONPasteboardType]];
 	
@@ -762,6 +945,8 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 @property(nonatomic) GLAProject *private_project;
 @property(nonatomic) BOOL private_editing;
 
+@property(nonatomic) NSTableCellView *measuringTableCellView;
+
 @end
 
 @implementation GLAProjectPlanViewController
@@ -831,9 +1016,10 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	(self.mutableReminders) =
 	[
 	 @[
-	   [GLAReminder dummyReminderWithTitle:@"About page redesign blah blah blah blah longer name"],
-	   [GLAReminder dummyReminderWithTitle:@"Double check Muted Light logo and gallery sliders"],
-	   [GLAReminder dummyReminderWithTitle:@"Prototyping landing page blah blah blah longer name blah blah"],
+	   //[GLAReminder dummyReminderWithTitle:@"About page redesign blah blah blah blah longer name"],
+	   [GLAReminder dummyReminderWithTitle:@"About page"],
+	   [GLAReminder dummyReminderWithTitle:@"Straight to the point"],
+	   [GLAReminder dummyReminderWithTitle:@"Prototyping landing page blah blah blah longer name oh so long long long long"],
 	   [GLAReminder dummyReminderWithTitle:@"Brief Stage D completed blah blah blah longer name blah blah"],
 	   [GLAReminder dummyReminderWithTitle:@"Brief Stage E completed blah blah blah longer name blah blah"],
 	   [GLAReminder dummyReminderWithTitle:@"Brief Stage F completed blah blah blah longer name blah blah"],
@@ -860,7 +1046,20 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	// I think Apple says this is better for scrolling performance.
 	(scrollView.wantsLayer) = YES;
 	
+	NSTableColumn *mainColumn = (tableView.tableColumns)[0];
+	(self.measuringTableCellView) = [tableView makeViewWithIdentifier:(mainColumn.identifier) owner:nil];
+	
 	[self wrapScrollView];
+	
+	
+	NSDateFormatter *dueDateFormatter = [NSDateFormatter new];
+	(dueDateFormatter.timeStyle) = NSDateFormatterShortStyle;
+	(dueDateFormatter.dateStyle) = NSDateFormatterMediumStyle;
+	//(dueDateFormatter.doesRelativeDateFormatting) = YES;
+	NSString *dateFormat = [NSDateFormatter dateFormatFromTemplate:@"EEE h:mm a" options:0 locale:[NSLocale autoupdatingCurrentLocale]];
+	(dueDateFormatter.dateFormat) = dateFormat;
+	(self.dueDateFormatter) = dueDateFormatter;
+	
 	
 	GLAReminderManager *reminderManager = [GLAReminderManager sharedReminderManager];
 	[reminderManager createEventStoreIfNeeded];
@@ -988,74 +1187,119 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	return NO;
 }
 
-- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+- (void)setUpTableCellView:(NSTableCellView *)cellView forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
-	(cellView.canDrawSubviewsIntoLayer) = YES;
+	(cellView.backgroundStyle) = NSBackgroundStyleDark;
+	
+	NSTextField *textField = (cellView.textField);
 	
 	GLAReminder *reminderItem = (self.mutableReminders)[row];
 	NSString *title = (reminderItem.title);
-	NSString *middleDot = @"\u00b7";
-	NSString *displayText = [NSString stringWithFormat:@"4PM Today %@ %@", middleDot, title];
-	//NSString *displayText = @"dfs";
-	//(cellView.objectValue) = displayText;
-	//(cellView.textField.stringValue) = displayText;
+	NSString *dividerText = @" \u00b7 ";
+	NSString *dueDateText = @"";
+	//NSString *dividerText = @" ";
+	
+	BOOL hasDueDate = (reminderItem.dueDateComponents) != nil;
+	if (hasDueDate) {
+		NSDateFormatter *dueDateFormatter = (self.dueDateFormatter);
+		NSDateComponents *dateComponents = (reminderItem.dueDateComponents);
+		dueDateText = [dueDateFormatter stringFromDate:(dateComponents.date)];
+		NSLog(@"DUE DATE %@ %@; %@", dateComponents, (dateComponents.date), dueDateFormatter);
+		//dueDateText = @"4PM today";
+	}
 	
 	GLAUIStyle *activeStyle = [GLAUIStyle activeStyle];
 	
-	NSFont *font;
-	NSColor *textColor;
+	NSFont *titleFont = (activeStyle.smallReminderFont);
+	NSFont *dueDateFont = (activeStyle.smallReminderDueDateFont);
 	
 	NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
 	(paragraphStyle.alignment) = NSRightTextAlignment;
+	(paragraphStyle.maximumLineHeight) = 18.0;
 	
-	if (row == 0) {
-		font = (activeStyle.highlightedReminderFont);
+	NSColor *textColor = (self.editing) ? (activeStyle.lightTextColor) : [activeStyle lightTextColorAtLevel:row];
+	
+	BOOL firstLineBigger = YES;
+	
+	if ((row == 0) && firstLineBigger) {
+		titleFont = (activeStyle.highlightedReminderFont);
+		dueDateFont = (activeStyle.highlightedReminderDueDateFont);
 		(paragraphStyle.maximumLineHeight) = 21.0; //(font.pointSize);
 		(paragraphStyle.lineSpacing) = 0.0;
-		textColor = (activeStyle.lightTextColor);
-	}
-	else {
-		font = (activeStyle.smallReminderFont);
-		(paragraphStyle.maximumLineHeight) = 18.0; //(font.pointSize);
-		
-		if (self.editing) {
-			textColor = (activeStyle.lightTextColor);
-		}
-		else {
-			textColor = (activeStyle.lightTextSecondaryColor);
-		}
 	}
 	
-	NSDictionary *attributes =
-  @{
-	NSFontAttributeName: font,
-	NSParagraphStyleAttributeName: paragraphStyle,
-	NSForegroundColorAttributeName: textColor
-	};
-	(cellView.textField.attributedStringValue) = [[NSMutableAttributedString alloc] initWithString:displayText attributes:attributes];
-	//(cellView.textField.font) = font;
+	NSDictionary *titleAttributes =
+	@{
+	  NSFontAttributeName: titleFont,
+	  NSParagraphStyleAttributeName: paragraphStyle,
+	  NSForegroundColorAttributeName: textColor
+	  };
 	
-	(cellView.textField.preferredMaxLayoutWidth) = (tableColumn.width);
+	NSDictionary *dueDateAttributes =
+	@{
+	  NSFontAttributeName: dueDateFont,
+	  NSParagraphStyleAttributeName: paragraphStyle,
+	  NSForegroundColorAttributeName: textColor
+	  };
 	
-	return cellView;
+	NSMutableAttributedString *wholeAttrString = [NSMutableAttributedString new];
+	if (hasDueDate) {
+		// Due date
+		NSRange dueDateRange = NSMakeRange((wholeAttrString.length), (dueDateText.length) + (dividerText.length));
+		[(wholeAttrString.mutableString) appendString:dueDateText];
+		[(wholeAttrString.mutableString) appendString:dividerText];
+		[wholeAttrString setAttributes:dueDateAttributes range:dueDateRange];
+	}
+	
+	// Title
+	NSRange titleRange = NSMakeRange((wholeAttrString.length), (title.length));
+	[(wholeAttrString.mutableString) appendString:title];
+	[wholeAttrString setAttributes:titleAttributes range:titleRange];
+	
+	(textField.attributedStringValue) = wholeAttrString;
+	
+	//(textField.preferredMaxLayoutWidth) = (tableColumn.width);
 }
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
-	/*
-	NSTableCellView *cellView = [tableView viewAtColumn:0 row:row makeIfNecessary:YES];
-	NSTextField *textField = (cellView.textField);
-	return (textField.intrinsicContentSize.height);
-	 */
+	NSTableCellView *cellView = (self.measuringTableCellView);
+	[self setUpTableCellView:cellView forTableColumn:nil row:row];
 	
+	NSTableColumn *tableColumn = (tableView.tableColumns)[0];
+	CGFloat cellWidth = (tableColumn.width);
+	(cellView.frameSize) = NSMakeSize(cellWidth, 100.0);
+	[cellView layoutSubtreeIfNeeded];
+	
+	NSTextField *textField = (cellView.textField);
+	//(textField.preferredMaxLayoutWidth) = (tableColumn.width);
+	(textField.preferredMaxLayoutWidth) = NSWidth(textField.bounds);
+	NSLog(@"textField.intrinsicContentSize %@ %f %f", [textField valueForKey:@"intrinsicContentSize"], (textField.preferredMaxLayoutWidth), (tableColumn.width));
+	
+	CGFloat extraPadding = 8.0;
+	
+	return (textField.intrinsicContentSize.height) + extraPadding;
+
+	/*
 	if (row == 0) {
 		return 2.0 * 21.0;
 	}
 	else {
 		//return 2.0 * 18.0;
 		return 2.0 * 21.0;
-	}
+	}*/
+}
+
+- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
+	(cellView.canDrawSubviewsIntoLayer) = YES;
+	
+	[self setUpTableCellView:cellView forTableColumn:tableColumn row:row];
+	
+	//(cellView.layer.backgroundColor) = [NSColor redColor].CGColor;
+	
+	return cellView;
 }
 
 - (NSTableRowView *)tableView:(NSTableView *)tableView rowViewForRow:(NSInteger)row

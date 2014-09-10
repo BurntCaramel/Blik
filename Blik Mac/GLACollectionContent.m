@@ -17,3 +17,13 @@
 }
 
 @end
+
+
+@implementation GLACollectionContentItem
+
+- (NSString *)title
+{
+	return @"";
+}
+
+@end

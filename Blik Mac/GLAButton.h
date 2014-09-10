@@ -22,7 +22,7 @@
 @property (nonatomic, getter = isSecondary) BOOL secondary; // Shows a gray highlight
 
 @property (nonatomic) NSColor *textHighlightColor;
-@property (nonatomic) CGFloat highlightOpacity;
+@property (nonatomic) CGFloat highlightAmount;
 
 @property (readonly, nonatomic, getter = isOnAndShowsOnState) BOOL onAndShowsOnState;
 
@@ -39,7 +39,7 @@
 @property (nonatomic, getter = isSecondary) BOOL secondary; // Shows a gray highlight
 
 @property (nonatomic) NSColor *textHighlightColor;
-@property (nonatomic) CGFloat highlightOpacity;
+@property (nonatomic) CGFloat highlightAmount;
 
 @property (readonly, nonatomic, getter = isOnAndShowsOnState) BOOL onAndShowsOnState;
 

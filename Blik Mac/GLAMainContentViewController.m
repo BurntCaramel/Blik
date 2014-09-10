@@ -26,9 +26,35 @@
 {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	if (self) {
-		
+		[self setUpProjectManagerObserving];
 	}
 	return self;
+}
+
+- (void)dealloc
+{
+	[self stopProjectManagerObserving];
+}
+
+- (void)setUpProjectManagerObserving
+{NSLog(@"setUpProjectManagerObserving");
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	// All Projects
+	[nc addObserver:self selector:@selector(projectManagerAllProjectsDidChangeNotification:) name:GLAProjectManagerAllProjectsDidChangeNotification object:projectManager];
+	// Now Project
+	[nc addObserver:self selector:@selector(projectManagerNowProjectDidChangeNotification:) name:GLAProjectManagerNowProjectDidChangeNotification object:projectManager];
+	
+}
+
+- (void)stopProjectManagerObserving
+{
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	// Stop observing any notifications on the project manager.
+	[nc removeObserver:self name:nil object:projectManager];
 }
 
 #pragma mark - Setting Up View Controllers -
@@ -58,14 +84,19 @@
 		return;
 	}
 	
+	NSLog(@"setUpAllProjectsViewControllerIfNeeded");
+	
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
 	GLAProjectsListViewController *controller = [[GLAProjectsListViewController alloc] initWithNibName:@"GLAProjectsListViewController" bundle:nil];
 	(controller.view.identifier) = @"allProjects";
 	
-	[projectManager useAllProjects:^(NSArray *allProjects) {
+	[projectManager requestAllProjects];
+	NSArray *allProjects = (projectManager.allProjectsSortedByDateCreatedNewestToOldest);
+	if (allProjects) {
 		(controller.projects) = allProjects;
-	}];
+	}
 	
 	(self.allProjectsViewController) = controller;
 	
@@ -73,8 +104,7 @@
 	//[self fillViewWithChildView:(controller.view)];
 	[self addViewIfNeeded:(controller.view) layout:YES];
 	
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	[nc addObserver:self selector:@selector(projectsListViewControllerDidClickOnProjectNotification:) name:GLAProjectsListViewControllerDidClickOnProjectNotification object:controller];
+	[nc addObserver:self selector:@selector(projectsListViewControllerDidClickOnProjectNotification:) name:GLAProjectsListViewControllerDidChooseProjectNotification object:controller];
 	[nc addObserver:self selector:@selector(projectsListViewControllerDidPerformWorkOnProjectNowNotification:) name:GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification object:controller];
 }
 
@@ -91,9 +121,11 @@
 	GLAProjectsListViewController *controller = [[GLAProjectsListViewController alloc] initWithNibName:@"GLAProjectsListViewController" bundle:nil];
 	(controller.view.identifier) = @"plannedProjects";
 	
+	/*
 	[projectManager usePlannedProjects:^(NSArray *plannedProjects) {
 		(controller.projects) = plannedProjects;
 	}];
+	 */
 	
 	(self.plannedProjectsViewController) = controller;
 	
@@ -101,20 +133,29 @@
 	[self addViewIfNeeded:(controller.view) layout:YES];
 	
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	[nc addObserver:self selector:@selector(projectsListViewControllerDidClickOnProjectNotification:) name:GLAProjectsListViewControllerDidClickOnProjectNotification object:controller];
+	[nc addObserver:self selector:@selector(projectsListViewControllerDidClickOnProjectNotification:) name:GLAProjectsListViewControllerDidChooseProjectNotification object:controller];
 	[nc addObserver:self selector:@selector(projectsListViewControllerDidPerformWorkOnProjectNowNotification:) name:GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification object:controller];
 }
 
 #pragma mark Now Project
 
 - (void)setUpNowProjectViewControllerIfNeeded
-{
+{NSLog(@"setUpNowProjectViewControllerIfNeeded");
 	if (self.nowProjectViewController) {
 		return;
 	}
 	
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	
 	GLAProjectViewController *controller = [[GLAProjectViewController alloc] initWithNibName:@"GLAProjectViewController" bundle:nil];
 	(controller.view.identifier) = @"nowProject";
+	
+	[projectManager requestNowProject];
+	GLAProject *nowProject = (projectManager.nowProject);
+	NSLog(@"CURRENT NOW PROJECT %@", nowProject);
+	if (nowProject) {
+		(controller.project) = nowProject;
+	}
 	
 	(self.nowProjectViewController) = controller;
 	
@@ -148,19 +189,45 @@
 		return;
 	}
 	
-	GLAProjectViewController *controller = [[GLAProjectViewController alloc] initWithNibName:@"GLAProjectViewController" bundle:nil];
-	(controller.view.identifier) = @"addedProject";
+	GLAAddNewProjectViewController *controller = [[GLAAddNewProjectViewController alloc] initWithNibName:@"GLAAddNewProjectViewController" bundle:nil];
+	(controller.view.identifier) = @"addNewProject";
 	
 	(self.addedProjectViewController) = controller;
 	
-	//[self addViewIfNeeded:(controller.view) layout:YES];
 	[self fillViewWithChildView:(controller.view)];
+}
+
+#pragma mark - Project Manager Notifications
+
+- (void)projectManagerAllProjectsDidChangeNotification:(NSNotification *)note
+{NSLog(@"projectManagerAllProjectsDidChangeNotification");
+	GLAProjectsListViewController *allProjectsViewController = (self.allProjectsViewController);
+	
+	GLAProjectManager *projectManager = (note.object);
+	if (allProjectsViewController) {
+		(allProjectsViewController.projects) = (projectManager.allProjectsSortedByDateCreatedNewestToOldest);
+	}
+	
+#if 0
+	// TEST
+	[projectManager saveAllProjects];
+#endif
+}
+
+- (void)projectManagerNowProjectDidChangeNotification:(NSNotification *)note
+{
+	GLAProjectViewController *nowProjectViewController = (self.nowProjectViewController);
+	NSLog(@"projectManagerNowProjectDidChangeNotification %@", nowProjectViewController);
+	GLAProjectManager *projectManager = (note.object);
+	if (nowProjectViewController) {
+		(nowProjectViewController.project) = (projectManager.nowProject);
+	}
 }
 
 #pragma mark - Accessing View Controllers
 
 - (GLAViewController *)setUpViewControllerForSection:(GLAMainContentSection *)section
-{
+{NSLog(@"setUpViewControllerForSection");
 	if (section.isAllProjects) {
 		[self setUpAllProjectsViewControllerIfNeeded];
 		return (self.allProjectsViewController);
@@ -269,15 +336,11 @@
 - (void)enterAddedProject:(GLAProject *)project
 {
 	[self setUpAddedProjectViewControllerIfNeeded];
-	GLAProjectViewController *viewController = (self.addedProjectViewController);
-	
-	(viewController.project) = project;
-	[viewController clearName];
+	GLAAddNewProjectViewController *viewController = (self.addedProjectViewController);
 	
 	[self goToSection:[GLAMainContentSection addNewProjectSectionWithPreviousSection:(self.currentSection)]];
 	
-	[viewController focusNameTextField];
-
+	[viewController resetAndFocus];
 }
 
 #pragma mark Collections
@@ -498,12 +561,17 @@
 
 #pragma mark Adjusting Individual Content Views
 
-- (NSTimeInterval)transitionDurationGoingIn
+- (NSTimeInterval)transitionDurationGoingInForChildView:(NSView *)view
 {
-	return 4.0 / 12.0;
+	if (view == (self.activeCollectionViewController.view)) {
+		return 2.5 / 12.0;
+	}
+	else {
+		return 4.0 / 12.0;
+	}
 }
 
-- (NSTimeInterval)transitionDurationGoingOut
+- (NSTimeInterval)transitionDurationGoingOutForChildView:(NSView *)view
 {
 	return 4.0 / 12.0;
 }
@@ -519,7 +587,7 @@
 	
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 		if (animate) {
-			(context.duration) = [self transitionDurationGoingOut];
+			(context.duration) = [self transitionDurationGoingOutForChildView:view];
 			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
 			
 			(view.animator.alphaValue) = 0.0;
@@ -580,7 +648,7 @@
 		//NSLog(@"%f", fractionFromDestination);
 		
 		if (animate) {
-			(context.duration) = fractionFromDestination * [self transitionDurationGoingIn];
+			(context.duration) = fractionFromDestination * [self transitionDurationGoingInForChildView:view];
 			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
 			
 			(view.animator.alphaValue) = 1.0;
