@@ -182,7 +182,7 @@
 	}
 	
 	NSMutableSet *collectedFiles = usedURLsToCollectedFiles[fileURL];
-	return collectedFiles;
+	return [collectedFiles copy];
 }
 
 - (void)viewWillAppear

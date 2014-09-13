@@ -9,6 +9,9 @@
 #import "GLAProjectManager.h"
 #import "Mantle/Mantle.h"
 #import "GLAModelErrors.h"
+#import "GLACollection.h"
+#import "GLACollectionFilesListContent.h"
+#import "GLAArrayEditor.h"
 
 
 @interface GLAProjectManagerStore : NSObject
@@ -28,10 +31,14 @@
 - (void)requestAllProjects;
 //- (void)requestPlannedProjects;
 - (void)requestNowProject;
+- (void)requestCollectionsForProject:(GLAProject *)project;
 
 @property(readonly, nonatomic) NSArray *allProjectsSortedByDateCreatedNewestToOldest;
 @property(readonly, nonatomic) NSArray *plannedProjectsSortedByDateNextPlanned;
 @property(readonly, nonatomic) GLAProject *nowProject;
+
+- (GLAArrayEditor *)collectionEditorForProject:(GLAProject *)project;
+- (NSArray *)copyCollectionsForProject:(GLAProject *)project;
 
 #pragma mark Editing
 
@@ -42,12 +49,14 @@
 - (void)requestSaveAllProjects;
 //- (void)requestSavePlannedProjects;
 - (void)requestSaveNowProject;
+- (void)requestSaveCollectionsForProject:(GLAProject *)project;
 
 @end
 
 
 NSString *GLAProjectManagerJSONAllProjectsKey = @"allProjects";
 NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
+NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 
 
 @interface GLAProjectManager ()
@@ -71,9 +80,11 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 - (void)loadAllProjects;
 - (void)saveAllProjects;
 
-- (void)allProjectsDidLoad;
-- (void)plannedProjectsDidLoad;
-- (void)nowProjectDidLoad;
+- (void)allProjectsDidChange;
+- (void)plannedProjectsDidChange;
+- (void)nowProjectDidChange;
+
+- (void)collectionListForProjectDidChange:(GLAProject *)project;
 
 //- (void)connectCollections:(NSArray *)collections withProjects:(NSArray *)projects;
 //- (void)connectReminders:(NSArray *)collections withProjects:(NSArray *)projects;
@@ -147,6 +158,17 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 	return (self.store.nowProject);
 }
 
+- (void)requestCollectionsForProject:(GLAProject *)project
+{
+	[(self.store) requestCollectionsForProject:project];
+}
+
+- (NSArray *)copyCollectionsForProject:(GLAProject *)project
+{
+	return [(self.store) copyCollectionsForProject:project];
+}
+
+#pragma mark -
 
 - (NSOperation *)operationToFetchContentSetUpIfNeeded
 {
@@ -167,35 +189,13 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 	return (self.operationToFetchContent);
 }
 
-- (void)useAllProjects:(void (^)(NSArray *))allProjectsReceiver
-{
-	[(self.receivingOperationQueue) addOperationWithBlock:^{
-		allProjectsReceiver([self allProjectsDummyContent]);
-	}];
-}
-
-- (void)usePlannedProjects:(void (^)(NSArray *))plannedProjectsReceiver
-{
-	[(self.receivingOperationQueue) addOperationWithBlock:^{
-		plannedProjectsReceiver([self plannedProjectsDummyContent]);
-	}];
-}
-
-- (void)useNowProject:(void (^)(GLAProject *))nowProjectReceiver
-{
-	[(self.receivingOperationQueue) addOperationWithBlock:^{
-		if (!(self.nowProject)) {
-			(self.nowProject) = [self allProjectsDummyContent][0];
-		}
-		nowProjectReceiver(self.nowProject);
-	}];
-}
+#pragma mark Editing
 
 - (void)changeNowProject:(GLAProject *)project
 {
 	(self.nowProject) = project;
 	
-	[self nowProjectDidLoad];
+	[self nowProjectDidChange];
 	
 	[(self.store) requestSaveNowProject];
 }
@@ -209,19 +209,46 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 	return project;
 }
 
-- (void)allProjectsDidLoad
+- (BOOL)editProjectCollections:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionsEditor))block
+{
+	GLAProjectManagerStore *store = (self.store);
+	
+	GLAArrayEditor *arrayEditor = [store collectionEditorForProject:project];
+	if (!arrayEditor) {
+		return NO;
+	}
+	
+	// Call the passed block to make changes.
+	block(arrayEditor);
+	
+	[store requestSaveCollectionsForProject:project];
+	
+	return YES;
+}
+
+#pragma mark Notifications
+
+- (void)allProjectsDidChange
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectManagerAllProjectsDidChangeNotification object:self];
 }
 
-- (void)plannedProjectsDidLoad
+- (void)plannedProjectsDidChange
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectManagerPlannedProjectsDidChangeNotification object:self];
 }
 
-- (void)nowProjectDidLoad
+- (void)nowProjectDidChange
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectManagerNowProjectDidChangeNotification object:self];
+}
+
+- (void)collectionListForProjectDidChange:(GLAProject *)project
+{
+	NSDictionary *noteInfo =
+	@{GLAProjectManagerNotificationProjectKey: project};
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectManagerProjectCollectionsDidChangeNotification object:self userInfo:noteInfo];
 }
 
 #pragma mark Saving and Loading
@@ -268,6 +295,20 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 			 ];
 }
 
+- (NSArray *)collectionListDummyContent
+{
+	GLACollectionFilesListContent *filesListContent = [GLACollectionFilesListContent new];
+	
+	return
+	@[
+	  [GLACollection dummyCollectionWithTitle:@"Working Files" colorIdentifier:GLACollectionColorLightBlue content:filesListContent],
+	  [GLACollection dummyCollectionWithTitle:@"Briefs" colorIdentifier:GLACollectionColorGreen content:filesListContent],
+	  [GLACollection dummyCollectionWithTitle:@"Contacts" colorIdentifier:GLACollectionColorPinkyPurple content:filesListContent],
+	  [GLACollection dummyCollectionWithTitle:@"Apps" colorIdentifier:GLACollectionColorRed content:filesListContent],
+	  [GLACollection dummyCollectionWithTitle:@"Research" colorIdentifier:GLACollectionColorYellow content:filesListContent]
+	  ];
+}
+
 @end
 
 
@@ -280,23 +321,29 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 @property(readwrite, nonatomic) NSArray *plannedProjectsSortedByDateNextPlanned;
 @property(readwrite, nonatomic) GLAProject *nowProject;
 
+@property(nonatomic) NSMutableDictionary *projectIDsToCollectionLists;
+
 @property(readonly, nonatomic) NSURL *allProjectsJSONFileURL;
 @property(readonly, nonatomic) NSURL *nowProjectJSONFileURL;
 
 @property(nonatomic) BOOL needsToLoadAllProjects;
 @property(nonatomic) BOOL needsToLoadPlannedProjects;
 @property(nonatomic) BOOL needsToLoadNowProject;
+@property(nonatomic) NSMutableSet *projectIDsNeedingCollectionsLoaded;
 
 - (void)loadAllProjects;
-- (void)loadPlannedProjects;
+//- (void)loadPlannedProjects;
 - (void)loadNowProject;
+
+- (void)loadCollectionsForProject:(GLAProject *)project;
 
 @property(nonatomic) BOOL needsToSaveAllProjects;
 @property(nonatomic) BOOL needsToSavePlannedProjects;
 @property(nonatomic) BOOL needsToSaveNowProject;
+@property(nonatomic) NSMutableSet *projectIDsNeedingCollectionsSaved;
 
 - (void)writeAllProjects;
-- (void)writePlannedProjects;
+//- (void)writePlannedProjects;
 - (void)writeNowProject;
 
 @end
@@ -312,6 +359,11 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 		
 		_backgroundOperationQueue = [NSOperationQueue new];
 		(_backgroundOperationQueue.maxConcurrentOperationCount) = 1;
+		
+#if 0
+		NSError *testError = [GLAModelErrors errorForMissingRequiredKey:GLAProjectManagerJSONAllProjectsKey inJSONFileAtURL:[NSURL fileURLWithPath:NSHomeDirectory()]];
+		[projectManager handleError:testError];
+#endif
     }
     return self;
 }
@@ -353,7 +405,7 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 
 #pragma mark Files
 
-- (NSURL *)version1DirectoryURL
+- (NSURL *)version1DirectoryURLWithInnerDirectoryComponents:(NSArray *)extraPathComponents
 {
 	GLAProjectManager *projectManager = (self.projectManager);
 	
@@ -366,9 +418,22 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 		return nil;
 	}
 	
-	NSString *appBundleID = [[NSBundle mainBundle] bundleIdentifier];
-	directoryURL = [directoryURL URLByAppendingPathComponent:appBundleID isDirectory:YES];
-	directoryURL = [directoryURL URLByAppendingPathComponent:@"v1" isDirectory:YES];
+	// Convert path to its components, so we can add more components
+	// and convert back into a URL.
+	NSMutableArray *pathComponents = [(directoryURL.pathComponents) mutableCopy];
+	
+	// {appBundleID}/v1/
+	NSString *appBundleID = ([NSBundle mainBundle].bundleIdentifier);
+	[pathComponents addObject:appBundleID];
+	[pathComponents addObject:@"v1"];
+	
+	// Append extra path components passed to this method.
+	if (extraPathComponents) {
+		[pathComponents addObjectsFromArray:extraPathComponents];
+	}
+	
+	// Convert components back into a URL.
+	directoryURL = [NSURL fileURLWithPathComponents:pathComponents];
 	
 	BOOL directorySuccess = [fm createDirectoryAtURL:directoryURL withIntermediateDirectories:YES attributes:nil error:&error];
 	if (!directorySuccess) {
@@ -377,6 +442,11 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 	}
 	
 	return directoryURL;
+}
+
+- (NSURL *)version1DirectoryURL
+{
+	return [self version1DirectoryURLWithInnerDirectoryComponents:nil];
 }
 
 - (NSURL *)allProjectsJSONFileURL
@@ -391,6 +461,16 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 {
 	NSURL *directoryURL = (self.version1DirectoryURL);
 	NSURL *fileURL = [directoryURL URLByAppendingPathComponent:@"now-project.json"];
+	
+	return fileURL;
+}
+
+- (NSURL *)collectionsListJSONFileURLForProjectID:(NSUUID *)projectUUID
+{
+	NSString *projectDirectoryName = [NSString stringWithFormat:@"project-%@", (projectUUID.UUIDString)];
+	NSURL *directoryURL = [self version1DirectoryURLWithInnerDirectoryComponents:@[projectDirectoryName]];
+	
+	NSURL *fileURL = [directoryURL URLByAppendingPathComponent:@"collections-list.json"];
 	
 	return fileURL;
 }
@@ -504,7 +584,7 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 	
 	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
 		(store.allProjectsSortedByDateCreatedNewestToOldest) = allProjectsSorted;
-		[projectManager allProjectsDidLoad];
+		[projectManager allProjectsDidChange];
 		
 		(self.needsToLoadAllProjects) = NO;
 	}];
@@ -530,7 +610,7 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 }
 
 - (void)loadNowProject
-{NSLog(@"loadNowProject");
+{
 	NSURL *fileURL = (self.nowProjectJSONFileURL);
 	if (!fileURL) {
 		return;
@@ -582,10 +662,117 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 {
 	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
 		(store.nowProject) = project;
-		[projectManager nowProjectDidLoad];
+		[projectManager nowProjectDidChange];
 		
 		(self.needsToLoadNowProject) = NO;
 	}];
+}
+
+#pragma mark Load Collections
+
+- (void)requestCollectionsForProject:(GLAProject *)project
+{
+	if ((self.projectIDsNeedingCollectionsLoaded) == nil) {
+		(self.projectIDsNeedingCollectionsLoaded) = [NSMutableSet set];
+	}
+	
+	NSUUID *projectUUID = (project.UUID);
+	if ([(self.projectIDsNeedingCollectionsLoaded) containsObject:projectUUID]) {
+		return;
+	}
+	
+	[(self.projectIDsNeedingCollectionsLoaded) addObject:projectUUID];
+	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+		[store loadCollectionsForProject:project];
+	}];
+}
+
+- (void)loadCollectionsForProject:(GLAProject *)project
+{
+	NSURL *fileURL = [self collectionsListJSONFileURLForProjectID:(project.UUID)];
+	
+	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+		NSArray *collectionList = nil;
+		
+		if (projectManager.shouldLoadTestProjects) {
+			collectionList = (projectManager.collectionListDummyContent);
+		}
+		else {
+			collectionList = [store background_readCollectionListFromJSONFileURL:fileURL];
+		}
+		
+		if (collectionList) {
+			[store background_processLoadedCollectionList:collectionList forProject:project];
+		}
+	}];
+}
+
+- (NSArray *)background_readCollectionListFromJSONFileURL:(NSURL *)fileURL
+{
+	GLAProjectManager *projectManager = (self.projectManager);
+	NSError *error = nil;
+	
+	NSDictionary *JSONDictionary = [self readJSONDictionaryFromFileURL:fileURL];
+	if (!JSONDictionary) {
+		return nil;
+	}
+	
+	NSArray *JSONArray = JSONDictionary[GLAProjectManagerJSONCollectionsListKey];
+	if (!JSONArray) {
+		error = [GLAModelErrors errorForMissingRequiredKey:GLAProjectManagerJSONCollectionsListKey inJSONFileAtURL:fileURL];
+		[projectManager handleError:error];
+		return nil;
+	}
+	
+	NSArray *collections = [MTLJSONAdapter modelsOfClass:[GLACollection class] fromJSONArray:JSONArray error:&error];
+	if (!collections) {
+		[projectManager handleError:error];
+		return nil;
+	}
+	
+	return collections;
+}
+
+- (void)background_processLoadedCollectionList:(NSArray *)collectionList forProject:(GLAProject *)project
+{
+	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+		NSMutableDictionary *projectIDsToCollectionLists = (self.projectIDsToCollectionLists);
+		if (!projectIDsToCollectionLists) {
+			projectIDsToCollectionLists = [NSMutableDictionary new];
+			(self.projectIDsToCollectionLists) = projectIDsToCollectionLists;
+		}
+		
+		GLAArrayEditor *collectionEditor = [[GLAArrayEditor alloc] initWithObjects:collectionList];
+		projectIDsToCollectionLists[project.UUID] = collectionEditor;
+		
+		[projectManager collectionListForProjectDidChange:project];
+		
+		[(self.projectIDsNeedingCollectionsLoaded) removeObject:(project.UUID)];
+	}];
+	//projectIDsToCollectionLists
+}
+
+- (GLAArrayEditor *)collectionEditorForProject:(GLAProject *)project
+{
+	NSMutableDictionary *projectIDsToCollectionLists = (self.projectIDsToCollectionLists);
+	if (projectIDsToCollectionLists) {
+		GLAArrayEditor *collectionEditor = projectIDsToCollectionLists[project.UUID];
+		return collectionEditor;
+	}
+	else {
+		return nil;
+	}
+}
+
+- (NSArray *)copyCollectionsForProject:(GLAProject *)project
+{
+	GLAArrayEditor *collectionEditor = [self collectionEditorForProject:project];
+	if (collectionEditor) {
+		return [collectionEditor copyChildren];
+	}
+	else {
+		return nil;
+	}
 }
 
 #pragma mark - Editing
@@ -675,9 +862,7 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 		NSDictionary *JSONProject = [MTLJSONAdapter JSONDictionaryFromModel:project];
 		
 		NSDictionary *JSONDictionary =
-		@{
-		  GLAProjectManagerJSONNowProjectKey: JSONProject
-		  };
+		@{GLAProjectManagerJSONNowProjectKey: JSONProject};
 		
 		[store writeJSONDictionary:JSONDictionary toFileURL:fileURL];
 		
@@ -686,6 +871,50 @@ NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 		}];
 	}];
 }
+
+#pragma mark Save Project Collection List
+
+- (void)requestSaveCollectionsForProject:(GLAProject *)project
+{
+	if ((self.projectIDsNeedingCollectionsSaved) == nil) {
+		(self.projectIDsNeedingCollectionsSaved) = [NSMutableSet set];
+	}
+	
+	NSUUID *projectUUID = (project.UUID);
+	if ([(self.projectIDsNeedingCollectionsSaved) containsObject:projectUUID]) {
+		return;
+	}
+	
+	[(self.projectIDsNeedingCollectionsSaved) addObject:projectUUID];
+	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+		[store writeCollectionsForProject:project];
+	}];
+}
+
+- (void)writeCollectionsForProject:(GLAProject *)project
+{
+	NSURL *fileURL = [self collectionsListJSONFileURLForProjectID:(project.UUID)];
+	
+	NSArray *collectionList = [self copyCollectionsForProject:project];
+	
+	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+		NSArray *JSONArray = [MTLJSONAdapter JSONArrayFromModels:collectionList];
+		
+		NSDictionary *JSONDictionary =
+		@{
+		  GLAProjectManagerJSONCollectionsListKey: JSONArray
+		  };
+		
+		[store writeJSONDictionary:JSONDictionary toFileURL:fileURL];
+		
+		[store runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+			[(store.projectIDsNeedingCollectionsSaved) removeObject:(project.UUID)];
+		}];
+	}];
+	
+}
+
+#pragma mark Save Collection Content
 
 @end
 

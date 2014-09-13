@@ -234,8 +234,10 @@
         <viewController title="Collections View Controller" id="raF-W4-b8E" customClass="GLAProjectCollectionsViewController">
             <connections>
                 <outlet property="contextualMenu" destination="GiZ-xZ-qxO" id="HrY-Ve-era"/>
+                <outlet property="editingActionsView" destination="xFc-GO-dGI" id="rrU-hh-ceJ"/>
+                <outlet property="makeNewCollectionButton" destination="zdL-Rb-okh" id="aJA-O9-qb4"/>
                 <outlet property="parentViewController" destination="-2" id="zhQ-Yp-077"/>
-                <outlet property="view" destination="0t7-tp-C0y" id="y5o-4F-krh"/>
+                <outlet property="tableView" destination="0t7-tp-C0y" id="Hfm-aj-nu4"/>
             </connections>
         </viewController>
         <viewController title="Plan View Controller" id="aDf-pc-aeE" customClass="GLAProjectPlanViewController">
@@ -330,11 +332,11 @@
                     </constraints>
                     <buttonCell key="cell" type="square" title="+" bezelStyle="shadowlessSquare" alignment="left" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mNU-PF-7mq" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" size="20" name="AvenirNext-Regular"/>
+                        <font key="font" size="22" name="AvenirNext-Regular"/>
                     </buttonCell>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                            <integer key="value" value="-2"/>
+                            <integer key="value" value="-3"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
@@ -452,18 +454,18 @@
                         <userDefinedRuntimeAttribute type="boolean" keyPath="alwaysHighlighted" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <action selector="editPlan:" target="-2" id="PaO-BH-hT1"/>
+                        <action selector="makeNewReminder:" target="aDf-pc-aeE" id="deL-5m-9bq"/>
                     </connections>
                 </button>
             </subviews>
             <constraints>
                 <constraint firstItem="HFX-tx-bsh" firstAttribute="leading" secondItem="kYy-Eb-3WH" secondAttribute="leading" id="DbB-k1-cAP"/>
                 <constraint firstItem="HFX-tx-bsh" firstAttribute="top" secondItem="kYy-Eb-3WH" secondAttribute="top" priority="750" id="GHi-qx-sCP"/>
-                <constraint firstItem="gya-ze-oT1" firstAttribute="top" secondItem="HFX-tx-bsh" secondAttribute="bottom" constant="10" id="Pvg-T5-TFZ"/>
+                <constraint firstItem="gya-ze-oT1" firstAttribute="top" relation="lessThanOrEqual" secondItem="HFX-tx-bsh" secondAttribute="bottom" constant="10" id="Pvg-T5-TFZ"/>
                 <constraint firstItem="gya-ze-oT1" firstAttribute="leading" secondItem="kYy-Eb-3WH" secondAttribute="leading" id="T0l-4t-Q6O"/>
                 <constraint firstAttribute="trailing" secondItem="gya-ze-oT1" secondAttribute="trailing" id="ZrF-ds-jxf"/>
                 <constraint firstAttribute="trailing" secondItem="HFX-tx-bsh" secondAttribute="trailing" id="fKn-6i-9GL"/>
-                <constraint firstAttribute="bottom" secondItem="gya-ze-oT1" secondAttribute="bottom" id="vFh-jk-2QI"/>
+                <constraint firstAttribute="bottom" relation="lessThanOrEqual" secondItem="gya-ze-oT1" secondAttribute="bottom" id="vFh-jk-2QI"/>
             </constraints>
         </customView>
         <menu id="GiZ-xZ-qxO">
@@ -477,5 +479,37 @@
                 </menuItem>
             </items>
         </menu>
+        <customView placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="30" id="xFc-GO-dGI" customClass="GLAView">
+            <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <button placeholderIntrinsicWidth="140" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="zdL-Rb-okh" customClass="GLAButton">
+                    <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="f7W-py-dpQ"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="New Collection" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="V2L-27-qLK" customClass="GLAButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="-2"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="alwaysHighlighted" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="makeNewCollection:" target="raF-W4-b8E" id="MSr-nV-UdM"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="zdL-Rb-okh" firstAttribute="leading" secondItem="xFc-GO-dGI" secondAttribute="leading" id="29y-Dk-QHy"/>
+                <constraint firstItem="zdL-Rb-okh" firstAttribute="top" secondItem="xFc-GO-dGI" secondAttribute="top" id="Zco-S4-hhn"/>
+                <constraint firstAttribute="bottom" relation="lessThanOrEqual" secondItem="zdL-Rb-okh" secondAttribute="bottom" id="giN-zJ-OhF"/>
+                <constraint firstAttribute="trailing" secondItem="zdL-Rb-okh" secondAttribute="trailing" id="lgr-gK-eUq"/>
+            </constraints>
+        </customView>
     </objects>
 </document>

@@ -11,6 +11,7 @@
 // VIEW
 #import "GLAView.h"
 #import "GLAProjectActionsBarController.h"
+#import "GLATableActionsViewController.h"
 #import "GLAProjectView.h"
 #import "GLATextField.h"
 // MODEL
@@ -80,11 +81,15 @@ extern NSString *GLAProjectViewControllerDidEnterCollectionNotification;
 
 @interface GLAProjectCollectionsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
 
-@property(readonly, nonatomic) NSTableView *tableView;
+@property(nonatomic) IBOutlet NSTableView *tableView;
 
 @property(weak) IBOutlet GLAProjectViewController *parentViewController;
 
 @property(strong, nonatomic) IBOutlet NSMenu *contextualMenu;
+
+@property(nonatomic) GLATableActionsViewController *editingActionsViewController;
+@property(nonatomic) IBOutlet NSView *editingActionsView;
+@property(nonatomic) IBOutlet GLAButton *makeNewCollectionButton;
 
 @property(nonatomic) GLAProject *project;
 @property(copy, nonatomic) NSArray *collections;
@@ -92,6 +97,8 @@ extern NSString *GLAProjectViewControllerDidEnterCollectionNotification;
 @property(nonatomic) BOOL editing;
 
 - (void)reloadCollections;
+
+- (IBAction)makeNewCollection:(id)sender;
 
 @end
 
@@ -106,11 +113,8 @@ extern NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotificati
 
 @property(weak) IBOutlet GLAProjectViewController *parentViewController;
 
-@property(nonatomic) GLAViewController *editingActionsViewController;
+@property(nonatomic) GLATableActionsViewController *editingActionsViewController;
 @property(nonatomic) IBOutlet NSView *editingActionsView;
-@property(nonatomic) IBOutlet NSLayoutConstraint *actionsHeightConstraint;
-@property(nonatomic) IBOutlet NSLayoutConstraint *scrollToActionsConstraint;
-@property(nonatomic) IBOutlet NSLayoutConstraint *actionsBottomConstraint;
 @property(nonatomic) IBOutlet GLAButton *chooseExistingRemindersButton;
 @property(nonatomic) IBOutlet GLAButton *makeNewReminderButton;
 

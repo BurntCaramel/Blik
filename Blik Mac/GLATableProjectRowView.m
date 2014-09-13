@@ -6,18 +6,18 @@
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-#import "GLATableRowView.h"
+#import "GLATableProjectRowView.h"
 #import "GLAUIStyle.h"
 
 
-@interface GLATableRowView ()
+@interface GLATableProjectRowView ()
 
 @property(nonatomic) NSTrackingArea *hoverTrackingArea;
 @property(nonatomic) BOOL mouseIsInside;
 
 @end
 
-@implementation GLATableRowView
+@implementation GLATableProjectRowView
 
 /*
 - (void)drawRect:(NSRect)dirtyRect

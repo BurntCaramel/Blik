@@ -32,11 +32,14 @@
 @property(readonly, copy, nonatomic) NSString *name;
 @property(readonly, nonatomic) NSDate *dateCreated;
 
+#if 0
 @property(readonly, copy, nonatomic) NSArray *copyCollections;
 - (id<GLAArrayEditing>)collectionsEditing;
 
 //@property(readonly, copy, nonatomic) NSSet *copyReminders;
 @property(readonly, copy, nonatomic) NSArray *copyRemindersOrderedByPriority;
 - (id<GLAReminderListEditing>)remindersEditing;
+
+#endif
 
 @end

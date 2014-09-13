@@ -8,7 +8,7 @@
 
 #import "GLAMainContentViewController.h"
 #import "GLAProject.h"
-#import "GLATableRowView.h"
+#import "GLATableProjectRowView.h"
 #import "GLAProjectManager.h"
 @import QuartzCore;
 
@@ -609,7 +609,7 @@
 		
 		if (tableView) {
 			[tableView enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowViewSuperclassed, NSInteger row) {
-				GLATableRowView *rowView = (GLATableRowView *)rowViewSuperclassed;
+				GLATableProjectRowView *rowView = (GLATableProjectRowView *)rowViewSuperclassed;
 				[rowView checkMouseLocationIsInside];
 			}];
 		}

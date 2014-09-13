@@ -75,6 +75,9 @@
 		
 		(style.deleteProjectButtonColor) = deleteRed;
 		
+		//(style.contentTableSelectionColor) = activeYellow;
+		(style.contentTableSelectionColor) = whiteAlmost30;
+		
 		(style.splitViewDividerColor) = [whiteAlmost colorWithAlphaComponent:0.057];
 		
 		// Item colors

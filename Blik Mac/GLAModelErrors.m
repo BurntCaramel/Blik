@@ -21,12 +21,15 @@ NSString *GLAModelErrorDomain()
 
 + (NSError *)errorForMissingRequiredKey:(NSString *)dictionaryKey inJSONFileAtURL:(NSURL *)fileURL
 {
-	NSString *descriptionPlaceholder = NSLocalizedString(@"JSON file (%@) does not contain required key (%@)", @"");
-	NSString *descriptionFilledOut = [NSString localizedStringWithFormat:descriptionPlaceholder, (fileURL.path), dictionaryKey];
+	NSString *descriptionFilledOut = NSLocalizedString(@"Saved file is missing essential information.", @"Error description for JSON file not containing required key");
+	
+	NSString *failureReasonPlaceholder = NSLocalizedString(@"JSON file (%@) does not contain required key (%@).", @"Error failure reason for JSON file not containing required key");
+	NSString *failureReasonFilledOut = [NSString localizedStringWithFormat:failureReasonPlaceholder, (fileURL.path), dictionaryKey];
 	
 	NSDictionary *errorInfo =
 	@{
-	  NSLocalizedDescriptionKey: descriptionFilledOut
+	  NSLocalizedDescriptionKey: descriptionFilledOut,
+	  NSLocalizedFailureReasonErrorKey: failureReasonFilledOut
 	  };
 	
 	return [NSError errorWithDomain:GLAModelErrorDomain() code:GLAModelErrorCodeJSONMissingRequiredKey userInfo:errorInfo];

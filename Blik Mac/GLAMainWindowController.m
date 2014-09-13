@@ -8,7 +8,7 @@
 
 #import "GLAMainWindowController.h"
 #import "GLAUIStyle.h"
-#import "GLATableRowView.h"
+#import "GLATableProjectRowView.h"
 #import "GLAProjectManager.h"
 #import <objc/runtime.h>
 @import QuartzCore;

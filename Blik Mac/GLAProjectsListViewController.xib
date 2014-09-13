@@ -105,7 +105,7 @@
                                                     <outlet property="workOnNowButton" destination="RUk-GO-gyx" id="lzW-2K-hog"/>
                                                 </connections>
                                             </tableCellView>
-                                            <customView identifier="NSTableViewRowViewKey" id="scR-OX-ZYE" customClass="GLATableRowView">
+                                            <customView identifier="NSTableViewRowViewKey" id="scR-OX-ZYE" customClass="GLATableProjectRowView">
                                                 <rect key="frame" x="1" y="72" width="497" height="39"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             </customView>

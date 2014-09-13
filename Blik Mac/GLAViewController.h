@@ -10,6 +10,10 @@
 @import QuartzCore;
 #import "GLAView.h"
 
+
+typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint *oldConstraint, NSLayoutConstraint *newConstraint);
+
+
 @interface GLAViewController : NSViewController <GLAViewDelegate>
 
 @property(readonly, nonatomic) GLAView *view;
@@ -38,9 +42,9 @@
 
 - (NSArray *)allLayoutConstraintsWithChildView:(NSView *)innerView;
 
-+ (NSArray *)copyLayoutConstraints:(NSArray *)oldConstraints replacingUsesOf:(id)originalItem with:(id)replacementItem;
++ (NSArray *)copyLayoutConstraints:(NSArray *)oldConstraints replacingUsesOf:(id)originalItem with:(id)replacementItem constraintVisitor:(GLAViewControllerConstraintReplacementVisitor)constraintVisitor;
 
-- (void)wrapChildViewKeepingOutsideConstraints:(NSView *)childView withView:(NSView *)replacementView;
+- (void)wrapChildViewKeepingOutsideConstraints:(NSView *)childView withView:(NSView *)replacementView constraintVisitor:(GLAViewControllerConstraintReplacementVisitor)constraintVisitor;
 
 #pragma mark Colors
 

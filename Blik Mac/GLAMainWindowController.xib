@@ -20,6 +20,7 @@
             <rect key="contentRect" x="488" y="524" width="500" height="320"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="500" height="314"/>
+            <value key="maxSize" type="size" width="800" height="5000"/>
             <view key="contentView" id="se5-gp-TjO">
                 <rect key="frame" x="0.0" y="0.0" width="500" height="320"/>
                 <autoresizingMask key="autoresizingMask"/>

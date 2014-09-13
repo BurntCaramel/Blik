@@ -17,9 +17,15 @@
 @property(readwrite, copy, nonatomic) NSString *name;
 @property(readwrite, nonatomic) NSDate *dateCreated;
 
+#if 0
+@property(copy, nonatomic) NSArray *collectionUUIDs;
+#endif
+
+#if 0
 @property(copy, nonatomic) NSArray *collectionsForMantle;
 @property(copy, nonatomic) NSArray *loadedCollections;
 @property(readonly, nonatomic) GLAArrayEditor *collectionListEditor;
+#endif
 
 @property(nonatomic) NSArray *mutableReminders;
 
@@ -34,7 +40,7 @@
 	  @"UUID": @"UUID",
 	  @"name": @"name",
 	  @"dateCreated": @"dateCreated",
-	  @"collectionsForMantle": @"collections",
+	  //@"collectionUUIDs": @"collectionUUIDs",
 	  @"remindersForMantle": @"reminders",
 	  @"loadedCollections": (NSNull.null),
 	  @"collectionListEditor": (NSNull.null),
@@ -52,6 +58,41 @@
 	return [NSValueTransformer valueTransformerForName:GLADateRFC3339ValueTransformerName];
 }
 
++ (NSValueTransformer *)collectionUUIDsJSONTransformer
+{
+	NSValueTransformer *UUIDValueTransformer = [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
+	
+	return [MTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSArray *JSONArrayOfUUIDs) {
+		if (!JSONArrayOfUUIDs) {
+			return nil;
+		}
+		
+		NSMutableArray *UUIDs = [NSMutableArray array];
+		for (id JSONValue in JSONArrayOfUUIDs) {
+			NSUUID *UUID = [UUIDValueTransformer transformedValue:JSONValue];
+			if (UUID && [UUID isKindOfClass:[NSUUID class]]) {
+				[UUIDs addObject:UUID];
+			}
+		}
+		
+		return UUIDs;
+	} reverseBlock:^id(NSArray *UUIDs) {
+		if (!UUIDs) {
+			return nil;
+		}
+		
+		NSMutableArray *JSONArrayOfUUIDs = [NSMutableArray array];
+		for (NSUUID *UUID in UUIDs) {
+			id JSONValue = [UUIDValueTransformer reverseTransformedValue:UUID];
+			if (JSONValue) {
+				[JSONArrayOfUUIDs addObject:JSONValue];
+			}
+		}
+		
+		return JSONArrayOfUUIDs;
+	}];
+}
+#if 0
 + (NSValueTransformer *)collectionsForMantleJSONTransformer
 {
 	return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:[GLACollection class]];
@@ -61,7 +102,7 @@
 {
 	return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:[GLAReminder class]];
 }
-
+#endif
 - (instancetype)initWithUUID:(NSUUID *)UUID name:(NSString *)name dateCreated:(NSDate *)dateCreated
 {
 	self = [super init];
@@ -85,7 +126,7 @@
 {
 	return [self initWithUUID:nil name:nil dateCreated:nil];
 }
-
+#if 0
 - (NSArray *)copyCollections
 {
 	return [(self.collectionListEditor) copyChildren];
@@ -113,7 +154,7 @@
 	
 	return _collectionListEditor;
 }
-
+#endif
 - (NSSet *)copyRemindersOrderedByPriority
 {
 	return [(self.mutableReminders) copy];

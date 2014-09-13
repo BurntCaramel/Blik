@@ -49,7 +49,7 @@
 - (void)deleteProjectPermanently:(GLAProject *)project;
 //- (id<GLAProjectEditing>)editProject:(id<GLAProjectBaseReading>)project;
 
-- (void)editProjectCollections:(id<GLAProjectBaseReading>)project usingBlock:(void (^)(id<GLAArrayEditing> collectionsEditor))block;
+- (BOOL)editProjectCollections:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionsEditor))block;
 //- (id<GLAProjectEditing>)editProject:(GLAProject *)project;
 
 #pragma mark Saving

@@ -9,6 +9,7 @@
 @import QuartzCore;
 #import "GLAProjectViewController.h"
 #import "GLAUIStyle.h"
+#import "GLAProjectManager.h"
 #import "GLAReminderManager.h"
 #import "GLACollectionFilesListContent.h"
 #import "GLAChooseRemindersViewController.h"
@@ -268,8 +269,8 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 	(self.animatingFocusChange) = YES;
 	
 	GLAProjectView *projectView = (self.projectView);
-	NSScrollView *itemsScrollView = [self collectionsScrollView];
-	NSScrollView *planScrollView = [self planScrollView];
+	NSScrollView *itemsScrollView = (self.collectionsScrollView);
+	NSScrollView *planScrollView = (self.planScrollView);
 	
 	if (isEditing) {
 		[self didBeginEditingInnerSection];
@@ -279,7 +280,8 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 			(context.duration) = 6.0 / 12.0;
 			(context.allowsImplicitAnimation) = YES;
 			
-			(self.itemsViewXConstraint) = [self addConstraintForCenteringView:itemsScrollView inView:projectView];
+			//(self.itemsViewXConstraint) = [self addConstraintForCenteringView:itemsScrollView inView:projectView];
+			(self.itemsViewXConstraint) = [self addConstraintForCenteringView:(self.collectionsViewController.view) inView:projectView];
 			
 			[projectView layoutSubtreeIfNeeded];
 		} completionHandler:^ {
@@ -367,8 +369,8 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 	(self.animatingFocusChange) = YES;
 	
 	GLAProjectView *projectView = (self.projectView);
-	NSScrollView *itemsScrollView = [self collectionsScrollView];
-	NSScrollView *planScrollView = [self planScrollView];
+	NSScrollView *itemsScrollView = (self.collectionsScrollView);
+	NSScrollView *planScrollView = (self.planScrollView);
 	
 	if (isEditing) {
 		[self didBeginEditingInnerSection];
@@ -378,7 +380,8 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 			(context.duration) = 6.0 / 12.0;
 			(context.allowsImplicitAnimation) = YES;
 			
-			(self.planViewXConstraint) = [self addConstraintForCenteringView:planScrollView inView:projectView];
+			//(self.planViewXConstraint) = [self addConstraintForCenteringView:planScrollView inView:projectView];
+			(self.planViewXConstraint) = [self addConstraintForCenteringView:(self.planViewController.view) inView:projectView];
 			
 			[projectView layoutSubtreeIfNeeded];
 		} completionHandler:^ {
@@ -536,9 +539,12 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 	// Copy bottom constraint from plan view to choose reminders view
 	GLAProjectView *projectView = (self.projectView);
 	NSLayoutConstraint *planViewBottomConstraint = (self.planViewBottomConstraint);
-	NSArray *adjustedConstraints = [GLAViewController copyLayoutConstraints:@[planViewBottomConstraint] replacingUsesOf:(self.planViewController.view) with:chooseRemindersView];
-	NSLayoutConstraint *newBottomConstraint = adjustedConstraints[0];
-	(newBottomConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"bottom" forChildView:chooseRemindersView];
+	__block NSLayoutConstraint *newBottomConstraint;
+	[GLAViewController copyLayoutConstraints:@[planViewBottomConstraint] replacingUsesOf:(self.planViewController.view) with:chooseRemindersView constraintVisitor:^(NSLayoutConstraint *oldConstraint, NSLayoutConstraint *newConstraint) {
+		newBottomConstraint = newConstraint;
+		(newBottomConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"bottom" forChildView:chooseRemindersView];
+	}];
+	
 	[projectView removeConstraint:[self layoutConstraintWithIdentifier:@"height" forChildView:chooseRemindersView]];
 	[projectView addConstraint:newBottomConstraint];
 	
@@ -697,6 +703,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 @interface GLAProjectCollectionsViewController ()
 
 @property(nonatomic) GLAProject *private_project;
+@property(nonatomic) BOOL private_editing;
 
 @property(nonatomic) NSIndexSet *draggedRowIndexes;
 
@@ -706,11 +713,16 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 @implementation GLAProjectCollectionsViewController
 
+- (void)dealloc
+{
+	[self stopProjectManagerObserving];
+}
+/*
 - (NSTableView *)tableView
 {
 	return (id)(self.view);
 }
-
+*/
 - (GLAProject *)project
 {
 	return (self.private_project);
@@ -721,32 +733,23 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	if ((self.private_project) != project) {
 		(self.private_project) = project;
 		
-		[self prepareDummyContent];
+		GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+		[projectManager requestCollectionsForProject:project];
 	}
-}
-
-- (void)prepareDummyContent
-{
-	GLAProject *project = (self.project);
-	id<GLAArrayEditing> collectionListEditing = (project.collectionsEditing);
-	
-	GLACollectionFilesListContent *filesListContent = [GLACollectionFilesListContent new];
-	
-	[collectionListEditing addChildren:
-	 @[
-	   [GLACollection dummyCollectionWithTitle:@"Working Files" colorIdentifier:GLACollectionColorLightBlue content:filesListContent],
-	   [GLACollection dummyCollectionWithTitle:@"Briefs" colorIdentifier:GLACollectionColorGreen content:filesListContent],
-	   [GLACollection dummyCollectionWithTitle:@"Contacts" colorIdentifier:GLACollectionColorPinkyPurple content:filesListContent],
-	   [GLACollection dummyCollectionWithTitle:@"Apps" colorIdentifier:GLACollectionColorRed content:filesListContent],
-	   [GLACollection dummyCollectionWithTitle:@"Research" colorIdentifier:GLACollectionColorYellow content:filesListContent]
-	   ]];
-	
-	[self reloadCollections];
 }
 
 - (void)reloadCollections
 {
-	(self.collections) = (self.project.copyCollections);
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	
+	NSArray *collections = [projectManager copyCollectionsForProject:(self.project)];
+	
+	if (!collections) {
+		collections = @[];
+	}
+	NSLog(@"RELOADING COLLECTIONS with %@", @(collections.count));
+	(self.collections) = collections;
+	
 	[(self.tableView) reloadData];
 }
 
@@ -765,21 +768,149 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	// I think Apple (from a WWDC video) says this is better for scrolling performance.
 	(tableView.enclosingScrollView.wantsLayer) = YES;
 	
+	[self wrapScrollView];
+	[self setUpEditingActionsView];
+	
 	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
+}
+
+- (void)setUpProjectManagerObserving
+{
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	// Project Collection List
+	[nc addObserver:self selector:@selector(projectManagerProjectCollectionsDidChangeNotification:) name:GLAProjectManagerProjectCollectionsDidChangeNotification object:projectManager];
+}
+
+- (void)stopProjectManagerObserving
+{
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	// Stop observing any notifications on the project manager.
+	[nc removeObserver:self name:nil object:projectManager];
 }
 
 - (void)loadView
 {
 	[super loadView];
 	
-	[self prepareViews];
+	//[self prepareViews];
+	//[self setUpProjectManagerObserving];
 }
 
 - (void)awakeFromNib
 {
+	[super awakeFromNib];
+	
 	[self prepareViews];
-	//[self prepareDummyContent];
+	[self setUpProjectManagerObserving];
 }
+
+- (void)wrapScrollView
+{
+	// Wrap the plan scroll view with a holder view
+	// to allow constraints to be more easily worked with
+	// and enable an actions view to be added underneath.
+	
+	NSScrollView *scrollView = (self.tableView.enclosingScrollView);
+	(scrollView.identifier) = @"tableScrollView";
+	(scrollView.translatesAutoresizingMaskIntoConstraints) = NO;
+	
+	GLAView *holderView = [GLAView new];
+	(holderView.identifier) = @"collectionListHolderView";
+	(holderView.translatesAutoresizingMaskIntoConstraints) = NO;
+	
+	GLAProjectViewController *projectViewController = (self.parentViewController);
+	NSLayoutConstraint *itemsViewLeadingConstraint = (projectViewController.itemsViewLeadingConstraint);
+	NSLayoutConstraint *itemsViewBottomConstraint = (projectViewController.itemsViewBottomConstraint);
+	
+	[projectViewController wrapChildViewKeepingOutsideConstraints:scrollView withView:holderView constraintVisitor:^ (NSLayoutConstraint *oldConstraint, NSLayoutConstraint *newConstraint) {
+		if (oldConstraint == itemsViewLeadingConstraint) {
+			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"leading" forChildView:holderView];
+			(projectViewController.itemsViewLeadingConstraint) = newConstraint;
+		}
+		else if (oldConstraint == itemsViewBottomConstraint) {
+			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"bottom" forChildView:holderView];
+			(projectViewController.itemsViewBottomConstraint) = newConstraint;
+		}
+	}];
+	
+	(self.view) = holderView;
+	
+	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeWidth withChildView:scrollView identifier:@"width"];
+	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:scrollView identifier:@"top"];
+	//(self.scrollLeadingConstraint) = [self addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:scrollView identifier:@"leading"];
+}
+
+- (void)setUpEditingActionsView
+{
+	GLATableActionsViewController *editingActionsViewController = [GLATableActionsViewController new];
+	(self.editingActionsViewController) = editingActionsViewController;
+	
+	NSView *editingActionsView = (self.editingActionsView);
+	(editingActionsView.identifier) = @"collectionsEditingActions";
+	(editingActionsView.translatesAutoresizingMaskIntoConstraints) = NO;
+	(editingActionsViewController.view) = editingActionsView;
+	
+	NSScrollView *scrollView = (self.tableView.enclosingScrollView);
+	NSView *view = (self.view);
+	
+	[editingActionsViewController addInsideView:view underRelativeToView:scrollView];
+	[editingActionsViewController addBottomConstraintToView:view];
+}
+
+- (BOOL)editing
+{
+	return (self.private_editing);
+}
+
+- (void)setEditing:(BOOL)editing
+{
+	(self.private_editing) = editing;
+	
+	//[self reloadReminders];
+	
+	GLATableActionsViewController *editingActionsViewController = (self.editingActionsViewController);
+	NSView *editingActionsView = (editingActionsViewController.view);
+	NSLayoutConstraint *actionsHeightConstraint = (editingActionsViewController.heightConstraint);
+	NSLayoutConstraint *scrollToActionsConstraint = (editingActionsViewController.topConstraint);
+	NSLayoutConstraint *actionsBottomConstraint = (editingActionsViewController.bottomConstraint);
+	
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 3.0 / 12.0;
+		
+		if (editing) {
+			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+			(editingActionsView.alphaValue) = 0.0;
+			(editingActionsView.animator.alphaValue) = 1.0;
+			(actionsHeightConstraint.animator.constant) = 70.0;
+			(scrollToActionsConstraint.animator.constant) = 8.0;
+			(actionsBottomConstraint.animator.constant) = 12.0;
+		}
+		else {
+			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+			(editingActionsView.animator.alphaValue) = 0.0;
+			(actionsHeightConstraint.animator.constant) = 0.0;
+			(scrollToActionsConstraint.animator.constant) = 0.0;
+			(actionsBottomConstraint.animator.constant) = 0.0;
+		}
+		
+		//[projectView layoutSubtreeIfNeeded];
+	} completionHandler:^ {
+		//(self.animatingFocusChange) = NO;
+	}];
+}
+
+#pragma mark Notifications
+
+- (void)projectManagerProjectCollectionsDidChangeNotification:(NSNotification *)note
+{
+	[self reloadCollections];
+}
+
+#pragma mark Actions
 
 - (IBAction)tableViewWasClicked:(id)sender
 {
@@ -835,14 +966,16 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 {
 	// Does not work for some reason.
 	if (operation == NSDragOperationDelete) {
-		id<GLAArrayEditing> collectionListEditing = (self.project.collectionsEditing);
+		GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 		
-		NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
-		(self.draggedRowIndexes) = nil;
-		
-		[collectionListEditing removeChildrenAtIndexes:sourceRowIndexes];
-		
-		[self reloadCollections];
+		[projectManager editProjectCollections:(self.project) usingBlock:^(id<GLAArrayEditing> collectionsEditor) {
+			NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
+			(self.draggedRowIndexes) = nil;
+			
+			[collectionsEditor removeChildrenAtIndexes:sourceRowIndexes];
+			
+			[self reloadCollections];
+		}];
 	}
 }
 
@@ -881,33 +1014,36 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 		return NO;
 	}
 	
-	id<GLAArrayEditing> collectionListEditing = (self.project.collectionsEditing);
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	
+	__block BOOL acceptDrop = YES;
 	NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
 	(self.draggedRowIndexes) = nil;
 	
-	NSDragOperation sourceOperation = (info.draggingSourceOperationMask);
-	if (sourceOperation & NSDragOperationMove) {
-		// The row index is the final destination, so reduce it by the number of rows being moved before it.
-		row -= [sourceRowIndexes countOfIndexesInRange:NSMakeRange(0, row)];
-		
-		[collectionListEditing moveChildrenAtIndexes:sourceRowIndexes toIndex:row];
-	}
-	else if (sourceOperation & NSDragOperationCopy) {
-		//TODO: actually make copies.
-		NSArray *childrenToCopy = [collectionListEditing childrenAtIndexes:sourceRowIndexes];
-		[collectionListEditing insertChildren:childrenToCopy atIndexes:[NSIndexSet indexSetWithIndex:row]];
-	}
-	else if (sourceOperation & NSDragOperationDelete) {
-		[collectionListEditing removeChildrenAtIndexes:sourceRowIndexes];
-	}
-	else {
-		return NO;
-	}
+	[projectManager editProjectCollections:(self.project) usingBlock:^(id<GLAArrayEditing> collectionsEditor) {
+		NSDragOperation sourceOperation = (info.draggingSourceOperationMask);
+		if (sourceOperation & NSDragOperationMove) {
+			// The row index is the final destination, so reduce it by the number of rows being moved before it.
+			NSInteger adjustedRow = row - [sourceRowIndexes countOfIndexesInRange:NSMakeRange(0, row)];
+			
+			[collectionsEditor moveChildrenAtIndexes:sourceRowIndexes toIndex:adjustedRow];
+		}
+		else if (sourceOperation & NSDragOperationCopy) {
+			//TODO: actually make copies.
+			NSArray *childrenToCopy = [collectionsEditor childrenAtIndexes:sourceRowIndexes];
+			[collectionsEditor insertChildren:childrenToCopy atIndexes:[NSIndexSet indexSetWithIndex:row]];
+		}
+		else if (sourceOperation & NSDragOperationDelete) {
+			[collectionsEditor removeChildrenAtIndexes:sourceRowIndexes];
+		}
+		else {
+			acceptDrop = NO;
+		}
+	}];
 	
 	[self reloadCollections];
 	
-	return YES;
+	return acceptDrop;
 }
 
 #pragma mark Table View Delegate
@@ -970,46 +1106,6 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	}
 }
 
-- (BOOL)editing
-{
-	return (self.private_editing);
-}
-
-- (void)setEditing:(BOOL)editing
-{
-	(self.private_editing) = editing;
-	
-	[self reloadReminders];
-	
-	NSView *editingActionsView = (self.editingActionsView);
-	NSLayoutConstraint *actionsHeightConstraint = (self.actionsHeightConstraint);
-	NSLayoutConstraint *scrollToActionsConstraint = (self.scrollToActionsConstraint);
-	NSLayoutConstraint *actionsBottomConstraint = (self.actionsBottomConstraint);
-	
-	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-		(context.duration) = 3.0 / 12.0;
-		
-		if (editing) {
-			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-			(editingActionsView.alphaValue) = 0.0;
-			(editingActionsView.animator.alphaValue) = 1.0;
-			(actionsHeightConstraint.animator.constant) = 70.0;
-			(scrollToActionsConstraint.animator.constant) = 8.0;
-			(actionsBottomConstraint.animator.constant) = 12.0;
-		}
-		else {
-			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-			(editingActionsView.animator.alphaValue) = 0.0;
-			(actionsHeightConstraint.animator.constant) = 0.0;
-			(scrollToActionsConstraint.animator.constant) = 0.0;
-			(actionsBottomConstraint.animator.constant) = 0.0;
-		}
-		
-		//[projectView layoutSubtreeIfNeeded];
-	} completionHandler:^ {
-		//(self.animatingFocusChange) = NO;
-	}];
-}
 
 - (void)prepareDummyContent
 {
@@ -1050,6 +1146,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	(self.measuringTableCellView) = [tableView makeViewWithIdentifier:(mainColumn.identifier) owner:nil];
 	
 	[self wrapScrollView];
+	[self setUpEditingActionsView];
 	
 	
 	NSDateFormatter *dueDateFormatter = [NSDateFormatter new];
@@ -1084,6 +1181,10 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 - (void)wrapScrollView
 {
+	// Wrap the plan scroll view with a holder view
+	// to allow constraints to be more easily worked with
+	// and enable an actions view to be added underneath.
+	
 	NSScrollView *scrollView = (self.tableView.enclosingScrollView);
 	(scrollView.identifier) = @"tableScrollView";
 	(scrollView.translatesAutoresizingMaskIntoConstraints) = NO;
@@ -1093,73 +1194,84 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	(holderView.translatesAutoresizingMaskIntoConstraints) = NO;
 	
 	GLAProjectViewController *projectViewController = (self.parentViewController);
-	
-	
 	NSLayoutConstraint *planViewTrailingConstraint = (projectViewController.planViewTrailingConstraint);
-	(planViewTrailingConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"trailing" forChildView:scrollView];
-	
 	NSLayoutConstraint *planViewBottomConstraint = (projectViewController.planViewBottomConstraint);
-	(planViewBottomConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"bottom" forChildView:scrollView];
 	
-	
-	[projectViewController wrapChildViewKeepingOutsideConstraints:scrollView withView:holderView];
-	
-	
-	planViewTrailingConstraint = [projectViewController layoutConstraintWithIdentifier:(planViewTrailingConstraint.identifier)];
-	(planViewTrailingConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"trailing" forChildView:holderView];
-	(projectViewController.planViewTrailingConstraint) = planViewTrailingConstraint;
-	
-	planViewBottomConstraint = [projectViewController layoutConstraintWithIdentifier:(planViewBottomConstraint.identifier)];
-	(planViewBottomConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"bottom" forChildView:holderView];
-	(projectViewController.planViewBottomConstraint) = planViewBottomConstraint;
-	
+	[projectViewController wrapChildViewKeepingOutsideConstraints:scrollView withView:holderView constraintVisitor:^ (NSLayoutConstraint *oldConstraint, NSLayoutConstraint *newConstraint) {
+		if (oldConstraint == planViewTrailingConstraint) {
+			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"trailing" forChildView:holderView];
+			(projectViewController.planViewTrailingConstraint) = newConstraint;
+		}
+		else if (oldConstraint == planViewBottomConstraint) {
+			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"bottom" forChildView:holderView];
+			(projectViewController.planViewBottomConstraint) = newConstraint;
+		}
+	}];
 	
 	(self.view) = holderView;
 	
 	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeWidth withChildView:scrollView identifier:@"width"];
 	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:scrollView identifier:@"top"];
 	(self.scrollLeadingConstraint) = [self addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:scrollView identifier:@"leading"];
-	
-	[self setUpEditingActionsView];
 }
 
 - (void)setUpEditingActionsView
 {
-	GLAViewController *editingActionsViewController = [[GLAViewController alloc] init];
+	GLATableActionsViewController *editingActionsViewController = [GLATableActionsViewController new];
+	(self.editingActionsViewController) = editingActionsViewController;
+	
 	NSView *editingActionsView = (self.editingActionsView);
+	(editingActionsView.identifier) = @"planEditingActions";
 	(editingActionsView.translatesAutoresizingMaskIntoConstraints) = NO;
 	(editingActionsViewController.view) = editingActionsView;
 	
 	NSScrollView *scrollView = (self.tableView.enclosingScrollView);
 	NSView *view = (self.view);
 	
-	NSLayoutConstraint *actionsHeightConstraint = [NSLayoutConstraint constraintWithItem:editingActionsView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:0.0];
-	(actionsHeightConstraint.priority) = 999;
+	[editingActionsViewController addInsideView:view underRelativeToView:scrollView];
+	[editingActionsViewController addBottomConstraintToView:view];
+}
+
+- (BOOL)editing
+{
+	return (self.private_editing);
+}
+
+- (void)setEditing:(BOOL)editing
+{
+	(self.private_editing) = editing;
 	
-	NSLayoutConstraint *scrollToActionsConstraint = [NSLayoutConstraint constraintWithItem:editingActionsView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:scrollView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
-	(scrollToActionsConstraint.priority) = 750;
+	[self reloadReminders];
 	
-	NSLayoutConstraint *actionsBottomConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:editingActionsView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
-	(actionsBottomConstraint.priority) = 750;
+	GLATableActionsViewController *editingActionsViewController = (self.editingActionsViewController);
+	NSView *editingActionsView = (editingActionsViewController.view);
+	NSLayoutConstraint *actionsHeightConstraint = (editingActionsViewController.heightConstraint);
+	NSLayoutConstraint *scrollToActionsConstraint = (editingActionsViewController.topConstraint);
+	NSLayoutConstraint *actionsBottomConstraint = (editingActionsViewController.bottomConstraint);
 	
-	(self.actionsHeightConstraint) = actionsHeightConstraint;
-	(self.scrollToActionsConstraint) = scrollToActionsConstraint;
-	(self.actionsBottomConstraint) = actionsBottomConstraint;
-	
-	NSArray *constraints =
-	@[
-	  // Leading
-	  [NSLayoutConstraint constraintWithItem:editingActionsView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:scrollView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0],
-	  // Width
-	  [NSLayoutConstraint constraintWithItem:editingActionsView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:scrollView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0.0],
-	  scrollToActionsConstraint,
-	  actionsBottomConstraint,
-	  actionsHeightConstraint
-	  ];
-	
-	[view addSubview:editingActionsView];
-	[view addConstraints:constraints];
-	//[view setNeedsLayout:YES];
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 3.0 / 12.0;
+		
+		if (editing) {
+			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+			(editingActionsView.alphaValue) = 0.0;
+			(editingActionsView.animator.alphaValue) = 1.0;
+			(actionsHeightConstraint.animator.constant) = 70.0;
+			(scrollToActionsConstraint.animator.constant) = 8.0;
+			(actionsBottomConstraint.animator.constant) = 12.0;
+		}
+		else {
+			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+			(editingActionsView.animator.alphaValue) = 0.0;
+			(actionsHeightConstraint.animator.constant) = 0.0;
+			(scrollToActionsConstraint.animator.constant) = 0.0;
+			(actionsBottomConstraint.animator.constant) = 0.0;
+		}
+		
+		//[projectView layoutSubtreeIfNeeded];
+	} completionHandler:^ {
+		//(self.animatingFocusChange) = NO;
+	}];
 }
 
 - (IBAction)chooseExistingReminders:(id)sender
@@ -1204,7 +1316,9 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 		NSDateFormatter *dueDateFormatter = (self.dueDateFormatter);
 		NSDateComponents *dateComponents = (reminderItem.dueDateComponents);
 		dueDateText = [dueDateFormatter stringFromDate:(dateComponents.date)];
+#if 0
 		NSLog(@"DUE DATE %@ %@; %@", dateComponents, (dateComponents.date), dueDateFormatter);
+#endif
 		//dueDateText = @"4PM today";
 	}
 	
@@ -1274,7 +1388,9 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	NSTextField *textField = (cellView.textField);
 	//(textField.preferredMaxLayoutWidth) = (tableColumn.width);
 	(textField.preferredMaxLayoutWidth) = NSWidth(textField.bounds);
+#if 0
 	NSLog(@"textField.intrinsicContentSize %@ %f %f", [textField valueForKey:@"intrinsicContentSize"], (textField.preferredMaxLayoutWidth), (tableColumn.width));
+#endif
 	
 	CGFloat extraPadding = 8.0;
 	

@@ -46,6 +46,8 @@
 
 @property (nonatomic) NSColor *deleteProjectButtonColor;
 
+@property (nonatomic) NSColor *contentTableSelectionColor;
+
 @property (nonatomic) NSColor *splitViewDividerColor;
 
 

@@ -9,7 +9,7 @@
 @import Cocoa;
 
 
-@interface GLATableRowView : NSTableRowView
+@interface GLATableProjectRowView : NSTableRowView
 
 - (void)checkMouseLocationIsInside;
 

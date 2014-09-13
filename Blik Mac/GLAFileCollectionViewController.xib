@@ -87,6 +87,10 @@
                                                                     <outlet property="textField" destination="0Gy-1C-EIV" id="ua0-Bj-RpT"/>
                                                                 </connections>
                                                             </tableCellView>
+                                                            <customView identifier="NSTableViewRowViewKey" id="cgB-L8-6nI" customClass="GLATableContentRowView">
+                                                                <rect key="frame" x="1" y="30" width="168" height="39"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                            </customView>
                                                         </prototypeCellViews>
                                                     </tableColumn>
                                                 </tableColumns>

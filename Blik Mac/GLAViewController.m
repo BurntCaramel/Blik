@@ -145,8 +145,11 @@
 	return [(self.view.constraints) filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"firstItem = %@ OR secondItem = %@", innerView, innerView]];
 }
 
-+ (NSArray *)copyLayoutConstraints:(NSArray *)oldConstraints replacingUsesOf:(id)originalItem with:(id)replacementItem
++ (NSArray *)copyLayoutConstraints:(NSArray *)oldConstraints replacingUsesOf:(id)originalItem with:(id)replacementItem constraintVisitor:(GLAViewControllerConstraintReplacementVisitor)constraintVisitor
 {
+	NSAssert(originalItem != nil, @"originalItem must not be nil.");
+	NSAssert(replacementItem != nil, @"replacementItem must not be nil.");
+	
 	NSMutableArray *newConstraints = [NSMutableArray arrayWithCapacity:(oldConstraints.count)];
 	for (NSLayoutConstraint *oldConstraint in oldConstraints) {
 		id firstItem = (oldConstraint.firstItem);
@@ -164,16 +167,23 @@
 		(newConstraint.priority) = (oldConstraint.priority);
 		(newConstraint.identifier) = (oldConstraint.identifier);
 		
+		if (constraintVisitor) {
+			constraintVisitor(oldConstraint, newConstraint);
+		}
+		
 		[newConstraints addObject:newConstraint];
 	}
 	
 	return newConstraints;
 }
 
-- (void)wrapChildViewKeepingOutsideConstraints:(NSView *)childView withView:(NSView *)replacementView
+- (void)wrapChildViewKeepingOutsideConstraints:(NSView *)childView withView:(NSView *)replacementView constraintVisitor:(GLAViewControllerConstraintReplacementVisitor)constraintVisitor
 {
+	NSAssert(childView != nil, @"childView must not be nil.");
+	NSAssert(replacementView != nil, @"replacementView must not be nil.");
+	
 	NSArray *oldConstraints = [self allLayoutConstraintsWithChildView:childView];
-	NSArray *newConstraints = [[self class] copyLayoutConstraints:oldConstraints replacingUsesOf:childView with:replacementView];
+	NSArray *newConstraints = [[self class] copyLayoutConstraints:oldConstraints replacingUsesOf:childView with:replacementView constraintVisitor:constraintVisitor];
 	
 	NSView *view = (self.view);
 	[view removeConstraints:oldConstraints];
