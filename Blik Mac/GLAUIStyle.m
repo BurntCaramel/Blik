@@ -49,6 +49,12 @@
 		(style.activeButtonHighlightColor) = [activeYellow colorWithAlphaComponent:0.91];
 		(style.activeButtonDisabledHighlightColor) = whiteAlmost30;
 		
+		(style.primaryButtonBackgroundColor) = activeYellow;
+		(style.primaryButtonTextColor) = grayExtraDark;
+		
+		(style.secondaryButtonBackgroundColor) = [whiteAlmost colorWithAlphaComponent:0.15];
+		(style.secondaryButtonTextColor) = whiteAlmost;
+		
 		(style.lightTextColor) =  whiteAlmost;
 		(style.lightTextDisabledColor) = whiteAlmost30;
 		//(style.lightTextSecondaryColor) = [whiteAlmost colorWithAlphaComponent:0.77];
@@ -67,8 +73,8 @@
 		(style.editedTextColor) = grayDark;
 		(style.editedTextBackgroundColor) = whiteAlmost;
 		
-		(style.toggleBorderColor) = whiteAlmost;
-		(style.toggleInsideColor) = whiteAlmost;
+		(style.roundedToggleBorderColor) = whiteAlmost;
+		(style.roundedToggleInsideColor) = whiteAlmost;
 		
 		(style.projectTableRowHoverBackgroundColor) = [whiteAlmost colorWithAlphaComponent:0.026];
 		(style.projectTableDividerColor) = [whiteAlmost colorWithAlphaComponent:0.057];
@@ -87,6 +93,8 @@
 		(style.reddishItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:197.0/255.0 blue:132.0/255.0 alpha:1.0];
 		//(style.yellowItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:211.0/255.0 blue:18.0/255.0 alpha:1.0];
 		(style.yellowItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:227.0/255.0 blue:102.0/255.0 alpha:1.0];
+		
+		(style.chooseColorBackgroundColor) = grayExtraDark;
 		
 		// FONTS
 		
@@ -109,6 +117,9 @@
 		
 		(style.highlightedReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:16.0];
 		(style.highlightedReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:11.0];
+		
+		(style.buttonFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
+		(style.labelFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:13.0];
 #else
 		(style.smallReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
 		(style.smallReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:13.0];
@@ -135,27 +146,26 @@
 	}
 }
 
-- (NSColor *)colorForProjectItemColorIdentifier:(GLACollectionColor)colorIdentifier
+- (NSColor *)colorForCollectionColor:(GLACollectionColor *)color
 {
-	switch (colorIdentifier) {
-		case GLACollectionColorLightBlue:
-			return (self.lightBlueItemColor);
-		
-		case GLACollectionColorGreen:
-			return (self.greenItemColor);
-		
-		case GLACollectionColorPinkyPurple:
-			return (self.pinkyPurpleItemColor);
-		
-		case GLACollectionColorRed:
-			return (self.reddishItemColor);
-		
-		case GLACollectionColorYellow:
-			return (self.yellowItemColor);
-			
-		default:
-			return (self.lightTextColor);
+	NSDictionary *colorIdentifierToDisplayColorTable =
+	@{
+	  GLACollectionColorIdentifierLightBlue: (self.lightBlueItemColor),
+	  GLACollectionColorIdentifierGreen: (self.greenItemColor),
+	  GLACollectionColorIdentifierPinkyPurple: (self.pinkyPurpleItemColor),
+	  GLACollectionColorIdentifierRed: (self.reddishItemColor),
+	  GLACollectionColorIdentifierYellow: (self.yellowItemColor)
+	  };
+	
+	if (color) {
+		NSString *colorIdentifier = (color.identifier);
+		NSColor *displayColor = colorIdentifierToDisplayColorTable[colorIdentifier];
+		if (displayColor) {
+			return displayColor;
+		}
 	}
+	
+	return (self.lightTextColor);
 }
 
 

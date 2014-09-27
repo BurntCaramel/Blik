@@ -29,6 +29,37 @@
 	return (id)[super view];
 }
 
+- (void)loadView
+{
+	[super loadView];
+	
+	[self prepareViewIfNeeded];
+}
+
+- (void)awakeFromNib
+{
+	[super awakeFromNib];
+	
+	[self prepareViewIfNeeded];
+}
+
+
+- (void)prepareViewIfNeeded
+{
+	if (self.hasPreparedViews) {
+		return;
+	}
+	
+	[self prepareView];
+	
+	(self.hasPreparedViews) = YES;
+}
+
+- (void)prepareView
+{
+	
+}
+
 - (void)viewWillAppear
 {
 }
@@ -208,6 +239,23 @@
 	} completionHandler:^{
 		
 	}];
+}
+
+@end
+
+
+@implementation GLAViewController (ViewIdentifiers)
+
++ (NSView *)viewWithIdentifier:(NSString *)identifier inViews:(NSArray *)views
+{
+	NSArray *matchingViews = [views filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"identifier = %@", identifier]];
+	
+	if (matchingViews.count == 0) {
+		return nil;
+	}
+	else {
+		return matchingViews[0];
+	}
 }
 
 @end

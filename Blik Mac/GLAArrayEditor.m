@@ -99,4 +99,19 @@ NSString *GLAArrayEditorDidChangeNotification = @"GLAArrayEditorDidChangeNotific
 	[noteQueue enqueueNotification:note postingStyle:NSPostASAP];
 }
 
+
+- (void)replaceChildWithValueForKey:(NSString *)key equalToValue:(id)value withObject:(id)object
+{
+	NSIndexSet *indexes = [(self.mutableChildren) indexesOfObjectsPassingTest:^BOOL(id originalObject, NSUInteger idx, BOOL *stop) {
+		BOOL found = [[originalObject valueForKey:key] isEqual:value];
+		if (found) {
+			*stop = YES;
+		}
+		return found;
+	}];
+	
+	[self replaceChildrenAtIndexes:indexes withObjects:@[object]];
+
+}
+
 @end

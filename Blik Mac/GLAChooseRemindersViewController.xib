@@ -107,10 +107,10 @@
                     </scroller>
                 </scrollView>
                 <button identifier="template" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="1jN-S2-8H0" customClass="GLAButton">
-                    <rect key="frame" x="0.0" y="237" width="43" height="43"/>
+                    <rect key="frame" x="0.0" y="244" width="43" height="32"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="43" id="se5-6E-BKm"/>
+                        <constraint firstAttribute="height" constant="32" id="se5-6E-BKm"/>
                     </constraints>
                     <buttonCell key="cell" type="square" title="Back" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="h4b-yd-kjd" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -120,7 +120,7 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
                             <integer key="value" value="-2"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="cell.alwaysHighlighted" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="exit:" target="-2" id="wrk-sU-5VN"/>
@@ -151,7 +151,7 @@
                     <rect key="frame" x="88" y="226" width="304" height="46"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Select any existing reminders you want to include in your project’s plan." placeholderString="" id="KUQ-bs-JHL">
-                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                        <font key="font" size="13" name="AvenirNext-MediumItalic"/>
                         <color key="textColor" red="0.98812824489999995" green="0.98829692599999996" blue="0.98811751599999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
@@ -164,7 +164,7 @@
                 <constraint firstItem="na0-Px-fAW" firstAttribute="top" secondItem="qkm-Y8-gNq" secondAttribute="bottom" constant="12" id="OW5-e9-xsH"/>
                 <constraint firstAttribute="centerX" secondItem="gNL-Vg-Uv1" secondAttribute="centerX" id="PB1-hH-OtN"/>
                 <constraint firstItem="gNL-Vg-Uv1" firstAttribute="trailing" secondItem="na0-Px-fAW" secondAttribute="trailing" id="RCu-55-IQP"/>
-                <constraint firstItem="1jN-S2-8H0" firstAttribute="top" secondItem="2by-Us-gF1" secondAttribute="top" constant="4" id="U6Y-Ll-xRV"/>
+                <constraint firstItem="1jN-S2-8H0" firstAttribute="top" secondItem="2by-Us-gF1" secondAttribute="top" constant="8" id="U6Y-Ll-xRV"/>
                 <constraint firstItem="1jN-S2-8H0" firstAttribute="leading" secondItem="2by-Us-gF1" secondAttribute="leading" id="fdn-1g-Be3"/>
                 <constraint firstItem="gNL-Vg-Uv1" firstAttribute="leading" secondItem="na0-Px-fAW" secondAttribute="leading" id="fmC-XG-BcG"/>
                 <constraint firstAttribute="bottom" secondItem="gNL-Vg-Uv1" secondAttribute="bottom" id="riV-vm-Sls"/>

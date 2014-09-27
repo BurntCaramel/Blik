@@ -60,7 +60,7 @@
 {
 	(self.cell.leftSpacing) = leftSpacing;
 	
-	[self setNeedsDisplay:YES];
+	(self.needsDisplay) = YES;
 }
 
 - (CGFloat)rightSpacing
@@ -72,7 +72,7 @@
 {
 	(self.cell.rightSpacing) = rightSpacing;
 	
-	[self setNeedsDisplay:YES];
+	(self.needsDisplay) = YES;
 }
 
 - (CGFloat)verticalOffsetDown
@@ -84,7 +84,7 @@
 {
 	(self.cell.verticalOffsetDown) = verticalOffsetDown;
 	
-	[self setNeedsDisplay:YES];
+	(self.needsDisplay) = YES;
 }
 
 - (BOOL)isAlwaysHighlighted
@@ -96,19 +96,7 @@
 {
 	(self.cell.alwaysHighlighted) = alwaysHighlighted;
 	
-	[self setNeedsDisplay:YES];
-}
-
-- (BOOL)isSecondary
-{
-	return (self.cell.isSecondary);
-}
-
-- (void)setSecondary:(BOOL)secondary
-{
-	(self.cell.secondary) = secondary;
-	
-	[self setNeedsDisplay:YES];
+	(self.needsDisplay) = YES;
 }
 
 - (NSColor *)textHighlightColor
@@ -120,7 +108,7 @@
 {
 	(self.cell.textHighlightColor) = textHighlightColor;
 	
-	[self setNeedsDisplay:YES];
+	(self.needsDisplay) = YES;
 }
 
 + (id)defaultAnimationForKey:(NSString *)key
@@ -189,6 +177,31 @@
 {
 	return (self.cell.isOnAndShowsOnState);
 }
+
+- (BOOL)hasPrimaryStyle
+{
+	return (self.cell.hasPrimaryStyle);
+}
+
+- (void)setHasPrimaryStyle:(BOOL)hasPrimaryStyle
+{
+	(self.cell.hasPrimaryStyle) = hasPrimaryStyle;
+	
+	(self.needsDisplay) = YES;
+}
+
+- (BOOL)hasSecondaryStyle
+{
+	return (self.cell.hasSecondaryStyle);
+}
+
+- (void)setHasSecondaryStyle:(BOOL)hasSecondaryStyle
+{
+	(self.cell.hasSecondaryStyle) = hasSecondaryStyle;
+	
+	(self.needsDisplay) = YES;
+}
+
 /*
  - (void)displayLayer:(CALayer *)layer
  {
@@ -221,9 +234,9 @@
 	(copy.verticalOffsetDown) = (self.verticalOffsetDown);
 	
 	(copy.alwaysHighlighted) = (self.alwaysHighlighted);
-	(copy.secondary) = (self.secondary);
 	
 	(copy.textHighlightColor) = (self.textHighlightColor);
+	(copy.backgroundColor) = (self.backgroundColor);
 	(copy.highlightAmount) = (self.highlightAmount);
 	
 	return copy;
@@ -245,6 +258,58 @@
 	return NO;
 }
 
+- (NSColor *)textColorForDrawing
+{
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	
+	if (!(self.isEnabled)) {
+		return (uiStyle.lightTextDisabledColor);
+	}
+	else if ((self.isOnAndShowsOnState) || (self.alwaysHighlighted) || (self.textHighlightColor) /*|| ((self.mouseDownFlags & NSMouseEnteredMask) == NSMouseEnteredMask)*/ ) {
+		if ((self.isEnabled) || (self.alwaysHighlighted)) {
+			NSColor *color = (self.textHighlightColor);
+			if (color) {
+				return color;
+			}
+			
+			return (uiStyle.activeTextColor);
+		}
+		else {
+			return (uiStyle.activeTextDisabledColor);
+		}
+	}
+	else if (self.hasPrimaryStyle) {
+		return (uiStyle.primaryButtonTextColor);
+	}
+	else if (self.hasSecondaryStyle) {
+		return (uiStyle.secondaryButtonTextColor);
+	}
+	else {
+		return (uiStyle.lightTextColor);
+	}
+	
+	return nil;
+}
+
+- (NSColor *)backgroundColorForDrawing
+{
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	
+	NSColor *backgroundColor = (self.backgroundColor);
+	if (backgroundColor) {
+		return backgroundColor;
+	}
+	
+	if (self.hasPrimaryStyle) {
+		return (uiStyle.primaryButtonBackgroundColor);
+	}
+	else if (self.hasSecondaryStyle) {
+		return (uiStyle.secondaryButtonBackgroundColor);
+	}
+	
+	return nil;
+}
+
 - (NSRect)titleRectForBounds:(NSRect)theRect
 {
 	return theRect;
@@ -252,6 +317,14 @@
 
 - (void)drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView
 {
+	NSColor *backgroundColor = (self.backgroundColorForDrawing);
+	if (backgroundColor) {
+		[backgroundColor setFill];
+		
+		CGFloat backgroundInsetAmount = (self.backgroundInsetAmount);
+		CGRect backgroundRect = CGRectInset(frame, backgroundInsetAmount, backgroundInsetAmount);
+		[[NSBezierPath bezierPathWithRoundedRect:backgroundRect xRadius:4.0 yRadius:4.0] fill];
+	}
 }
 
 - (NSRect)drawTitle:(NSAttributedString *)title withFrame:(NSRect)frame inView:(NSView *)controlView
@@ -260,9 +333,10 @@
 	[coloredTitle appendAttributedString:title];
 	NSRange entireStringRange = NSMakeRange(0, (coloredTitle.length));
 	
-	NSColor *color = nil;
+	NSColor *textColor = (self.textColorForDrawing);
 	//NSLog(@"mouse %lu", (unsigned long)(self.mouseDownFlags));
-	if ((self.isOnAndShowsOnState) || (self.alwaysHighlighted) || (self.textHighlightColor) /*|| ((self.mouseDownFlags & NSMouseEnteredMask) == NSMouseEnteredMask)*/ ) {
+	/*
+	if ((self.isOnAndShowsOnState) || (self.alwaysHighlighted) || (self.textHighlightColor)) {
 		if (self.isEnabled || (self.alwaysHighlighted)) {
 			color = (self.textHighlightColor);
 			if (!color) {
@@ -281,8 +355,11 @@
 			color = ([GLAUIStyle activeStyle].lightTextDisabledColor);
 		}
 	}
+	 */
 	// Replace text color.
-	[coloredTitle addAttribute:NSForegroundColorAttributeName value:color range:entireStringRange];
+	if (textColor) {
+		[coloredTitle addAttribute:NSForegroundColorAttributeName value:textColor range:entireStringRange];
+	}
 	
 	
 	NSRect adjustedFrame, adjustedFrameRemainder;

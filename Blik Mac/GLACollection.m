@@ -9,7 +9,21 @@
 #import "GLACollection.h"
 #import "NSValueTransformer+GLAModel.h"
 #import "GLACollectionContent.h"
+#import "GLACollectionColor.h"
 
+
+@interface GLACollection () <GLACollectionEditing>
+
+@property(readwrite, nonatomic) GLACollectionContent *content;
+
+@property(readwrite, nonatomic) NSUUID *UUID;
+@property(readwrite, copy, nonatomic) NSString *title;
+
+@property(readwrite, nonatomic) GLACollectionColor *color;
+
+@property(readwrite, nonatomic) NSString *colorIdentifier;
+
+@end
 
 @implementation GLACollection
 
@@ -21,6 +35,7 @@
 	  @"content": @"content",
 	  @"UUID": @"UUID",
 	  @"title": @"title",
+	  @"color": (NSNull.null),
 	  @"colorIdentifier": @"colorIdentifier"
 	};
 }
@@ -35,35 +50,40 @@
 	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
 }
 
-+ (NSValueTransformer *)colorIdentifierValueTransformer
-{
-	static NSValueTransformer *vt;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		NSDictionary *stringToColorIdentifiers =
-		@{
-		  (NSNull.null): @(GLACollectionColorUnknown),
-		  @"lightBlue": @(GLACollectionColorLightBlue),
-		  @"green": @(GLACollectionColorGreen),
-		  @"pinkyPurple": @(GLACollectionColorPinkyPurple),
-		  @"red": @(GLACollectionColorRed),
-		  @"yellow": @(GLACollectionColorYellow)
-		  };
-		
-		vt = [NSValueTransformer mtl_valueMappingTransformerWithDictionary:stringToColorIdentifiers defaultValue:@(GLACollectionColorUnknown) reverseDefaultValue:[NSNull null]];
-	});
-	return vt;
-}
-
 - (instancetype)init
 {
     self = [super init];
     if (self) {
         _UUID = [NSUUID new];
 		//_title = @"";
-		_colorIdentifier = GLACollectionColorUnknown;
     }
     return self;
+}
+
+- (NSString *)colorIdentifier
+{
+	return (self.color.identifier);
+}
+
+- (void)setColorIdentifier:(NSString *)colorIdentifier
+{
+	(self.color) = [[GLACollectionColor alloc] initWithIdentifier:colorIdentifier];
+}
+
++ (instancetype)newWithCreationFromEditing:(void (^)(id<GLACollectionEditing>))editingBlock
+{
+	GLACollection *collection = [self new];
+	editingBlock(collection);
+	
+	return collection;
+}
+
+- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLACollectionEditing>collectionEditor))collectionEditingBlock
+{
+	GLACollection *copy = [self copy];
+	collectionEditingBlock(copy);
+	
+	return copy;
 }
 
 #pragma mark NSPasteboardReading
@@ -157,11 +177,11 @@ NSString *GLACollectionJSONPasteboardType = @"com.burntcaramel.GLACollection.JSO
 
 @implementation GLACollection (GLADummyContent)
 
-+ (instancetype)dummyCollectionWithTitle:(NSString *)title colorIdentifier:(GLACollectionColor)colorIdentifier content:(GLACollectionContent *)content
++ (instancetype)dummyCollectionWithTitle:(NSString *)title color:(GLACollectionColor *)color content:(GLACollectionContent *)content
 {
 	GLACollection *item = [self new];
 	(item.title) = title;
-	(item.colorIdentifier) = colorIdentifier;
+	(item.color) = color;
 	(item.content) = content;
 	
 	return item;

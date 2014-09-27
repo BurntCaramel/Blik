@@ -8,6 +8,7 @@
 
 #import "GLAMainWindow.h"
 
+
 @implementation GLAMainWindow
 
 - (BOOL)canBecomeKeyWindow

@@ -18,6 +18,10 @@ typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint
 
 @property(readonly, nonatomic) GLAView *view;
 
+- (void)prepareViewIfNeeded;
+@property(nonatomic) BOOL hasPreparedViews;
+- (void)prepareView;
+
 - (void)viewWillAppear;
 - (void)viewDidAppear;
 
@@ -49,5 +53,11 @@ typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint
 #pragma mark Colors
 
 - (void)animateBackgroundColorTo:(NSColor *)color;
+
+@end
+
+@interface GLAViewController (ViewIdentifiers)
+
++ (NSView *)viewWithIdentifier:(NSString *)identifier inViews:(NSArray *)views;
 
 @end

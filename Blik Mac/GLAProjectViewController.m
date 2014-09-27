@@ -747,14 +747,15 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	if (!collections) {
 		collections = @[];
 	}
-	NSLog(@"RELOADING COLLECTIONS with %@", @(collections.count));
 	(self.collections) = collections;
 	
 	[(self.tableView) reloadData];
 }
 
-- (void)prepareViews
+- (void)prepareView
 {
+	[super prepareView];
+	
 	NSTableView *tableView = (self.tableView);
 	[[GLAUIStyle activeStyle] prepareContentTableView:tableView];
 	
@@ -770,6 +771,8 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	
 	[self wrapScrollView];
 	[self setUpEditingActionsView];
+	
+	[self setUpProjectManagerObserving];
 	
 	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
 }
@@ -790,22 +793,6 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	
 	// Stop observing any notifications on the project manager.
 	[nc removeObserver:self name:nil object:projectManager];
-}
-
-- (void)loadView
-{
-	[super loadView];
-	
-	//[self prepareViews];
-	//[self setUpProjectManagerObserving];
-}
-
-- (void)awakeFromNib
-{
-	[super awakeFromNib];
-	
-	[self prepareViews];
-	[self setUpProjectManagerObserving];
 }
 
 - (void)wrapScrollView
@@ -903,6 +890,64 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	}];
 }
 
+- (NSPopover *)colorChoicePopoverCreatingIfNeeded
+{
+	NSPopover *colorChoicePopover = (self.colorChoicePopover);
+	if (!colorChoicePopover) {
+		colorChoicePopover = [NSPopover new];
+		GLACollectionColorPickerViewController *colorPickerViewController = [[GLACollectionColorPickerViewController alloc] initWithNibName:@"GLACollectionColorPickerViewController" bundle:nil];
+		(colorChoicePopover.contentViewController) = colorPickerViewController;
+		(colorChoicePopover.appearance) = NSPopoverAppearanceHUD;
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(collectionColorPickerChosenColorDidChangeNotification:) name:GLACollectionColorPickerViewControllerChosenColorDidChangeNotification object:colorPickerViewController];
+		
+		(self.colorChoicePopover) = colorChoicePopover;
+	}
+	
+	return colorChoicePopover;
+}
+
+- (void)collectionColorPickerChosenColorDidChangeNotification:(NSNotification *)note
+{
+	GLACollectionColorPickerViewController *colorPickerViewController = (note.object);
+	GLACollectionColor *color = (colorPickerViewController.chosenCollectionColor);
+	[self changeColor:color forCollection:(self.collectionWithColorBeingPicked)];
+}
+
+- (void)chooseColorForCollection:(GLACollection *)collection atRow:(NSInteger)collectionRow
+{
+	(self.collectionWithColorBeingPicked) = collection;
+	
+	NSPopover *colorChoicePopover = (self.colorChoicePopoverCreatingIfNeeded);
+	
+	if (colorChoicePopover.isShown) {
+		[colorChoicePopover close];
+		(self.collectionWithColorBeingPicked) = nil;
+	}
+	else {
+		GLACollectionColorPickerViewController *colorPickerViewController = (self.colorPickerViewController);
+		(colorPickerViewController.chosenCollectionColor) = (collection.color);
+		
+		NSTableView *tableView = (self.tableView);
+		NSRect rowRect = [tableView rectOfRow:collectionRow];
+		// Show underneath.
+		[colorChoicePopover showRelativeToRect:rowRect ofView:tableView preferredEdge:NSMaxYEdge];
+	}
+}
+
+- (void)changeColor:(GLACollectionColor *)color forCollection:(GLACollection *)collection
+{
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	
+	[projectManager changeColorOfCollection:collection inProject:(self.project) toColor:color];
+	
+	[self reloadCollections];
+	/*
+	NSTableView *tableView = (self.tableView);
+	[tableView reloadData];
+	 */
+}
+
 #pragma mark Notifications
 
 - (void)projectManagerProjectCollectionsDidChangeNotification:(NSNotification *)note
@@ -919,11 +964,16 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	
 	GLACollection *collection = (self.collections)[clickedRow];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectCollectionsViewControllerDidClickCollectionNotification object:self userInfo:
-	 @{
-	   @"row": @(clickedRow),
-	   @"collection": collection
-	   }];
+	if (self.editing) {
+		[self chooseColorForCollection:collection atRow:clickedRow];
+	}
+	else {
+		[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectCollectionsViewControllerDidClickCollectionNotification object:self userInfo:
+		 @{
+		   @"row": @(clickedRow),
+		   @"collection": collection
+		   }];
+	}
 }
 
 #pragma mark Table View Data Source
@@ -1064,7 +1114,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	(cellView.textField.stringValue) = title;
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
-	(cellView.textField.textColor) = [uiStyle colorForProjectItemColorIdentifier:(collection.colorIdentifier)];
+	(cellView.textField.textColor) = [uiStyle colorForCollectionColor:(collection.color)];
 	
 	return cellView;
 }
@@ -1129,12 +1179,8 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	[(self.tableView) reloadData];
 }
 
-- (void)prepareViewsIfNeeded
+- (void)prepareView
 {
-	if (self.hasPreparedViews) {
-		return;
-	}
-	
 	NSTableView *tableView = (self.tableView);
 	[[GLAUIStyle activeStyle] prepareContentTableView:tableView];
 	
@@ -1160,23 +1206,6 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	
 	GLAReminderManager *reminderManager = [GLAReminderManager sharedReminderManager];
 	[reminderManager createEventStoreIfNeeded];
-	
-	(self.hasPreparedViews) = YES;
-}
-
-- (void)loadView
-{
-	[super loadView];
-	
-	//[self prepareViewsIfNeeded];
-}
-
-- (void)awakeFromNib
-{
-	[super awakeFromNib];
-	
-	[self prepareViewsIfNeeded];
-	//[self prepareDummyContent];
 }
 
 - (void)wrapScrollView

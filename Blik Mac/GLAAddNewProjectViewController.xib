@@ -6,6 +6,9 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAAddNewProjectViewController">
             <connections>
+                <outlet property="confirmCreateButton" destination="8Mo-vT-DhC" id="V3f-mN-Xfo"/>
+                <outlet property="nameLabel" destination="Leg-WZ-4hm" id="gHk-0I-e4Z"/>
+                <outlet property="nameTextField" destination="RhU-Xs-2SL" id="YQe-wH-t6I"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
@@ -28,21 +31,46 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Leg-WZ-4hm">
-                    <rect key="frame" x="188" y="166" width="125" height="17"/>
+                    <rect key="frame" x="174" y="166" width="152" height="23"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Enter Project Name" id="cdD-am-Ppd">
-                        <font key="font" metaFont="system"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="8lc-Ju-BES"/>
+                    </constraints>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Enter the project’s name:" id="cdD-am-Ppd">
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <button placeholderIntrinsicWidth="160" placeholderIntrinsicHeight="36" translatesAutoresizingMaskIntoConstraints="NO" id="8Mo-vT-DhC" customClass="GLAButton">
+                    <rect key="frame" x="170" y="32" width="160" height="36"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="36" id="1LZ-oz-W91"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="Create New Project" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="76A-4U-2pS" customClass="GLAButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="16" name="AvenirNext-Medium"/>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="-2"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasPrimaryStyle" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="confirmCreate:" target="-2" id="bZB-8q-tac"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
                 <constraint firstItem="RhU-Xs-2SL" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" id="7aU-Qn-VKg"/>
+                <constraint firstAttribute="bottom" secondItem="8Mo-vT-DhC" secondAttribute="bottom" constant="32" id="7yg-ym-Dzl"/>
                 <constraint firstAttribute="centerY" secondItem="RhU-Xs-2SL" secondAttribute="centerY" constant="6" id="CAY-jb-7cT"/>
+                <constraint firstAttribute="centerX" secondItem="8Mo-vT-DhC" secondAttribute="centerX" id="DPI-hK-gBa"/>
                 <constraint firstItem="RhU-Xs-2SL" firstAttribute="top" secondItem="Leg-WZ-4hm" secondAttribute="bottom" constant="8" id="nnK-st-MAq"/>
                 <constraint firstAttribute="trailing" secondItem="RhU-Xs-2SL" secondAttribute="trailing" constant="20" id="pV7-dq-o0I"/>
-                <constraint firstAttribute="centerX" secondItem="Leg-WZ-4hm" secondAttribute="centerX" constant="-0.5" id="vMj-eT-Xhi"/>
+                <constraint firstAttribute="centerX" secondItem="Leg-WZ-4hm" secondAttribute="centerX" id="vMj-eT-Xhi"/>
                 <constraint firstAttribute="centerX" secondItem="RhU-Xs-2SL" secondAttribute="centerX" id="xkl-wY-giP"/>
             </constraints>
         </customView>

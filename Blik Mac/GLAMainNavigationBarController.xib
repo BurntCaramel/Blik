@@ -81,13 +81,13 @@
                         <action selector="addNewProject:" target="-2" id="P9p-bQ-DaO"/>
                     </connections>
                 </button>
-                <button identifier="template" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="WcU-G7-cKy" customClass="GLANavigationButton">
+                <button identifier="template" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="WcU-G7-cKy" customClass="GLAButton">
                     <rect key="frame" x="0.0" y="0.0" width="43" height="43"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="43" id="wvq-Rs-ptV"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" title="Back to ..." bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0bt-YE-fFF" customClass="GLANavigationButtonCell">
+                    <buttonCell key="cell" type="square" title="Back to ..." bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0bt-YE-fFF" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
                     </buttonCell>
@@ -95,7 +95,10 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
                             <integer key="value" value="-2"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="cell.alwaysHighlighted" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="cell.hasSecondaryStyle" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.backgroundInsetAmount">
+                            <integer key="value" value="10"/>
+                        </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </button>
             </subviews>

@@ -12,6 +12,7 @@
 #import "GLAView.h"
 #import "GLAProjectActionsBarController.h"
 #import "GLATableActionsViewController.h"
+#import "GLACollectionColorPickerViewController.h"
 #import "GLAProjectView.h"
 #import "GLATextField.h"
 // MODEL
@@ -86,6 +87,8 @@ extern NSString *GLAProjectViewControllerDidEnterCollectionNotification;
 @property(weak) IBOutlet GLAProjectViewController *parentViewController;
 
 @property(strong, nonatomic) IBOutlet NSMenu *contextualMenu;
+@property(nonatomic) NSPopover *colorChoicePopover;
+@property(nonatomic) GLACollectionColorPickerViewController *colorPickerViewController;
 
 @property(nonatomic) GLATableActionsViewController *editingActionsViewController;
 @property(nonatomic) IBOutlet NSView *editingActionsView;
@@ -99,6 +102,9 @@ extern NSString *GLAProjectViewControllerDidEnterCollectionNotification;
 - (void)reloadCollections;
 
 - (IBAction)makeNewCollection:(id)sender;
+
+@property(nonatomic) GLACollection *collectionWithColorBeingPicked;
+- (void)chooseColorForCollection:(GLACollection *)collection atRow:(NSInteger)collectionRow;
 
 @end
 

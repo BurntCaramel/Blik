@@ -11,6 +11,36 @@
 #import "GLAButton.h"
 #import "GLAUIStyle.h"
 
+
+@interface GLAMainNavigationButtonGroup : NSObject
+
++ (instancetype)buttonGroupWithBarController:(GLAMainNavigationBarController *)barController;
+
+@property(weak, nonatomic) GLAMainNavigationBarController *barController;
+
+- (GLAButton *)makeLeadingButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier;
+- (GLAButton *)makeCenterButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier;
+- (GLAButton *)makeTrailingButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier;
+
+@property(nonatomic) GLAButton *leadingButton;
+@property(nonatomic) GLAButton *centerButton;
+@property(nonatomic) GLAButton *trailingButton;
+
+@property(nonatomic) NSTimeInterval leadingButtonInDuration;
+@property(nonatomic) NSTimeInterval leadingButtonOutDuration;
+@property(nonatomic) NSTimeInterval centerButtonInDuration;
+@property(nonatomic) NSTimeInterval centerButtonOutDuration;
+@property(nonatomic) NSTimeInterval trailingButtonInDuration;
+@property(nonatomic) NSTimeInterval trailingButtonOutDuration;
+
+- (void)animateButtonsIn;
+- (void)animateButtonsOutWithCompletionHandler:(dispatch_block_t)completionHandler;
+
+- (void)animateInButtons:(NSArray *)buttons duration:(NSTimeInterval)duration;
+
+@end
+
+
 @interface GLAMainNavigationBarController ()
 
 @property(readwrite, nonatomic) GLAMainContentSection *currentSection;
@@ -249,7 +279,8 @@
 	
 	NSString *workOnNowTitle = NSLocalizedString(@"Work on Now", @"Title for Work on Now button in an edited project");
 	GLAButton *workOnNowButton = [self addTrailingButtonWithTitle:workOnNowTitle action:@selector(workOnCurrentProjectNow:) identifier:@"workOnNow-editingProject"];
-	(workOnNowButton.alwaysHighlighted) = YES;
+	(workOnNowButton.hasSecondaryStyle) = NO;
+	(workOnNowButton.hasPrimaryStyle) = YES;
 	(self.editingProjectWorkOnNowButton) = workOnNowButton;
 	
 	NSLayoutConstraint *backLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:backButton];
@@ -268,7 +299,7 @@
 		(backLeadingConstraint.constant) = -250.0;
 		(backLeadingConstraint.animator.constant) = 0.0;
 		
-		// Back button
+		// Work on now button
 		(workOnNowButton.alphaValue) = 0.0;
 		(workOnNowButton.animator.alphaValue) = 1.0;
 		// Constraint
@@ -289,113 +320,73 @@
 
 - (void)showButtonsForAddingNewProject
 {
+	GLAMainNavigationButtonGroup *buttonGroup = [GLAMainNavigationButtonGroup buttonGroupWithBarController:self];
+	
 	NSString *cancelTitle = NSLocalizedString(@"Cancel", @"Title for cancel adding new project button");
-	GLAButton *cancelButton = [self addLeadingButtonWithTitle:cancelTitle action:@selector(cancelAddingNewProject:) identifier:@"cancelAddNewProject"];
-	(self.addingNewProjectCancelButton) = cancelButton;
+	(self.addingNewProjectCancelButton) = [buttonGroup makeLeadingButtonWithTitle:cancelTitle action:@selector(cancelAddingNewProject:) identifier:@"cancelAddNewProject"];
 	
-	NSString *confirmCreateTitle = NSLocalizedString(@"Create New Project", @"Title for confirming creating new project button");
-	GLAButton *confirmButton = [self addTrailingButtonWithTitle:confirmCreateTitle action:@selector(confirmAddingNewProject:) identifier:@"confirmAddNewProject"];
-	(self.addingNewProjectConfirmButton) = confirmButton;
+	NSString *title = NSLocalizedString(@"New Project", @"Title label for creating new project");
+	GLAButton *titleButton = [buttonGroup makeCenterButtonWithTitle:title action:@selector(confirmAddingNewProject:) identifier:@"confirmAddNewProject"];
+	(titleButton.hasSecondaryStyle) = NO;
 	
-	NSLayoutConstraint *cancelLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:cancelButton];
-	NSLayoutConstraint *confirmTrailingConstraint = [self layoutConstraintWithIdentifier:@"trailing" forChildView:confirmButton];
+	(buttonGroup.leadingButtonInDuration) = 3.0 / 12.0;
+	(buttonGroup.centerButtonInDuration) = 2.7 / 12.0;
+	[buttonGroup animateButtonsIn];
 	
-	(self.animatingCounter)++;
-	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-		(context.duration) = 4.0 / 12.0;
-		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-		
-		// Cancel button
-		(cancelButton.alphaValue) = 0.0;
-		(cancelButton.animator.alphaValue) = 1.0;
-		// Constraint
-		(cancelLeadingConstraint.constant) = -250.0;
-		(cancelLeadingConstraint.animator.constant) = 0.0;
-		
-		// Confirm button
-		(confirmButton.alphaValue) = 0.0;
-		(confirmButton.animator.alphaValue) = 1.0;
-		// Constraint
-		(confirmTrailingConstraint.constant) = 250.0;
-		(confirmTrailingConstraint.animator.constant) = 0.0;
-	} completionHandler:^ {
-		(self.animatingCounter)--;
-	}];
+	(self.addingNewProjectButtonGroup) = buttonGroup;
 }
 
 - (void)hideButtonsForAddingNewProject
 {
-	[self hideLeadingButton:(self.addingNewProjectCancelButton) trailingButton:(self.addingNewProjectConfirmButton) centerButton:nil completionHandler:^{
+	[(self.addingNewProjectButtonGroup) animateButtonsOutWithCompletionHandler:^{
 		(self.addingNewProjectCancelButton) = nil;
-		(self.addingNewProjectConfirmButton) = nil;
+		(self.addingNewProjectButtonGroup) = nil;
 	}];
 }
 
 - (void)showButtonsForCurrentCollection
 {
+	GLAMainNavigationButtonGroup *buttonGroup = [GLAMainNavigationButtonGroup buttonGroupWithBarController:self];
+	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	GLAMainContentSection *currentSection = (self.currentSection);
-	NSAssert1([currentSection isKindOfClass:[GLAMainContentEditCollectionSection class]], @"Current section (%@) must be a GLAMainContentEditCollectedSection when calling -showButtonsForCurrentCollection", currentSection);
+	NSAssert([currentSection isKindOfClass:[GLAMainContentEditCollectionSection class]], @"Current section (%@) must be a GLAMainContentEditCollectedSection when calling -showButtonsForCurrentCollection", currentSection);
 	
 	GLAMainContentEditCollectionSection *editCollectionSection = (GLAMainContentEditCollectionSection *)currentSection;
 	GLACollection *collection = (editCollectionSection.collection);
 	
 	// Back
 	NSString *backTitle = NSLocalizedString(@"Back", @"Title for collection back button to go back");
-	GLAButton *backButton = [self addLeadingButtonWithTitle:backTitle action:@selector(exitEditedCollection:) identifier:@"back-collection"];
-	(self.collectionBackButton) = backButton;
-	NSLayoutConstraint *backLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:backButton];
+	(self.collectionBackButton) = [buttonGroup makeLeadingButtonWithTitle:backTitle action:@selector(exitEditedCollection:) identifier:@"back-collection"];
 	
 	// Collection title
 	NSString *collectionTitle = (collection.title);
-	GLAButton *titleButton = [self addCenterButtonWithTitle:collectionTitle action:nil identifier:@"collectionTitle"];
-	(titleButton.textHighlightColor) = [uiStyle colorForProjectItemColorIdentifier:(collection.colorIdentifier)];
+	GLAButton *titleButton = [buttonGroup makeCenterButtonWithTitle:collectionTitle action:nil identifier:@"collectionTitle"];
+	(titleButton.textHighlightColor) = [uiStyle colorForCollectionColor:(collection.color)];
 	(self.collectionTitleButton) = titleButton;
-	NSLayoutConstraint *titleTopConstraint = [self layoutConstraintWithIdentifier:@"top" forChildView:titleButton];
 	
+
+	(buttonGroup.centerButtonInDuration) = 2.3 / 12.0;
+	(buttonGroup.leadingButtonInDuration) = 2.4 / 12.0;
+	[buttonGroup animateButtonsIn];
 	
-	(self.animatingCounter)++;
-	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-		(context.duration) = 2.1 / 12.0;
-		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-		
-		// Confirm button
-		(titleButton.alphaValue) = 0.0;
-		(titleButton.animator.alphaValue) = 1.0;
-		// Constraint
-		(titleTopConstraint.constant) = 50.0;
-		(titleTopConstraint.animator.constant) = 0.0;
-	} completionHandler:^ {
-		(self.animatingCounter)--;
-	}];
+	(self.collectionButtonGroup) = buttonGroup;
+	/*
+	 GLAMainNavigationButtonGroup *buttonGroup = ...
+	 [buttonGroup animateInButtonsInWithIDs:@[@"collectionTitle"] duration:(2.1 / 12.0)];
+	*/
 	
-	
-	(self.animatingCounter)++;
-	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-		(context.duration) = 2.9 / 12.0;
-		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-		
-		// Back button
-		(backButton.alphaValue) = 0.0;
-		(backButton.animator.alphaValue) = 1.0;
-		// Constraint
-		(backLeadingConstraint.constant) = -250.0;
-		(backLeadingConstraint.animator.constant) = 0.0;
-	} completionHandler:^ {
-		(self.animatingCounter)--;
-	}];
-	
-	
-	NSColor *collectionColor = [uiStyle colorForProjectItemColorIdentifier:(collection.colorIdentifier)];
+	NSColor *collectionColor = [uiStyle colorForCollectionColor:(collection.color)];
 	//[self animateBackgroundColorTo:collectionColor];
 	[(self.navigationBar) highlightWithColor:collectionColor animate:YES];
 }
 
 - (void)hideButtonsForCurrentCollection
 {
-	[self hideLeadingButton:(self.collectionBackButton) trailingButton:nil centerButton:(self.collectionTitleButton) completionHandler:^{
+	[(self.collectionButtonGroup) animateButtonsOutWithCompletionHandler:^{
 		(self.collectionBackButton) = nil;
 		(self.collectionTitleButton) = nil;
+		(self.collectionButtonGroup) = nil;
 	}];
 	
 	[(self.navigationBar) highlightWithColor:nil animate:YES];
@@ -443,7 +434,7 @@
 	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
 		GLAMainContentSection *currentSection = (self.currentSection);
-		NSAssert1([currentSection isKindOfClass:[GLAMainContentEditProjectSection class]], @"Current section (%@) must be a GLAMainContentEditProjectSection when calling -workOnCurrentProjectNow: action", currentSection);
+		NSAssert([currentSection isKindOfClass:[GLAMainContentEditProjectSection class]], @"Current section (%@) must be a GLAMainContentEditProjectSection when calling -workOnCurrentProjectNow: action", currentSection);
 		
 		GLAMainContentEditProjectSection *editProjectSection = (GLAMainContentEditProjectSection *)currentSection;
 		[delegate mainNavigationBarController:self performWorkOnProjectNow:(editProjectSection.project)];
@@ -516,6 +507,8 @@
 {
 	GLAButton *button = [self addButtonWithTitle:title action:action identifier:identifier];
 	
+	(button.hasSecondaryStyle) = YES;
+	
 	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:button identifier:@"leading"];
 	
 	return button;
@@ -525,6 +518,8 @@
 {
 	GLAButton *button = [self addButtonWithTitle:title action:action identifier:identifier];
 	
+	(button.hasSecondaryStyle) = YES;
+	
 	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTrailing withChildView:button identifier:@"trailing"];
 	
 	return button;
@@ -532,7 +527,10 @@
 
 - (GLAButton *)addCenterButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier
 {
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	GLAButton *button = [self addButtonWithTitle:title action:action identifier:identifier];
+	
+	(button.font) = (uiStyle.labelFont);
 	
 	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeCenterX withChildView:button identifier:@"centerX"];
 	
@@ -544,4 +542,151 @@
 	
 }
 
+@end
+
+
+@implementation GLAMainNavigationButtonGroup
+
++ (instancetype)buttonGroupWithBarController:(GLAMainNavigationBarController *)barController
+{
+	GLAMainNavigationButtonGroup *buttonGroup = [GLAMainNavigationButtonGroup new];
+	(buttonGroup.barController) = barController;
+	
+	return buttonGroup;
+}
+
+- (GLAButton *)makeLeadingButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier
+{
+	GLAMainNavigationBarController *barController = (self.barController);
+	
+	GLAButton *button = [barController addLeadingButtonWithTitle:title action:action identifier:identifier];
+	(self.leadingButton) = button;
+	
+	return button;
+}
+
+- (GLAButton *)makeCenterButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier
+{
+	GLAMainNavigationBarController *barController = (self.barController);
+	
+	GLAButton *button = [barController addCenterButtonWithTitle:title action:action identifier:identifier];
+	(self.centerButton) = button;
+	
+	return button;
+}
+
+- (GLAButton *)makeTrailingButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier
+{
+	GLAMainNavigationBarController *barController = (self.barController);
+	
+	GLAButton *button = [barController addTrailingButtonWithTitle:title action:action identifier:identifier];
+	(self.trailingButton) = button;
+	
+	return button;
+}
+
+- (void)willBeginAnimating
+{
+	GLAMainNavigationBarController *barController = (self.barController);
+	(barController.animatingCounter)++;
+}
+
+- (void)didEndAnimating
+{
+	GLAMainNavigationBarController *barController = (self.barController);
+	(barController.animatingCounter)--;
+}
+
+- (void)animateInButton:(GLAButton *)button duration:(NSTimeInterval)duration constraintIdentifier:(NSString *)constraintIdentifier constraintStartValue:(CGFloat)constraintStartValue
+{
+	GLAMainNavigationBarController *barController = (self.barController);
+	
+	[self willBeginAnimating];
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = duration;
+		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+		
+		NSLayoutConstraint *constraint = [barController layoutConstraintWithIdentifier:constraintIdentifier forChildView:button];
+		
+		(button.alphaValue) = 0.0;
+		(button.animator.alphaValue) = 1.0;
+		
+		(constraint.constant) = constraintStartValue;
+		(constraint.animator.constant) = 0.0;
+	} completionHandler:^ {
+		[self didEndAnimating];
+	}];
+}
+
+- (void)animateOutButton:(GLAButton *)button duration:(NSTimeInterval)duration constraintIdentifier:(NSString *)constraintIdentifier constraintEndValue:(CGFloat)constraintEndValue completionHandler:(dispatch_block_t)completionHandler
+{
+	GLAMainNavigationBarController *barController = (self.barController);
+	
+	[self willBeginAnimating];
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = duration;
+		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+		
+		NSLayoutConstraint *constraint = [barController layoutConstraintWithIdentifier:constraintIdentifier forChildView:button];
+		
+		(button.animator.alphaValue) = 0.0;
+		
+		(constraint.animator.constant) = constraintEndValue;
+	} completionHandler:^ {
+		[button removeFromSuperview];
+		
+		completionHandler();
+		
+		[self didEndAnimating];
+	}];
+}
+
+- (void)animateButtonsIn
+{
+	GLAButton *leadingButton = (self.leadingButton);
+	GLAButton *centerButton = (self.centerButton);
+	GLAButton *trailingButton = (self.trailingButton);
+	
+	if (leadingButton) {
+		[self animateInButton:leadingButton duration:(self.leadingButtonInDuration) constraintIdentifier:@"leading" constraintStartValue:-250.0];
+	}
+	
+	if (centerButton) {
+		[self animateInButton:centerButton duration:(self.centerButtonInDuration) constraintIdentifier:@"top" constraintStartValue:50.0];
+	}
+	
+	if (trailingButton) {
+		[self animateInButton:trailingButton duration:(self.trailingButtonInDuration) constraintIdentifier:@"trailing" constraintStartValue:250.0];
+	}
+}
+
+- (void)animateButtonsOutWithCompletionHandler:(dispatch_block_t)completionHandler
+{
+	GLAButton *leadingButton = (self.leadingButton);
+	GLAButton *centerButton = (self.centerButton);
+	GLAButton *trailingButton = (self.trailingButton);
+	__block NSUInteger buttonsAnimating = 0;
+	
+	dispatch_block_t individualButtonCompletionHandler = ^{
+		buttonsAnimating--;
+		if (buttonsAnimating == 0) {
+			completionHandler();
+		}
+	};
+	
+	if (leadingButton) {
+		buttonsAnimating++;
+		[self animateOutButton:leadingButton duration:(self.leadingButtonInDuration) constraintIdentifier:@"leading" constraintEndValue:-250.0 completionHandler:individualButtonCompletionHandler];
+	}
+	
+	if (centerButton) {
+		buttonsAnimating++;
+		[self animateOutButton:centerButton duration:(self.centerButtonInDuration) constraintIdentifier:@"top" constraintEndValue:50.0 completionHandler:individualButtonCompletionHandler];
+	}
+	
+	if (trailingButton) {
+		buttonsAnimating++;
+		[self animateOutButton:trailingButton duration:(self.trailingButtonInDuration) constraintIdentifier:@"trailing" constraintEndValue:250.0 completionHandler:individualButtonCompletionHandler];
+	}
+}
 @end

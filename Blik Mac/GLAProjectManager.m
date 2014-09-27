@@ -10,6 +10,7 @@
 #import "Mantle/Mantle.h"
 #import "GLAModelErrors.h"
 #import "GLACollection.h"
+#import "GLACollectionColor.h"
 #import "GLACollectionFilesListContent.h"
 #import "GLAArrayEditor.h"
 
@@ -39,6 +40,8 @@
 
 - (GLAArrayEditor *)collectionEditorForProject:(GLAProject *)project;
 - (NSArray *)copyCollectionsForProject:(GLAProject *)project;
+
+//- (NSSet *)loadedProjectUUIDsContainingCollection:(GLACollection *)collection;
 
 #pragma mark Editing
 
@@ -221,9 +224,40 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	// Call the passed block to make changes.
 	block(arrayEditor);
 	
+	[self collectionListForProjectDidChange:project];
 	[store requestSaveCollectionsForProject:project];
 	
 	return YES;
+}
+
+- (GLACollection *)editCollection:(GLACollection *)collection inProject:(GLAProject *)project usingBlock:(void(^)(id<GLACollectionEditing>collectionEditor))editBlock
+{
+	GLAProjectManagerStore *store = (self.store);
+	
+	GLACollection *changedCollection = [collection copyWithChangesFromEditing:editBlock];
+	
+	GLAArrayEditor *arrayEditor = [store collectionEditorForProject:project];
+	[arrayEditor replaceChildWithValueForKey:@"UUID" equalToValue:(collection.UUID) withObject:changedCollection];
+	
+	[self collectionListForProjectDidChange:project];
+	[store requestSaveCollectionsForProject:project];
+	
+	return changedCollection;
+
+}
+
+- (GLACollection *)renameCollection:(GLACollection *)collection inProject:(GLAProject *)project toString:(NSString *)name
+{
+	return [self editCollection:collection inProject:project usingBlock:^(id<GLACollectionEditing> collectionEditor) {
+		(collectionEditor.title) = name;
+	}];
+}
+
+- (GLACollection *)changeColorOfCollection:(GLACollection *)collection inProject:(GLAProject *)project toColor:(GLACollectionColor *)color
+{
+	return [self editCollection:collection inProject:project usingBlock:^(id<GLACollectionEditing> collectionEditor) {
+		(collectionEditor.color) = color;
+	}];
 }
 
 #pragma mark Notifications
@@ -301,11 +335,11 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	
 	return
 	@[
-	  [GLACollection dummyCollectionWithTitle:@"Working Files" colorIdentifier:GLACollectionColorLightBlue content:filesListContent],
-	  [GLACollection dummyCollectionWithTitle:@"Briefs" colorIdentifier:GLACollectionColorGreen content:filesListContent],
-	  [GLACollection dummyCollectionWithTitle:@"Contacts" colorIdentifier:GLACollectionColorPinkyPurple content:filesListContent],
-	  [GLACollection dummyCollectionWithTitle:@"Apps" colorIdentifier:GLACollectionColorRed content:filesListContent],
-	  [GLACollection dummyCollectionWithTitle:@"Research" colorIdentifier:GLACollectionColorYellow content:filesListContent]
+	  [GLACollection dummyCollectionWithTitle:@"Working Files" color:[GLACollectionColor lightBlue] content:filesListContent],
+	  [GLACollection dummyCollectionWithTitle:@"Briefs" color:[GLACollectionColor green] content:filesListContent],
+	  [GLACollection dummyCollectionWithTitle:@"Contacts" color:[GLACollectionColor pinkyPurple] content:filesListContent],
+	  [GLACollection dummyCollectionWithTitle:@"Apps" color:[GLACollectionColor red] content:filesListContent],
+	  [GLACollection dummyCollectionWithTitle:@"Research" color:[GLACollectionColor yellow] content:filesListContent]
 	  ];
 }
 
@@ -322,6 +356,7 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 @property(readwrite, nonatomic) GLAProject *nowProject;
 
 @property(nonatomic) NSMutableDictionary *projectIDsToCollectionLists;
+@property(nonatomic) NSMutableDictionary *collectionIdentifiersToProjectIDSets;
 
 @property(readonly, nonatomic) NSURL *allProjectsJSONFileURL;
 @property(readonly, nonatomic) NSURL *nowProjectJSONFileURL;

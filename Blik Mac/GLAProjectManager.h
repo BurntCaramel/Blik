@@ -49,8 +49,13 @@
 - (void)deleteProjectPermanently:(GLAProject *)project;
 //- (id<GLAProjectEditing>)editProject:(id<GLAProjectBaseReading>)project;
 
-- (BOOL)editProjectCollections:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionsEditor))block;
+- (BOOL)editProjectCollections:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionListEditor))block;
 //- (id<GLAProjectEditing>)editProject:(GLAProject *)project;
+
+- (GLACollection *)editCollection:(GLACollection *)collection inProject:(GLAProject *)project usingBlock:(void(^)(id<GLACollectionEditing>collectionEditor))editBlock;
+
+- (GLACollection *)renameCollection:(GLACollection *)collection inProject:(GLAProject *)project toString:(NSString *)name;
+- (GLACollection *)changeColorOfCollection:(GLACollection *)collection inProject:(GLAProject *)project toColor:(GLACollectionColor *)color;
 
 #pragma mark Saving
 
@@ -61,10 +66,11 @@
 
 - (void)projectNameDidChange:(GLAProject *)project; // Name
 
-- (void)projectCollectionsListDidChange:(GLAProject *)project; // Added, removed, reordered
+- (void)collectionListForProjectDidChange:(GLAProject *)project; // Added, removed, reordered
 - (void)projectRemindersListDidChange:(GLAProject *)project; // Added, removed
 
-- (void)collectionDidChange:(GLACollection *)collection insideProject:(GLAProject *)project;
+- (void)collectionDidChange:(GLACollection *)collection insideProject:(GLAProject *)project; // Renamed, color changed, content changed.
+
 - (void)reminderDidChange:(GLACollection *)collection insideProject:(GLAProject *)project;
 
 @end
@@ -73,6 +79,11 @@
 extern NSString *GLAProjectManagerAllProjectsDidChangeNotification;
 extern NSString *GLAProjectManagerPlannedProjectsDidChangeNotification;
 extern NSString *GLAProjectManagerNowProjectDidChangeNotification;
+
 extern NSString *GLAProjectManagerProjectCollectionsDidChangeNotification;
+extern NSString *GLAProjectManagerCollectionPropertiesDidChangeNotification;
+
 extern NSString *GLAProjectManagerProjectRemindersDidChangeNotification;
+
 extern NSString *GLAProjectManagerNotificationProjectKey;
+extern NSString *GLAProjectManagerNotificationChangedPropertiesKey;

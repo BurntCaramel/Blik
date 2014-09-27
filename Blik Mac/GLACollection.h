@@ -10,16 +10,7 @@
 #import "Mantle/Mantle.h"
 @class GLAProject;
 @class GLACollectionContent;
-
-
-typedef NS_ENUM(NSInteger, GLACollectionColor) {
-	GLACollectionColorUnknown,
-	GLACollectionColorLightBlue,
-	GLACollectionColorGreen,
-	GLACollectionColorPinkyPurple,
-	GLACollectionColorRed,
-	GLACollectionColorYellow
-};
+@class GLACollectionColor;
 
 
 @protocol GLACollectedItem <NSObject>
@@ -29,18 +20,32 @@ typedef NS_ENUM(NSInteger, GLACollectionColor) {
 @end
 
 
+@protocol GLACollectionEditing <NSObject>
+
+//@property(weak, nonatomic) GLAProject *project;
+
+@property(readwrite, nonatomic) GLACollectionContent *content;
+@property(readwrite, copy, nonatomic) NSString *title;
+
+@property(readwrite, nonatomic) GLACollectionColor *color;
+
+@end
+
+
 @interface GLACollection : MTLModel <GLACollectedItem, MTLJSONSerializing, NSPasteboardReading, NSPasteboardWriting>
 
-@property(weak, nonatomic) GLAProject *project;
+//@property(readonly, weak, nonatomic) GLAProject *project;
 
-@property(nonatomic) GLACollectionContent *content;
+@property(readonly, nonatomic) GLACollectionContent *content;
 
 @property(readonly, nonatomic) NSUUID *UUID;
-@property(copy, nonatomic) NSString *title;
+@property(readonly, copy, nonatomic) NSString *title;
 
-@property(nonatomic) GLACollectionColor colorIdentifier;
+@property(readonly, nonatomic) GLACollectionColor *color;
 
-+ (NSValueTransformer *)colorIdentifierValueTransformer;
++ (instancetype)newWithCreationFromEditing:(void(^)(id<GLACollectionEditing>collectionEditor))editingBlock;
+
+- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLACollectionEditing>collectionEditor))editingBlock;
 
 @end
 
@@ -60,28 +65,6 @@ extern NSString *GLACollectionJSONPasteboardType;
 
 @interface GLACollection (GLADummyContent)
 
-+ (instancetype)dummyCollectionWithTitle:(NSString *)title colorIdentifier:(GLACollectionColor)colorIdentifier content:(GLACollectionContent *)content;
++ (instancetype)dummyCollectionWithTitle:(NSString *)title color:(GLACollectionColor *)color content:(GLACollectionContent *)content;
 
-@end
-
-
-@protocol GLACollectionListEditing <NSObject>
-
-- (void)addChildCollections:(NSArray *)collections;
-- (void)insertChildCollections:(NSArray *)collections atIndexes:(NSIndexSet *)indexes;
-//- (void)removeChildCollections:(NSArray *)collections;
-- (void)removeChildCollectionsAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceChildCollectionsAtIndexes:(NSIndexSet *)indexes withChildCollections:(NSArray *)collections;
-- (void)moveChildCollectionsAtIndexes:(NSIndexSet *)indexes toIndex:(NSUInteger)toIndex;
-
-- (NSArray *)copyCollections;
-- (NSArray *)childCollectionsAtIndexes:(NSIndexSet *)indexes;
-
-//- (void)addObserverForAnyChanges:(void(^)(void))block;
-
-/*
-- (void)addObserverForInsertedCollections:(void(^)(NSIndexSet *indexesInserted))block;
-- (void)addObserverForRemovedCollections:(void(^)(NSIndexSet *indexesRemoved, NSArray *collectionsRemoved))block;
-- (void)addObserverForChangedIndexes:(void(^)(NSIndexSet *indexesChanged))block;
-*/
 @end

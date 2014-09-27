@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="GLACollectionColorPickerViewController">
+            <connections>
+                <outlet property="colorGridCollectionView" destination="oZ7-mk-eAc" id="fwJ-aG-cSX"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="208" height="160"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gpQ-UD-Abz">
+                    <rect key="frame" x="0.0" y="0.0" width="208" height="160"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <clipView key="contentView" id="bW8-wI-zQy">
+                        <rect key="frame" x="0.0" y="0.0" width="208" height="160"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView selectable="YES" maxNumberOfColumns="4" id="oZ7-mk-eAc">
+                                <rect key="frame" x="0.0" y="0.0" width="208" height="160"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                <connections>
+                                    <outlet property="delegate" destination="-2" id="ELx-Ha-fxQ"/>
+                                    <outlet property="itemPrototype" destination="KFD-yP-u1m" id="HfR-im-yBR"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                    </clipView>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="208" id="RfH-35-ZtR"/>
+                        <constraint firstAttribute="height" constant="160" id="aDc-Y4-xsn"/>
+                    </constraints>
+                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="hhN-x5-8S9">
+                        <rect key="frame" x="1" y="144" width="233" height="15"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="MPo-FK-Ja9">
+                        <rect key="frame" x="234" y="1" width="15" height="143"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                </scrollView>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="gpQ-UD-Abz" secondAttribute="bottom" id="3vM-hh-9Ox"/>
+                <constraint firstItem="gpQ-UD-Abz" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="A7R-lR-o3B"/>
+                <constraint firstAttribute="trailing" secondItem="gpQ-UD-Abz" secondAttribute="trailing" id="ALN-wE-VQQ"/>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="gpQ-UD-Abz" secondAttribute="bottom" id="NLt-RC-Fkd"/>
+                <constraint firstItem="gpQ-UD-Abz" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="kIY-hM-RbD"/>
+                <constraint firstItem="gpQ-UD-Abz" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="oPN-f3-gGZ"/>
+            </constraints>
+        </customView>
+        <collectionViewItem id="KFD-yP-u1m" customClass="GLACollectionViewColorChoiceItem">
+            <connections>
+                <outlet property="colorChoiceView" destination="pRD-ff-Vrw" id="hQH-Hf-ev7"/>
+                <outlet property="view" destination="fPQ-gN-IRX" id="MuK-gL-0ah"/>
+            </connections>
+        </collectionViewItem>
+        <view id="fPQ-gN-IRX">
+            <rect key="frame" x="0.0" y="0.0" width="52" height="52"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <customView identifier="colorChoice" translatesAutoresizingMaskIntoConstraints="NO" id="pRD-ff-Vrw" customClass="GLAColorChoiceView">
+                    <rect key="frame" x="10" y="10" width="32" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="Jg5-x4-pJe"/>
+                        <constraint firstAttribute="width" constant="32" id="SN7-3t-HIc"/>
+                    </constraints>
+                </customView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="pRD-ff-Vrw" firstAttribute="top" secondItem="fPQ-gN-IRX" secondAttribute="top" constant="10" id="LVS-bm-cR6"/>
+                <constraint firstAttribute="centerY" secondItem="pRD-ff-Vrw" secondAttribute="centerY" id="g0o-PM-aDP"/>
+                <constraint firstAttribute="centerX" secondItem="pRD-ff-Vrw" secondAttribute="centerX" id="gv6-Ez-6qL"/>
+                <constraint firstItem="pRD-ff-Vrw" firstAttribute="leading" secondItem="fPQ-gN-IRX" secondAttribute="leading" constant="10" id="zZD-AT-4w5"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

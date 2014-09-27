@@ -7,6 +7,8 @@
 //
 
 #import "GLAAddNewProjectViewController.h"
+#import "GLAUIStyle.h"
+
 
 @interface GLAAddNewProjectViewController ()
 
@@ -23,11 +25,26 @@
     return self;
 }
 
+- (void)prepareView
+{
+	[super prepareView];
+	
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	NSTextField *nameLabel = (self.nameLabel);
+	(nameLabel.textColor) = (uiStyle.lightTextColor);
+	(nameLabel.layer.borderColor) = [NSColor colorWithCalibratedWhite:0.5 alpha:1.0].CGColor;
+}
+
 - (void)resetAndFocus
 {
 	(self.nameTextField.stringValue) = @"";
 	
 	[(self.view.window) makeFirstResponder:(self.nameTextField)];
+}
+
+- (IBAction)confirmCreate:(id)sender
+{
+	
 }
 
 @end

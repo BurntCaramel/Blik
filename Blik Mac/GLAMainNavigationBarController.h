@@ -14,6 +14,7 @@
 #import "GLAProject.h"
 #import "GLACollection.h"
 #import "GLAMainContentSection.h"
+@class GLAMainNavigationButtonGroup;
 
 
 typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
@@ -43,9 +44,11 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 @property(nonatomic) IBOutlet GLAButton *addingNewProjectCancelButton;
 @property(nonatomic) IBOutlet GLAButton *addingNewProjectConfirmButton;
+@property(nonatomic) GLAMainNavigationButtonGroup *addingNewProjectButtonGroup;
 
 @property(nonatomic) IBOutlet GLAButton *collectionTitleButton;
 @property(nonatomic) IBOutlet GLAButton *collectionBackButton;
+@property(nonatomic) GLAMainNavigationButtonGroup *collectionButtonGroup;
 
 @property(nonatomic) IBOutlet NSLayoutConstraint *allButtonTopConstraint;
 @property(nonatomic) IBOutlet NSLayoutConstraint *todayButtonTopConstraint;

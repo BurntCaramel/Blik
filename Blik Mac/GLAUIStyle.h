@@ -9,6 +9,7 @@
 @import Cocoa;
 @import QuartzCore;
 #import "GLACollection.h"
+#import "GLACollectionColor.h"
 
 
 @interface GLAUIStyle : NSObject
@@ -18,61 +19,71 @@
 
 #pragma mark Colors
 
-@property (nonatomic) NSColor *barBackgroundColor;
-@property (nonatomic) NSColor *contentBackgroundColor;
+@property(nonatomic) NSColor *barBackgroundColor;
+@property(nonatomic) NSColor *contentBackgroundColor;
 
-@property (nonatomic) NSColor *activeBarBackgroundColor;
-@property (nonatomic) NSColor *activeBarTextColor;
+@property(nonatomic) NSColor *activeBarBackgroundColor;
+@property(nonatomic) NSColor *activeBarTextColor;
 
-@property (nonatomic) NSColor *activeButtonHighlightColor;
-@property (nonatomic) NSColor *activeButtonDisabledHighlightColor;
+@property(nonatomic) NSColor *activeButtonHighlightColor;
+@property(nonatomic) NSColor *activeButtonDisabledHighlightColor;
 
-@property (nonatomic) NSColor *lightTextColor;
-@property (nonatomic) NSColor *lightTextDisabledColor;
-@property (strong, nonatomic) NSColor *(^lightTextColorAtLevelBlock)(GLAUIStyle *style, NSUInteger level);
+@property(nonatomic) NSColor *primaryButtonBackgroundColor;
+@property(nonatomic) NSColor *primaryButtonTextColor;
+
+@property(nonatomic) NSColor *secondaryButtonBackgroundColor;
+@property(nonatomic) NSColor *secondaryButtonTextColor;
+
+@property(nonatomic) NSColor *lightTextColor;
+@property(nonatomic) NSColor *lightTextDisabledColor;
+@property(strong, nonatomic) NSColor *(^lightTextColorAtLevelBlock)(GLAUIStyle *style, NSUInteger level);
 - (NSColor *)lightTextColorAtLevel:(NSUInteger)level;
 
-@property (nonatomic) NSColor *activeTextColor;
-@property (nonatomic) NSColor *activeTextDisabledColor;
+@property(nonatomic) NSColor *activeTextColor;
+@property(nonatomic) NSColor *activeTextDisabledColor;
 
-@property (nonatomic) NSColor *editedTextColor;
-@property (nonatomic) NSColor *editedTextBackgroundColor;
+@property(nonatomic) NSColor *editedTextColor;
+@property(nonatomic) NSColor *editedTextBackgroundColor;
 
-@property (nonatomic) NSColor *toggleBorderColor;
-@property (nonatomic) NSColor *toggleInsideColor;
+@property(nonatomic) NSColor *roundedToggleBorderColor;
+@property(nonatomic) NSColor *roundedToggleInsideColor;
 
-@property (nonatomic) NSColor *projectTableRowHoverBackgroundColor;
-@property (nonatomic) NSColor *projectTableDividerColor;
+@property(nonatomic) NSColor *projectTableRowHoverBackgroundColor;
+@property(nonatomic) NSColor *projectTableDividerColor;
 
-@property (nonatomic) NSColor *deleteProjectButtonColor;
+@property(nonatomic) NSColor *deleteProjectButtonColor;
 
-@property (nonatomic) NSColor *contentTableSelectionColor;
+@property(nonatomic) NSColor *contentTableSelectionColor;
 
-@property (nonatomic) NSColor *splitViewDividerColor;
+@property(nonatomic) NSColor *splitViewDividerColor;
 
 
-@property (nonatomic) NSColor *lightBlueItemColor;
-@property (nonatomic) NSColor *greenItemColor;
-@property (nonatomic) NSColor *pinkyPurpleItemColor;
-@property (nonatomic) NSColor *reddishItemColor;
-@property (nonatomic) NSColor *yellowItemColor;
+@property(nonatomic) NSColor *lightBlueItemColor;
+@property(nonatomic) NSColor *greenItemColor;
+@property(nonatomic) NSColor *pinkyPurpleItemColor;
+@property(nonatomic) NSColor *reddishItemColor;
+@property(nonatomic) NSColor *yellowItemColor;
 
-- (NSColor *)colorForProjectItemColorIdentifier:(GLACollectionColor)colorIdentifier;
+- (NSColor *)colorForCollectionColor:(GLACollectionColor *)color;
+
+
+@property(nonatomic) NSColor *chooseColorBackgroundColor;
 
 
 #pragma mark Fonts
 
-@property (nonatomic) NSFont *projectTitleFont;
+@property(nonatomic) NSFont *projectTitleFont;
 
-@property (nonatomic) NSFont *collectionFont;
+@property(nonatomic) NSFont *collectionFont;
 
-@property (nonatomic) NSFont *smallReminderFont;
-@property (nonatomic) NSFont *smallReminderDueDateFont;
+@property(nonatomic) NSFont *smallReminderFont;
+@property(nonatomic) NSFont *smallReminderDueDateFont;
 
-@property (nonatomic) NSFont *highlightedReminderFont;
-@property (nonatomic) NSFont *highlightedReminderDueDateFont;
+@property(nonatomic) NSFont *highlightedReminderFont;
+@property(nonatomic) NSFont *highlightedReminderDueDateFont;
 
-@property (nonatomic) NSFont *buttonFont;
+@property(nonatomic) NSFont *buttonFont;
+@property(nonatomic) NSFont *labelFont;
 
 
 #pragma mark Preparing Views

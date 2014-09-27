@@ -28,13 +28,13 @@
 	NSRect ellipseRect = NSMakeRect(NSMinX(frame) + offset.x, NSMinY(frame) + offset.y, ellipseDimension, ellipseDimension);
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
-	[(uiStyle.toggleBorderColor) setStroke];
+	[(uiStyle.roundedToggleBorderColor) setStroke];
 	[[NSBezierPath bezierPathWithOvalInRect:NSInsetRect(ellipseRect, 0.5, 0.5)] stroke];
 	
 	if (self.isOnAndShowsOnState) {
 		CGFloat inset = 3.0; // OR 2.0
 		NSRect insideEllipseRect = NSInsetRect(ellipseRect, inset, inset);
-		[(uiStyle.toggleInsideColor) setFill];
+		[(uiStyle.roundedToggleInsideColor) setFill];
 		[[NSBezierPath bezierPathWithOvalInRect:insideEllipseRect] fill];
 	}
 }

@@ -8,6 +8,7 @@
 
 @import Cocoa;
 
+
 @interface GLAMainWindow : NSWindow
 
 @end

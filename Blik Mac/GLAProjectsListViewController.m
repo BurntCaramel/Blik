@@ -32,26 +32,16 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
     return self;
 }
 
-- (void)prepareViews
+- (void)prepareView
 {
+	[super prepareView];
+	
 	NSTableView *tableView = (self.tableView);
 	(tableView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
 	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
 	
 	NSScrollView *scrollView = [tableView enclosingScrollView];
 	(scrollView.wantsLayer) = YES;
-}
-
-- (void)loadView
-{
-	[super loadView];
-	
-	[self prepareViews];
-}
-
-- (void)awakeFromNib
-{
-	//[self prepareViews];
 }
 
 - (void)viewDidAppear
@@ -129,7 +119,7 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	//(plannedDateTextField.textColor) = (activeStyle.lightTextSecondaryColor);
 	
 	GLANavigationButton *workOnNowButton = (cellView.workOnNowButton);
-	(workOnNowButton.alwaysHighlighted) = YES;
+	//(workOnNowButton.alwaysHighlighted) = YES;
 	(workOnNowButton.target) = self;
 	(workOnNowButton.action) = @selector(workOnProjectNowClicked:);
 	(workOnNowButton.tag) = row;

@@ -67,21 +67,27 @@
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
                                                     </button>
-                                                    <button horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RUk-GO-gyx" customClass="GLAButton">
-                                                        <rect key="frame" x="385" y="10" width="92" height="23"/>
+                                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RUk-GO-gyx" customClass="GLAButton">
+                                                        <rect key="frame" x="385" y="10" width="92" height="24"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="23" id="51Q-Ms-aPB"/>
+                                                            <constraint firstAttribute="height" constant="24" id="51Q-Ms-aPB"/>
                                                         </constraints>
-                                                        <buttonCell key="cell" type="square" title="Work on Now" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="right" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eD0-2P-IqQ" customClass="GLAButtonCell">
+                                                        <buttonCell key="cell" type="square" title="Work on Now" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eD0-2P-IqQ" customClass="GLAButtonCell">
                                                             <behavior key="behavior" lightByContents="YES"/>
                                                             <font key="font" size="13" name="AvenirNext-Medium"/>
                                                         </buttonCell>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="hasPrimaryStyle" value="YES"/>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                                                                <integer key="value" value="0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
                                                     </button>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rPy-bU-lu1">
-                                                        <rect key="frame" x="149" y="10" width="199" height="23"/>
+                                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rPy-bU-lu1">
+                                                        <rect key="frame" x="175" y="10" width="147" height="23"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Planned for Thursday 5th of June" id="Ulw-kA-GfG">
+                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="for Thursday 5th of June" id="Ulw-kA-GfG">
                                                             <font key="font" size="13" name="AvenirNext-MediumItalic"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -97,7 +103,6 @@
                                                     <constraint firstAttribute="bottom" secondItem="rPy-bU-lu1" secondAttribute="bottom" constant="10" id="c4f-0C-5wn"/>
                                                     <constraint firstItem="UnQ-Ry-Bvo" firstAttribute="trailing" secondItem="RUk-GO-gyx" secondAttribute="trailing" id="h8x-iC-tjy"/>
                                                     <constraint firstItem="UnQ-Ry-Bvo" firstAttribute="leading" secondItem="LCw-fj-f7m" secondAttribute="leading" constant="20" symbolic="YES" id="rDn-CG-94M"/>
-                                                    <constraint firstItem="RUk-GO-gyx" firstAttribute="leading" secondItem="rPy-bU-lu1" secondAttribute="trailing" priority="250" constant="8" id="x3Y-q3-QFm"/>
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="plannedDateTextField" destination="rPy-bU-lu1" id="4ux-3e-gac"/>

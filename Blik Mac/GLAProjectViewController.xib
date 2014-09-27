@@ -368,7 +368,7 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="square" title="Finish Editing Collections" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Rab-Rf-U7k" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" size="13" name="AvenirNext-DemiBold"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
                     </buttonCell>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
@@ -395,7 +395,7 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="square" title="Finish Editing Plan" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="UHM-eY-8iR" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" size="13" name="AvenirNext-DemiBold"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
                     </buttonCell>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
@@ -431,7 +431,7 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
                             <integer key="value" value="-2"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="alwaysHighlighted" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="chooseExistingReminders:" target="aDf-pc-aeE" id="zor-Hg-E3k"/>
@@ -451,7 +451,7 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
                             <integer key="value" value="-2"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="alwaysHighlighted" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasPrimaryStyle" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="makeNewReminder:" target="aDf-pc-aeE" id="deL-5m-9bq"/>
@@ -497,7 +497,7 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
                             <integer key="value" value="-2"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="alwaysHighlighted" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasPrimaryStyle" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="makeNewCollection:" target="raF-W4-b8E" id="MSr-nV-UdM"/>
