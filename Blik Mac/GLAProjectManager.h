@@ -52,10 +52,17 @@
 - (BOOL)editProjectCollections:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionListEditor))block;
 //- (id<GLAProjectEditing>)editProject:(GLAProject *)project;
 
+- (GLACollection *)createNewCollectionWithName:(NSString *)name content:(GLACollectionContent *)content inProject:(GLAProject *)project;
+
 - (GLACollection *)editCollection:(GLACollection *)collection inProject:(GLAProject *)project usingBlock:(void(^)(id<GLACollectionEditing>collectionEditor))editBlock;
 
 - (GLACollection *)renameCollection:(GLACollection *)collection inProject:(GLAProject *)project toString:(NSString *)name;
 - (GLACollection *)changeColorOfCollection:(GLACollection *)collection inProject:(GLAProject *)project toColor:(GLACollectionColor *)color;
+
+#pragma mark Validating
+
+- (BOOL)nameIsValid:(NSString *)name;
+- (NSString *)normalizeName:(NSString *)name;
 
 #pragma mark Saving
 

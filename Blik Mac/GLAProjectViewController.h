@@ -50,6 +50,7 @@
 
 - (IBAction)editCollections:(id)sender;
 @property(readonly, nonatomic) BOOL editingCollections;
+- (IBAction)addNewCollection:(id)sender;
 
 - (IBAction)editPlan:(id)sender;
 @property(readonly, nonatomic) BOOL editingPlan;
@@ -78,6 +79,8 @@ extern NSString *GLAProjectViewControllerDidEndEditingPlanNotification;
 
 extern NSString *GLAProjectViewControllerDidEnterCollectionNotification;
 
+extern NSString *GLAProjectViewControllerRequestAddNewCollectionNotification;
+
 
 
 @interface GLAProjectCollectionsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
@@ -87,6 +90,7 @@ extern NSString *GLAProjectViewControllerDidEnterCollectionNotification;
 @property(weak) IBOutlet GLAProjectViewController *parentViewController;
 
 @property(strong, nonatomic) IBOutlet NSMenu *contextualMenu;
+
 @property(nonatomic) NSPopover *colorChoicePopover;
 @property(nonatomic) GLACollectionColorPickerViewController *colorPickerViewController;
 

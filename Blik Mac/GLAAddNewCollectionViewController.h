@@ -1,17 +1,20 @@
 //
-//  GLAAddNewProjectViewController.h
+//  GLAAddNewCollectionViewController.h
 //  Blik
 //
-//  Created by Patrick Smith on 14/08/2014.
+//  Created by Patrick Smith on 27/09/2014.
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
 #import "GLAViewController.h"
+#import "GLAProject.h"
 #import "GLATextField.h"
 #import "GLAButton.h"
 
 
-@interface GLAAddNewProjectViewController : GLAViewController
+@interface GLAAddNewCollectionViewController : GLAViewController
+
+@property(strong, nonatomic) GLAProject *project;
 
 @property(strong, nonatomic) IBOutlet NSTextField *nameLabel;
 @property(strong, nonatomic) IBOutlet GLATextField *nameTextField;
@@ -24,4 +27,4 @@
 
 @end
 
-extern NSString *GLAAddNewProjectViewControllerDidConfirmCreatingNotification;
+extern NSString *GLAAddNewCollectionViewControllerDidConfirmCreatingNotification;

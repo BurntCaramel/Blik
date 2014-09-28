@@ -186,17 +186,24 @@
 	[self goToSection:[GLAMainContentEditProjectSection editProjectSectionWithProject:project previousSection:(self.currentSection)]];
 }
 
-#pragma mark New Project
-
-- (IBAction)addNewProject:(id)sender
+- (void)showAddNewProject
 {
 	[self goToSection:[GLAMainContentSection addNewProjectSectionWithPreviousSection:(self.currentSection)]];
 }
 
-- (void)confirmAddingNewProject
+- (void)showAddNewCollectionToProject:(GLAProject *)project
 {
-	
+	[self goToSection:[GLAMainContentAddNewCollectionSection addNewCollectionSectionToProject:project previousSection:(self.currentSection)]];
 }
+
+#pragma mark New Project
+
+- (IBAction)addNewProject:(id)sender
+{
+	[self showAddNewProject];
+}
+
+#pragma mark New Collection
 
 #pragma mark Collections
 
@@ -323,6 +330,13 @@
 	[self enterCollection:collection];
 }
 
+- (void)activeProjectViewControllerDidRequestAddNewCollection:(NSNotification *)note
+{
+	GLAProjectViewController *controller = (note.object);
+	GLAProject *project = (controller.project);
+	[self showAddNewCollectionToProject:project];
+}
+
 #pragma mark GLAMainContentViewControllerDelegate
 
 - (void)mainContentViewController:(GLAMainContentViewController *)contentViewController projectViewControllerDidBecomeActive:(GLAProjectViewController *)projectViewController
@@ -339,6 +353,9 @@
 	
 	// Enter collection
 	[nc addObserver:self selector:@selector(activeProjectViewControllerDidEnterCollection:) name:GLAProjectViewControllerDidEnterCollectionNotification object:projectViewController];
+	
+	// Request add new collection
+	[nc addObserver:self selector:@selector(activeProjectViewControllerDidRequestAddNewCollection:) name:GLAProjectViewControllerRequestAddNewCollectionNotification object:projectViewController];
 }
 
 - (void)mainContentViewController:(GLAMainContentViewController *)contentViewController projectViewControllerDidBecomeInactive:(GLAProjectViewController *)projectViewController
@@ -358,6 +375,16 @@
 	[self workOnProjectNow:project];
 }
 
+- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewProjectViewController:(GLAAddNewProjectViewController *)addNewProjectViewController didConfirmCreatingProject:(GLAProject *)project
+{
+	[self goToPreviousSection];
+}
+
+- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewController:(GLAAddNewCollectionViewController *)addNewCollectionViewController didConfirmCreatingCollection:(GLACollection *)collection
+{
+	[self goToPreviousSection];
+}
+
 #pragma mark Main Navigation
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performChangeCurrentSectionTo:(GLAMainContentSection *)newSection
@@ -368,11 +395,6 @@
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performAddNewProject:(id)sender
 {
 	[self addNewProject:sender];
-}
-
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performConfirmNewProject:(id)sender
-{
-	[self confirmAddingNewProject];
 }
 
 - (void)mainNavigationBarControllerDidExitEditedProject:(GLAProject *)project

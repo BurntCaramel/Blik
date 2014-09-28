@@ -97,12 +97,9 @@
 }
 
 - (void)didChangeCurrentSectionFrom:(GLAMainContentSection *)previousSection to:(GLAMainContentSection *)newSection
-{
+{NSLog(@"NEW SECTION %@", newSection);
 	if ((previousSection.isAllProjects) || (previousSection.isPlannedProjects) || (previousSection.isNow)) {
 		[self hideMainButtons];
-	}
-	else if (previousSection.isAddNewProject) {
-		[self hideButtonsForAddingNewProject];
 	}
 	else if (previousSection.isEditProject) {
 		[self hideButtonsForEditingExistingProject];
@@ -110,18 +107,27 @@
 	else if (previousSection.isEditCollection) {
 		[self hideButtonsForCurrentCollection];
 	}
+	else if (previousSection.isAddNewProject) {
+		[self hideButtonsForAddingNewProject];
+	}
+	else if (previousSection.isAddNewCollection) {
+		[self hideButtonsForAddingNewCollection];
+	}
 	
 	if ((newSection.isAllProjects) || (newSection.isPlannedProjects) || (newSection.isNow)) {
 		[self showMainButtons];
-	}
-	else if (newSection.isAddNewProject) {
-		[self showButtonsForAddingNewProject];
 	}
 	else if (newSection.isEditProject) {
 		[self showButtonsForEditingExistingProject];
 	}
 	else if (newSection.isEditCollection) {
 		[self showButtonsForCurrentCollection];
+	}
+	else if (newSection.isAddNewProject) {
+		[self showButtonsForAddingNewProject];
+	}
+	else if (newSection.isAddNewCollection) {
+		[self showButtonsForAddingNewCollection];
 	}
 	
 	[self updateSelectedSectionUI];
@@ -322,11 +328,11 @@
 {
 	GLAMainNavigationButtonGroup *buttonGroup = [GLAMainNavigationButtonGroup buttonGroupWithBarController:self];
 	
-	NSString *cancelTitle = NSLocalizedString(@"Cancel", @"Title for cancel adding new project button");
+	NSString *cancelTitle = NSLocalizedString(@"Cancel", @"Title for cancel creating new project button");
 	(self.addingNewProjectCancelButton) = [buttonGroup makeLeadingButtonWithTitle:cancelTitle action:@selector(cancelAddingNewProject:) identifier:@"cancelAddNewProject"];
 	
 	NSString *title = NSLocalizedString(@"New Project", @"Title label for creating new project");
-	GLAButton *titleButton = [buttonGroup makeCenterButtonWithTitle:title action:@selector(confirmAddingNewProject:) identifier:@"confirmAddNewProject"];
+	GLAButton *titleButton = [buttonGroup makeCenterButtonWithTitle:title action:nil identifier:@"confirmAddNewProject"];
 	(titleButton.hasSecondaryStyle) = NO;
 	
 	(buttonGroup.leadingButtonInDuration) = 3.0 / 12.0;
@@ -360,8 +366,9 @@
 	(self.collectionBackButton) = [buttonGroup makeLeadingButtonWithTitle:backTitle action:@selector(exitEditedCollection:) identifier:@"back-collection"];
 	
 	// Collection title
-	NSString *collectionTitle = (collection.title);
+	NSString *collectionTitle = (collection.name);
 	GLAButton *titleButton = [buttonGroup makeCenterButtonWithTitle:collectionTitle action:nil identifier:@"collectionTitle"];
+	(titleButton.hasSecondaryStyle) = NO;
 	(titleButton.textHighlightColor) = [uiStyle colorForCollectionColor:(collection.color)];
 	(self.collectionTitleButton) = titleButton;
 	
@@ -390,6 +397,31 @@
 	}];
 	
 	[(self.navigationBar) highlightWithColor:nil animate:YES];
+}
+
+- (void)showButtonsForAddingNewCollection
+{
+	GLAMainNavigationButtonGroup *buttonGroup = [GLAMainNavigationButtonGroup buttonGroupWithBarController:self];
+	
+	NSString *cancelTitle = NSLocalizedString(@"Cancel", @"Title for cancel creating new collection button");
+	[buttonGroup makeLeadingButtonWithTitle:cancelTitle action:@selector(cancelAddingNewProject:) identifier:@"cancelAddNewProject"];
+	
+	NSString *title = NSLocalizedString(@"New Collection", @"Title label for creating new collection");
+	GLAButton *titleButton = [buttonGroup makeCenterButtonWithTitle:title action:nil identifier:@"confirmAddNewCollection"];
+	(titleButton.hasSecondaryStyle) = NO;
+	
+	(buttonGroup.leadingButtonInDuration) = 3.0 / 12.0;
+	(buttonGroup.centerButtonInDuration) = 2.7 / 12.0;
+	[buttonGroup animateButtonsIn];
+	
+	(self.addNewCollectionButtonGroup) = buttonGroup;
+}
+
+- (void)hideButtonsForAddingNewCollection
+{
+	[(self.addNewCollectionButtonGroup) animateButtonsOutWithCompletionHandler:^{
+		(self.addNewCollectionButtonGroup) = nil;
+	}];
 }
 
 #pragma mark Projects
@@ -450,23 +482,6 @@
 	[self exitEditedProject:sender];
 }
 
-- (IBAction)confirmAddingNewProject:(id)sender
-{
-	if (self.isAnimating) {
-		return;
-	}
-	
-	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
-	if (delegate) {
-		[delegate mainNavigationBarController:self performConfirmNewProject:sender];
-	}
-	
-	//TODO remove these:
-	
-	[self hideButtonsForAddingNewProject];
-	[self showButtonsForEditingExistingProject];
-}
-
 #pragma mark Collections
 
 - (void)exitEditedCollection:(id)sender
@@ -489,8 +504,10 @@
 	(button.cell) = [(self.templateButton.cell) copy];
 	(button.identifier) = identifier;
 	(button.title) = title;
-	(button.target) = self;
-	(button.action) = action;
+	if (action) {
+		(button.target) = self;
+		(button.action) = action;
+	}
 	(button.translatesAutoresizingMaskIntoConstraints) = NO;
 	
 	GLANavigationBar *navigationBar = (self.navigationBar);

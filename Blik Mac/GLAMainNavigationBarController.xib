@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -18,14 +18,13 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="Hz6-mo-xeY" customClass="GLANavigationBar">
             <rect key="frame" x="0.0" y="0.0" width="500" height="43"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button identifier="now" placeholderIntrinsicWidth="82" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="xNl-pT-6vZ" customClass="GLANavigationButton">
                     <rect key="frame" x="250" y="0.0" width="82" height="43"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="43" id="MmO-EA-ZHz"/>
                     </constraints>
@@ -44,7 +43,6 @@
                 </button>
                 <button identifier="allProjects" placeholderIntrinsicWidth="82" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="qAd-jv-zj2" customClass="GLANavigationButton">
                     <rect key="frame" x="168" y="0.0" width="82" height="43"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="43" id="ZQU-Ui-dJc"/>
                     </constraints>
@@ -63,7 +61,6 @@
                 </button>
                 <button identifier="addNewProject" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="hxP-cr-AEv" customClass="GLAButton">
                     <rect key="frame" x="457" y="0.0" width="43" height="43"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="43" id="3GB-Pu-s6S"/>
                     </constraints>
@@ -83,7 +80,6 @@
                 </button>
                 <button identifier="template" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="WcU-G7-cKy" customClass="GLAButton">
                     <rect key="frame" x="0.0" y="0.0" width="43" height="43"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="43" id="wvq-Rs-ptV"/>
                     </constraints>
@@ -97,7 +93,7 @@
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="cell.hasSecondaryStyle" value="YES"/>
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.backgroundInsetAmount">
-                            <integer key="value" value="10"/>
+                            <integer key="value" value="8"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </button>

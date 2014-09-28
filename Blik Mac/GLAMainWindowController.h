@@ -50,11 +50,21 @@
 - (void)goToSection:(GLAMainContentSection *)newSection;
 - (void)goToPreviousSection;
 
+- (void)workOnProjectNow:(GLAProject *)project;
+
+- (void)editProject:(GLAProject *)project;
+
+- (void)showAddNewProject;
+- (void)showAddNewCollectionToProject:(GLAProject *)project;
+
+#pragma mark Actions
+
 - (IBAction)goToAll:(id)sender;
 - (IBAction)goToToday:(id)sender;
 - (IBAction)goToPlanned:(id)sender;
 - (IBAction)workOnEditedProjectNow:(id)sender;
 
+- (IBAction)addNewProject:(id)sender;
 
 - (void)projectListViewControllerDidClickOnProjectNotification:(NSNotification *)note;
 - (void)projectListViewControllerDidPerformWorkOnProjectNowNotification:(NSNotification *)note;

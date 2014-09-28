@@ -1,21 +1,22 @@
 //
-//  GLAAddNewProjectViewController.m
+//  GLAAddNewCollectionViewController.m
 //  Blik
 //
-//  Created by Patrick Smith on 14/08/2014.
+//  Created by Patrick Smith on 27/09/2014.
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-#import "GLAAddNewProjectViewController.h"
+#import "GLAAddNewCollectionViewController.h"
 #import "GLAUIStyle.h"
 #import "GLAProjectManager.h"
+#import "GLACollectionFilesListContent.h"
 
 
-@interface GLAAddNewProjectViewController ()
+@interface GLAAddNewCollectionViewController ()
 
 @end
 
-@implementation GLAAddNewProjectViewController
+@implementation GLAAddNewCollectionViewController
 
 - (void)prepareView
 {
@@ -60,18 +61,21 @@
 
 - (IBAction)confirmCreate:(id)sender
 {
+	GLAProject *project = (self.project);
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	
-	NSString *name = [projectManager normalizeName:(self.nameTextField.stringValue)];
+	NSString *name = [projectManager normalizeName:(self.nameLabel.stringValue)];
 	if (![projectManager nameIsValid:name]) {
 		return;
 	}
 	
-	GLAProject *project = [projectManager createNewProjectWithName:name];
+	GLACollectionContent *collectionContent = [GLACollectionFilesListContent new];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAAddNewProjectViewControllerDidConfirmCreatingNotification object:self userInfo:@{@"project": project}];
+	GLACollection *collection = [projectManager createNewCollectionWithName:name content:collectionContent inProject:project];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAAddNewCollectionViewControllerDidConfirmCreatingNotification object:self userInfo:@{@"collection": collection}];
 }
 
 @end
 
-NSString *GLAAddNewProjectViewControllerDidConfirmCreatingNotification = @"GLAAddNewProjectViewControllerDidConfirmCreatingNotification";
+NSString *GLAAddNewCollectionViewControllerDidConfirmCreatingNotification = @"GLAAddNewCollectionViewControllerDidConfirmCreatingNotification";

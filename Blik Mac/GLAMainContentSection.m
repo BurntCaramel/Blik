@@ -27,11 +27,6 @@
 	return [self initWithBaseIdentifier:baseIdentifier previousSection:nil];
 }
 
-- (BOOL)hasBaseIdentifier:(NSString *)baseIdentifier
-{
-	return [(self.baseIdentifier) isEqualToString:baseIdentifier];
-}
-
 - (NSString *)description
 {
 	return [NSString stringWithFormat:@"<%@ %p %@; %@>", (self.class), self, (self.baseIdentifier), (self.previousSection)];
@@ -57,6 +52,11 @@
 + (instancetype)addNewProjectSectionWithPreviousSection:(GLAMainContentSection *)previousSection
 {
 	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierAddNewProject previousSection:previousSection];
+}
+
++ (instancetype)addNewCollectionSectionWithPreviousSection:(GLAMainContentSection *)previousSection
+{
+	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierAddNewCollection previousSection:previousSection];
 }
 
 #pragma mark - JSON
@@ -126,7 +126,38 @@
 @end
 
 
+@implementation GLAMainContentAddNewCollectionSection
+
+- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainContentSection *)previousSection project:(GLAProject *)project
+{
+	self = [super initWithBaseIdentifier:baseIdentifier previousSection:previousSection];
+	if (self) {
+		_project = project;
+	}
+	return self;
+}
+
++ (instancetype)addNewCollectionSectionToProject:(GLAProject *)project previousSection:(GLAMainContentSection *)previousSection
+{
+	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierAddNewCollection previousSection:previousSection project:project];
+}
+
+#pragma mark JSON
+
++ (NSValueTransformer *)projectJSONTransformer
+{
+	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLAProject class]];
+}
+
+@end
+
+
 @implementation GLAMainContentSection (ConvenienceCheckingIdentifier)
+
+- (BOOL)hasBaseIdentifier:(NSString *)baseIdentifier
+{
+	return [(self.baseIdentifier) isEqualToString:baseIdentifier];
+}
 
 - (BOOL)isAllProjects
 {
@@ -143,11 +174,6 @@
 	return [self hasBaseIdentifier:GLAMainContentSectionBaseIdentifierNow];
 }
 
-- (BOOL)isAddNewProject
-{
-	return [self hasBaseIdentifier:GLAMainContentSectionBaseIdentifierAddNewProject];
-}
-
 - (BOOL)isEditProject
 {
 	return [self hasBaseIdentifier:GLAMainContentSectionBaseIdentifierEditProject];
@@ -158,12 +184,25 @@
 	return [self hasBaseIdentifier:GLAMainContentSectionBaseIdentifierEditCollection];
 }
 
+- (BOOL)isAddNewProject
+{
+	return [self hasBaseIdentifier:GLAMainContentSectionBaseIdentifierAddNewProject];
+}
+
+- (BOOL)isAddNewCollection
+{
+	return [self hasBaseIdentifier:GLAMainContentSectionBaseIdentifierAddNewCollection];
+}
+
 @end
 
 
 NSString *GLAMainContentSectionBaseIdentifierAllProjects = @"allProjects";
 NSString *GLAMainContentSectionBaseIdentifierPlannedProjects = @"plannedProjects";
 NSString *GLAMainContentSectionBaseIdentifierNow = @"now";
-NSString *GLAMainContentSectionBaseIdentifierAddNewProject = @"addNewProject";
+
 NSString *GLAMainContentSectionBaseIdentifierEditProject = @"editProject";
 NSString *GLAMainContentSectionBaseIdentifierEditCollection = @"editCollection";
+
+NSString *GLAMainContentSectionBaseIdentifierAddNewProject = @"addNewProject";
+NSString *GLAMainContentSectionBaseIdentifierAddNewCollection = @"addNewCollection";

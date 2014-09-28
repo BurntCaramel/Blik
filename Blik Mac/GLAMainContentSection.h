@@ -22,8 +22,6 @@
 @property(readonly, nonatomic) NSString *baseIdentifier;
 @property(readonly, nonatomic) GLAMainContentSection *previousSection;
 
-- (BOOL)hasBaseIdentifier:(NSString *)baseIdentifier;
-
 #pragma mark -
 
 + (instancetype)allProjectsSection;
@@ -31,6 +29,8 @@
 + (instancetype)nowSection;
 
 + (instancetype)addNewProjectSectionWithPreviousSection:(GLAMainContentSection *)previousSection;
+
++ (instancetype)addNewCollectionSectionWithPreviousSection:(GLAMainContentSection *)previousSection;
 
 @end
 
@@ -59,14 +59,31 @@
 @end
 
 
+@interface GLAMainContentAddNewCollectionSection : GLAMainContentSection
+
+// Designated init:
+- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainContentSection *)previousSection project:(GLAProject *)project;
+
+@property(readonly, nonatomic) GLAProject *project;
+
++ (instancetype)addNewCollectionSectionToProject:(GLAProject *)project previousSection:(GLAMainContentSection *)previousSection;
+
+@end
+
+
 @interface GLAMainContentSection (ConvenienceCheckingIdentifier)
+
+- (BOOL)hasBaseIdentifier:(NSString *)baseIdentifier;
 
 - (BOOL)isAllProjects;
 - (BOOL)isPlannedProjects;
 - (BOOL)isNow;
-- (BOOL)isAddNewProject;
+
 - (BOOL)isEditProject;
 - (BOOL)isEditCollection;
+
+- (BOOL)isAddNewProject;
+- (BOOL)isAddNewCollection;
 
 @end
 
@@ -74,6 +91,9 @@
 extern NSString *GLAMainContentSectionBaseIdentifierAllProjects;
 extern NSString *GLAMainContentSectionBaseIdentifierPlannedProjects;
 extern NSString *GLAMainContentSectionBaseIdentifierNow;
-extern NSString *GLAMainContentSectionBaseIdentifierAddNewProject;
+
 extern NSString *GLAMainContentSectionBaseIdentifierEditProject;
 extern NSString *GLAMainContentSectionBaseIdentifierEditCollection;
+
+extern NSString *GLAMainContentSectionBaseIdentifierAddNewProject;
+extern NSString *GLAMainContentSectionBaseIdentifierAddNewCollection;

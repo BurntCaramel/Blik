@@ -24,6 +24,8 @@ NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectV
 
 NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.projectViewController.didEnterCollection";
 
+NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.projectViewController.requestAddNewCollection";
+
 
 @interface GLAProjectViewController ()
 
@@ -158,6 +160,11 @@ NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.project
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidEndEditingItemsNotification object:self];
 	}
+}
+
+- (IBAction)addNewCollection:(id)sender
+{NSLog(@"addNewCollection:");
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerRequestAddNewCollectionNotification object:self];
 }
 
 - (IBAction)editPlan:(id)sender
@@ -1109,7 +1116,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	(cellView.canDrawSubviewsIntoLayer) = YES;
 	
 	GLACollection *collection = (self.collections)[row];
-	NSString *title = (collection.title);
+	NSString *title = (collection.name);
 	(cellView.objectValue) = collection;
 	(cellView.textField.stringValue) = title;
 	

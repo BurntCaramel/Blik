@@ -14,13 +14,12 @@
 
 @interface GLACollection () <GLACollectionEditing>
 
+@property(readwrite, nonatomic) NSUUID *UUID;
+@property(readwrite, copy, nonatomic) NSString *name;
+
 @property(readwrite, nonatomic) GLACollectionContent *content;
 
-@property(readwrite, nonatomic) NSUUID *UUID;
-@property(readwrite, copy, nonatomic) NSString *title;
-
 @property(readwrite, nonatomic) GLACollectionColor *color;
-
 @property(readwrite, nonatomic) NSString *colorIdentifier;
 
 @end
@@ -34,7 +33,7 @@
 	  @"project": (NSNull.null),
 	  @"content": @"content",
 	  @"UUID": @"UUID",
-	  @"title": @"title",
+	  @"name": @"name",
 	  @"color": (NSNull.null),
 	  @"colorIdentifier": @"colorIdentifier"
 	};
@@ -177,14 +176,13 @@ NSString *GLACollectionJSONPasteboardType = @"com.burntcaramel.GLACollection.JSO
 
 @implementation GLACollection (GLADummyContent)
 
-+ (instancetype)dummyCollectionWithTitle:(NSString *)title color:(GLACollectionColor *)color content:(GLACollectionContent *)content
++ (instancetype)dummyCollectionWithName:(NSString *)name color:(GLACollectionColor *)color content:(GLACollectionContent *)content
 {
-	GLACollection *item = [self new];
-	(item.title) = title;
-	(item.color) = color;
-	(item.content) = content;
-	
-	return item;
+	return [self newWithCreationFromEditing:^(id<GLACollectionEditing> collectionEditor) {
+		(collectionEditor.name) = name;
+		(collectionEditor.content) = content;
+		(collectionEditor.color) = color;
+	}];
 }
 
 @end

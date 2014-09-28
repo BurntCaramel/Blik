@@ -296,15 +296,23 @@
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	
 	NSColor *backgroundColor = (self.backgroundColor);
-	if (backgroundColor) {
-		return backgroundColor;
+	if (!backgroundColor) {
+		if (self.hasPrimaryStyle) {
+			backgroundColor = (uiStyle.primaryButtonBackgroundColor);
+		}
+		else if (self.hasSecondaryStyle) {
+			backgroundColor = (uiStyle.secondaryButtonBackgroundColor);
+		}
 	}
 	
-	if (self.hasPrimaryStyle) {
-		return (uiStyle.primaryButtonBackgroundColor);
-	}
-	else if (self.hasSecondaryStyle) {
-		return (uiStyle.secondaryButtonBackgroundColor);
+	if (backgroundColor) {
+		if (!(self.isEnabled)) {
+			return nil;
+			//return [backgroundColor colorWithAlphaComponent:(backgroundColor.alphaComponent) * 0.12];
+		}
+		else {
+			return backgroundColor;
+		}
 	}
 	
 	return nil;

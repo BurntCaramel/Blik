@@ -14,8 +14,6 @@
 
 - (instancetype)initWithObjects:(NSArray *)objects;
 
-- (void)replaceChildWithValueForKey:(NSString *)key equalToValue:(id)value withObject:(id)object;
-
 @end
 
 extern NSString *GLAArrayEditorDidChangeNotification;

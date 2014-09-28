@@ -52,7 +52,7 @@
 		(style.primaryButtonBackgroundColor) = activeYellow;
 		(style.primaryButtonTextColor) = grayExtraDark;
 		
-		(style.secondaryButtonBackgroundColor) = [whiteAlmost colorWithAlphaComponent:0.15];
+		(style.secondaryButtonBackgroundColor) = [whiteAlmost colorWithAlphaComponent:0.12];
 		(style.secondaryButtonTextColor) = whiteAlmost;
 		
 		(style.lightTextColor) =  whiteAlmost;
@@ -174,6 +174,21 @@
 - (void)prepareContentTextField:(NSTextField *)textField
 {
 	(textField.textColor) = (self.lightTextColor);
+}
+
+- (void)prepareTextLabel:(NSTextField *)textField
+{
+	(textField.textColor) = (self.lightTextColor);
+}
+
+- (void)prepareOutlinedTextField:(NSTextField *)textField
+{
+	(textField.wantsLayer) = YES;
+	CALayer *layer = (textField.layer);
+	
+	(layer.borderWidth) = 0.5;
+	(layer.borderColor) = [NSColor colorWithCalibratedWhite:0.32 alpha:1.0].CGColor;
+	(layer.cornerRadius) = 4.0;
 }
 
 - (void)prepareContentTableView:(NSTableView *)tableView

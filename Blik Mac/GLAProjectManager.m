@@ -143,6 +143,10 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 
 - (void)requestAllProjects
 {
+	if (self.allProjectsSortedByDateCreatedNewestToOldest) {
+		return;
+	}
+	
 	[(self.store) requestAllProjects];
 }
 
@@ -153,6 +157,10 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 
 - (void)requestNowProject
 {
+	if (self.nowProject) {
+		return;
+	}
+	
 	[(self.store) requestNowProject];
 }
 
@@ -207,7 +215,10 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 {
 	GLAProject *project = [[GLAProject alloc] initWithUUID:nil name:name dateCreated:nil];
 	
-	[(self.store) addProjects:@[project]];
+	GLAProjectManagerStore *store = (self.store);
+	[store addProjects:@[project]];
+	
+	[store requestSaveAllProjects];
 	
 	return project;
 }
@@ -230,26 +241,35 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	return YES;
 }
 
+- (GLACollection *)createNewCollectionWithName:(NSString *)name content:(GLACollectionContent *)content inProject:(GLAProject *)project
+{
+	GLACollection *collection = [GLACollection newWithCreationFromEditing:^(id<GLACollectionEditing> collectionEditor) {
+		(collectionEditor.name) = name;
+		(collectionEditor.content) = content;
+	}];
+	
+	[self editProjectCollections:project usingBlock:^(id<GLAArrayEditing> collectionListEditor) {
+		[collectionListEditor addChildren:@[collection]];
+	}];
+	
+	return collection;
+}
+
 - (GLACollection *)editCollection:(GLACollection *)collection inProject:(GLAProject *)project usingBlock:(void(^)(id<GLACollectionEditing>collectionEditor))editBlock
 {
-	GLAProjectManagerStore *store = (self.store);
-	
 	GLACollection *changedCollection = [collection copyWithChangesFromEditing:editBlock];
 	
-	GLAArrayEditor *arrayEditor = [store collectionEditorForProject:project];
-	[arrayEditor replaceChildWithValueForKey:@"UUID" equalToValue:(collection.UUID) withObject:changedCollection];
-	
-	[self collectionListForProjectDidChange:project];
-	[store requestSaveCollectionsForProject:project];
+	[self editProjectCollections:project usingBlock:^(id<GLAArrayEditing> collectionListEditor) {
+		[collectionListEditor replaceChildWithValueForKey:@"UUID" equalToValue:(collection.UUID) withObject:changedCollection];
+	}];
 	
 	return changedCollection;
-
 }
 
 - (GLACollection *)renameCollection:(GLACollection *)collection inProject:(GLAProject *)project toString:(NSString *)name
 {
 	return [self editCollection:collection inProject:project usingBlock:^(id<GLACollectionEditing> collectionEditor) {
-		(collectionEditor.title) = name;
+		(collectionEditor.name) = name;
 	}];
 }
 
@@ -285,7 +305,29 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectManagerProjectCollectionsDidChangeNotification object:self userInfo:noteInfo];
 }
 
-#pragma mark Saving and Loading
+#pragma mark Validating
+
+- (NSString *)normalizeName:(NSString *)name
+{
+	if (!name) {
+		return @"";
+	}
+	
+	NSCharacterSet *whitespaceCharacterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+	return [name stringByTrimmingCharactersInSet:whitespaceCharacterSet];
+}
+
+- (BOOL)nameIsValid:(NSString *)name
+{
+	NSString *normalizedName = [self normalizeName:name];
+	if ([normalizedName isEqualToString:@""]) {
+		return NO;
+	}
+	
+	return YES;
+}
+
+#pragma mark Saving
 
 - (void)saveAllProjects
 {
@@ -335,11 +377,11 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	
 	return
 	@[
-	  [GLACollection dummyCollectionWithTitle:@"Working Files" color:[GLACollectionColor lightBlue] content:filesListContent],
-	  [GLACollection dummyCollectionWithTitle:@"Briefs" color:[GLACollectionColor green] content:filesListContent],
-	  [GLACollection dummyCollectionWithTitle:@"Contacts" color:[GLACollectionColor pinkyPurple] content:filesListContent],
-	  [GLACollection dummyCollectionWithTitle:@"Apps" color:[GLACollectionColor red] content:filesListContent],
-	  [GLACollection dummyCollectionWithTitle:@"Research" color:[GLACollectionColor yellow] content:filesListContent]
+	  [GLACollection dummyCollectionWithName:@"Working Files" color:[GLACollectionColor lightBlue] content:filesListContent],
+	  [GLACollection dummyCollectionWithName:@"Briefs" color:[GLACollectionColor green] content:filesListContent],
+	  [GLACollection dummyCollectionWithName:@"Contacts" color:[GLACollectionColor pinkyPurple] content:filesListContent],
+	  [GLACollection dummyCollectionWithName:@"Apps" color:[GLACollectionColor red] content:filesListContent],
+	  [GLACollection dummyCollectionWithName:@"Research" color:[GLACollectionColor yellow] content:filesListContent]
 	  ];
 }
 
@@ -555,6 +597,9 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	if (self.needsToLoadAllProjects) {
 		return;
 	}
+	if (self.needsToSaveAllProjects) {
+		return;
+	}
 	
 	(self.needsToLoadAllProjects) = YES;
 	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
@@ -617,6 +662,8 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:NO];
 	NSArray *allProjectsSorted = [allProjectsUnsorted sortedArrayUsingDescriptors:@[sortDescriptor]];
 	
+	NSLog(@"background_processLoadedAllProjects: %@", allProjectsSorted);
+	
 	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
 		(store.allProjectsSortedByDateCreatedNewestToOldest) = allProjectsSorted;
 		[projectManager allProjectsDidChange];
@@ -635,6 +682,9 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 - (void)requestNowProject
 {
 	if (self.needsToLoadNowProject) {
+		return;
+	}
+	if (self.needsToSaveNowProject) {
 		return;
 	}
 	
@@ -813,12 +863,12 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 #pragma mark - Editing
 
 - (void)addProjects:(NSArray *)projects
-{
-	NSArray *allProjectsBefore = (self.allProjectsSortedByDateCreatedNewestToOldest);
+{NSLog(@"addProjects: %@", projects);
+	NSArray *allProjectsBefore = [(self.allProjectsSortedByDateCreatedNewestToOldest) copy];
 	
 	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
 		NSArray *allProjects = [allProjectsBefore arrayByAddingObjectsFromArray:projects];
-		
+		NSLog(@"NEW ALL PROJECTS %@", allProjects);
 		[self background_processLoadedAllProjects:allProjects];
 	}];
 }

@@ -18,6 +18,6 @@
 
 @interface GLACollectionContentItem : MTLModel <GLACollectedItem, MTLJSONSerializing>
 
-@property (copy, readonly, nonatomic) NSString *title;
+@property (copy, readonly, nonatomic) NSString *name;
 
 @end

@@ -21,7 +21,7 @@
 
 @implementation GLACollectionContentItem
 
-- (NSString *)title
+- (NSString *)name
 {
 	return @"";
 }

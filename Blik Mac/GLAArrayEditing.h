@@ -17,6 +17,8 @@
 - (void)replaceChildrenAtIndexes:(NSIndexSet *)indexes withObjects:(NSArray *)objects;
 - (void)moveChildrenAtIndexes:(NSIndexSet *)indexes toIndex:(NSUInteger)toIndex;
 
+- (void)replaceChildWithValueForKey:(NSString *)key equalToValue:(id)value withObject:(id)object;
+
 - (NSArray *)copyChildren;
 - (NSArray *)childrenAtIndexes:(NSIndexSet *)indexes;
 

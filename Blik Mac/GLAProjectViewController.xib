@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAProjectViewController">
@@ -22,21 +22,18 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView identifier="projectView" translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY" customClass="GLAProjectView">
             <rect key="frame" x="0.0" y="0.0" width="500" height="275"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <customView placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="8vi-0s-ZAk" customClass="GLAView">
                     <rect key="frame" x="0.0" y="0.0" width="500" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <connections>
                         <outlet property="delegate" destination="fD5-0A-qdK" id="OPS-R4-6E8"/>
                     </connections>
                 </customView>
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" placeholderIntrinsicWidth="312" placeholderIntrinsicHeight="29" translatesAutoresizingMaskIntoConstraints="NO" id="uUN-fG-dyR" customClass="GLATextField">
                     <rect key="frame" x="18" y="229" width="464" height="32"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="32" id="Yz5-N8-tKB"/>
                     </constraints>
@@ -48,13 +45,11 @@
                 </textField>
                 <scrollView verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="aK9-xA-IHE">
                     <rect key="frame" x="20" y="38" width="160" height="177"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="3UR-hc-b9q">
                         <rect key="frame" x="0.0" y="0.0" width="160" height="177"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="none" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="32" viewBased="YES" id="0t7-tp-C0y">
-                                <rect key="frame" x="0.0" y="0.0" width="160" height="177"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -79,7 +74,6 @@
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="aE0-1H-naF">
                                                         <rect key="frame" x="-2" y="0.0" width="161" height="32"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="32" id="i8C-5E-2yP"/>
                                                         </constraints>
@@ -127,13 +121,11 @@
                 </scrollView>
                 <scrollView identifier="width" verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="38" horizontalPageScroll="10" verticalLineScroll="38" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="b3Y-jm-1gd">
                     <rect key="frame" x="200" y="38" width="300" height="175"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="feV-1y-3x9">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="175"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="none" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="36" rowSizeStyle="automatic" viewBased="YES" id="qcb-6b-Ekp">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="175"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -158,7 +150,6 @@
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CNu-U7-Yfv">
                                                         <rect key="frame" x="-2" y="7" width="257" height="23"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="pBN-CX-Mzc">
                                                             <font key="font" size="13" name="AvenirNext-Medium"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -167,7 +158,6 @@
                                                     </textField>
                                                     <button translatesAutoresizingMaskIntoConstraints="NO" id="BTJ-R3-LvA" customClass="GLAToggleButton">
                                                         <rect key="frame" x="261" y="0.0" width="16" height="36"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="16" id="iAf-ba-H5t"/>
                                                             <constraint firstAttribute="height" relation="lessThanOrEqual" constant="36" id="m2p-xs-rfK"/>
@@ -265,31 +255,27 @@
             <rect key="frame" x="0.0" y="0.0" width="500" height="30"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <button placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="UAD-cb-caO" customClass="GLAButton">
-                    <rect key="frame" x="0.0" y="0.0" width="120" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                <button placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="m3I-Co-wZM" customClass="GLAButton">
+                    <rect key="frame" x="0.0" y="0.0" width="37" height="30"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="30" id="RyI-AQ-d6Q"/>
+                        <constraint firstAttribute="width" constant="37" id="67j-vf-Ocz"/>
+                        <constraint firstAttribute="height" constant="30" id="t1S-Ar-dx9"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" title="Edit Collections" bezelStyle="shadowlessSquare" alignment="left" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="XD0-q2-jL3" customClass="GLAButtonCell">
+                    <buttonCell key="cell" type="square" title="+" bezelStyle="shadowlessSquare" alignment="right" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jeG-IQ-I3W" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                        <font key="font" size="22" name="AvenirNext-Regular"/>
                     </buttonCell>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="cell.leftSpacing">
-                            <integer key="value" value="20"/>
-                        </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                            <integer key="value" value="-2"/>
+                            <integer key="value" value="-3"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <action selector="editCollections:" target="-2" id="gGd-l5-s43"/>
+                        <action selector="addNewCollection:" target="-2" id="8Vo-eW-Kmc"/>
                     </connections>
                 </button>
                 <button placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="OLf-jb-seP" customClass="GLAButton">
                     <rect key="frame" x="333" y="0.0" width="120" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="ZUS-dC-Lli"/>
                     </constraints>
@@ -311,7 +297,6 @@
                 </button>
                 <popUpButton hidden="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SUp-2J-5hc" customClass="GLAPopUpButton">
                     <rect key="frame" x="210" y="4" width="80" height="22"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="square" title="Actions" bezelStyle="shadowlessSquare" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" arrowPosition="noArrow" altersStateOfSelectedItem="NO" id="QvB-cY-VJL" customClass="GLAPopUpButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -325,7 +310,6 @@
                 </popUpButton>
                 <button placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="idT-cZ-Pfb" customClass="GLAButton">
                     <rect key="frame" x="463" y="0.0" width="37" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="37" id="Af7-GP-hUj"/>
                         <constraint firstAttribute="height" constant="30" id="yP4-sE-ydQ"/>
@@ -343,20 +327,44 @@
                         <action selector="editPlan:" target="-2" id="J96-y4-GYL"/>
                     </connections>
                 </button>
+                <button placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="UAD-cb-caO" customClass="GLAButton">
+                    <rect key="frame" x="47" y="0.0" width="120" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="RyI-AQ-d6Q"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="Edit Collections" bezelStyle="shadowlessSquare" alignment="left" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="XD0-q2-jL3" customClass="GLAButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.leftSpacing">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="-2"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="editCollections:" target="-2" id="gGd-l5-s43"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
                 <constraint firstItem="idT-cZ-Pfb" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" id="13N-W5-jns"/>
                 <constraint firstItem="UAD-cb-caO" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" id="3G8-0V-NRb"/>
                 <constraint firstItem="SUp-2J-5hc" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" constant="4" id="8FN-sr-VHl"/>
                 <constraint firstItem="SUp-2J-5hc" firstAttribute="centerY" secondItem="UAD-cb-caO" secondAttribute="centerY" id="Abh-M8-Rw4"/>
+                <constraint firstAttribute="bottom" secondItem="m3I-Co-wZM" secondAttribute="bottom" id="Ari-Y1-C7k"/>
                 <constraint firstAttribute="trailing" secondItem="idT-cZ-Pfb" secondAttribute="trailing" id="BkC-iR-BcR"/>
                 <constraint firstAttribute="bottom" secondItem="idT-cZ-Pfb" secondAttribute="bottom" id="FG1-dM-CWF"/>
+                <constraint firstItem="m3I-Co-wZM" firstAttribute="leading" secondItem="8EB-qb-bNQ" secondAttribute="leading" id="FN7-jj-iJW"/>
                 <constraint firstItem="OLf-jb-seP" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" id="FrT-WX-nf3"/>
                 <constraint firstItem="idT-cZ-Pfb" firstAttribute="leading" secondItem="OLf-jb-seP" secondAttribute="trailing" constant="10" id="Hlt-hs-1N4"/>
+                <constraint firstItem="UAD-cb-caO" firstAttribute="leading" secondItem="m3I-Co-wZM" secondAttribute="trailing" constant="10" id="PaM-vf-s9d"/>
                 <constraint firstItem="SUp-2J-5hc" firstAttribute="centerX" secondItem="8EB-qb-bNQ" secondAttribute="centerX" id="Tvc-qy-n0p"/>
                 <constraint firstAttribute="bottom" secondItem="UAD-cb-caO" secondAttribute="bottom" id="XmI-Jc-umb"/>
                 <constraint firstAttribute="bottom" secondItem="OLf-jb-seP" secondAttribute="bottom" id="YxR-fB-v6q"/>
-                <constraint firstItem="UAD-cb-caO" firstAttribute="leading" secondItem="8EB-qb-bNQ" secondAttribute="leading" id="bSR-ZJ-TcM"/>
+                <constraint firstItem="m3I-Co-wZM" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" id="zkI-9z-aem"/>
             </constraints>
         </customView>
         <customView placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="30" id="eQO-U4-biO" customClass="GLANavigationBar">
@@ -365,7 +373,6 @@
             <subviews>
                 <button placeholderIntrinsicWidth="140" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="dcZ-cK-qd4" customClass="GLAButton">
                     <rect key="frame" x="0.0" y="0.0" width="500" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="square" title="Finish Editing Collections" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Rab-Rf-U7k" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -392,7 +399,6 @@
             <subviews>
                 <button placeholderIntrinsicWidth="140" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="c85-1L-Qdb" customClass="GLAButton">
                     <rect key="frame" x="0.0" y="0.0" width="500" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="square" title="Finish Editing Plan" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="UHM-eY-8iR" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -419,7 +425,6 @@
             <subviews>
                 <button placeholderIntrinsicWidth="140" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="HFX-tx-bsh" customClass="GLAButton">
                     <rect key="frame" x="0.0" y="40" width="300" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="UPi-9v-z2P"/>
                     </constraints>
@@ -439,7 +444,6 @@
                 </button>
                 <button placeholderIntrinsicWidth="140" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="gya-ze-oT1" customClass="GLAButton">
                     <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="cw3-6l-doZ"/>
                     </constraints>
@@ -485,7 +489,6 @@
             <subviews>
                 <button placeholderIntrinsicWidth="140" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="zdL-Rb-okh" customClass="GLAButton">
                     <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="f7W-py-dpQ"/>
                     </constraints>

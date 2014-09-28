@@ -50,6 +50,8 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 @property(nonatomic) IBOutlet GLAButton *collectionBackButton;
 @property(nonatomic) GLAMainNavigationButtonGroup *collectionButtonGroup;
 
+@property(nonatomic) GLAMainNavigationButtonGroup *addNewCollectionButtonGroup;
+
 @property(nonatomic) IBOutlet NSLayoutConstraint *allButtonTopConstraint;
 @property(nonatomic) IBOutlet NSLayoutConstraint *todayButtonTopConstraint;
 @property(nonatomic) IBOutlet NSLayoutConstraint *plannedButtonTopConstraint;
@@ -89,7 +91,6 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performChangeCurrentSectionTo:(GLAMainContentSection *)newSection;
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performAddNewProject:(id)sender;
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performConfirmNewProject:(id)sender;
 
 - (void)mainNavigationBarControllerDidExitEditedProject:(GLAMainNavigationBarController *)controller;
 

@@ -12,6 +12,7 @@
 #import "GLAProjectViewController.h"
 #import "GLAAddNewProjectViewController.h"
 #import "GLACollectionViewController.h"
+#import "GLAAddNewCollectionViewController.h"
 @class GLAProject;
 @protocol GLAMainContentViewControllerDelegate;
 
@@ -33,22 +34,33 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 @property(nonatomic) id<GLAMainContentViewControllerDelegate> delegate;
 
 @property(nonatomic) GLAMainContentSection *currentSection;
-@property(readonly, nonatomic) GLAProjectViewController *activeProjectViewController;
+
+// Project List
 
 @property(nonatomic) GLAProjectsListViewController *allProjectsViewController;
 @property(nonatomic) GLAProjectsListViewController *plannedProjectsViewController;
 
+// Single Project
+
+@property(readonly, nonatomic) GLAProjectViewController *activeProjectViewController;
 @property(nonatomic) GLAProjectViewController *nowProjectViewController;
 @property(nonatomic) GLAProjectViewController *editedProjectViewController;
-@property(nonatomic) GLAAddNewProjectViewController *addedProjectViewController;
+
+// Collection
 
 @property(nonatomic) GLACollectionViewController *activeCollectionViewController;
+
+// Adding Project or Collection
+
+@property(nonatomic) GLAAddNewProjectViewController *addedProjectViewController;
+@property(nonatomic) GLAAddNewCollectionViewController *addedCollectionViewController;
 
 - (void)setUpAllProjectsViewControllerIfNeeded;
 - (void)setUpPlannedProjectsViewControllerIfNeeded;
 - (void)setUpNowProjectViewControllerIfNeeded;
 - (void)setUpEditedProjectViewControllerIfNeeded;
 - (void)setUpAddedProjectViewControllerIfNeeded;
+- (void)setUpAddedCollectionViewControllerIfNeeded;
 
 - (GLAViewController *)viewControllerForSection:(GLAMainContentSection *)section;
 
@@ -59,8 +71,10 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 - (void)workOnProjectNow:(GLAProject *)project;
 
 - (void)editProject:(GLAProject *)project;
-- (void)enterAddedProject:(GLAProject *)project;
-- (void)endEditingProject:(GLAProject *)project;
+//- (void)enterAddedProject:(GLAProject *)project;
+//- (void)endEditingProject:(GLAProject *)project;
+
+//- (void)enterAddedCollection:(GLAProject *)project;
 
 - (void)transitionToSection:(GLAMainContentSection *)newSection animate:(BOOL)animate;
 
@@ -91,5 +105,13 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 - (void)mainContentViewController:(GLAMainContentViewController *)contentViewController projectsListViewController:(GLAProjectsListViewController *)projectsListViewController didClickOnProject:(GLAProject *)project;
 
 - (void)mainContentViewController:(GLAMainContentViewController *)contentViewController projectsListViewController:(GLAProjectsListViewController *)projectsListViewController didPerformWorkOnProject:(GLAProject *)project;
+
+#pragma mark Adding New Project
+
+- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewProjectViewController:(GLAAddNewProjectViewController *)addNewProjectViewController didConfirmCreatingProject:(GLAProject *)project;
+
+#pragma mark Adding New Collection
+
+- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewController:(GLAAddNewCollectionViewController *)addNewCollectionViewController didConfirmCreatingCollection:(GLACollection *)collection;
 
 @end

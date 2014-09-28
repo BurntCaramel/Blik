@@ -37,7 +37,7 @@
 }
 
 - (void)setUpProjectManagerObserving
-{NSLog(@"setUpProjectManagerObserving");
+{
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
@@ -192,7 +192,27 @@
 	GLAAddNewProjectViewController *controller = [[GLAAddNewProjectViewController alloc] initWithNibName:@"GLAAddNewProjectViewController" bundle:nil];
 	(controller.view.identifier) = @"addNewProject";
 	
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver:self selector:@selector(addNewProjectViewControllerDidConfirmCreatingNotification:) name:GLAAddNewProjectViewControllerDidConfirmCreatingNotification object:controller];
+	
 	(self.addedProjectViewController) = controller;
+	
+	[self fillViewWithChildView:(controller.view)];
+
+}
+
+#pragma mark Added Collection
+
+- (void)setUpAddedCollectionViewControllerIfNeeded
+{
+	if (self.addedCollectionViewController) {
+		return;
+	}
+	
+	GLAAddNewCollectionViewController *controller = [[GLAAddNewCollectionViewController alloc] initWithNibName:@"GLAAddNewCollectionViewController" bundle:nil];
+	(controller.view.identifier) = @"addNewCollection";
+	
+	(self.addedCollectionViewController) = controller;
 	
 	[self fillViewWithChildView:(controller.view)];
 }
@@ -200,10 +220,10 @@
 #pragma mark - Project Manager Notifications
 
 - (void)projectManagerAllProjectsDidChangeNotification:(NSNotification *)note
-{NSLog(@"projectManagerAllProjectsDidChangeNotification");
-	GLAProjectsListViewController *allProjectsViewController = (self.allProjectsViewController);
-	
+{
 	GLAProjectManager *projectManager = (note.object);
+	GLAProjectsListViewController *allProjectsViewController = (self.allProjectsViewController);
+	NSLog(@"projectManagerAllProjectsDidChangeNotification %@ %@", allProjectsViewController, (projectManager.allProjectsSortedByDateCreatedNewestToOldest));
 	if (allProjectsViewController) {
 		(allProjectsViewController.projects) = (projectManager.allProjectsSortedByDateCreatedNewestToOldest);
 	}
@@ -216,9 +236,10 @@
 
 - (void)projectManagerNowProjectDidChangeNotification:(NSNotification *)note
 {
+	GLAProjectManager *projectManager = (note.object);
 	GLAProjectViewController *nowProjectViewController = (self.nowProjectViewController);
 	NSLog(@"projectManagerNowProjectDidChangeNotification %@", nowProjectViewController);
-	GLAProjectManager *projectManager = (note.object);
+	
 	if (nowProjectViewController) {
 		(nowProjectViewController.project) = (projectManager.nowProject);
 	}
@@ -226,40 +247,32 @@
 
 #pragma mark - Accessing View Controllers
 
-- (GLAViewController *)setUpViewControllerForSection:(GLAMainContentSection *)section
-{NSLog(@"setUpViewControllerForSection");
+- (void)setUpViewControllerForSection:(GLAMainContentSection *)section
+{
 	if (section.isAllProjects) {
 		[self setUpAllProjectsViewControllerIfNeeded];
-		return (self.allProjectsViewController);
 	}
 	else if (section.isNow) {
 		[self setUpNowProjectViewControllerIfNeeded];
-		return (self.nowProjectViewController);
 	}
 	else if (section.isPlannedProjects) {
 		[self setUpPlannedProjectsViewControllerIfNeeded];
-		return (self.plannedProjectsViewController);
 	}
 	else if (section.isEditProject) {
 		GLAMainContentEditProjectSection *editProjectSection = (GLAMainContentEditProjectSection *)(section);
 		[self setUpEditedProjectViewControllerIfNeeded];
 		
 		(self.editedProjectViewController.project) = (editProjectSection.project);
-		
-		return (self.editedProjectViewController);
-	}
-	else if (section.isAddNewProject) {
-		[self setUpAddedProjectViewControllerIfNeeded];
-		return (self.addedProjectViewController);
 	}
 	else if (section.isEditCollection) {
 		GLAMainContentEditCollectionSection *editCollectionSection = (GLAMainContentEditCollectionSection *)section;
 		[self setUpEditedCollectionViewControllerForSection:editCollectionSection];
-		
-		return (self.activeCollectionViewController);
 	}
-	else {
-		return nil;
+	else if (section.isAddNewProject) {
+		[self setUpAddedProjectViewControllerIfNeeded];
+	}
+	else if (section.isAddNewCollection) {
+		[self setUpAddedCollectionViewControllerIfNeeded];
 	}
 }
 
@@ -277,11 +290,14 @@
 	else if (section.isEditProject) {
 		return (self.editedProjectViewController);
 	}
+	else if (section.isEditCollection) {
+		return (self.activeCollectionViewController);
+	}
 	else if (section.isAddNewProject) {
 		return (self.addedProjectViewController);
 	}
-	else if (section.isEditCollection) {
-		return (self.activeCollectionViewController);
+	else if (section.isAddNewCollection) {
+		return (self.addedCollectionViewController);
 	}
 	else {
 		return nil;
@@ -298,9 +314,11 @@
 	else if (currentSection.isEditProject) {
 		return (self.editedProjectViewController);
 	}
+	/*
 	else if (currentSection.isAddNewProject) {
 		return (self.addedProjectViewController);
 	}
+	 */
 	else {
 		return nil;
 	}
@@ -321,7 +339,6 @@
 	
 	(self.nowProjectViewController.project) = project;
 	
-	//[(self.mainNavigationBarController) changeCurrentSectionTo:GLAMainNavigationSectionToday];
 	[self goToSection:[GLAMainContentSection nowSection]];
 }
 
@@ -332,7 +349,7 @@
 	
 	[self goToSection:[GLAMainContentEditProjectSection editProjectSectionWithProject:project previousSection:(self.currentSection)]];
 }
-
+/*
 - (void)enterAddedProject:(GLAProject *)project
 {
 	[self setUpAddedProjectViewControllerIfNeeded];
@@ -342,7 +359,7 @@
 	
 	[viewController resetAndFocus];
 }
-
+*/
 #pragma mark Collections
 
 - (GLACollectionViewController *)createViewControllerForCollection:(GLACollection *)collection
@@ -387,6 +404,8 @@
 	[self goToSection:section];
 }
 
+#pragma mark -
+
 #pragma mark Active/Inactive Project View Controller
 
 - (void)projectViewControllerDidBecomeActive:(GLAProjectViewController *)projectViewController
@@ -429,7 +448,33 @@
 	}
 }
 
-#pragma mark Transition
+#pragma mark Add New Project View Controller
+
+- (void)addNewProjectViewControllerDidConfirmCreatingNotification:(NSNotification *)note
+{
+	GLAAddNewProjectViewController *addNewProjectViewController = (note.object);
+	GLAProject *project = (note.userInfo)[@"project"];
+	
+	id<GLAMainContentViewControllerDelegate> delegate = (self.delegate);
+	if (delegate) {
+		[delegate mainContentViewController:self addNewProjectViewController:addNewProjectViewController didConfirmCreatingProject:project];
+	}
+}
+
+#pragma mark Add New Collection View Controller
+
+- (void)addNewCollectionViewControllerDidConfirmCreatingNotification:(NSNotification *)note
+{
+	GLAAddNewCollectionViewController *addNewCollectionViewController = (note.object);
+	GLACollection *collection = (note.userInfo)[@"collection"];
+	
+	id<GLAMainContentViewControllerDelegate> delegate = (self.delegate);
+	if (delegate) {
+		[delegate mainContentViewController:self addNewCollectionViewController:addNewCollectionViewController didConfirmCreatingCollection:collection];
+	}
+}
+
+#pragma mark - Transition
 
 - (void)transitionToSection:(GLAMainContentSection *)newSection animate:(BOOL)animate
 {
@@ -511,11 +556,15 @@
 		outLeading = -500.0;
 		inLeading = 500.0;
 	}
+	else if (newSection.isEditCollection) {
+		outLeading = -500.0;
+		inLeading = 500.0;
+	}
 	else if (newSection.isAddNewProject) {
 		outLeading = -500.0;
 		inLeading = 500.0;
 	}
-	else if (newSection.isEditCollection) {
+	else if (newSection.isAddNewCollection) {
 		outLeading = -500.0;
 		inLeading = 500.0;
 	}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAAddNewProjectViewController">
@@ -13,26 +13,24 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="Hz6-mo-xeY">
             <rect key="frame" x="0.0" y="0.0" width="500" height="272"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" placeholderIntrinsicWidth="312" placeholderIntrinsicHeight="29" translatesAutoresizingMaskIntoConstraints="NO" id="RhU-Xs-2SL" customClass="GLATextField">
-                    <rect key="frame" x="18" y="126" width="464" height="32"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                <textField wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" placeholderIntrinsicWidth="312" placeholderIntrinsicHeight="29" translatesAutoresizingMaskIntoConstraints="NO" id="RhU-Xs-2SL" customClass="GLATextField">
+                    <rect key="frame" x="18" y="128" width="464" height="32"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="32" id="duq-aM-kZM"/>
                     </constraints>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Project With Big Long Name That Goes On" placeholderString="Enter a project name" id="nZb-Gp-5Yx">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Project name text field" placeholderString="" id="nZb-Gp-5Yx">
                         <font key="font" size="16" name="AvenirNext-DemiBold"/>
                         <color key="textColor" red="0.98812824489999995" green="0.98829692599999996" blue="0.98811751599999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Leg-WZ-4hm">
-                    <rect key="frame" x="174" y="166" width="152" height="23"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <rect key="frame" x="173" y="168" width="154" height="23"/>
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="8lc-Ju-BES"/>
                     </constraints>
@@ -44,7 +42,6 @@
                 </textField>
                 <button placeholderIntrinsicWidth="160" placeholderIntrinsicHeight="36" translatesAutoresizingMaskIntoConstraints="NO" id="8Mo-vT-DhC" customClass="GLAButton">
                     <rect key="frame" x="170" y="32" width="160" height="36"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="36" id="1LZ-oz-W91"/>
                     </constraints>
@@ -66,7 +63,7 @@
             <constraints>
                 <constraint firstItem="RhU-Xs-2SL" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" id="7aU-Qn-VKg"/>
                 <constraint firstAttribute="bottom" secondItem="8Mo-vT-DhC" secondAttribute="bottom" constant="32" id="7yg-ym-Dzl"/>
-                <constraint firstAttribute="centerY" secondItem="RhU-Xs-2SL" secondAttribute="centerY" constant="6" id="CAY-jb-7cT"/>
+                <constraint firstAttribute="centerY" secondItem="RhU-Xs-2SL" secondAttribute="centerY" constant="8" id="CAY-jb-7cT"/>
                 <constraint firstAttribute="centerX" secondItem="8Mo-vT-DhC" secondAttribute="centerX" id="DPI-hK-gBa"/>
                 <constraint firstItem="RhU-Xs-2SL" firstAttribute="top" secondItem="Leg-WZ-4hm" secondAttribute="bottom" constant="8" id="nnK-st-MAq"/>
                 <constraint firstAttribute="trailing" secondItem="RhU-Xs-2SL" secondAttribute="trailing" constant="20" id="pV7-dq-o0I"/>

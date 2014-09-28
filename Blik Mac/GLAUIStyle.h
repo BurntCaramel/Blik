@@ -89,6 +89,8 @@
 #pragma mark Preparing Views
 
 - (void)prepareContentTextField:(NSTextField *)textField;
+- (void)prepareTextLabel:(NSTextField *)textField;
+- (void)prepareOutlinedTextField:(NSTextField *)textField;
 - (void)prepareContentTableView:(NSTableView *)tableView;
 
 

@@ -15,7 +15,7 @@
 
 @protocol GLACollectedItem <NSObject>
 
-@property(copy, readonly, nonatomic) NSString *title;
+@property(copy, readonly, nonatomic) NSString *name;
 
 @end
 
@@ -24,9 +24,8 @@
 
 //@property(weak, nonatomic) GLAProject *project;
 
+@property(readwrite, copy, nonatomic) NSString *name;
 @property(readwrite, nonatomic) GLACollectionContent *content;
-@property(readwrite, copy, nonatomic) NSString *title;
-
 @property(readwrite, nonatomic) GLACollectionColor *color;
 
 @end
@@ -36,10 +35,10 @@
 
 //@property(readonly, weak, nonatomic) GLAProject *project;
 
-@property(readonly, nonatomic) GLACollectionContent *content;
-
 @property(readonly, nonatomic) NSUUID *UUID;
-@property(readonly, copy, nonatomic) NSString *title;
+@property(readonly, copy, nonatomic) NSString *name;
+
+@property(readonly, nonatomic) GLACollectionContent *content;
 
 @property(readonly, nonatomic) GLACollectionColor *color;
 
@@ -65,6 +64,6 @@ extern NSString *GLACollectionJSONPasteboardType;
 
 @interface GLACollection (GLADummyContent)
 
-+ (instancetype)dummyCollectionWithTitle:(NSString *)title color:(GLACollectionColor *)color content:(GLACollectionContent *)content;
++ (instancetype)dummyCollectionWithName:(NSString *)name color:(GLACollectionColor *)color content:(GLACollectionContent *)content;
 
 @end
