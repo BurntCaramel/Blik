@@ -13,12 +13,9 @@
 #import "Mantle/Mantle.h"
 
 
-@protocol GLAProjectBaseReading <NSObject>
+@protocol GLAProjectEditing <NSObject>
 
-@property(readonly, nonatomic) NSUUID *UUID;
-@property(readonly, copy, nonatomic) NSString *name;
-
-@property(readonly, nonatomic) NSDate *dateCreated;
+@property(readwrite, copy, nonatomic) NSString *name;
 
 @end
 
@@ -32,14 +29,6 @@
 @property(readonly, copy, nonatomic) NSString *name;
 @property(readonly, nonatomic) NSDate *dateCreated;
 
-#if 0
-@property(readonly, copy, nonatomic) NSArray *copyCollections;
-- (id<GLAArrayEditing>)collectionsEditing;
-
-//@property(readonly, copy, nonatomic) NSSet *copyReminders;
-@property(readonly, copy, nonatomic) NSArray *copyRemindersOrderedByPriority;
-- (id<GLAReminderListEditing>)remindersEditing;
-
-#endif
+- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAProjectEditing> editor))editingBlock;
 
 @end

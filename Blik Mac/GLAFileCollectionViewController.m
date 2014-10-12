@@ -8,14 +8,13 @@
 
 #import "GLAFileCollectionViewController.h"
 #import "GLAUIStyle.h"
-#import "GLACollectionFilesListContent.h"
+#import "GLAProjectManager.h"
 #import "GLACollectedFile.h"
 #import "GLAFileInfoRetriever.h"
 
 
 @interface GLAFileCollectionViewController ()
 
-@property(nonatomic) GLACollectionFilesListContent *private_filesListContent;
 @property(copy, nonatomic) NSArray *collectedFiles;
 
 @property(nonatomic) NSMutableSet *accessedSecurityScopedURLs;
@@ -36,6 +35,12 @@
     return self;
 }
 
+- (void)dealloc
+{
+	[self stopCollectionObserving];
+	[self stopObservingPreviewFrameChanges];
+}
+
 - (void)loadView
 {
 	[super loadView];
@@ -51,6 +56,27 @@
 	[self reloadSourceFiles];
 }
 
+- (void)startCollectionObserving
+{
+	GLACollection *collection = (self.filesListCollection);
+	if (!collection) {
+		return;
+	}
+	
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	// Project Collection List
+	[nc addObserver:self selector:@selector(filesListDidChangeNotification:) name:GLACollectionFilesListDidChangeNotification object:collection];
+}
+
+- (void)stopCollectionObserving
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	// Stop observing any notifications on the project manager.
+	[nc removeObserver:self name:nil object:(self.filesListCollection)];
+}
+
 - (void)setUpFileInfoRetriever
 {
 	GLAFileInfoRetriever *fileInfoRetriever = [GLAFileInfoRetriever new];
@@ -60,28 +86,47 @@
 	
 }
 
-- (GLACollectionFilesListContent *)filesListContent
-{
-	return (self.private_filesListContent);
-}
+@synthesize filesListCollection = _filesListCollection;
 
-- (void)setFilesListContent:(GLACollectionFilesListContent *)filesListContent
+- (void)setFilesListCollection:(GLACollection *)filesListCollection
 {
-	(self.private_filesListContent) = filesListContent;
+	if (_filesListCollection == filesListCollection) {
+		return;
+	}
+	
+	[self stopCollectionObserving];
+	
+	_filesListCollection = filesListCollection;
+	
+	[self startCollectionObserving];
+	
 	[self reloadSourceFiles];
 }
 
 - (void)reloadSourceFiles
 {
-	GLACollectionFilesListContent *filesListContent = (self.filesListContent);
-	if (filesListContent) {
-		(self.collectedFiles) = [(self.filesListContent) copyFiles];
+	GLACollection *filesListCollection = (self.filesListCollection);
+	if (filesListCollection) {
+		GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+		
+		NSArray *collectedFiles = [pm copyFilesListForCollection:filesListCollection];
+		if (!collectedFiles) {
+			[pm requestFilesListForCollection:filesListCollection];
+			collectedFiles = @[];
+		}
+		
+		(self.collectedFiles) = collectedFiles;
 	}
 	else {
 		(self.collectedFiles) = @[];
 	}
 	
 	[(self.sourceFilesListTableView) reloadData];
+}
+
+- (void)filesListDidChangeNotification:(NSNotification *)note
+{
+	[self reloadSourceFiles];
 }
 
 - (void)updateQuickLookPreview
@@ -221,13 +266,17 @@
 
 - (void)addFileURLs:(NSArray *)fileURLs
 {
-	GLACollectionFilesListContent *filesListContent = (self.filesListContent);
+	GLACollection *filesListCollection = (self.filesListCollection);
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 	
 	NSMutableArray *collectedFiles = [NSMutableArray array];
 	for (NSURL *fileURL in fileURLs) {
 		[collectedFiles addObject:[GLACollectedFile collectedFileWithFileURL:fileURL]];
 	}
-	[(filesListContent.filesListEditing) addChildren:collectedFiles];
+	
+	[pm editFilesListOfCollection:filesListCollection usingBlock:^(id<GLAArrayEditing> filesListEditor) {
+		[filesListEditor addChildren:collectedFiles];
+	}];
 	
 	[self reloadSourceFiles];
 }

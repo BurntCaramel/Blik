@@ -9,6 +9,7 @@
 #import "GLAAppDelegate.h"
 #import <objc/runtime.h>
 #import "GLAProjectManager.h"
+#import "GLAProjectManager.h"
 
 
 @interface GLAAppDelegate ()
@@ -40,8 +41,10 @@
 	//[self toggleShowingPrototypeA:self];
 	[self toggleShowingMainWindow:self];
 	
+#if 0
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	(projectManager.shouldLoadTestProjects) = YES;
+#endif
 }
 
 - (void)prepareIfNeeded
@@ -54,6 +57,8 @@
 	
 	(self.statusItemController) = [GLAStatusItemController new];
 	[nc addObserver:self selector:@selector(toggleShowingMainWindowAndApplicationHidden:) name:GLAStatusItemControllerToggleNotification object:(self.statusItemController)];
+	
+	[nc addObserver:self selector:@selector(helpMenuDidBeginTracking:) name:NSMenuDidBeginTrackingNotification object:(self.mainHelpMenu)];
 	
 	(self.hasPrepared) = YES;
 }
@@ -161,6 +166,28 @@
 - (void)toggleShowingStatusItem:(id)sender
 {
 	[(self.statusItemController) toggleShowing:sender];
+}
+
+#pragma mark Help Menu
+
+- (void)updateActivityStatusMenuItem
+{
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	
+	NSMenuItem *activityStatusMenuItem = (self.activityStatusMenuItem);
+	
+	NSString *status = (projectManager.statusOfCompletedActivity);
+	NSLog(@"%@", status);
+	/*NSArray *actionStati = [status componentsSeparatedByString:@"\n"];
+	for (NSString *actionStatus in actionStati) {
+		
+	}*/
+	(activityStatusMenuItem.title) = status;
+}
+
+- (void)helpMenuDidBeginTracking:(NSNotification *)note
+{
+	[self updateActivityStatusMenuItem];
 }
 
 #pragma mark Validating UI Items

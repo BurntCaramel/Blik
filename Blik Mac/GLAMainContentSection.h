@@ -26,7 +26,6 @@
 
 + (instancetype)allProjectsSection;
 + (instancetype)plannedProjectsSection;
-+ (instancetype)nowSection;
 
 + (instancetype)addNewProjectSectionWithPreviousSection:(GLAMainContentSection *)previousSection;
 
@@ -38,11 +37,14 @@
 @interface GLAMainContentEditProjectSection : GLAMainContentSection
 
 // Designated init:
-- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainContentSection *)previousSection project:(GLAProject *)project;
+- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainContentSection *)previousSection project:(GLAProject *)project isNow:(BOOL)isNow;
 
 @property(readonly, nonatomic) GLAProject *project;
+@property(readonly, nonatomic) BOOL isNow;
 
 + (instancetype)editProjectSectionWithProject:(GLAProject *)project previousSection:(GLAMainContentSection *)previousSection;
+
++ (instancetype)nowProjectSectionWithProject:(GLAProject *)project;
 
 @end
 

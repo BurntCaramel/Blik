@@ -8,8 +8,11 @@
 
 #import "GLAViewController.h"
 #import "GLAProject.h"
+#import "GLACollection.h"
+#import "GLACollectionColor.h"
 #import "GLATextField.h"
 #import "GLAButton.h"
+#import "GLAColorChoiceView.h"
 
 
 @interface GLAAddNewCollectionViewController : GLAViewController
@@ -18,6 +21,10 @@
 
 @property(strong, nonatomic) IBOutlet NSTextField *nameLabel;
 @property(strong, nonatomic) IBOutlet GLATextField *nameTextField;
+
+@property(strong, nonatomic) IBOutlet NSTextField *colorLabel;
+@property(strong, nonatomic) IBOutlet GLAColorChoiceView *colorChoiceView;
+@property(strong, nonatomic) IBOutlet GLACollectionColor *chosenCollectionColor;
 
 @property(strong, nonatomic) IBOutlet GLAButton *confirmCreateButton;
 

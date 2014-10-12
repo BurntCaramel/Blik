@@ -10,6 +10,7 @@
 @import QuartzCore;
 #import "GLAButton.h"
 #import "GLAUIStyle.h"
+#import "GLAProjectManager.h"
 
 
 @interface GLAMainNavigationButtonGroup : NSObject
@@ -168,7 +169,12 @@
 
 - (IBAction)goToToday:(id)sender
 {
-	[self performChangeCurrentSectionTo:[GLAMainContentSection nowSection]];
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	
+	[projectManager requestNowProject];
+	GLAProject *nowProject = (projectManager.nowProject);
+	
+	[self performChangeCurrentSectionTo:[GLAMainContentEditProjectSection nowProjectSectionWithProject:nowProject]];
 }
 
 - (IBAction)goToPlanned:(id)sender

@@ -93,7 +93,7 @@ NSString *GLAArrayEditorDidChangeNotification = @"GLAArrayEditorDidChangeNotific
 
 - (void)enqueueChangeNotification
 {
-	// Enqueue using NSNotificationQueue so multiple changes can get coalesce
+	// Enqueue using NSNotificationQueue so multiple changes can get coalesced.
 	NSNotificationQueue *noteQueue = [NSNotificationQueue defaultQueue];
 	NSNotification *note = [NSNotification notificationWithName:GLAArrayEditorDidChangeNotification object:self];
 	[noteQueue enqueueNotification:note postingStyle:NSPostASAP];

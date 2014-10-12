@@ -11,7 +11,6 @@
 #import "GLAUIStyle.h"
 #import "GLAProjectManager.h"
 #import "GLAReminderManager.h"
-#import "GLACollectionFilesListContent.h"
 #import "GLAChooseRemindersViewController.h"
 #import <objc/runtime.h>
 
@@ -28,8 +27,9 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 
 
 @interface GLAProjectViewController ()
-
-@property(nonatomic) GLAProject *private_project;
+{
+	GLAProject *_project;
+}
 
 @property(readwrite, nonatomic) BOOL editingCollections;
 @property(readwrite, nonatomic) BOOL editingPlan;
@@ -121,23 +121,26 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	[(self.planScrollView.contentView) scrollToPoint:NSZeroPoint];
 }
 
-- (GLAProject *)project
-{
-	return (self.private_project);
-}
+@synthesize project = _project;
 
 - (void)setProject:(GLAProject *)project
-{NSLog(@"SET PROJECT %@", project);
-	if ((self.private_project) != project) {
-		(self.private_project) = project;
-		
+{
+	if (_project == project) {
+		return;
+	}
+	
+	BOOL isSameProject = (_project != nil) && [(_project.UUID) isEqual:(project.UUID)];
+	
+	_project = project;
+	
+	NSLog(@"PVC %@", project);
+	
+	if (!isSameProject) {
 		(self.collectionsViewController.project) = project;
 		(self.planViewController.project) = project;
-		
-		(self.nameTextField.stringValue) = (project.name);
-		
-		
 	}
+	
+	(self.nameTextField.stringValue) = (project.name);
 }
 
 #pragma mark Actions
@@ -195,6 +198,20 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 - (void)focusNameTextField
 {
 	[(self.view.window) makeFirstResponder:(self.nameTextField)];
+}
+
+- (void)changeName:(id)sender
+{
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	
+	NSString *newName = (self.nameTextField.stringValue);
+	newName = [pm normalizeName:newName];
+	if ([pm nameIsValid:newName]) {
+		(self.project) = [pm renameProject:(self.project) toName:newName];
+	}
+	else {
+		NSBeep();
+	}
 }
 
 #pragma mark Notifications
@@ -708,8 +725,10 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"GLA.projectCollectionsViewController.didClickCollection";
 
 @interface GLAProjectCollectionsViewController ()
+{
+	GLAProject *_project;
+}
 
-@property(nonatomic) GLAProject *private_project;
 @property(nonatomic) BOOL private_editing;
 
 @property(nonatomic) NSIndexSet *draggedRowIndexes;
@@ -722,24 +741,26 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 - (void)dealloc
 {
-	[self stopProjectManagerObserving];
+	[self stopProjectObserving];
 }
-/*
-- (NSTableView *)tableView
-{
-	return (id)(self.view);
-}
-*/
-- (GLAProject *)project
-{
-	return (self.private_project);
-}
+
+@synthesize project = _project;
 
 - (void)setProject:(GLAProject *)project
 {
-	if ((self.private_project) != project) {
-		(self.private_project) = project;
+	if (_project == project) {
+		return;
+	}
+	
+	BOOL isSameProject = (_project != nil) && [(_project.UUID) isEqual:(project.UUID)];
+	
+	[self stopProjectObserving];
+	
+	_project = project;
+	
+	[self startProjectObserving];
 		
+	if (!isSameProject) {
 		GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 		[projectManager requestCollectionsForProject:project];
 	}
@@ -779,27 +800,23 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	[self wrapScrollView];
 	[self setUpEditingActionsView];
 	
-	[self setUpProjectManagerObserving];
-	
 	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
 }
 
-- (void)setUpProjectManagerObserving
+- (void)startProjectObserving
 {
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
 	// Project Collection List
-	[nc addObserver:self selector:@selector(projectManagerProjectCollectionsDidChangeNotification:) name:GLAProjectManagerProjectCollectionsDidChangeNotification object:projectManager];
+	[nc addObserver:self selector:@selector(projectCollectionsDidChangeNotification:) name:GLAProjectCollectionsDidChangeNotification object:(self.project)];
 }
 
-- (void)stopProjectManagerObserving
+- (void)stopProjectObserving
 {
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
 	// Stop observing any notifications on the project manager.
-	[nc removeObserver:self name:nil object:projectManager];
+	[nc removeObserver:self name:nil object:(self.project)];
 }
 
 - (void)wrapScrollView
@@ -906,12 +923,17 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 		(colorChoicePopover.contentViewController) = colorPickerViewController;
 		(colorChoicePopover.appearance) = NSPopoverAppearanceHUD;
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(collectionColorPickerChosenColorDidChangeNotification:) name:GLACollectionColorPickerViewControllerChosenColorDidChangeNotification object:colorPickerViewController];
+		
 		
 		(self.colorChoicePopover) = colorChoicePopover;
 	}
 	
 	return colorChoicePopover;
+}
+
+- (GLACollectionColorPickerPopover *)colorPickerPopover
+{
+	return [GLACollectionColorPickerPopover sharedColorPickerPopover];
 }
 
 - (void)collectionColorPickerChosenColorDidChangeNotification:(NSNotification *)note
@@ -921,24 +943,33 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	[self changeColor:color forCollection:(self.collectionWithColorBeingPicked)];
 }
 
+- (void)collectionColorPickerPopupDidCloseNotification:(NSNotification *)note
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc removeObserver:self name:nil object:(self.colorPickerPopover)];
+}
+
 - (void)chooseColorForCollection:(GLACollection *)collection atRow:(NSInteger)collectionRow
 {
 	(self.collectionWithColorBeingPicked) = collection;
 	
-	NSPopover *colorChoicePopover = (self.colorChoicePopoverCreatingIfNeeded);
+	GLACollectionColorPickerPopover *colorPickerPopover = (self.colorPickerPopover);
 	
-	if (colorChoicePopover.isShown) {
-		[colorChoicePopover close];
+	if (colorPickerPopover.isShown) {
+		[colorPickerPopover close];
 		(self.collectionWithColorBeingPicked) = nil;
 	}
 	else {
-		GLACollectionColorPickerViewController *colorPickerViewController = (self.colorPickerViewController);
-		(colorPickerViewController.chosenCollectionColor) = (collection.color);
+		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+		[nc addObserver:self selector:@selector(collectionColorPickerChosenColorDidChangeNotification:) name:GLACollectionColorPickerPopoverChosenColorDidChangeNotification object:colorPickerPopover];
+		[nc addObserver:self selector:@selector(collectionColorPickerPopupDidCloseNotification:) name:NSPopoverDidCloseNotification object:colorPickerPopover];
+		
+		(colorPickerPopover.chosenCollectionColor) = (collection.color);
 		
 		NSTableView *tableView = (self.tableView);
 		NSRect rowRect = [tableView rectOfRow:collectionRow];
 		// Show underneath.
-		[colorChoicePopover showRelativeToRect:rowRect ofView:tableView preferredEdge:NSMaxYEdge];
+		[colorPickerPopover showRelativeToRect:rowRect ofView:tableView preferredEdge:NSMaxYEdge];
 	}
 }
 
@@ -957,7 +988,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 #pragma mark Notifications
 
-- (void)projectManagerProjectCollectionsDidChangeNotification:(NSNotification *)note
+- (void)projectCollectionsDidChangeNotification:(NSNotification *)note
 {
 	[self reloadCollections];
 }
@@ -1132,10 +1163,12 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 #pragma mark -
 
 @interface GLAProjectPlanViewController ()
+{
+	GLAProject *_project;
+}
 
 @property(nonatomic) BOOL hasPreparedViews;
 
-@property(nonatomic) GLAProject *private_project;
 @property(nonatomic) BOOL private_editing;
 
 @property(nonatomic) NSTableCellView *measuringTableCellView;
@@ -1143,21 +1176,13 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 @end
 
 @implementation GLAProjectPlanViewController
-/*
-- (NSTableView *)tableView
-{
-	return (id)(self.view);
-}
-*/
-- (GLAProject *)project
-{
-	return (self.private_project);
-}
+
+@synthesize project = _project;
 
 - (void)setProject:(GLAProject *)project
 {
-	if ((self.private_project) != project) {
-		(self.private_project) = project;
+	if (_project != project) {
+		_project = project;
 		
 		[self prepareDummyContent];
 	}

@@ -7,17 +7,19 @@
 //
 
 #import "GLACollection.h"
+#import "GLACollection+GLACollection_ProjectEditing.h"
 #import "NSValueTransformer+GLAModel.h"
-#import "GLACollectionContent.h"
 #import "GLACollectionColor.h"
 
 
 @interface GLACollection () <GLACollectionEditing>
 
+@property(readwrite, weak , nonatomic) GLAProject *project;
+
 @property(readwrite, nonatomic) NSUUID *UUID;
 @property(readwrite, copy, nonatomic) NSString *name;
 
-@property(readwrite, nonatomic) GLACollectionContent *content;
+@property(readwrite, nonatomic) NSString *type;
 
 @property(readwrite, nonatomic) GLACollectionColor *color;
 @property(readwrite, nonatomic) NSString *colorIdentifier;
@@ -30,18 +32,11 @@
 {
 	return
 	@{
-	  @"project": (NSNull.null),
-	  @"content": @"content",
 	  @"UUID": @"UUID",
 	  @"name": @"name",
 	  @"color": (NSNull.null),
 	  @"colorIdentifier": @"colorIdentifier"
 	};
-}
-
-+ (NSValueTransformer *)contentJSONTransformer
-{
-	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLACollectionContent class]];
 }
 
 + (NSValueTransformer *)UUIDJSONTransformer
@@ -69,15 +64,16 @@
 	(self.color) = [[GLACollectionColor alloc] initWithIdentifier:colorIdentifier];
 }
 
-+ (instancetype)newWithCreationFromEditing:(void (^)(id<GLACollectionEditing>))editingBlock
++ (instancetype)newWithType:(NSString *)collectionType creatingFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock
 {
 	GLACollection *collection = [self new];
+	(collection.type) = collectionType;
 	editingBlock(collection);
 	
 	return collection;
 }
 
-- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLACollectionEditing>collectionEditor))collectionEditingBlock
+- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLACollectionEditing>editor))collectionEditingBlock
 {
 	GLACollection *copy = [self copy];
 	collectionEditingBlock(copy);
@@ -176,13 +172,20 @@ NSString *GLACollectionJSONPasteboardType = @"com.burntcaramel.GLACollection.JSO
 
 @implementation GLACollection (GLADummyContent)
 
-+ (instancetype)dummyCollectionWithName:(NSString *)name color:(GLACollectionColor *)color content:(GLACollectionContent *)content
++ (instancetype)dummyCollectionWithName:(NSString *)name color:(GLACollectionColor *)color type:(NSString *)collectionType
 {
-	return [self newWithCreationFromEditing:^(id<GLACollectionEditing> collectionEditor) {
+	return [self newWithType:collectionType creatingFromEditing:^(id<GLACollectionEditing> collectionEditor) {
 		(collectionEditor.name) = name;
-		(collectionEditor.content) = content;
 		(collectionEditor.color) = color;
 	}];
 }
 
 @end
+
+
+@implementation GLACollection (GLACollection_ProjectEditing)
+
+@end
+
+
+NSString *GLACollectionTypeFilesList = @"filesList";

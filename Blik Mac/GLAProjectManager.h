@@ -19,45 +19,67 @@
 
 @property(nonatomic) BOOL shouldLoadTestProjects;
 
+#pragma mark Status
+
+- (NSString *)statusOfCurrentActivity;
+- (NSString *)statusOfCompletedActivity;
+
 #pragma mark Using Projects
 
-// Lazy loaded
+#pragma mark Projects
 
 - (void)requestAllProjects;
-- (void)requestPlannedProjects;
 - (void)requestNowProject;
-
-- (void)requestCollectionsForProject:(GLAProject *)project;
-- (void)requestRemindersForProject:(GLAProject *)project;
 
 // All of these may be nil until they are loaded.
 // Use the notifications below to react to when they are ready.
 @property(readonly, copy, nonatomic) NSArray *allProjectsSortedByDateCreatedNewestToOldest;
-@property(readonly, copy, nonatomic) NSArray *plannedProjects;
+//@property(readonly, copy, nonatomic) NSArray *plannedProjects;
+
+- (GLAProject *)projectWithUUID:(NSUUID *)projectUUID;
+
 @property(readonly, copy, nonatomic) GLAProject *nowProject;
 
+#pragma mark Collections
+
+- (void)requestCollectionsForProject:(GLAProject *)project;
+
 - (NSArray *)copyCollectionsForProject:(GLAProject *)project;
+//- (GLACollection *)collectionWithUUID:(NSUUID *)collectionUUID;
 
-#pragma mark Editing
+#pragma mark Files List Collections
 
-- (void)changeNowProject:(id<GLAProjectBaseReading>)project;
+- (void)requestFilesListForCollection:(GLACollection *)filesListCollection;
+
+- (NSArray *)copyFilesListForCollection:(GLACollection *)filesListCollection;
+
+#pragma mark Editing Projects
 
 - (GLAProject *)createNewProjectWithName:(NSString *)name;
 
-- (void)renameProject:(GLAProject *)project toString:(NSString *)name;
+- (GLAProject *)renameProject:(GLAProject *)project toName:(NSString *)name;
 
 - (void)deleteProjectPermanently:(GLAProject *)project;
-//- (id<GLAProjectEditing>)editProject:(id<GLAProjectBaseReading>)project;
+
+#pragma mark Now Project
+
+- (void)changeNowProject:(GLAProject *)project;
+
+#pragma mark Collections
 
 - (BOOL)editProjectCollections:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionListEditor))block;
 //- (id<GLAProjectEditing>)editProject:(GLAProject *)project;
 
-- (GLACollection *)createNewCollectionWithName:(NSString *)name content:(GLACollectionContent *)content inProject:(GLAProject *)project;
+- (GLACollection *)createNewCollectionWithName:(NSString *)name type:(NSString *)type color:(GLACollectionColor *)color inProject:(GLAProject *)project;
 
 - (GLACollection *)editCollection:(GLACollection *)collection inProject:(GLAProject *)project usingBlock:(void(^)(id<GLACollectionEditing>collectionEditor))editBlock;
 
 - (GLACollection *)renameCollection:(GLACollection *)collection inProject:(GLAProject *)project toString:(NSString *)name;
 - (GLACollection *)changeColorOfCollection:(GLACollection *)collection inProject:(GLAProject *)project toColor:(GLACollectionColor *)color;
+
+#pragma mark Collection Files List
+
+- (BOOL)editFilesListOfCollection:(GLACollection *)filesListCollection usingBlock:(void (^)(id<GLAArrayEditing> filesListEditor))block;
 
 #pragma mark Validating
 
@@ -66,19 +88,21 @@
 
 #pragma mark Saving
 
-- (void)saveAllProjects;
-- (void)saveCollectionsForProject:(GLAProject *)project;
+- (void)requestSaveAllProjects;
+- (void)requestSaveCollectionsForProject:(GLAProject *)project;
+- (void)requestSaveFilesListForCollections:(GLACollection *)filesListCollection;
 
 #pragma mark Project Changes
 
-- (void)projectNameDidChange:(GLAProject *)project; // Name
-
 - (void)collectionListForProjectDidChange:(GLAProject *)project; // Added, removed, reordered
+
 - (void)projectRemindersListDidChange:(GLAProject *)project; // Added, removed
+
+- (void)filesListForCollectionDidChange:(GLACollection *)collection; // Added, removed, reordered
 
 - (void)collectionDidChange:(GLACollection *)collection insideProject:(GLAProject *)project; // Renamed, color changed, content changed.
 
-- (void)reminderDidChange:(GLACollection *)collection insideProject:(GLAProject *)project;
+//- (void)reminderDidChange:(GLACollection *)collection insideProject:(GLAProject *)project;
 
 @end
 
@@ -87,10 +111,15 @@ extern NSString *GLAProjectManagerAllProjectsDidChangeNotification;
 extern NSString *GLAProjectManagerPlannedProjectsDidChangeNotification;
 extern NSString *GLAProjectManagerNowProjectDidChangeNotification;
 
-extern NSString *GLAProjectManagerProjectCollectionsDidChangeNotification;
-extern NSString *GLAProjectManagerCollectionPropertiesDidChangeNotification;
+// ObjectL GLAProject
+extern NSString *GLAProjectCollectionsDidChangeNotification;
+//extern NSString *GLACollectionPropertiesDidChangeNotification;
 
-extern NSString *GLAProjectManagerProjectRemindersDidChangeNotification;
+// Object: GLACollection
+extern NSString *GLACollectionFilesListDidChangeNotification;
+
+//extern NSString *GLAProjectManagerProjectRemindersDidChangeNotification;
 
 extern NSString *GLAProjectManagerNotificationProjectKey;
-extern NSString *GLAProjectManagerNotificationChangedPropertiesKey;
+extern NSString *GLAProjectManagerNotificationCollectionKey;
+//extern NSString *GLAProjectManagerNotificationChangedPropertiesKey;

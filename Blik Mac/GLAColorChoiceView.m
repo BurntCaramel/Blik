@@ -25,6 +25,7 @@
     self = [super initWithFrame:frame];
     if (self) {
 		(self.wantsLayer) = YES;
+		(self.togglesOnAndOff) = YES;
     }
     return self;
 }
@@ -58,7 +59,7 @@
 	(animation.fromValue) = @(0.8);
 	(animation.toValue) = @(0.4);
 	[layer pop_addAnimation:animation forKey:@"scaleSpring"];
-#else
+#elseif 0
 	(layer.contentsGravity) = kCAGravityCenter;
 	//(layer.anchorPoint) = CGPointMake(0.5, 0.5);
 	CAKeyframeAnimation *scaleAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
@@ -117,12 +118,17 @@
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
-	if (!(self.on)) {
-		(self.on) = YES;
+	if (self.togglesOnAndOff) {
+		if (!(self.on)) {
+			(self.on) = YES;
+		}
 	}
-	//(self.on) = !(self.on);
+	else {
+		[[NSNotificationCenter defaultCenter] postNotificationName:GLAColorChoiceViewDidClickNotification object:self];
+	}
 }
 
 @end
 
 NSString *GLAColorChoiceViewOnDidChangeNotification = @"GLAColorChoiceViewOnDidChangeNotification";
+NSString *GLAColorChoiceViewDidClickNotification = @"GLAColorChoiceViewDidClickNotification";

@@ -44,11 +44,6 @@
 	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierPlannedProjects];
 }
 
-+ (instancetype)nowSection
-{
-	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierNow];
-}
-
 + (instancetype)addNewProjectSectionWithPreviousSection:(GLAMainContentSection *)previousSection
 {
 	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierAddNewProject previousSection:previousSection];
@@ -71,18 +66,24 @@
 
 @implementation GLAMainContentEditProjectSection
 
-- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainContentSection *)previousSection project:(GLAProject *)project
+- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainContentSection *)previousSection project:(GLAProject *)project isNow:(BOOL)isNow
 {
 	self = [super initWithBaseIdentifier:baseIdentifier previousSection:previousSection];
 	if (self) {
 		_project = project;
+		_isNow = isNow;
 	}
 	return self;
 }
 
 + (instancetype)editProjectSectionWithProject:(GLAProject *)project previousSection:(GLAMainContentSection *)previousSection
 {
-	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierEditProject previousSection:previousSection project:project];
+	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierEditProject previousSection:previousSection project:project isNow:NO];
+}
+
++ (instancetype)nowProjectSectionWithProject:(GLAProject *)project
+{
+	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierNow previousSection:nil project:project isNow:YES];
 }
 
 #pragma mark JSON

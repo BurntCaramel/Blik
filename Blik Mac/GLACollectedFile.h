@@ -23,6 +23,7 @@
 + (instancetype)collectedFileWithFileURL:(NSURL *)URL;
 
 @property(readonly, nonatomic) NSURL *URL;
+@property(readonly, nonatomic) NSString *filePath;
 
 - (NSData *)bookmarkDataWithError:(NSError *__autoreleasing *)error;
 @property(readonly, nonatomic) NSData *bookmarkData;

@@ -12,6 +12,7 @@
 #import "GLAView.h"
 #import "GLAProjectActionsBarController.h"
 #import "GLATableActionsViewController.h"
+#import "GLACollectionColorPickerPopover.h"
 #import "GLACollectionColorPickerViewController.h"
 #import "GLAProjectView.h"
 #import "GLATextField.h"
@@ -61,6 +62,7 @@
 
 - (void)clearName;
 - (void)focusNameTextField;
+- (IBAction)changeName:(id)sender;
 
 @property(readonly, nonatomic) NSScrollView *itemsScrollView;
 @property(readonly, nonatomic) NSScrollView *planScrollView;
@@ -91,6 +93,7 @@ extern NSString *GLAProjectViewControllerRequestAddNewCollectionNotification;
 
 @property(strong, nonatomic) IBOutlet NSMenu *contextualMenu;
 
+@property(readonly, nonatomic) GLACollectionColorPickerPopover *colorPickerPopover;
 @property(nonatomic) NSPopover *colorChoicePopover;
 @property(nonatomic) GLACollectionColorPickerViewController *colorPickerViewController;
 

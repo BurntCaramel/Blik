@@ -14,6 +14,9 @@
 @property(nonatomic) NSColor *color;
 @property(nonatomic) BOOL on;
 
+@property(nonatomic) BOOL togglesOnAndOff;
+
 @end
 
 extern NSString *GLAColorChoiceViewOnDidChangeNotification;
+extern NSString *GLAColorChoiceViewDidClickNotification;

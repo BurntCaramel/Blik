@@ -9,13 +9,15 @@
 @import Foundation;
 #import "Mantle/Mantle.h"
 @class GLAProject;
-@class GLACollectionContent;
 @class GLACollectionColor;
+
+
+extern NSString *GLACollectionTypeFilesList;
 
 
 @protocol GLACollectedItem <NSObject>
 
-@property(copy, readonly, nonatomic) NSString *name;
+@property(readonly, copy, nonatomic) NSString *name;
 
 @end
 
@@ -25,7 +27,6 @@
 //@property(weak, nonatomic) GLAProject *project;
 
 @property(readwrite, copy, nonatomic) NSString *name;
-@property(readwrite, nonatomic) GLACollectionContent *content;
 @property(readwrite, nonatomic) GLACollectionColor *color;
 
 @end
@@ -33,18 +34,18 @@
 
 @interface GLACollection : MTLModel <GLACollectedItem, MTLJSONSerializing, NSPasteboardReading, NSPasteboardWriting>
 
-//@property(readonly, weak, nonatomic) GLAProject *project;
+@property(readonly, weak, nonatomic) GLAProject *project;
 
 @property(readonly, nonatomic) NSUUID *UUID;
 @property(readonly, copy, nonatomic) NSString *name;
 
-@property(readonly, nonatomic) GLACollectionContent *content;
+@property(readonly, nonatomic) NSString *type;
 
 @property(readonly, nonatomic) GLACollectionColor *color;
 
-+ (instancetype)newWithCreationFromEditing:(void(^)(id<GLACollectionEditing>collectionEditor))editingBlock;
++ (instancetype)newWithType:(NSString *)collectionType creatingFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock;
 
-- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLACollectionEditing>collectionEditor))editingBlock;
+- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock;
 
 @end
 
@@ -64,6 +65,6 @@ extern NSString *GLACollectionJSONPasteboardType;
 
 @interface GLACollection (GLADummyContent)
 
-+ (instancetype)dummyCollectionWithName:(NSString *)name color:(GLACollectionColor *)color content:(GLACollectionContent *)content;
++ (instancetype)dummyCollectionWithName:(NSString *)name color:(GLACollectionColor *)color type:(NSString *)collectionType;
 
 @end

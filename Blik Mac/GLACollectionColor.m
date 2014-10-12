@@ -33,6 +33,19 @@
 	return [self initWithIdentifier:nil];
 }
 
+- (BOOL)isEqual:(GLACollectionColor *)color
+{
+	if (self == color) return YES;
+	if (!color || ![color isMemberOfClass:self.class]) return NO;
+	
+	return [(color.identifier) isEqual:(self.identifier)];
+}
+
+- (NSUInteger)hash
+{
+	return (self.identifier.hash);
+}
+
 - (id)copyWithZone:(NSZone *)zone
 {
 	return self;

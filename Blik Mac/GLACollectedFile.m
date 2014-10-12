@@ -11,8 +11,13 @@
 
 
 @interface GLACollectedFile ()
+{
+	NSData *_bookmarkData;
+}
 
-@property(nonatomic) NSData *loadedBookmarkData;
+@property(readwrite, nonatomic) NSURL *URL;
+@property(readwrite, nonatomic) NSString *filePath;
+@property(readwrite, nonatomic) NSData *bookmarkData;
 
 @end
 
@@ -60,6 +65,17 @@
 	  ];
 }
 
+- (NSString *)filePath
+{
+	NSURL *URL = (self.URL);
+	if (URL) {
+		return (URL.path);
+	}
+	else {
+		return nil;
+	}
+}
+
 - (NSData *)bookmarkDataWithError:(NSError *__autoreleasing *)error
 {
 	NSURL *URL = (self.URL);
@@ -73,6 +89,42 @@
 	return [self bookmarkDataWithError:&error];
 }
 
+- (void)setBookmarkData:(NSData *)bookmarkData
+{
+	_bookmarkData = bookmarkData;
+	
+	BOOL isStale = NO;
+	NSError *error = nil;
+	NSURL *URL = [NSURL URLByResolvingBookmarkData:bookmarkData options:NSURLBookmarkResolutionWithSecurityScope relativeToURL:nil bookmarkDataIsStale:&isStale error:&error];
+	(self.URL) = URL;
+	
+}
+
+- (BOOL)validateBookmarkData:(inout __autoreleasing NSData **)ioBookmarkData error:(out NSError *__autoreleasing *)outError
+{
+	NSData *bookmarkData = *ioBookmarkData;
+	BOOL isStale = NO;
+	// Resolve the bookmark data.
+	NSURL *URL = [NSURL URLByResolvingBookmarkData:bookmarkData options:NSURLBookmarkResolutionWithSecurityScope relativeToURL:nil bookmarkDataIsStale:&isStale error:outError];
+	// No URL could be found: invalid.
+	if (!URL) {
+		return NO;
+	}
+	
+	// Is stale: needs updating to new bookmark data.
+	if (isStale) {
+		NSArray *resourceValues = [[self class] resourceValuesForCreatingBookmarkData];
+		bookmarkData = [URL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys:resourceValues relativeToURL:nil error:outError];
+		if (!bookmarkData) {
+			return NO;
+		}
+		
+		*ioBookmarkData = bookmarkData;
+	}
+	
+	return YES;
+}
+
 #pragma mark JSON
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey
@@ -80,6 +132,7 @@
 	return
 	@{
 	  @"URL": (NSNull.null),
+	  @"filePath": @"filePath",
 	  @"bookmarkData": @"bookmarkData"
 	  };
 }

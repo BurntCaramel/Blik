@@ -11,8 +11,20 @@
 #import "GLAModelErrors.h"
 #import "GLACollection.h"
 #import "GLACollectionColor.h"
-#import "GLACollectionFilesListContent.h"
+#import "GLACollectedFile.h"
 #import "GLAArrayEditor.h"
+
+
+@interface GLAProjectManagerStoreState : NSObject
+
+@property(nonatomic) NSArray *allProjectsSortedByDateCreatedNewestToOldest;
+@property(nonatomic) NSDictionary *allProjectUUIDsToProjects;
+
+@property(nonatomic) NSUUID *nowProjectUUID;
+
+@property(nonatomic) GLAProject *nowProject;
+
+@end
 
 
 @interface GLAProjectManagerStore : NSObject
@@ -21,25 +33,30 @@
 
 @property(weak, nonatomic) GLAProjectManager *projectManager;
 
-@property(readonly, nonatomic) NSOperationQueue *receivingOperationQueue;
-@property(nonatomic) NSOperationQueue *backgroundOperationQueue;
-
 @property(readonly, nonatomic) NSURL *version1DirectoryURL;
 
+- (NSString *)statusOfCurrentActivity;
+- (NSString *)statusOfCompletedActivity;
 
 #pragma mark Loading
 
 - (void)requestAllProjects;
-//- (void)requestPlannedProjects;
 - (void)requestNowProject;
 - (void)requestCollectionsForProject:(GLAProject *)project;
+- (void)requestFilesListForCollection:(GLACollection *)filesListCollection;
 
-@property(readonly, nonatomic) NSArray *allProjectsSortedByDateCreatedNewestToOldest;
-@property(readonly, nonatomic) NSArray *plannedProjectsSortedByDateNextPlanned;
-@property(readonly, nonatomic) GLAProject *nowProject;
+@property(readonly, copy, nonatomic) NSArray *allProjectsSortedByDateCreatedNewestToOldest;
+//@property(readonly, copy, nonatomic) NSArray *plannedProjects;
+
+- (GLAProject *)projectWithUUID:(NSUUID *)projectUUID;
+
+@property(readonly, copy, nonatomic) GLAProject *nowProject;
 
 - (GLAArrayEditor *)collectionEditorForProject:(GLAProject *)project;
 - (NSArray *)copyCollectionsForProject:(GLAProject *)project;
+
+- (GLAArrayEditor *)filesListEditorForCollection:(GLACollection *)filesListCollection;
+- (NSArray *)copyFilesListForCollection:(GLACollection *)filesListCollection;
 
 //- (NSSet *)loadedProjectUUIDsContainingCollection:(GLACollection *)collection;
 
@@ -47,12 +64,17 @@
 
 - (void)addProjects:(NSArray *)projects;
 
+- (GLAProject *)editProject:(GLAProject *)project usingBlock:(void(^)(id<GLAProjectEditing>projectEditor))editBlock;
+
+- (void)changeNowProject:(GLAProject *)project;
+
 #pragma mark Saving
 
 - (void)requestSaveAllProjects;
 //- (void)requestSavePlannedProjects;
 - (void)requestSaveNowProject;
 - (void)requestSaveCollectionsForProject:(GLAProject *)project;
+- (void)requestSaveFilesListForCollection:(GLACollection *)filesListCollection;
 
 @end
 
@@ -60,22 +82,17 @@
 NSString *GLAProjectManagerJSONAllProjectsKey = @"allProjects";
 NSString *GLAProjectManagerJSONNowProjectKey = @"nowProject";
 NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
+NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 
 @interface GLAProjectManager ()
 
 @property(nonatomic) GLAProjectManagerStore *store;
 
-@property(nonatomic) NSOperationQueue *backgroundOperationQueue;
-@property(nonatomic) NSBlockOperation *operationToFetchContent;
+//@property(nonatomic) NSArray *allProjects;
+//@property(nonatomic) NSArray *plannedProjects;
 
-@property(nonatomic) NSBlockOperation *operationToFetchAllProjects;
-@property(nonatomic) NSArray *allProjects;
-
-@property(nonatomic) NSBlockOperation *operationToFetchPlannedProjects;
-@property(nonatomic) NSArray *plannedProjects;
-
-@property(nonatomic) GLAProject *nowProject;
+//@property(nonatomic) GLAProject *nowProject;
 
 
 #pragma mark Saving and Loading
@@ -105,9 +122,6 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 {
     self = [super init];
     if (self) {
-		_backgroundOperationQueue = [NSOperationQueue new];
-		(_backgroundOperationQueue.maxConcurrentOperationCount) = 1;
-		
 		_store = [[GLAProjectManagerStore alloc] initWithProjectManager:self];
     }
     return self;
@@ -134,8 +148,11 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 - (void)handleError:(NSError *)error
 {
 	[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+		NSLog(@"ERROR %@", error);
 		// TODO something a bit more elegant?
-		[NSApp presentError:error];
+		//[NSApp presentError:error];
+		NSAlert *alert = [NSAlert alertWithError:error];
+		[alert runModal];
 	}];
 }
 
@@ -153,6 +170,11 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 - (NSArray *)allProjectsSortedByDateCreatedNewestToOldest
 {
 	return (self.store.allProjectsSortedByDateCreatedNewestToOldest);
+}
+
+- (GLAProject *)projectWithUUID:(NSUUID *)projectUUID
+{
+	return [(self.store) projectWithUUID:projectUUID];
 }
 
 - (void)requestNowProject
@@ -179,36 +201,26 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	return [(self.store) copyCollectionsForProject:project];
 }
 
-#pragma mark -
-
-- (NSOperation *)operationToFetchContentSetUpIfNeeded
+- (void)requestFilesListForCollection:(GLACollection *)filesListCollection
 {
-	if (!(self.operationToFetchContent)) {
-		__weak GLAProjectManager *weakSelf = self;
-		NSBlockOperation *operationToFetchContent = [NSBlockOperation blockOperationWithBlock:^{
-			GLAProjectManager *self = weakSelf;
-			
-			[self loadAllProjects];
-		}];
-		
-		(operationToFetchContent.queuePriority) = NSOperationQueuePriorityHigh;
-		[(self.backgroundOperationQueue) addOperation:operationToFetchContent];
-		
-		(self.operationToFetchContent) = operationToFetchContent;
-	}
-	
-	return (self.operationToFetchContent);
+	[(self.store) requestFilesListForCollection:filesListCollection];
+}
+
+- (NSArray *)copyFilesListForCollection:(GLACollection *)filesListCollection
+{
+	return [(self.store) copyFilesListForCollection:filesListCollection];
 }
 
 #pragma mark Editing
 
 - (void)changeNowProject:(GLAProject *)project
-{
-	(self.nowProject) = project;
+{NSLog(@"CHANGE NOW PROJECT %@", project);
+	GLAProjectManagerStore *store = (self.store);
 	
+	[store changeNowProject:project];
 	[self nowProjectDidChange];
 	
-	[(self.store) requestSaveNowProject];
+	[store requestSaveNowProject];
 }
 
 - (GLAProject *)createNewProjectWithName:(NSString *)name
@@ -218,9 +230,16 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	GLAProjectManagerStore *store = (self.store);
 	[store addProjects:@[project]];
 	
-	[store requestSaveAllProjects];
+	//[store requestSaveAllProjects];
 	
 	return project;
+}
+
+- (GLAProject *)renameProject:(GLAProject *)project toName:(NSString *)name
+{
+	return [(self.store) editProject:project usingBlock:^(id<GLAProjectEditing> projectEditor) {
+		(projectEditor.name) = name;
+	}];
 }
 
 - (BOOL)editProjectCollections:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionsEditor))block
@@ -241,11 +260,13 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	return YES;
 }
 
-- (GLACollection *)createNewCollectionWithName:(NSString *)name content:(GLACollectionContent *)content inProject:(GLAProject *)project
+- (GLACollection *)createNewCollectionWithName:(NSString *)name type:(NSString *)type color:(GLACollectionColor *)color inProject:(GLAProject *)project
 {
-	GLACollection *collection = [GLACollection newWithCreationFromEditing:^(id<GLACollectionEditing> collectionEditor) {
+	NSAssert(project != nil, @"Passed project must not be nil.");
+	
+	GLACollection *collection = [GLACollection newWithType:type creatingFromEditing:^(id<GLACollectionEditing> collectionEditor) {
 		(collectionEditor.name) = name;
-		(collectionEditor.content) = content;
+		(collectionEditor.color) = color;
 	}];
 	
 	[self editProjectCollections:project usingBlock:^(id<GLAArrayEditing> collectionListEditor) {
@@ -280,6 +301,24 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	}];
 }
 
+- (BOOL)editFilesListOfCollection:(GLACollection *)filesListCollection usingBlock:(void (^)(id<GLAArrayEditing> filesListEditor))block
+{
+	GLAProjectManagerStore *store = (self.store);
+	
+	GLAArrayEditor *arrayEditor = [store filesListEditorForCollection:filesListCollection];
+	if (!arrayEditor) {
+		return NO;
+	}
+	
+	// Call the passed block to make changes.
+	block(arrayEditor);
+	
+	[self filesListForCollectionDidChange:filesListCollection];
+	[store requestSaveFilesListForCollection:filesListCollection];
+	
+	return YES;
+}
+
 #pragma mark Notifications
 
 - (void)allProjectsDidChange
@@ -293,16 +332,18 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 }
 
 - (void)nowProjectDidChange
-{
+{NSLog(@"PM nowProjectDidChange %@", (self.nowProject));
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectManagerNowProjectDidChangeNotification object:self];
 }
 
 - (void)collectionListForProjectDidChange:(GLAProject *)project
 {
-	NSDictionary *noteInfo =
-	@{GLAProjectManagerNotificationProjectKey: project};
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectManagerProjectCollectionsDidChangeNotification object:self userInfo:noteInfo];
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectCollectionsDidChangeNotification object:project];
+}
+
+- (void)filesListForCollectionDidChange:(GLACollection *)collection
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLACollectionFilesListDidChangeNotification object:collection];
 }
 
 #pragma mark Validating
@@ -329,59 +370,78 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 
 #pragma mark Saving
 
-- (void)saveAllProjects
+- (void)requestSaveAllProjects
 {
 	[(self.store) requestSaveAllProjects];
 }
 
+- (void)requestSaveCollectionsForProject:(GLAProject *)project
+{
+	[(self.store) requestSaveCollectionsForProject:project];
+}
+
+- (void)requestSaveFilesListForCollections:(GLACollection *)filesListCollection
+{
+	[(self.store) requestSaveFilesListForCollection:filesListCollection];
+}
+
+#pragma mark Status
+
+- (NSString *)statusOfCurrentActivity
+{
+	return [(self.store) statusOfCurrentActivity];
+}
+
+- (NSString *)statusOfCompletedActivity
+{
+	return [(self.store) statusOfCompletedActivity];
+}
+
 #pragma mark Dummy
 
-- (GLAProject *)newDummyProjectWithName:(NSString *)name
++ (GLAProject *)newDummyProjectWithName:(NSString *)name
 {
 	GLAProject *project = [[GLAProject alloc] initWithUUID:[NSUUID UUID] name:name dateCreated:[NSDate date]];
 	
 	return project;
 }
 
-- (NSArray *)allProjectsDummyContent
++ (NSArray *)allProjectsDummyContent
 {
-	return @[
-			 [self newDummyProjectWithName:@"Project With Big Long Name That Goes On"],
-			 [self newDummyProjectWithName:@"Eat a thousand muffins in one day"],
-			 [self newDummyProjectWithName:@"Another, yet another project"],
-			 [self newDummyProjectWithName:@"The one that just won’t die"],
-			 [self newDummyProjectWithName:@"Could this be my favourite project ever?"],
-			 [self newDummyProjectWithName:@"Freelance project #82"]
-			 ];
-}
-
-- (GLAProject *)nowProjectDummyContent
-{
-	return (self.allProjectsDummyContent)[0];
-}
-
-- (NSArray *)plannedProjectsDummyContent
-{
-	return @[
-			 [self newDummyProjectWithName:@"Eat a thousand muffins in one day"],
-			 [self newDummyProjectWithName:@"Another, yet another project"],
-			 [self newDummyProjectWithName:@"The one that just won’t die"],
-			 [self newDummyProjectWithName:@"Could this be my favourite project ever?"],
-			 [self newDummyProjectWithName:@"Freelance project #82"]
-			 ];
-}
-
-- (NSArray *)collectionListDummyContent
-{
-	GLACollectionFilesListContent *filesListContent = [GLACollectionFilesListContent new];
+	static NSArray *dummyAllProjects;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		dummyAllProjects =
+  @[
+	[GLAProjectManager newDummyProjectWithName:@"Project With Big Long Name That Goes On"],
+	[GLAProjectManager newDummyProjectWithName:@"Eat a thousand muffins in one day"],
+	[GLAProjectManager newDummyProjectWithName:@"Another, yet another project"],
+	[GLAProjectManager newDummyProjectWithName:@"The one that just won’t die"],
+	[GLAProjectManager newDummyProjectWithName:@"Could this be my favourite project ever?"],
+	[GLAProjectManager newDummyProjectWithName:@"Freelance project #82"]
+	];
+	});
 	
+	return dummyAllProjects;
+	
+	
+}
+
++ (GLAProject *)nowProjectDummyContent
+{
+	NSArray *allProjects = [GLAProjectManager allProjectsDummyContent];
+	return allProjects[0];
+}
+
++ (NSArray *)collectionListDummyContent
+{
 	return
 	@[
-	  [GLACollection dummyCollectionWithName:@"Working Files" color:[GLACollectionColor lightBlue] content:filesListContent],
-	  [GLACollection dummyCollectionWithName:@"Briefs" color:[GLACollectionColor green] content:filesListContent],
-	  [GLACollection dummyCollectionWithName:@"Contacts" color:[GLACollectionColor pinkyPurple] content:filesListContent],
-	  [GLACollection dummyCollectionWithName:@"Apps" color:[GLACollectionColor red] content:filesListContent],
-	  [GLACollection dummyCollectionWithName:@"Research" color:[GLACollectionColor yellow] content:filesListContent]
+	  [GLACollection dummyCollectionWithName:@"Working Files" color:[GLACollectionColor lightBlue] type:GLACollectionTypeFilesList],
+	  [GLACollection dummyCollectionWithName:@"Briefs" color:[GLACollectionColor green] type:GLACollectionTypeFilesList],
+	  [GLACollection dummyCollectionWithName:@"Contacts" color:[GLACollectionColor pinkyPurple] type:GLACollectionTypeFilesList],
+	  [GLACollection dummyCollectionWithName:@"Apps" color:[GLACollectionColor red] type:GLACollectionTypeFilesList],
+	  [GLACollection dummyCollectionWithName:@"Research" color:[GLACollectionColor yellow] type:GLACollectionTypeFilesList]
 	  ];
 }
 
@@ -391,14 +451,27 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 #pragma mark -
 
 
+@implementation GLAProjectManagerStoreState
+
+@end
+
+
+#pragma mark -
+
 @interface GLAProjectManagerStore ()
 
-@property(readwrite, nonatomic) NSArray *allProjectsSortedByDateCreatedNewestToOldest;
-@property(readwrite, nonatomic) NSArray *plannedProjectsSortedByDateNextPlanned;
-@property(readwrite, nonatomic) GLAProject *nowProject;
+//@property(readwrite, nonatomic) NSArray *plannedProjectsSortedByDateNextPlanned;
+
+@property(readonly, nonatomic) NSOperationQueue *foregroundOperationQueue;
+@property(nonatomic) NSOperationQueue *backgroundOperationQueue;
+
+@property(readonly, nonatomic) GLAProjectManagerStoreState *foregroundState;
+@property(readonly, nonatomic) GLAProjectManagerStoreState *backgroundState;
 
 @property(nonatomic) NSMutableDictionary *projectIDsToCollectionLists;
-@property(nonatomic) NSMutableDictionary *collectionIdentifiersToProjectIDSets;
+
+@property(nonatomic) NSMutableDictionary *collectionIDsToFilesLists;
+//@property(nonatomic) NSMutableDictionary *collectionIdentifiersToProjectIDSets;
 
 @property(readonly, nonatomic) NSURL *allProjectsJSONFileURL;
 @property(readonly, nonatomic) NSURL *nowProjectJSONFileURL;
@@ -407,21 +480,35 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 @property(nonatomic) BOOL needsToLoadPlannedProjects;
 @property(nonatomic) BOOL needsToLoadNowProject;
 @property(nonatomic) NSMutableSet *projectIDsNeedingCollectionsLoaded;
+@property(nonatomic) NSMutableSet *collectionIDsNeedingFilesListsLoaded;
 
-- (void)loadAllProjects;
+- (void)loadAllProjects:(dispatch_block_t)completionBlock;
 //- (void)loadPlannedProjects;
-- (void)loadNowProject;
+- (void)loadNowProject:(dispatch_block_t)completionBlock;
 
-- (void)loadCollectionsForProject:(GLAProject *)project;
+- (void)loadCollectionsForProject:(GLAProject *)project completionBlock:(dispatch_block_t)completionBlock;
 
 @property(nonatomic) BOOL needsToSaveAllProjects;
 @property(nonatomic) BOOL needsToSavePlannedProjects;
 @property(nonatomic) BOOL needsToSaveNowProject;
 @property(nonatomic) NSMutableSet *projectIDsNeedingCollectionsSaved;
+@property(nonatomic) NSMutableSet *collectionIDsNeedingFilesListsSaved;
 
-- (void)writeAllProjects;
+- (void)writeAllProjects:(dispatch_block_t)completionBlock;
 //- (void)writePlannedProjects;
-- (void)writeNowProject;
+- (void)writeNowProject:(dispatch_block_t)completionBlock;
+
+- (void)writeCollectionsForProject:(GLAProject *)project completionBlock:(dispatch_block_t)completionBlock;
+
+#pragma Status
+
+@property(nonatomic) NSMutableSet *actionsThatAreRunning;
+@property(nonatomic) NSMutableDictionary *actionsToBeginTime;
+@property(nonatomic) NSMutableDictionary *actionsToEndTime;
+
+- (dispatch_block_t)beginActionWithIdentifier:(NSString *)actionIdentifierFormat, ... NS_FORMAT_FUNCTION(1,2);
+
+- (NSTimeInterval)durationOfLastRunOfActionWithIdentifier:(NSString *)actionIdentifier;
 
 @end
 
@@ -437,6 +524,9 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 		_backgroundOperationQueue = [NSOperationQueue new];
 		(_backgroundOperationQueue.maxConcurrentOperationCount) = 1;
 		
+		_foregroundState = [GLAProjectManagerStoreState new];
+		_backgroundState = [GLAProjectManagerStoreState new];
+		
 #if 0
 		NSError *testError = [GLAModelErrors errorForMissingRequiredKey:GLAProjectManagerJSONAllProjectsKey inJSONFileAtURL:[NSURL fileURLWithPath:NSHomeDirectory()]];
 		[projectManager handleError:testError];
@@ -447,7 +537,7 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 
 #pragma mark Queuing Work
 
-- (NSOperationQueue *)receivingOperationQueue
+- (NSOperationQueue *)foregroundOperationQueue
 {
 	GLAProjectManager *projectManager = (self.projectManager);
 	if (projectManager) {
@@ -458,11 +548,23 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	}
 }
 
-- (void)runBlock:(void (^)(GLAProjectManagerStore *store, GLAProjectManager *projectManager))block onOperationQueue:(NSOperationQueue *)queue
+- (void)runInBackground:(void (^)(GLAProjectManagerStore *store, GLAProjectManagerStoreState *backgroundState))block
 {
 	__weak GLAProjectManagerStore *weakStore = self;
 	
-	[queue addOperationWithBlock:^{
+	[(self.backgroundOperationQueue) addOperationWithBlock:^{
+		GLAProjectManagerStore *store = weakStore;
+		GLAProjectManagerStoreState *backgroundState = (store.backgroundState);
+		
+		block(store, backgroundState);
+	}];
+}
+
+- (void)runInForeground:(void (^)(GLAProjectManagerStore *store, GLAProjectManager *projectManager))block
+{
+	__weak GLAProjectManagerStore *weakStore = self;
+	
+	[(self.foregroundOperationQueue) addOperationWithBlock:^{
 		GLAProjectManagerStore *store = weakStore;
 		GLAProjectManager *projectManager = (store.projectManager);
 		
@@ -470,14 +572,15 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	}];
 }
 
-- (void)runInBackground:(void (^)(GLAProjectManagerStore *store, GLAProjectManager *projectManager))block
+- (BOOL)shouldLoadTestProjects
 {
-	[self runBlock:block onOperationQueue:(self.backgroundOperationQueue)];
-}
-
-- (void)runInForeground:(void (^)(GLAProjectManagerStore *store, GLAProjectManager *projectManager))block
-{
-	[self runBlock:block onOperationQueue:(self.receivingOperationQueue)];
+	GLAProjectManager *pm = (self.projectManager);
+	if (pm) {
+		return (pm.shouldLoadTestProjects);
+	}
+	else {
+		return NO;
+	}
 }
 
 #pragma mark Files
@@ -552,10 +655,25 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	return fileURL;
 }
 
-- (NSDictionary *)readJSONDictionaryFromFileURL:(NSURL *)fileURL
+- (NSURL *)filesListJSONFileURLForCollectionID:(NSUUID *)collectionUUID
+{
+	NSString *collectionDirectoryName = [NSString stringWithFormat:@"collection-%@", (collectionUUID.UUIDString)];
+	NSURL *directoryURL = [self version1DirectoryURLWithInnerDirectoryComponents:@[collectionDirectoryName]];
+	
+	NSURL *fileURL = [directoryURL URLByAppendingPathComponent:@"files-list.json"];
+	
+	return fileURL;
+}
+
+- (NSDictionary *)background_readJSONDictionaryFromFileURL:(NSURL *)fileURL
 {
 	GLAProjectManager *projectManager = (self.projectManager);
 	NSError *error = nil;
+	
+	NSFileManager *fm = [NSFileManager defaultManager];
+	if (![fm fileExistsAtPath:(fileURL.path)]) {
+		return nil;
+	}
 	
 	NSData *JSONData = [NSData dataWithContentsOfURL:fileURL options:0 error:&error];
 	if (!JSONData) {
@@ -570,6 +688,32 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	}
 	
 	return JSONDictionary;
+}
+
+- (NSArray *)background_readModelsOfClass:(Class)modelClass atDictionaryKey:(NSString *)JSONKey fromJSONFileURL:(NSURL *)fileURL
+{
+	GLAProjectManager *projectManager = (self.projectManager);
+	NSError *error = nil;
+	
+	NSDictionary *JSONDictionary = [self background_readJSONDictionaryFromFileURL:fileURL];
+	if (!JSONDictionary) {
+		return nil;
+	}
+	
+	NSArray *JSONArray = JSONDictionary[JSONKey];
+	if (!JSONArray) {
+		error = [GLAModelErrors errorForMissingRequiredKey:JSONKey inJSONFileAtURL:fileURL];
+		[projectManager handleError:error];
+		return nil;
+	}
+	
+	NSArray *models = [MTLJSONAdapter modelsOfClass:modelClass fromJSONArray:JSONArray error:&error];
+	if (!models) {
+		[projectManager handleError:error];
+		return nil;
+	}
+	
+	return models;
 }
 
 - (BOOL)writeJSONDictionary:(NSDictionary *)JSONDictionary toFileURL:(NSURL *)fileURL
@@ -602,59 +746,45 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	}
 	
 	(self.needsToLoadAllProjects) = YES;
+	
+	dispatch_block_t actionTracker = [self beginActionWithIdentifier:@"Load All Projects"];
+	
 	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
-		[store loadAllProjects];
+		[store loadAllProjects:actionTracker];
 	}];
 }
 
-- (void)loadAllProjects
+- (void)loadAllProjects:(dispatch_block_t)completionBlock
 {
 	NSURL *fileURL = (self.allProjectsJSONFileURL);
 	if (!fileURL) {
 		return;
 	}
 	
-	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+	BOOL loadTestContent = (self.shouldLoadTestProjects);
+	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManagerStoreState *backgroundState) {
 		NSArray *allProjects = nil;
 		
-		if (projectManager.shouldLoadTestProjects) {
-			allProjects = (projectManager.allProjectsDummyContent);
+		if (loadTestContent) {
+			allProjects = [GLAProjectManager allProjectsDummyContent];
 		}
 		else {
 			allProjects = [store background_readAllProjectsFromJSONFileURL:fileURL];
 		}
 		
-		if (allProjects) {
-			[store background_processLoadedAllProjects:allProjects];
+		if (!allProjects) {
+			allProjects = @[];
 		}
 		
+		[store background_processLoadedAllProjects:allProjects];
+		
+		completionBlock();
 	}];
 }
 
 - (NSArray *)background_readAllProjectsFromJSONFileURL:(NSURL *)fileURL
 {
-	GLAProjectManager *projectManager = (self.projectManager);
-	NSError *error = nil;
-	
-	NSDictionary *JSONDictionary = [self readJSONDictionaryFromFileURL:fileURL];
-	if (!JSONDictionary) {
-		return nil;
-	}
-	
-	NSArray *JSONArray = JSONDictionary[GLAProjectManagerJSONAllProjectsKey];
-	if (!JSONArray) {
-		error = [GLAModelErrors errorForMissingRequiredKey:GLAProjectManagerJSONAllProjectsKey inJSONFileAtURL:fileURL];
-		[projectManager handleError:error];
-		return nil;
-	}
-	
-	NSArray *allProjects = [MTLJSONAdapter modelsOfClass:[GLAProject class] fromJSONArray:JSONArray error:&error];
-	if (!allProjects) {
-		[projectManager handleError:error];
-		return nil;
-	}
-	
-	return allProjects;
+	return [self background_readModelsOfClass:[GLAProject class] atDictionaryKey:GLAProjectManagerJSONAllProjectsKey fromJSONFileURL:fileURL];
 }
 
 - (void)background_processLoadedAllProjects:(NSArray *)allProjectsUnsorted
@@ -664,56 +794,112 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	
 	NSLog(@"background_processLoadedAllProjects: %@", allProjectsSorted);
 	
+	NSArray *projectUUIDs = [allProjectsSorted valueForKey:@"UUID"];
+	NSDictionary *allProjectUUIDsToProjects = [NSDictionary dictionaryWithObjects:allProjectsSorted forKeys:projectUUIDs];
+	
+	(self.backgroundState.allProjectsSortedByDateCreatedNewestToOldest) = allProjectsSorted;
+	(self.backgroundState.allProjectUUIDsToProjects) = allProjectUUIDsToProjects;
+	[self background_matchNowProjectFromAllProjectsUsingUUID];
+	
 	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
-		(store.allProjectsSortedByDateCreatedNewestToOldest) = allProjectsSorted;
+		(store.foregroundState.allProjectsSortedByDateCreatedNewestToOldest) = allProjectsSorted;
+		(store.foregroundState.allProjectUUIDsToProjects) = allProjectUUIDsToProjects;
+		
 		[projectManager allProjectsDidChange];
 		
-		(self.needsToLoadAllProjects) = NO;
+		(store.needsToLoadAllProjects) = NO;
 	}];
 }
 
-- (void)loadPlannedProjects
+- (NSArray *)allProjectsSortedByDateCreatedNewestToOldest
 {
-	
+	return [(self.foregroundState.allProjectsSortedByDateCreatedNewestToOldest) copy];
+}
+
+- (GLAProject *)projectWithUUID:(NSUUID *)projectUUID
+{
+	NSDictionary *allProjectUUIDsToProjects = (self.foregroundState.allProjectUUIDsToProjects);
+	if (allProjectUUIDsToProjects) {
+		return allProjectUUIDsToProjects[projectUUID];
+	}
+	else {
+		return nil;
+	}
 }
 
 #pragma mark Load Now Project
 
+- (void)background_matchNowProjectFromAllProjectsUsingUUID
+{NSLog(@"matchNowProjectFromAllProjectsUsingUUID");
+	GLAProjectManagerStoreState *backgroundState = (self.backgroundState);
+	NSArray *allProjects = (backgroundState.allProjectsSortedByDateCreatedNewestToOldest);
+	if (!allProjects) {
+		NSLog(@"NO ALL PROJECTS");
+		[self requestAllProjects];
+		return;
+	}
+	
+	NSUUID *nowProjectUUID = (backgroundState.nowProjectUUID);
+	if (!nowProjectUUID) {
+		NSLog(@"NO NOW PROJECT");
+		return;
+	}
+	
+	NSDictionary *allProjectUUIDsToProjects = (backgroundState.allProjectUUIDsToProjects);
+	GLAProject *nowProject = allProjectUUIDsToProjects[nowProjectUUID];
+	
+	NSAssert(nowProject != nil, @"Could not find project to match now project's UUID %@", nowProjectUUID);
+	
+	(self.backgroundState.nowProject) = nowProject;
+	
+	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+		NSLog(@"GOT NOW PROJECT");
+		(store.foregroundState.nowProject) = nowProject;
+		[projectManager nowProjectDidChange];
+	}];
+}
+
 - (void)requestNowProject
 {
+	// Only load once.
 	if (self.needsToLoadNowProject) {
 		return;
 	}
+	// If currently saving, don't load anything from disk.
 	if (self.needsToSaveNowProject) {
 		return;
 	}
 	
 	(self.needsToLoadNowProject) = YES;
+	
+	dispatch_block_t actionTracker = [self beginActionWithIdentifier:@"Load Now Project"];
+	
 	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
-		[store loadNowProject];
+		[store loadNowProject:actionTracker];
 	}];
 }
 
-- (void)loadNowProject
+- (void)loadNowProject:(dispatch_block_t)completionBlock
 {
 	NSURL *fileURL = (self.nowProjectJSONFileURL);
 	if (!fileURL) {
 		return;
 	}
 	
-	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+	BOOL loadTestContent = (self.shouldLoadTestProjects);
+	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManagerStoreState *backgroundState) {
 		GLAProject *project = nil;
 		
-		if (projectManager.shouldLoadTestProjects) {
-			project = (projectManager.nowProjectDummyContent);
+		if (loadTestContent) {
+			project = [GLAProjectManager nowProjectDummyContent];
 		}
 		else {
 			project = [store background_readNowProjectFromJSONFileURL:fileURL];
 		}
 		
-		if (project) {
-			[store background_processLoadedNowProject:project];
-		}
+		[store background_processLoadedNowProject:project];
+		
+		completionBlock();
 	}];
 }
 
@@ -722,7 +908,7 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	GLAProjectManager *projectManager = (self.projectManager);
 	NSError *error = nil;
 	
-	NSDictionary *JSONDictionary = [self readJSONDictionaryFromFileURL:fileURL];
+	NSDictionary *JSONDictionary = [self background_readJSONDictionaryFromFileURL:fileURL];
 	if (!JSONDictionary) {
 		return nil;
 	}
@@ -745,12 +931,18 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 
 - (void)background_processLoadedNowProject:(GLAProject *)project
 {
+	(self.backgroundState.nowProjectUUID) = (project.UUID);
+	
+	[self background_matchNowProjectFromAllProjectsUsingUUID];
+	
 	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
-		(store.nowProject) = project;
-		[projectManager nowProjectDidChange];
-		
 		(self.needsToLoadNowProject) = NO;
 	}];
+}
+
+- (GLAProject *)nowProject
+{
+	return (self.foregroundState.nowProject);
 }
 
 #pragma mark Load Collections
@@ -767,55 +959,42 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	}
 	
 	[(self.projectIDsNeedingCollectionsLoaded) addObject:projectUUID];
+	
+	dispatch_block_t actionTracker = [self beginActionWithIdentifier:@"Load Collections for Project \"%@\"", (project.name)];
+	
 	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
-		[store loadCollectionsForProject:project];
+		[store loadCollectionsForProject:project completionBlock:actionTracker];
 	}];
 }
 
-- (void)loadCollectionsForProject:(GLAProject *)project
+- (void)loadCollectionsForProject:(GLAProject *)project completionBlock:(dispatch_block_t)completionBlock
 {
 	NSURL *fileURL = [self collectionsListJSONFileURLForProjectID:(project.UUID)];
 	
-	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+	BOOL loadTestContent = (self.shouldLoadTestProjects);
+	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManagerStoreState *backgroundState) {
 		NSArray *collectionList = nil;
 		
-		if (projectManager.shouldLoadTestProjects) {
-			collectionList = (projectManager.collectionListDummyContent);
+		if (loadTestContent) {
+			collectionList = [GLAProjectManager collectionListDummyContent];
 		}
 		else {
 			collectionList = [store background_readCollectionListFromJSONFileURL:fileURL];
 		}
 		
-		if (collectionList) {
-			[store background_processLoadedCollectionList:collectionList forProject:project];
+		if (!collectionList) {
+			collectionList = @[];
 		}
+		
+		[store background_processLoadedCollectionList:collectionList forProject:project];
+		
+		completionBlock();
 	}];
 }
 
 - (NSArray *)background_readCollectionListFromJSONFileURL:(NSURL *)fileURL
 {
-	GLAProjectManager *projectManager = (self.projectManager);
-	NSError *error = nil;
-	
-	NSDictionary *JSONDictionary = [self readJSONDictionaryFromFileURL:fileURL];
-	if (!JSONDictionary) {
-		return nil;
-	}
-	
-	NSArray *JSONArray = JSONDictionary[GLAProjectManagerJSONCollectionsListKey];
-	if (!JSONArray) {
-		error = [GLAModelErrors errorForMissingRequiredKey:GLAProjectManagerJSONCollectionsListKey inJSONFileAtURL:fileURL];
-		[projectManager handleError:error];
-		return nil;
-	}
-	
-	NSArray *collections = [MTLJSONAdapter modelsOfClass:[GLACollection class] fromJSONArray:JSONArray error:&error];
-	if (!collections) {
-		[projectManager handleError:error];
-		return nil;
-	}
-	
-	return collections;
+	return [self background_readModelsOfClass:[GLACollection class] atDictionaryKey:GLAProjectManagerJSONCollectionsListKey fromJSONFileURL:fileURL];
 }
 
 - (void)background_processLoadedCollectionList:(NSArray *)collectionList forProject:(GLAProject *)project
@@ -834,7 +1013,6 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 		
 		[(self.projectIDsNeedingCollectionsLoaded) removeObject:(project.UUID)];
 	}];
-	//projectIDsToCollectionLists
 }
 
 - (GLAArrayEditor *)collectionEditorForProject:(GLAProject *)project
@@ -860,16 +1038,142 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	}
 }
 
+#pragma mark Load Files List
+
+- (void)requestFilesListForCollection:(GLACollection *)filesListCollection
+{
+	NSAssert([(filesListCollection.type) isEqualToString:GLACollectionTypeFilesList], @"Collection must be of files list type.");
+	
+	if ((self.collectionIDsNeedingFilesListsLoaded) == nil) {
+		(self.collectionIDsNeedingFilesListsLoaded) = [NSMutableSet set];
+	}
+	
+	NSUUID *collectionUUID = (filesListCollection.UUID);
+	if ([(self.collectionIDsNeedingFilesListsLoaded) containsObject:collectionUUID]) {
+		return;
+	}
+	
+	[(self.collectionIDsNeedingFilesListsLoaded) addObject:collectionUUID];
+	
+	dispatch_block_t actionTracker = [self beginActionWithIdentifier:@"Load Files List for Collection \"%@\"", (filesListCollection.name)];
+	
+	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+		[store loadFilesListForCollections:filesListCollection completionBlock:actionTracker];
+	}];
+}
+
+- (void)loadFilesListForCollections:(GLACollection *)collection completionBlock:(dispatch_block_t)completionBlock
+{
+	NSURL *fileURL = [self filesListJSONFileURLForCollectionID:(collection.UUID)];
+	
+	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManagerStoreState *backgroundState) {
+		NSArray *filesList = [store background_readFilesListFromJSONFileURL:fileURL];
+		
+		if (!filesList) {
+			filesList = @[];
+		}
+		
+		[store background_processLoadedFilesList:filesList forCollection:collection];
+		
+		completionBlock();
+	}];
+}
+
+- (NSArray *)background_readFilesListFromJSONFileURL:(NSURL *)fileURL
+{
+	return [self background_readModelsOfClass:[GLACollectedFile class] atDictionaryKey:GLAProjectManagerJSONFilesListKey fromJSONFileURL:fileURL];
+}
+
+- (void)background_processLoadedFilesList:(NSArray *)filesListArray forCollection:(GLACollection *)collection
+{
+	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+		NSMutableDictionary *collectionIDsToFilesLists = (self.collectionIDsToFilesLists);
+		if (!collectionIDsToFilesLists) {
+			collectionIDsToFilesLists = [NSMutableDictionary new];
+			(self.collectionIDsToFilesLists) = collectionIDsToFilesLists;
+		}
+		
+		GLAArrayEditor *filesListEditor = [[GLAArrayEditor alloc] initWithObjects:filesListArray];
+		collectionIDsToFilesLists[collection.UUID] = filesListEditor;
+		
+		[projectManager filesListForCollectionDidChange:collection];
+		
+		[(self.collectionIDsNeedingFilesListsLoaded) removeObject:(collection.UUID)];
+	}];
+}
+
+- (GLAArrayEditor *)filesListEditorForCollection:(GLACollection *)filesListCollection
+{
+	NSAssert([(filesListCollection.type) isEqualToString:GLACollectionTypeFilesList], @"Collection must be of files list type.");
+
+	NSMutableDictionary *collectionIDsToFilesLists = (self.collectionIDsToFilesLists);
+	if (collectionIDsToFilesLists) {
+		GLAArrayEditor *filesListEditor = collectionIDsToFilesLists[filesListCollection.UUID];
+		return filesListEditor;
+	}
+	else {
+		return nil;
+	}
+}
+
+- (NSArray *)copyFilesListForCollection:(GLACollection *)filesListCollection
+{
+	GLAArrayEditor *filesListEditor = [self filesListEditorForCollection:filesListCollection];
+	if (filesListEditor) {
+		return [filesListEditor copyChildren];
+	}
+	else {
+		return nil;
+	}
+}
+
 #pragma mark - Editing
 
 - (void)addProjects:(NSArray *)projects
-{NSLog(@"addProjects: %@", projects);
-	NSArray *allProjectsBefore = [(self.allProjectsSortedByDateCreatedNewestToOldest) copy];
-	
-	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+{
+	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManagerStoreState *backgroundState) {
+		NSArray *allProjectsBefore = (backgroundState.allProjectsSortedByDateCreatedNewestToOldest);
 		NSArray *allProjects = [allProjectsBefore arrayByAddingObjectsFromArray:projects];
 		NSLog(@"NEW ALL PROJECTS %@", allProjects);
-		[self background_processLoadedAllProjects:allProjects];
+		[store background_processLoadedAllProjects:allProjects];
+		
+		[store runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+			NSLog(@"SAVING ADDED PROJECTS");
+			[store requestSaveAllProjects];
+		}];
+	}];
+}
+
+- (GLAProject *)editProject:(GLAProject *)project usingBlock:(void(^)(id<GLAProjectEditing>projectEditor))editBlock
+{
+	GLAProject *changedProject = [project copyWithChangesFromEditing:editBlock];
+	NSUUID *projectUUID = (project.UUID);
+	
+	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManagerStoreState *backgroundState) {
+		NSMutableArray *allProjectsBefore = [(backgroundState.allProjectsSortedByDateCreatedNewestToOldest) mutableCopy];
+		
+		NSUInteger projectIndex = [allProjectsBefore indexOfObjectPassingTest:^BOOL(GLAProject *projectToCheck, NSUInteger idx, BOOL *stop) {
+			return [(projectToCheck.UUID) isEqual:projectUUID];
+		}];
+		
+		[allProjectsBefore replaceObjectAtIndex:projectIndex withObject:changedProject];
+		
+		[self background_processLoadedAllProjects:allProjectsBefore];
+		
+		[store runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+			[store requestSaveAllProjects];
+		}];
+	}];
+	
+	return changedProject;
+}
+
+- (void)changeNowProject:(GLAProject *)project
+{
+	(self.foregroundState.nowProject) = project;
+	
+	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManagerStoreState *backgroundState) {
+		(backgroundState.nowProject) = project;
 	}];
 }
 
@@ -885,23 +1189,26 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	
 	(self.needsToSaveAllProjects) = YES;
 	
+	dispatch_block_t actionTracker = [self beginActionWithIdentifier:@"Save All Projects"];
+	
 	// Queue so this is done after the current run loop.
 	// Multiple calls to -requestSaveAllProjects will be coalsced.
 	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
-		[store writeAllProjects];
+		[store writeAllProjects:actionTracker];
 	}];
 }
 
-- (void)writeAllProjects
+- (void)writeAllProjects:(dispatch_block_t)completionBlock
 {
 	NSURL *fileURL = (self.allProjectsJSONFileURL);
 	if (!fileURL) {
 		return;
 	}
 	
-	NSArray *allProjectsSorted = (self.allProjectsSortedByDateCreatedNewestToOldest);
-	
-	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManagerStoreState *backgroundState) {
+		NSArray *allProjectsSorted = (backgroundState.allProjectsSortedByDateCreatedNewestToOldest);
+		NSLog(@"SAVING THESE PROJECTS %@", allProjectsSorted);
+		
 		NSArray *JSONArray = [MTLJSONAdapter JSONArrayFromModels:allProjectsSorted];
 		
 		NSDictionary *JSONDictionary =
@@ -910,6 +1217,8 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 		  };
 		
 		[store writeJSONDictionary:JSONDictionary toFileURL:fileURL];
+		
+		completionBlock();
 		
 		[store runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
 			(store.needsToSaveAllProjects) = NO;
@@ -921,35 +1230,36 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 
 - (void)requestSaveNowProject
 {
+	// FIXME: if now project is changed while a save is already in process, need a change counter or == here.
 	if (self.needsToSaveNowProject) {
 		return;
 	}
 	
 	(self.needsToSaveNowProject) = YES;
 	
-	// Queue so this is done after the current run loop.
-	// Multiple calls to -requestSaveNowProject will be coalsced.
-	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
-		[store writeNowProject];
-	}];
+	dispatch_block_t actionTracker = [self beginActionWithIdentifier:@"Save Now Project"];
+	[self writeNowProject:actionTracker];
 }
 
-- (void)writeNowProject
+- (void)writeNowProject:(dispatch_block_t)completionBlock
 {
 	NSURL *fileURL = (self.nowProjectJSONFileURL);
 	if (!fileURL) {
 		return;
 	}
 	
-	GLAProject *project = (self.nowProject);
-	
-	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManagerStoreState *backgroundState) {
+		GLAProject *project = (backgroundState.nowProject);
+		// TODO support saving no now project.
+		NSAssert(project != nil, @"Can't save no now project.");
 		NSDictionary *JSONProject = [MTLJSONAdapter JSONDictionaryFromModel:project];
 		
 		NSDictionary *JSONDictionary =
 		@{GLAProjectManagerJSONNowProjectKey: JSONProject};
 		
 		[store writeJSONDictionary:JSONDictionary toFileURL:fileURL];
+		
+		completionBlock();
 		
 		[store runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
 			(store.needsToSaveAllProjects) = NO;
@@ -971,18 +1281,18 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 	}
 	
 	[(self.projectIDsNeedingCollectionsSaved) addObject:projectUUID];
-	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
-		[store writeCollectionsForProject:project];
-	}];
+	
+	dispatch_block_t actionTracker = [self beginActionWithIdentifier:@"Save Collections for Project \"%@\"", (project.name)];
+	[self writeCollectionsForProject:project completionBlock:actionTracker];
 }
 
-- (void)writeCollectionsForProject:(GLAProject *)project
+- (void)writeCollectionsForProject:(GLAProject *)project completionBlock:(dispatch_block_t)completionBlock
 {
 	NSURL *fileURL = [self collectionsListJSONFileURLForProjectID:(project.UUID)];
 	
 	NSArray *collectionList = [self copyCollectionsForProject:project];
 	
-	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManagerStoreState *backgroundState) {
 		NSArray *JSONArray = [MTLJSONAdapter JSONArrayFromModels:collectionList];
 		
 		NSDictionary *JSONDictionary =
@@ -992,14 +1302,130 @@ NSString *GLAProjectManagerJSONCollectionsListKey = @"collectionsList";
 		
 		[store writeJSONDictionary:JSONDictionary toFileURL:fileURL];
 		
+		completionBlock();
+		
 		[store runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
 			[(store.projectIDsNeedingCollectionsSaved) removeObject:(project.UUID)];
 		}];
 	}];
-	
 }
 
 #pragma mark Save Collection Content
+
+- (void)requestSaveFilesListForCollection:(GLACollection *)filesListCollection
+{
+	if ((self.collectionIDsNeedingFilesListsSaved) == nil) {
+		(self.collectionIDsNeedingFilesListsSaved) = [NSMutableSet set];
+	}
+	
+	NSUUID *collectionUUID = (filesListCollection.UUID);
+	if ([(self.collectionIDsNeedingFilesListsSaved) containsObject:collectionUUID]) {
+		return;
+	}
+	
+	[(self.collectionIDsNeedingFilesListsSaved) addObject:collectionUUID];
+	
+	dispatch_block_t actionTracker = [self beginActionWithIdentifier:@"Save Files List for Collection \"%@\"", (filesListCollection.name)];
+	[self writeFilesListForCollection:filesListCollection completionBlock:actionTracker];
+}
+
+- (void)writeFilesListForCollection:(GLACollection *)collection completionBlock:(dispatch_block_t)completionBlock
+{
+	NSURL *fileURL = [self filesListJSONFileURLForCollectionID:(collection.UUID)];
+	
+	NSArray *filesList = [self copyFilesListForCollection:collection];
+	
+	[self runInBackground:^(GLAProjectManagerStore *store, GLAProjectManagerStoreState *backgroundState) {
+		NSArray *JSONArray = [MTLJSONAdapter JSONArrayFromModels:filesList];
+		
+		NSDictionary *JSONDictionary =
+		@{
+		  GLAProjectManagerJSONFilesListKey: JSONArray
+		  };
+		
+		[store writeJSONDictionary:JSONDictionary toFileURL:fileURL];
+		
+		completionBlock();
+		
+		[store runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+			[(store.collectionIDsNeedingFilesListsSaved) removeObject:(collection.UUID)];
+		}];
+	}];
+}
+
+#pragma mark Status
+
+- (dispatch_block_t)beginActionWithIdentifier:(NSString *)actionIdentifierFormat, ... NS_FORMAT_FUNCTION(1,2)
+{
+	NSDate *nowDate = [NSDate date];
+	
+	va_list args;
+	va_start(args, actionIdentifierFormat);
+	NSString *actionIdentifier = [[NSString alloc] initWithFormat:actionIdentifierFormat arguments:args];
+	va_end(args);
+	
+	[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+		if (!(store.actionsThatAreRunning)) {
+			(store.actionsThatAreRunning) = [NSMutableSet new];
+			(store.actionsToBeginTime) = [NSMutableDictionary new];
+			(store.actionsToEndTime) = [NSMutableDictionary new];
+		}
+		
+		[(store.actionsThatAreRunning) addObject:actionIdentifier];
+		(store.actionsToBeginTime)[actionIdentifier] = nowDate;
+	}];
+	
+	return ^ {
+		NSDate *nowDate = [NSDate date];
+		
+		[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+			[(store.actionsThatAreRunning) removeObject:actionIdentifier];
+			(store.actionsToEndTime)[actionIdentifier] = nowDate;
+		}];
+	};
+}
+
+- (NSTimeInterval)durationOfLastRunOfActionWithIdentifier:(NSString *)actionIdentifier
+{
+	NSDate *beginDate = (self.actionsToBeginTime)[actionIdentifier];
+	NSDate *endDate = (self.actionsToEndTime)[actionIdentifier];
+	
+	return [endDate timeIntervalSinceDate:beginDate];
+}
+
+- (NSString *)statusOfActions:(NSArray *)actionIdentifiers
+{
+	NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
+	(numberFormatter.minimumFractionDigits) = 3;
+	(numberFormatter.maximumFractionDigits) = 3;
+	
+	NSMutableArray *lines = [NSMutableArray array];
+	for (NSString *actionIdentifier in actionIdentifiers) {
+		NSTimeInterval duration = [self durationOfLastRunOfActionWithIdentifier:actionIdentifier];
+		NSString *statusForAction = [NSString localizedStringWithFormat:@"%@s: %@", [numberFormatter stringFromNumber:@(duration)], actionIdentifier];
+		[lines addObject:statusForAction];
+	}
+	
+	return [lines componentsJoinedByString:@"\n"];
+}
+
+- (NSString *)statusOfCurrentActivity
+{
+	if (!(self.actionsThatAreRunning)) {
+		return @"No activity yet";
+	}
+	
+	return [self statusOfActions:[(self.actionsThatAreRunning) allObjects]];
+}
+
+- (NSString *)statusOfCompletedActivity
+{
+	if (!(self.actionsThatAreRunning)) {
+		return @"Nothing completed yet";
+	}
+	
+	return [self statusOfActions:[(self.actionsToEndTime) allKeys]];
+}
 
 @end
 
@@ -1008,6 +1434,10 @@ NSString *GLAProjectManagerAllProjectsDidChangeNotification = @"GLAProjectManage
 NSString *GLAProjectManagerPlannedProjectsDidChangeNotification = @"GLAProjectManagerPlannedProjectsDidChangeNotification";
 NSString *GLAProjectManagerNowProjectDidChangeNotification = @"GLAProjectManagerNowProjectDidChangeNotification";
 
-NSString *GLAProjectManagerProjectCollectionsDidChangeNotification = @"GLAProjectManagerProjectCollectionsDidChangeNotification";
-NSString *GLAProjectManagerProjectRemindersDidChangeNotification = @"GLAProjectManagerProjectRemindersDidChangeNotification";
+NSString *GLAProjectCollectionsDidChangeNotification = @"GLAProjectCollectionsDidChangeNotification";
+//NSString *GLAProjectManagerProjectRemindersDidChangeNotification = @"GLAProjectManagerProjectRemindersDidChangeNotification";
+
+NSString *GLACollectionFilesListDidChangeNotification = @"GLACollectionFilesListDidChangeNotification";
+
 NSString *GLAProjectManagerNotificationProjectKey = @"GLAProjectManagerNotificationProjectKey";
+NSString *GLAProjectManagerNotificationCollectionKey = @"GLAProjectManagerNotificationCollectionKey";

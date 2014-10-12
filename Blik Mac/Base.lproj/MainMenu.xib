@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -10,9 +10,11 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="GLAAppDelegate">
             <connections>
+                <outlet property="activityStatusMenuItem" destination="i0u-LY-wXa" id="ZsJ-xQ-cty"/>
+                <outlet property="mainHelpMenu" destination="F2S-fz-NVQ" id="6Va-3s-85r"/>
                 <outlet property="prototypeAMenuItem" destination="snW-S8-Cw5" id="AzG-9Z-dgI"/>
                 <outlet property="prototypeBMenuItem" destination="HIr-Z5-ajm" id="RhG-Rf-BmS"/>
             </connections>
@@ -353,22 +355,22 @@ DQ
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Plan" id="96z-eX-NDn">
+                <menuItem title="Highlights" id="96z-eX-NDn">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Plan" id="5cF-uk-BG1">
+                    <menu key="submenu" title="Highlights" id="5cF-uk-BG1">
                         <items>
-                            <menuItem title="New Item…" id="cHO-vO-C6E">
+                            <menuItem title="How to Highlight Item from Collection…" id="cHO-vO-C6E">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="TJJ-Gc-NSV"/>
+                            <menuItem title="New Reminder…" id="5c0-Ui-wzK">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
                             <menuItem title="Choose Existing Reminders…" id="X7c-qw-MSe">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="cXS-le-q1k"/>
                             <menuItem title="Schedule Tomorrow…" id="ZKR-GR-Bt8">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                            <menuItem title="Clear All Due Dates for Project…" id="ZQG-Ib-g27">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="xy5-yP-QlA"/>
@@ -464,6 +466,10 @@ DQ
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="y7X-2Q-9no"/>
                                 </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="Moz-ut-eGf"/>
+                            <menuItem title="(Recent Activity)" id="i0u-LY-wXa">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                         </items>
                     </menu>

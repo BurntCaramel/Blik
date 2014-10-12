@@ -18,6 +18,8 @@
 @property(nonatomic) GLACollectionColor *chosenCollectionColor;
 @property(nonatomic) GLACollectionViewColorChoiceItem *chosenViewItem;
 
+- (void)selectCollectionColorInUI:(GLACollectionColor *)color;
+
 @end
 
 extern NSString *GLACollectionColorPickerViewControllerChosenColorDidChangeNotification;

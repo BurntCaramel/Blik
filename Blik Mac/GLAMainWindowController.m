@@ -38,6 +38,7 @@
     
 	(self.window.movableByWindowBackground) = YES;
 	
+	[self setUpNotifications];
 	[self setUpBaseUI];
 	
 	[self setUpContentViewController];
@@ -52,6 +53,14 @@
 }
 
 #pragma mark Setting Up View Controllers
+
+- (void)setUpNotifications
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	[nc addObserver:self selector:@selector(projectManagerNowProjectDidChangeNotification:) name:GLAProjectManagerNowProjectDidChangeNotification object:pm];
+}
 
 - (void)setUpBaseUI
 {
@@ -153,12 +162,25 @@
 
 #pragma mark Editing Projects
 
+- (void)projectManagerNowProjectDidChangeNotification:(NSNotification *)note
+{
+	GLAProjectManager *projectManager = (note.object);
+	GLAProject *nowProject = (projectManager.nowProject);
+	GLAMainContentSection *currentSection = (self.currentSection);
+	NSLog(@"WC projectManagerNowProjectDidChangeNotification %@ CURRENT %@", nowProject, currentSection);
+	if (currentSection.isNow) {
+		GLAMainContentEditProjectSection *newNowSection = [GLAMainContentEditProjectSection nowProjectSectionWithProject:nowProject];
+		[self goToSection:newNowSection];
+	}
+}
+
 - (void)goToSection:(GLAMainContentSection *)newSection
 {
 	if ([newSection isEqual:(self.currentSection)]) {
 		return;
 	}
 	
+	NSLog(@"GO TO SECTION %@", newSection);
 	(self.currentSection) = newSection;
 	
 	[(self.mainContentViewController) goToSection:newSection];
@@ -175,9 +197,9 @@
 {
 	[[GLAProjectManager sharedProjectManager] changeNowProject:project];
 	
-	[(self.mainContentViewController) changeNowProject:project];
+	//[(self.mainContentViewController) changeNowProject:project];
 	
-	[self goToSection:[GLAMainContentSection nowSection]];
+	[self goToSection:[GLAMainContentEditProjectSection nowProjectSectionWithProject:project]];
 }
 
 - (void)editProject:(GLAProject *)project
@@ -377,7 +399,8 @@
 
 - (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewProjectViewController:(GLAAddNewProjectViewController *)addNewProjectViewController didConfirmCreatingProject:(GLAProject *)project
 {
-	[self goToPreviousSection];
+	[self workOnProjectNow:project];
+	//[self goToPreviousSection];
 }
 
 - (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewController:(GLAAddNewCollectionViewController *)addNewCollectionViewController didConfirmCreatingCollection:(GLACollection *)collection
