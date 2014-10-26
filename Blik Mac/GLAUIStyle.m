@@ -3,7 +3,7 @@
 //  Blik
 //
 //  Created by Patrick Smith on 7/07/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 #import "GLAUIStyle.h"
@@ -87,12 +87,22 @@
 		(style.splitViewDividerColor) = [whiteAlmost colorWithAlphaComponent:0.057];
 		
 		// Item colors
-		(style.lightBlueItemColor) = [NSColor colorWithSRGBRed:168.0/255.0 green:227.0/255.0 blue:255.0/255.0 alpha:1.0];
-		(style.greenItemColor) = [NSColor colorWithSRGBRed:191.0/255.0 green:218.0/255.0 blue:126.0/255.0 alpha:1.0];
-		(style.pinkyPurpleItemColor) = [NSColor colorWithSRGBRed:228.0/255.0 green:203.0/255.0 blue:255.0/255.0 alpha:1.0];
-		(style.reddishItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:197.0/255.0 blue:132.0/255.0 alpha:1.0];
-		//(style.yellowItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:211.0/255.0 blue:18.0/255.0 alpha:1.0];
-		(style.yellowItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:227.0/255.0 blue:102.0/255.0 alpha:1.0];
+		(style.pastelLightBlueItemColor) = [NSColor colorWithSRGBRed:168.0/255.0 green:227.0/255.0 blue:255.0/255.0 alpha:1.0];
+		(style.pastelGreenItemColor) = [NSColor colorWithSRGBRed:191.0/255.0 green:218.0/255.0 blue:126.0/255.0 alpha:1.0];
+		(style.pastelPinkyPurpleItemColor) = [NSColor colorWithSRGBRed:228.0/255.0 green:203.0/255.0 blue:255.0/255.0 alpha:1.0];
+		(style.pastelRedItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:197.0/255.0 blue:132.0/255.0 alpha:1.0];
+		//(style.pastelYellowItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:211.0/255.0 blue:18.0/255.0 alpha:1.0];
+		(style.pastelYellowItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:227.0/255.0 blue:102.0/255.0 alpha:1.0];
+		(style.pastelFullRedItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:131.0/255.0 blue:108.0/255.0 alpha:1.0];
+		(style.pastelPurplyBlueItemColor) = [NSColor colorWithSRGBRed:135.0/255.0 green:172.0/255.0 blue:221.0/255.0 alpha:1.0];
+		
+		(style.strongRedItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:60.0/255.0 blue:0.0 alpha:1.0];
+		(style.strongYellowItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:194.0/255.0 blue:0.0 alpha:1.0];
+		(style.strongPurpleItemColor) = [NSColor colorWithSRGBRed:188.0/255.0 green:106.0/255.0 blue:255.0/255.0 alpha:1.0];
+		(style.strongBlueItemColor) = [NSColor colorWithSRGBRed:0.0/255.0 green:170.0/255.0 blue:255.0/255.0 alpha:1.0];
+		(style.strongPinkItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:64.0/255.0 blue:157.0/255.0 alpha:1.0];
+		(style.strongOrangeItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:111.0/255.0 blue:0.0/255.0 alpha:1.0];
+		(style.strongGreenItemColor) = [NSColor colorWithSRGBRed:0.0/255.0 green:217.0/255.0 blue:48.0/255.0 alpha:1.0];
 		
 		(style.chooseColorBackgroundColor) = grayExtraDark;
 		
@@ -150,11 +160,18 @@
 {
 	NSDictionary *colorIdentifierToDisplayColorTable =
 	@{
-	  GLACollectionColorIdentifierLightBlue: (self.lightBlueItemColor),
-	  GLACollectionColorIdentifierGreen: (self.greenItemColor),
-	  GLACollectionColorIdentifierPinkyPurple: (self.pinkyPurpleItemColor),
-	  GLACollectionColorIdentifierRed: (self.reddishItemColor),
-	  GLACollectionColorIdentifierYellow: (self.yellowItemColor)
+	  GLACollectionColorIdentifierPastelLightBlue: (self.pastelLightBlueItemColor),
+	  GLACollectionColorIdentifierPastelGreen: (self.pastelGreenItemColor),
+	  GLACollectionColorIdentifierPastelPinkyPurple: (self.pastelPinkyPurpleItemColor),
+	  GLACollectionColorIdentifierPastelRed: (self.pastelRedItemColor),
+	  GLACollectionColorIdentifierPastelYellow: (self.pastelYellowItemColor),
+	  GLACollectionColorIdentifierStrongRed: (self.strongRedItemColor),
+	  GLACollectionColorIdentifierStrongYellow: (self.strongYellowItemColor),
+	  GLACollectionColorIdentifierStrongPurple: (self.strongPurpleItemColor),
+	  GLACollectionColorIdentifierStrongBlue: (self.strongBlueItemColor),
+	  GLACollectionColorIdentifierStrongPink: (self.strongPinkItemColor),
+	  GLACollectionColorIdentifierStrongOrange: (self.strongOrangeItemColor),
+	  GLACollectionColorIdentifierStrongGreen: (self.strongGreenItemColor)
 	  };
 	
 	if (color) {

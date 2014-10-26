@@ -3,7 +3,7 @@
 //  Blik
 //
 //  Created by Patrick Smith on 7/07/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 @import Cocoa;
@@ -23,6 +23,7 @@
 
 @class GLAProjectCollectionsViewController;
 @class GLAProjectPlanViewController;
+@class GLAProjectHighlightsViewController;
 @class GLAChooseRemindersViewController;
 
 
@@ -31,7 +32,8 @@
 @property(readonly, nonatomic) GLAProjectView *projectView;
 
 @property(strong, nonatomic) IBOutlet GLAProjectCollectionsViewController *collectionsViewController;
-@property(strong, nonatomic) IBOutlet GLAProjectPlanViewController *planViewController;
+@property(strong, nonatomic) IBOutlet GLAProjectHighlightsViewController *highlightsViewController;
+//@property(strong, nonatomic) IBOutlet GLAProjectPlanViewController *planViewController;
 
 @property(strong, nonatomic) IBOutlet NSLayoutConstraint *itemsViewLeadingConstraint;
 @property(strong, nonatomic) IBOutlet NSLayoutConstraint *itemsViewHeightConstraint;
@@ -82,67 +84,3 @@ extern NSString *GLAProjectViewControllerDidEndEditingPlanNotification;
 extern NSString *GLAProjectViewControllerDidEnterCollectionNotification;
 
 extern NSString *GLAProjectViewControllerRequestAddNewCollectionNotification;
-
-
-
-@interface GLAProjectCollectionsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
-
-@property(nonatomic) IBOutlet NSTableView *tableView;
-
-@property(weak) IBOutlet GLAProjectViewController *parentViewController;
-
-@property(strong, nonatomic) IBOutlet NSMenu *contextualMenu;
-
-@property(readonly, nonatomic) GLACollectionColorPickerPopover *colorPickerPopover;
-@property(nonatomic) NSPopover *colorChoicePopover;
-@property(nonatomic) GLACollectionColorPickerViewController *colorPickerViewController;
-
-@property(nonatomic) GLATableActionsViewController *editingActionsViewController;
-@property(nonatomic) IBOutlet NSView *editingActionsView;
-@property(nonatomic) IBOutlet GLAButton *makeNewCollectionButton;
-
-@property(nonatomic) GLAProject *project;
-@property(copy, nonatomic) NSArray *collections;
-
-@property(nonatomic) BOOL editing;
-
-- (void)reloadCollections;
-
-- (IBAction)makeNewCollection:(id)sender;
-
-@property(nonatomic) GLACollection *collectionWithColorBeingPicked;
-- (void)chooseColorForCollection:(GLACollection *)collection atRow:(NSInteger)collectionRow;
-
-@end
-
-extern NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification;
-
-
-
-@interface GLAProjectPlanViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
-
-@property(nonatomic) IBOutlet NSTableView *tableView;
-@property(nonatomic) IBOutlet NSLayoutConstraint *scrollLeadingConstraint;
-
-@property(weak) IBOutlet GLAProjectViewController *parentViewController;
-
-@property(nonatomic) GLATableActionsViewController *editingActionsViewController;
-@property(nonatomic) IBOutlet NSView *editingActionsView;
-@property(nonatomic) IBOutlet GLAButton *chooseExistingRemindersButton;
-@property(nonatomic) IBOutlet GLAButton *makeNewReminderButton;
-
-@property(nonatomic) GLAProject *project;
-@property(copy, nonatomic) NSMutableArray *mutableReminders;
-
-@property(nonatomic) NSDateFormatter *dueDateFormatter;
-
-@property(nonatomic) BOOL editing;
-@property(nonatomic) BOOL showsDoesNotHaveAccessToReminders;
-
-//- (void)remindersDidChange;
-- (void)reloadReminders;
-
-- (IBAction)chooseExistingReminders:(id)sender;
-- (IBAction)makeNewReminder:(id)sender;
-
-@end

@@ -3,12 +3,13 @@
 //  Blik
 //
 //  Created by Patrick Smith on 30/07/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 @import Foundation;
 #import "GLAProject.h"
 #import "GLACollection.h"
+#import "GLAHighlightedItem.h"
 
 
 @interface GLAProjectManager : NSObject
@@ -28,8 +29,8 @@
 
 #pragma mark Projects
 
-- (void)requestAllProjects;
-- (void)requestNowProject;
+- (void)loadAllProjects;
+- (void)loadNowProject;
 
 // All of these may be nil until they are loaded.
 // Use the notifications below to react to when they are ready.
@@ -38,34 +39,27 @@
 
 - (GLAProject *)projectWithUUID:(NSUUID *)projectUUID;
 
-@property(readonly, copy, nonatomic) GLAProject *nowProject;
-
-#pragma mark Collections
-
-- (void)requestCollectionsForProject:(GLAProject *)project;
-
-- (NSArray *)copyCollectionsForProject:(GLAProject *)project;
-//- (GLACollection *)collectionWithUUID:(NSUUID *)collectionUUID;
-
-#pragma mark Files List Collections
-
-- (void)requestFilesListForCollection:(GLACollection *)filesListCollection;
-
-- (NSArray *)copyFilesListForCollection:(GLACollection *)filesListCollection;
-
-#pragma mark Editing Projects
-
 - (GLAProject *)createNewProjectWithName:(NSString *)name;
 
 - (GLAProject *)renameProject:(GLAProject *)project toName:(NSString *)name;
 
 - (void)deleteProjectPermanently:(GLAProject *)project;
 
+
 #pragma mark Now Project
+
+@property(readonly, copy, nonatomic) GLAProject *nowProject;
 
 - (void)changeNowProject:(GLAProject *)project;
 
 #pragma mark Collections
+
+- (void)loadCollectionsForProject:(GLAProject *)project;
+- (NSArray *)copyCollectionsForProject:(GLAProject *)project;
+
+- (NSUUID *)projectUUIDHoldingCollectionWithUUID:(NSUUID *)collectionUUID;
+- (GLAProject *)projectHoldingCollection:(Collection *)collection;
+- (GLACollection *)canonicalCollectionForCollection:(GLACollection *)collection;
 
 - (BOOL)editProjectCollections:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionListEditor))block;
 //- (id<GLAProjectEditing>)editProject:(GLAProject *)project;
@@ -77,7 +71,21 @@
 - (GLACollection *)renameCollection:(GLACollection *)collection inProject:(GLAProject *)project toString:(NSString *)name;
 - (GLACollection *)changeColorOfCollection:(GLACollection *)collection inProject:(GLAProject *)project toColor:(GLACollectionColor *)color;
 
+- (void)permanentlyDeleteCollection:(GLACollection *)collection fromProject:(GLAProject *)project;
+
+#pragma mark Highlights
+
+- (void)loadHighlightsForProject:(GLAProject *)project;
+- (NSArray /* GLAHighlightedItem */ *)copyHighlightsForProject:(GLAProject *)project;
+
+- (BOOL)editHighlightsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> highlightsEditor))block;
+
+//- (void)addCollectedItemToHighlights:(id<GLACollectedItem>)collectedItem;
+
 #pragma mark Collection Files List
+
+- (void)loadFilesListForCollection:(GLACollection *)filesListCollection;
+- (NSArray *)copyFilesListForCollection:(GLACollection *)filesListCollection;
 
 - (BOOL)editFilesListOfCollection:(GLACollection *)filesListCollection usingBlock:(void (^)(id<GLAArrayEditing> filesListEditor))block;
 
@@ -104,6 +112,13 @@
 
 //- (void)reminderDidChange:(GLACollection *)collection insideProject:(GLAProject *)project;
 
+#pragma mark Notifications
+
+- (id)notificationObjectForProject:(GLAProject *)project;
+- (id)notificationObjectForCollection:(GLACollection *)collection;
+
+//- (void)addObserver:(id)observer selector:(SEL)aSelector name:(NSString *)aName project:(GLAProject *)project;
+
 @end
 
 
@@ -111,15 +126,13 @@ extern NSString *GLAProjectManagerAllProjectsDidChangeNotification;
 extern NSString *GLAProjectManagerPlannedProjectsDidChangeNotification;
 extern NSString *GLAProjectManagerNowProjectDidChangeNotification;
 
-// ObjectL GLAProject
+// Object GLAProject
 extern NSString *GLAProjectCollectionsDidChangeNotification;
-//extern NSString *GLACollectionPropertiesDidChangeNotification;
+extern NSString *GLAProjectHighlightsDidChangeNotification;
 
 // Object: GLACollection
 extern NSString *GLACollectionFilesListDidChangeNotification;
 
 //extern NSString *GLAProjectManagerProjectRemindersDidChangeNotification;
 
-extern NSString *GLAProjectManagerNotificationProjectKey;
-extern NSString *GLAProjectManagerNotificationCollectionKey;
 //extern NSString *GLAProjectManagerNotificationChangedPropertiesKey;

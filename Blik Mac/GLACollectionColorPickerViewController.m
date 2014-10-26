@@ -3,7 +3,7 @@
 //  Blik
 //
 //  Created by Patrick Smith on 16/09/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 #import "GLACollectionColorPickerViewController.h"
@@ -43,7 +43,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(collectionViewSelectedColorChoiceDidChangeNotification:) name:GLACollectionViewSelectedColorChoiceDidChangeNotification object:colorGridCollectionView];
 }
 
-- (void)changeChosenViewItem:(GLACollectionViewColorChoiceItem *)item changeUI:(BOOL)changeUI
+- (void)changeChosenViewItem:(GLACollectionViewColorChoiceItem *)item fromUI:(BOOL)fromUI
 {
 	GLACollectionViewColorChoiceItem *previouslyChosenItem = (self.chosenViewItem);
 	if (previouslyChosenItem == item) {
@@ -57,18 +57,19 @@
 	(self.chosenViewItem) = item;
 	(self.chosenCollectionColor) = (item.representedCollectionColor);
 	
-	if (changeUI) {
+	if (fromUI) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:GLACollectionColorPickerViewControllerChosenColorDidChangeNotification object:self];
+	}
+	else {
 		(item.colorChoiceView.on) = YES;
 	}
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLACollectionColorPickerViewControllerChosenColorDidChangeNotification object:self];
 }
 
 - (void)collectionViewSelectedColorChoiceDidChangeNotification:(NSNotification *)note
 {
 	GLACollectionViewColorChoiceItem *item = (note.userInfo)[@"item"];
 	
-	[self changeChosenViewItem:item changeUI:NO];
+	[self changeChosenViewItem:item fromUI:YES];
 }
 
 - (void)selectCollectionColorInUI:(GLACollectionColor *)color
@@ -78,7 +79,7 @@
 	NSArray *allColors = (self.allColors);
 	NSUInteger colorIndex = [allColors indexOfObject:color];
 	GLACollectionViewColorChoiceItem *item = (GLACollectionViewColorChoiceItem *)[(self.colorGridCollectionView) itemAtIndex:colorIndex];
-	[self changeChosenViewItem:item changeUI:YES];
+	[self changeChosenViewItem:item fromUI:NO];
 }
 
 @end

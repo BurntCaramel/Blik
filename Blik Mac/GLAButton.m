@@ -11,6 +11,109 @@
 #import "GLAUIStyle.h"
 
 
+@implementation NSButton (GLAButtonStyling)
+
++ (NSColor *)backgroundColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button
+{
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	
+	NSColor *backgroundColor = (button.backgroundColor);
+	if (!backgroundColor) {
+		if (button.hasPrimaryStyle) {
+			backgroundColor = (uiStyle.primaryButtonBackgroundColor);
+		}
+		else if (button.hasSecondaryStyle) {
+			backgroundColor = (uiStyle.secondaryButtonBackgroundColor);
+		}
+	}
+	
+	if (backgroundColor) {
+		if (!(button.isEnabled)) {
+			return nil;
+			//return [backgroundColor colorWithAlphaComponent:(backgroundColor.alphaComponent) * 0.12];
+		}
+		else {
+			return backgroundColor;
+		}
+	}
+	
+	return nil;
+}
+
++ (NSColor *)textColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button
+{
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	
+	if (!(button.isEnabled)) {
+		return (uiStyle.lightTextDisabledColor);
+	}
+	else if ((button.isOnAndShowsOnState) || (button.alwaysHighlighted) || (button.textHighlightColor) /*|| ((button.mouseDownFlags & NSMouseEnteredMask) == NSMouseEnteredMask)*/ ) {
+		if ((button.isEnabled) || (button.alwaysHighlighted)) {
+			NSColor *color = (button.textHighlightColor);
+			if (color) {
+				return color;
+			}
+			
+			return (uiStyle.activeTextColor);
+		}
+		else {
+			return (uiStyle.activeTextDisabledColor);
+		}
+	}
+	else if (button.hasPrimaryStyle) {
+		return (uiStyle.primaryButtonTextColor);
+	}
+	else if (button.hasSecondaryStyle) {
+		return (uiStyle.secondaryButtonTextColor);
+	}
+	else {
+		return (uiStyle.lightTextColor);
+	}
+	
+	return nil;
+}
+
++ (void)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView
+{
+	NSColor *backgroundColor = [self backgroundColorForDrawingGLAStyledButton:buttonCell];
+	if (backgroundColor) {
+		[backgroundColor setFill];
+		
+		CGFloat backgroundInsetAmount = (buttonCell.backgroundInsetAmount);
+		CGRect backgroundRect = CGRectInset(frame, backgroundInsetAmount, backgroundInsetAmount);
+		[[NSBezierPath bezierPathWithRoundedRect:backgroundRect xRadius:4.0 yRadius:4.0] fill];
+	}
+}
+
++ (NSRect)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawTitle:(NSAttributedString *)title withFrame:(NSRect)frame inView:(NSView *)controlView
+{
+	NSMutableAttributedString *coloredTitle = [NSMutableAttributedString new];
+	[coloredTitle appendAttributedString:title];
+	NSRange entireStringRange = NSMakeRange(0, (coloredTitle.length));
+	
+	NSColor *textColor = [self textColorForDrawingGLAStyledButton:buttonCell];
+
+	// Replace text color.
+	if (textColor) {
+		[coloredTitle addAttribute:NSForegroundColorAttributeName value:textColor range:entireStringRange];
+	}
+	
+	
+	NSRect adjustedFrame, adjustedFrameRemainder;
+	adjustedFrame = frame;
+	NSDivideRect(adjustedFrame, &adjustedFrameRemainder, &adjustedFrame, (buttonCell.leftSpacing), NSMinXEdge);
+	NSDivideRect(adjustedFrame, &adjustedFrameRemainder, &adjustedFrame, (buttonCell.rightSpacing), NSMaxXEdge);
+	
+	adjustedFrame.origin.y += (buttonCell.verticalOffsetDown);
+	
+	[title drawWithRect:adjustedFrame options:0];
+	
+	return adjustedFrame;
+}
+
+@end
+
+
 @interface GLAButton ()
 
 @property(nonatomic) NSTrackingArea *mainTrackingArea;
@@ -107,6 +210,42 @@
 - (void)setTextHighlightColor:(NSColor *)textHighlightColor
 {
 	(self.cell.textHighlightColor) = textHighlightColor;
+	
+	(self.needsDisplay) = YES;
+}
+
+- (NSColor *)backgroundColor
+{
+	return (self.cell.backgroundColor);
+}
+
+- (void)setBackgroundColor:(NSColor *)backgroundColor
+{
+	(self.cell.backgroundColor) = backgroundColor;
+	
+	(self.needsDisplay) = YES;
+}
+
+- (CGFloat)highlightAmount
+{
+	return (self.cell.highlightAmount);
+}
+
+- (void)setHighlightAmount:(CGFloat)highlightAmount
+{
+	(self.cell.highlightAmount) = highlightAmount;
+	
+	(self.needsDisplay) = YES;
+}
+
+- (CGFloat)backgroundInsetAmount
+{
+	return (self.cell.backgroundInsetAmount);
+}
+
+- (void)setBackgroundInsetAmount:(CGFloat)backgroundInsetAmount
+{
+	(self.cell.backgroundInsetAmount) = backgroundInsetAmount;
 	
 	(self.needsDisplay) = YES;
 }

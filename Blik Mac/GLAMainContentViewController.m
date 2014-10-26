@@ -3,7 +3,7 @@
 //  Blik
 //
 //  Created by Patrick Smith on 4/08/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 #import "GLAMainContentViewController.h"
@@ -91,7 +91,7 @@
 	GLAProjectsListViewController *controller = [[GLAProjectsListViewController alloc] initWithNibName:@"GLAProjectsListViewController" bundle:nil];
 	(controller.view.identifier) = @"allProjects";
 	
-	[projectManager requestAllProjects];
+	[projectManager loadAllProjects];
 	NSArray *allProjects = (projectManager.allProjectsSortedByDateCreatedNewestToOldest);
 	if (allProjects) {
 		(controller.projects) = allProjects;
@@ -149,7 +149,7 @@
 	GLAProjectViewController *controller = [[GLAProjectViewController alloc] initWithNibName:@"GLAProjectViewController" bundle:nil];
 	(controller.view.identifier) = @"nowProject";
 	
-	[projectManager requestNowProject];
+	[projectManager loadNowProject];
 	GLAProject *nowProject = (projectManager.nowProject);
 	NSLog(@"CURRENT NOW PROJECT %@", nowProject);
 	if (nowProject) {

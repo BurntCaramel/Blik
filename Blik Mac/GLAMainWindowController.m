@@ -3,13 +3,14 @@
 //  Blik
 //
 //  Created by Patrick Smith on 7/07/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 #import "GLAMainWindowController.h"
 #import "GLAUIStyle.h"
 #import "GLATableProjectRowView.h"
 #import "GLAProjectManager.h"
+#import "GLACollection.h"
 #import <objc/runtime.h>
 @import QuartzCore;
 
@@ -18,6 +19,8 @@
 
 
 @interface GLAMainWindowController ()
+
+@property(nonatomic) GLACollection *collectionWithDetailsBeingEdited;
 
 @end
 
@@ -46,8 +49,8 @@
 	
 	//TODO: add waiting to load animation
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	[projectManager requestNowProject];
-	[projectManager requestAllProjects];
+	[projectManager loadNowProject];
+	[projectManager loadAllProjects];
 	
 	[self goToToday:nil];
 }
@@ -331,6 +334,14 @@
 }
 #endif
 
+- (NSRect)window:(NSWindow *)window willPositionSheet:(NSWindow *)sheet usingRect:(NSRect)rect
+{
+	rect = (self.barHolderView.frame);
+	rect.size.height = 0;
+	
+	return rect;
+}
+
 #pragma mark Project View Controller Notifications
 
 - (void)activeProjectViewControllerDidBeginEditing:(NSNotification *)note
@@ -410,27 +421,32 @@
 
 #pragma mark Main Navigation
 
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performChangeCurrentSectionTo:(GLAMainContentSection *)newSection
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller handleChangeCurrentSectionTo:(GLAMainContentSection *)newSection
 {
 	[self goToSection:newSection];
 }
 
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performAddNewProject:(id)sender
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller handleAddNewProject:(id)sender
 {
 	[self addNewProject:sender];
 }
 
-- (void)mainNavigationBarControllerDidExitEditedProject:(GLAProject *)project
+- (void)mainNavigationBarControllerHandleExitEditedProject:(GLAProject *)project
 {
 	[self goToPreviousSection];
 }
 
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performWorkOnProjectNow:(GLAProject *)project
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller handleWorkNowOnProject:(GLAProject *)project
 {
 	[self workOnProjectNow:project];
 }
 
-- (void)mainNavigationBarControllerDidExitEditedCollection:(GLAMainNavigationBarController *)controller
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller handleEditDetailsForCollection:(GLACollection *)collection fromButton:(GLAButton *)button
+{
+	
+}
+
+- (void)mainNavigationBarControllerHandleExitEditedCollection:(GLAMainNavigationBarController *)controller
 {
 	[self goToPreviousSection];
 }

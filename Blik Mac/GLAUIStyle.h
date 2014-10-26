@@ -3,7 +3,7 @@
 //  Blik
 //
 //  Created by Patrick Smith on 7/07/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 @import Cocoa;
@@ -58,11 +58,21 @@
 @property(nonatomic) NSColor *splitViewDividerColor;
 
 
-@property(nonatomic) NSColor *lightBlueItemColor;
-@property(nonatomic) NSColor *greenItemColor;
-@property(nonatomic) NSColor *pinkyPurpleItemColor;
-@property(nonatomic) NSColor *reddishItemColor;
-@property(nonatomic) NSColor *yellowItemColor;
+@property(nonatomic) NSColor *pastelLightBlueItemColor;
+@property(nonatomic) NSColor *pastelGreenItemColor;
+@property(nonatomic) NSColor *pastelPinkyPurpleItemColor;
+@property(nonatomic) NSColor *pastelRedItemColor;
+@property(nonatomic) NSColor *pastelYellowItemColor;
+@property(nonatomic) NSColor *pastelFullRedItemColor;
+@property(nonatomic) NSColor *pastelPurplyBlueItemColor;
+
+@property(nonatomic) NSColor *strongRedItemColor;
+@property(nonatomic) NSColor *strongYellowItemColor;
+@property(nonatomic) NSColor *strongPurpleItemColor;
+@property(nonatomic) NSColor *strongBlueItemColor;
+@property(nonatomic) NSColor *strongPinkItemColor;
+@property(nonatomic) NSColor *strongOrangeItemColor;
+@property(nonatomic) NSColor *strongGreenItemColor;
 
 - (NSColor *)colorForCollectionColor:(GLACollectionColor *)color;
 

@@ -3,7 +3,7 @@
 //  Blik
 //
 //  Created by Patrick Smith on 2/08/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 #import "GLACollectedFile.h"
@@ -15,8 +15,15 @@
 	NSData *_bookmarkData;
 }
 
+@property(readwrite, nonatomic) NSUUID *UUID;
 @property(readwrite, nonatomic) NSURL *URL;
+
 @property(readwrite, nonatomic) NSString *filePath;
+
+@property(readwrite, nonatomic) BOOL isDirectory;
+@property(readwrite, nonatomic) BOOL isExecutable;
+@property(readwrite, copy, nonatomic) NSString *name;
+
 @property(readwrite, nonatomic) NSData *bookmarkData;
 
 @end
@@ -27,6 +34,7 @@
 {
 	self = [super init];
 	if (self) {
+		_UUID = [NSUUID new];
 		_URL = URL;
 	}
 	return self;
@@ -53,9 +61,32 @@
 	return [(self.URL) isEqual:(other.URL)];
 }
 
++ (NSDictionary *)JSONKeyPathsByPropertyKey
+{
+	NSNull *null = [NSNull null];
+	
+	return
+  @{
+	@"URL": null,
+	@"name": null,
+	@"isDirectory": null,
+	@"isExecutable": null
+	};
+}
+
++ (NSValueTransformer *)UUIDJSONTransformer
+{
+	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
+}
+
++ (NSValueTransformer *)bookmarkDataJSONTransformer
+{
+	return [NSValueTransformer GLA_DataBase64ValueTransformer];
+}
+
 #pragma mark Bookmark Data
 
-+ (NSArray *)resourceValuesForCreatingBookmarkData
++ (NSArray *)coreResourceValueKeys
 {
 	return
 	@[
@@ -76,11 +107,26 @@
 	}
 }
 
+- (void)updateInformationFromURLResourceValues:(NSDictionary *)resourceValues
+{
+	(self.isDirectory) = [[NSNumber numberWithBool:YES] isEqual:resourceValues[NSURLIsDirectoryKey]];
+	(self.isExecutable) = [[NSNumber numberWithBool:YES] isEqual:resourceValues[NSURLIsExecutableKey]];
+	(self.name) = resourceValues[NSURLLocalizedNameKey];
+}
+
+- (void)updateInformationWithError:(NSError *__autoreleasing *)error
+{
+	NSURL *URL = (self.URL);
+	NSArray *resourceValueKeys = [[self class] coreResourceValueKeys];
+	NSDictionary *resourceValues = [URL resourceValuesForKeys:resourceValueKeys error:error];
+	[self updateInformationFromURLResourceValues:resourceValues];
+}
+
 - (NSData *)bookmarkDataWithError:(NSError *__autoreleasing *)error
 {
 	NSURL *URL = (self.URL);
-	NSArray *resourceValues = [[self class] resourceValuesForCreatingBookmarkData];
-	return [URL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys:resourceValues relativeToURL:nil error:error];
+	NSArray *resourceValueKeys = [[self class] coreResourceValueKeys];
+	return [URL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys:resourceValueKeys relativeToURL:nil error:error];
 }
 
 - (NSData *)bookmarkData
@@ -98,6 +144,9 @@
 	NSURL *URL = [NSURL URLByResolvingBookmarkData:bookmarkData options:NSURLBookmarkResolutionWithSecurityScope relativeToURL:nil bookmarkDataIsStale:&isStale error:&error];
 	(self.URL) = URL;
 	
+	NSArray *resourceValueKeys = [[self class] coreResourceValueKeys];
+	NSDictionary *resourceValues = [NSURL resourceValuesForKeys:resourceValueKeys fromBookmarkData:bookmarkData];
+	[self updateInformationFromURLResourceValues:resourceValues];
 }
 
 - (BOOL)validateBookmarkData:(inout __autoreleasing NSData **)ioBookmarkData error:(out NSError *__autoreleasing *)outError
@@ -113,7 +162,7 @@
 	
 	// Is stale: needs updating to new bookmark data.
 	if (isStale) {
-		NSArray *resourceValues = [[self class] resourceValuesForCreatingBookmarkData];
+		NSArray *resourceValues = [[self class] coreResourceValueKeys];
 		bookmarkData = [URL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys:resourceValues relativeToURL:nil error:outError];
 		if (!bookmarkData) {
 			return NO;
@@ -123,23 +172,6 @@
 	}
 	
 	return YES;
-}
-
-#pragma mark JSON
-
-+ (NSDictionary *)JSONKeyPathsByPropertyKey
-{
-	return
-	@{
-	  @"URL": (NSNull.null),
-	  @"filePath": @"filePath",
-	  @"bookmarkData": @"bookmarkData"
-	  };
-}
-
-+ (NSValueTransformer *)bookmarkDataJSONTransformer
-{
-	return [NSValueTransformer GLA_DataBase64ValueTransformer];
 }
 
 @end

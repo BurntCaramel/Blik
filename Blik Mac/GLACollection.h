@@ -3,7 +3,7 @@
 //  Blik
 //
 //  Created by Patrick Smith on 18/07/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 @import Foundation;
@@ -17,6 +17,8 @@ extern NSString *GLACollectionTypeFilesList;
 
 @protocol GLACollectedItem <NSObject>
 
+@property(readonly, nonatomic) NSUUID *UUID;
+
 @property(readonly, copy, nonatomic) NSString *name;
 
 @end
@@ -24,7 +26,7 @@ extern NSString *GLACollectionTypeFilesList;
 
 @protocol GLACollectionEditing <NSObject>
 
-//@property(weak, nonatomic) GLAProject *project;
+@property(readwrite, copy, nonatomic) NSUUID *projectUUID;
 
 @property(readwrite, copy, nonatomic) NSString *name;
 @property(readwrite, nonatomic) GLACollectionColor *color;
@@ -32,9 +34,9 @@ extern NSString *GLACollectionTypeFilesList;
 @end
 
 
-@interface GLACollection : MTLModel <GLACollectedItem, MTLJSONSerializing, NSPasteboardReading, NSPasteboardWriting>
+@interface GLACollection : MTLModel <GLACollectedItem, MTLJSONSerializing>
 
-@property(readonly, weak, nonatomic) GLAProject *project;
+@property(readonly, copy, nonatomic) NSUUID *projectUUID;
 
 @property(readonly, nonatomic) NSUUID *UUID;
 @property(readonly, copy, nonatomic) NSString *name;
@@ -50,12 +52,9 @@ extern NSString *GLACollectionTypeFilesList;
 @end
 
 
-@interface GLACollection (PasteboardSupport)
+@interface GLACollection (PasteboardSupport) <NSPasteboardReading, NSPasteboardWriting>
 
 extern NSString *GLACollectionJSONPasteboardType;
-
-- (NSPasteboardItem *)newPasteboardItem;
-+ (void)writeCollections:(NSArray *)collections toPasteboard:(NSPasteboard *)pboard;
 
 + (BOOL)canCopyCollectionsFromPasteboard:(NSPasteboard *)pboard;
 + (NSArray *)copyCollectionsFromPasteboard:(NSPasteboard *)pboard;

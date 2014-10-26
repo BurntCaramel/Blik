@@ -3,7 +3,7 @@
 //  Blik
 //
 //  Created by Patrick Smith on 10/07/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 #import "GLAMainNavigationBarController.h"
@@ -11,6 +11,7 @@
 #import "GLAButton.h"
 #import "GLAUIStyle.h"
 #import "GLAProjectManager.h"
+#import "GLAEditCollectionDetailsPopover.h"
 
 
 @interface GLAMainNavigationButtonGroup : NSObject
@@ -38,6 +39,8 @@
 - (void)animateButtonsOutWithCompletionHandler:(dispatch_block_t)completionHandler;
 
 - (void)animateInButtons:(NSArray *)buttons duration:(NSTimeInterval)duration;
+
+- (GLACollection *)currentCollection;
 
 @end
 
@@ -154,7 +157,7 @@
 	
 	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
-		[delegate mainNavigationBarController:self performChangeCurrentSectionTo:newSection];
+		[delegate mainNavigationBarController:self handleChangeCurrentSectionTo:newSection];
 	}
 	
 	[self updateSelectedSectionUI];
@@ -171,7 +174,7 @@
 {
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	
-	[projectManager requestNowProject];
+	[projectManager loadNowProject];
 	GLAProject *nowProject = (projectManager.nowProject);
 	
 	[self performChangeCurrentSectionTo:[GLAMainContentEditProjectSection nowProjectSectionWithProject:nowProject]];
@@ -356,16 +359,21 @@
 	}];
 }
 
+- (GLACollection *)currentCollection
+{
+	GLAMainContentSection *currentSection = (self.currentSection);
+	NSAssert([currentSection isKindOfClass:[GLAMainContentEditCollectionSection class]], @"Current section (%@) must be a GLAMainContentEditCollectedSection when calling -showButtonsForCurrentCollection", currentSection);
+	
+	GLAMainContentEditCollectionSection *editCollectionSection = (GLAMainContentEditCollectionSection *)currentSection;
+	return (editCollectionSection.collection);
+}
+
 - (void)showButtonsForCurrentCollection
 {
 	GLAMainNavigationButtonGroup *buttonGroup = [GLAMainNavigationButtonGroup buttonGroupWithBarController:self];
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
-	GLAMainContentSection *currentSection = (self.currentSection);
-	NSAssert([currentSection isKindOfClass:[GLAMainContentEditCollectionSection class]], @"Current section (%@) must be a GLAMainContentEditCollectedSection when calling -showButtonsForCurrentCollection", currentSection);
-	
-	GLAMainContentEditCollectionSection *editCollectionSection = (GLAMainContentEditCollectionSection *)currentSection;
-	GLACollection *collection = (editCollectionSection.collection);
+	GLACollection *collection = (self.currentCollection);
 	
 	// Back
 	NSString *backTitle = NSLocalizedString(@"Back", @"Title for collection back button to go back");
@@ -373,7 +381,7 @@
 	
 	// Collection title
 	NSString *collectionTitle = (collection.name);
-	GLAButton *titleButton = [buttonGroup makeCenterButtonWithTitle:collectionTitle action:nil identifier:@"collectionTitle"];
+	GLAButton *titleButton = [buttonGroup makeCenterButtonWithTitle:collectionTitle action:@selector(editCollectionDetails:) identifier:@"collectionTitle"];
 	(titleButton.hasSecondaryStyle) = NO;
 	(titleButton.textHighlightColor) = [uiStyle colorForCollectionColor:(collection.color)];
 	(self.collectionTitleButton) = titleButton;
@@ -436,7 +444,7 @@
 {
 	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
-		[delegate mainNavigationBarController:self performAddNewProject:sender];
+		[delegate mainNavigationBarController:self handleAddNewProject:sender];
 	}
 }
 
@@ -463,7 +471,7 @@
 	
 	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
-		[delegate mainNavigationBarControllerDidExitEditedProject:self];
+		[delegate mainNavigationBarControllerHandleExitEditedProject:self];
 	}
 }
 
@@ -475,7 +483,7 @@
 		NSAssert([currentSection isKindOfClass:[GLAMainContentEditProjectSection class]], @"Current section (%@) must be a GLAMainContentEditProjectSection when calling -workOnCurrentProjectNow: action", currentSection);
 		
 		GLAMainContentEditProjectSection *editProjectSection = (GLAMainContentEditProjectSection *)currentSection;
-		[delegate mainNavigationBarController:self performWorkOnProjectNow:(editProjectSection.project)];
+		[delegate mainNavigationBarController:self handleWorkNowOnProject:(editProjectSection.project)];
 	}
 }
 
@@ -490,7 +498,7 @@
 
 #pragma mark Collections
 
-- (void)exitEditedCollection:(id)sender
+- (IBAction)editCollectionDetails:(GLAButton *)sender
 {
 	if (self.isAnimating) {
 		return;
@@ -498,7 +506,20 @@
 	
 	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
-		[delegate mainNavigationBarControllerDidExitEditedCollection:self];
+		GLACollection *collection = (self.currentCollection);
+		[delegate mainNavigationBarController:self handleEditDetailsForCollection:collection fromButton:sender];
+	}
+}
+
+- (IBAction)exitEditedCollection:(id)sender
+{
+	if (self.isAnimating) {
+		return;
+	}
+	
+	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
+	if (delegate) {
+		[delegate mainNavigationBarControllerHandleExitEditedCollection:self];
 	}
 }
 
@@ -564,6 +585,67 @@
 {
 	
 }
+
+#pragma mark -
+
+#if 0
+
+- (GLAEditCollectionDetailsPopover *)editCollectionPopover
+{
+	return [GLAEditCollectionDetailsPopover sharedEditCollectionDetailsPopover];
+}
+
+- (void)editCollectionDetailsPopoverChosenNameDidChangeNotification:(NSNotification *)note
+{
+	GLAEditCollectionDetailsPopover *popover = (note.object);
+	NSString *name = (popover.chosenName);
+	
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	
+	[projectManager renameCollection:(self.currentCollection) inProject:(self.project) toString:name];
+}
+
+- (void)editCollectionDetailsPopoverChosenColorDidChangeNotification:(NSNotification *)note
+{NSLog(@"editCollectionDetailsPopoverChosenColorDidChangeNotification");
+	GLAEditCollectionDetailsPopover *popover = (note.object);
+	GLACollectionColor *color = (popover.chosenCollectionColor);
+	[self changeColor:color forCollection:(self.collectionWithDetailsBeingEdited)];
+}
+
+- (void)editCollectionDetailsPopupDidCloseNotification:(NSNotification *)note
+{NSLog(@"EC DID CLOSE");
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc removeObserver:self name:nil object:(self.editCollectionPopover)];
+	
+	(self.collectionWithDetailsBeingEdited) = nil;
+}
+
+- (void)editDetailsOfCollection:(GLACollection *)collection fromNavigationButton:(GLAButton *)button
+{
+	(self.collectionWithDetailsBeingEdited) = collection;
+	
+	GLAEditCollectionDetailsPopover *popover = (self.editCollectionPopover);
+	
+	if (popover.isShown) {
+		[popover close];
+		//(self.collectionWithDetailsBeingEdited) = nil;
+	}
+	else {
+		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+		[nc addObserver:self selector:@selector(editCollectionDetailsPopoverChosenNameDidChangeNotification:) name:GLAEditCollectionDetailsPopoverChosenNameDidChangeNotification object:popover];
+		[nc addObserver:self selector:@selector(editCollectionDetailsPopoverChosenColorDidChangeNotification:) name:GLAEditCollectionDetailsPopoverChosenColorDidChangeNotification object:popover];
+		[nc addObserver:self selector:@selector(editCollectionDetailsPopupDidCloseNotification:) name:NSPopoverDidCloseNotification object:popover];
+		
+		[popover setUpWithCollection:collection];
+		
+		NSTableView *tableView = (self.tableView);
+		NSRect rowRect = [tableView rectOfRow:collectionRow];
+		// Show underneath.
+		[popover showRelativeToRect:rowRect ofView:tableView preferredEdge:NSMaxXEdge];
+	}
+}
+
+#endif
 
 @end
 

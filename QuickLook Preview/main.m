@@ -3,7 +3,7 @@
 //  QuickLook Preview
 //
 //  Created by Patrick Smith on 6/08/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 #include <xpc/xpc.h>

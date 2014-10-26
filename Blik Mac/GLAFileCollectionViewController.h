@@ -3,17 +3,25 @@
 //  Blik
 //
 //  Created by Patrick Smith on 30/07/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
-#import "GLACollectionViewController.h"
+#import "GLAViewController.h"
+// View
+#import "GLAPopUpButton.h"
+// Model
+#import "GLACollection.h"
 #import "GLAFileInfoRetriever.h"
+// Frameworks
 @import Quartz;
 
 
-@interface GLAFileCollectionViewController : GLAViewController <NSTableViewDataSource, NSTableViewDelegate, GLAFileInfoRetrieverDelegate>
+@interface GLAFileCollectionViewController : GLAViewController <NSTableViewDataSource, NSTableViewDelegate, NSMenuDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, GLAFileInfoRetrieverDelegate>
 
 @property(nonatomic) IBOutlet NSTableView *sourceFilesListTableView;
+@property(strong, nonatomic) IBOutlet NSMenu *sourceFilesListContextualMenu;
+
+@property(strong, nonatomic) IBOutlet GLAPopUpButton *openerApplicationsPopUpButton;
 
 @property(nonatomic) IBOutlet GLAViewController *previewHolderViewController;
 @property(nonatomic) IBOutlet NSView *previewHolderView;
@@ -22,5 +30,13 @@
 @property(nonatomic) GLACollection *filesListCollection;
 
 @property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
+
+- (void)makeSourceFilesListFirstResponder;
+
+- (IBAction)openSelectedFiles:(id)sender;
+- (IBAction)revealSelectedFilesInFinder:(id)sender;
+- (IBAction)removeSelectedFilesFromList:(id)sender;
+
+- (IBAction)addSelectedFilesToHighlights:(id)sender;
 
 @end

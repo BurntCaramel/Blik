@@ -3,18 +3,17 @@
 //  Blik
 //
 //  Created by Patrick Smith on 18/07/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 #import "GLACollection.h"
-#import "GLACollection+GLACollection_ProjectEditing.h"
 #import "NSValueTransformer+GLAModel.h"
 #import "GLACollectionColor.h"
 
 
 @interface GLACollection () <GLACollectionEditing>
 
-@property(readwrite, weak , nonatomic) GLAProject *project;
+@property(readwrite, copy, nonatomic) NSUUID *projectUUID;
 
 @property(readwrite, nonatomic) NSUUID *UUID;
 @property(readwrite, copy, nonatomic) NSString *name;
@@ -32,14 +31,16 @@
 {
 	return
 	@{
-	  @"UUID": @"UUID",
-	  @"name": @"name",
 	  @"color": (NSNull.null),
-	  @"colorIdentifier": @"colorIdentifier"
 	};
 }
 
 + (NSValueTransformer *)UUIDJSONTransformer
+{
+	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
+}
+
++ (NSValueTransformer *)projectUUIDJSONTransformer
 {
 	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
 }
@@ -49,7 +50,6 @@
     self = [super init];
     if (self) {
         _UUID = [NSUUID new];
-		//_title = @"";
     }
     return self;
 }
@@ -80,6 +80,13 @@
 	
 	return copy;
 }
+
+@end
+
+
+@implementation GLACollection (PasteboardSupport)
+
+NSString *GLACollectionJSONPasteboardType = @"com.burntcaramel.GLACollection.JSONPasteboardType";
 
 #pragma mark NSPasteboardReading
 
@@ -128,24 +135,7 @@
 	return jsonData;
 }
 
-@end
-
-
-@implementation GLACollection (PasteboardSupport)
-
-NSString *GLACollectionJSONPasteboardType = @"com.burntcaramel.GLACollection.JSONPasteboardType";
-
-- (NSPasteboardItem *)newPasteboardItem
-{
-	NSDictionary *selfAsJSON = [MTLJSONAdapter JSONDictionaryFromModel:self];
-	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:selfAsJSON options:0 error:NULL];
-	return [[NSPasteboardItem alloc] initWithPasteboardPropertyList:jsonData ofType:GLACollectionJSONPasteboardType];
-}
-
-+ (void)writeCollections:(NSArray *)collections toPasteboard:(NSPasteboard *)pboard
-{
-	[pboard writeObjects:collections];
-}
+#pragma mark -
 
 + (BOOL)canCopyCollectionsFromPasteboard:(NSPasteboard *)pboard
 {

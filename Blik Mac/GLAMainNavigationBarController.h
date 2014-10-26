@@ -3,7 +3,7 @@
 //  Blik
 //
 //  Created by Patrick Smith on 10/07/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 @import Cocoa;
@@ -88,14 +88,16 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 //- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller wantsToChangeSection:(GLAMainContentSection *)newSection;
 
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performChangeCurrentSectionTo:(GLAMainContentSection *)newSection;
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller handleChangeCurrentSectionTo:(GLAMainContentSection *)newSection;
 
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performAddNewProject:(id)sender;
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller handleAddNewProject:(id)sender;
 
-- (void)mainNavigationBarControllerDidExitEditedProject:(GLAMainNavigationBarController *)controller;
+- (void)mainNavigationBarControllerHandleExitEditedProject:(GLAMainNavigationBarController *)controller;
 
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller performWorkOnProjectNow:(GLAProject *)project;
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller handleWorkNowOnProject:(GLAProject *)project;
 
-- (void)mainNavigationBarControllerDidExitEditedCollection:(GLAMainNavigationBarController *)controller;
+- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller handleEditDetailsForCollection:(GLACollection *)collection fromButton:(GLAButton *)button;
+
+- (void)mainNavigationBarControllerHandleExitEditedCollection:(GLAMainNavigationBarController *)controller;
 
 @end

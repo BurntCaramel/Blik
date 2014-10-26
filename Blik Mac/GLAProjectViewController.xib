@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAProjectViewController">
@@ -10,12 +11,12 @@
                 <outlet property="actionsBarHolder" destination="8vi-0s-ZAk" id="fER-0J-YJc"/>
                 <outlet property="actionsBarHolderBottomConstraint" destination="f6P-NC-GhS" id="r8R-1f-m7l"/>
                 <outlet property="collectionsViewController" destination="raF-W4-b8E" id="PF0-mt-Ryz"/>
+                <outlet property="highlightsViewController" destination="aDf-pc-aeE" id="PGv-IR-9yh"/>
                 <outlet property="itemsViewBottomConstraint" destination="fUN-x8-iVl" id="JkA-s5-C7p"/>
                 <outlet property="itemsViewHeightConstraint" destination="B9G-tJ-wrx" id="xs3-h6-aLf"/>
                 <outlet property="itemsViewLeadingConstraint" destination="4N2-fG-NN0" id="6kd-44-jLf"/>
                 <outlet property="nameTextField" destination="uUN-fG-dyR" id="1Ll-53-eki"/>
                 <outlet property="planViewBottomConstraint" destination="9SR-1S-pao" id="2PH-C1-Bn8"/>
-                <outlet property="planViewController" destination="aDf-pc-aeE" id="apl-ed-0CF"/>
                 <outlet property="planViewHeightConstraint" destination="1YL-eX-iqA" id="Bhy-kS-221"/>
                 <outlet property="planViewTrailingConstraint" destination="GXN-5G-oay" id="7Re-uD-o7p"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
@@ -233,11 +234,8 @@
                 <outlet property="tableView" destination="0t7-tp-C0y" id="Hfm-aj-nu4"/>
             </connections>
         </viewController>
-        <viewController title="Plan View Controller" id="aDf-pc-aeE" customClass="GLAProjectPlanViewController">
+        <viewController title="Highlights View Controller" id="aDf-pc-aeE" customClass="GLAProjectHighlightsViewController">
             <connections>
-                <outlet property="chooseExistingRemindersButton" destination="HFX-tx-bsh" id="joR-cw-ewb"/>
-                <outlet property="editingActionsView" destination="kYy-Eb-3WH" id="aQu-al-b9I"/>
-                <outlet property="makeNewReminderButton" destination="gya-ze-oT1" id="x6L-i5-uFc"/>
                 <outlet property="parentViewController" destination="-2" id="kAI-Y6-LNm"/>
                 <outlet property="tableView" destination="qcb-6b-Ekp" id="WeB-DQ-KSM"/>
             </connections>
@@ -441,9 +439,6 @@
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
                     </userDefinedRuntimeAttributes>
-                    <connections>
-                        <action selector="chooseExistingReminders:" target="aDf-pc-aeE" id="zor-Hg-E3k"/>
-                    </connections>
                 </button>
                 <button placeholderIntrinsicWidth="140" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="gya-ze-oT1" customClass="GLAButton">
                     <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
@@ -460,9 +455,6 @@
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="hasPrimaryStyle" value="YES"/>
                     </userDefinedRuntimeAttributes>
-                    <connections>
-                        <action selector="makeNewReminder:" target="aDf-pc-aeE" id="deL-5m-9bq"/>
-                    </connections>
                 </button>
             </subviews>
             <constraints>
@@ -479,10 +471,16 @@
             <items>
                 <menuItem title="Rename Collection…" id="5AV-kD-8fd">
                     <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="renameClickedCollection:" target="raF-W4-b8E" id="0E8-6W-27y"/>
+                    </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="UPi-eN-JLm"/>
                 <menuItem title="Delete Collection…" id="B9A-Yw-QEs">
                     <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="permanentlyDeleteClickedCollection:" target="raF-W4-b8E" id="e4P-wL-pT3"/>
+                    </connections>
                 </menuItem>
             </items>
         </menu>

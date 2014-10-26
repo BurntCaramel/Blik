@@ -3,12 +3,11 @@
 //  Blik
 //
 //  Created by Patrick Smith on 2/07/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 #import "GLAAppDelegate.h"
 #import <objc/runtime.h>
-#import "GLAProjectManager.h"
 #import "GLAProjectManager.h"
 
 

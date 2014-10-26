@@ -10,9 +10,7 @@
 @class GLAButtonCell;
 
 
-@interface GLAButton : NSButton
-
-@property(nonatomic) GLAButtonCell *cell;
+@protocol GLAButtonStyling <NSObject>
 
 @property(nonatomic) CGFloat leftSpacing;
 @property(nonatomic) CGFloat rightSpacing;
@@ -22,6 +20,7 @@
 
 @property(nonatomic) NSColor *textHighlightColor;
 @property(nonatomic) NSColor *backgroundColor;
+@property(nonatomic) CGFloat backgroundInsetAmount;
 @property(nonatomic) CGFloat highlightAmount;
 
 @property(readonly, nonatomic, getter = isOnAndShowsOnState) BOOL onAndShowsOnState;
@@ -32,7 +31,25 @@
 @end
 
 
-@interface GLAButtonCell : NSButtonCell
+@interface NSButton (GLAButtonStyling)
+
++ (NSColor *)backgroundColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button;
++ (NSColor *)textColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button;
+
++ (void)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView;
++ (NSRect)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawTitle:(NSAttributedString *)title withFrame:(NSRect)frame inView:(NSView *)controlView;
+
+@end
+
+
+@interface GLAButton : NSButton <GLAButtonStyling>
+
+@property(nonatomic) GLAButtonCell *cell;
+
+@end
+
+
+@interface GLAButtonCell : NSButtonCell <GLAButtonStyling>
 
 @property(nonatomic) CGFloat leftSpacing;
 @property(nonatomic) CGFloat rightSpacing;

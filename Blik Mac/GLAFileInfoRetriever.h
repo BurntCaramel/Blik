@@ -3,7 +3,7 @@
 //  Blik
 //
 //  Created by Patrick Smith on 4/08/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 @import Foundation;
@@ -16,10 +16,22 @@
 
 @property(weak, nonatomic) id<GLAFileInfoRetrieverDelegate> delegate;
 
+#pragma mark File Properties
+
 - (void)requestResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL;
 
-- (NSDictionary *)loadedResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL requestIfNeed:(BOOL)request;
+- (NSDictionary *)loadedResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL requestIfNeeded:(BOOL)request;
 - (NSError *)lastErrorLoadingResourceValuesForURL:(NSURL *)URL;
+
+#pragma mark Applications
+
+- (void)requestApplicationURLsToOpenURL:(NSURL *)URL;
+- (NSArray *)applicationsURLsToOpenURL:(NSURL *)URL;
+- (NSURL *)defaultApplicationsURLToOpenURL:(NSURL *)URL;
+
+#pragma mark -
+
+- (void)clearCacheForURLs:(NSArray *)URLs;
 
 - (void)cancelAllLoading;
 
@@ -30,6 +42,8 @@
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didLoadResourceValuesForURL:(NSURL *)URL;
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didFailWithError:(NSError *)error loadingResourceValuesForURL:(NSURL *)URL;
+
+- (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didRetrieveApplicationURLsToOpenURL:(NSURL *)URL;
 
 @end
 

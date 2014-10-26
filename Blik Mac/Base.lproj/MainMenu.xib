@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -119,7 +120,7 @@ DQ
                                     <action selector="goToAll:" target="-1" id="ccn-5J-0qi"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Planned Projects" keyEquivalent="2" id="bzg-Bt-vsR">
+                            <menuItem title="Planned Projects" hidden="YES" keyEquivalent="2" id="bzg-Bt-vsR">
                                 <connections>
                                     <action selector="goToPlanned:" target="-1" id="TCH-KT-UyY"/>
                                 </connections>
@@ -351,7 +352,11 @@ DQ
                     <menu key="submenu" title="Collections" id="y5R-d6-Gfj">
                         <items>
                             <menuItem title="Add Files Collection…" keyEquivalent="N" id="jfO-Ol-vRE"/>
-                            <menuItem title="Add Contacts Collection…" keyEquivalent="C" id="McO-7U-HxW"/>
+                            <menuItem title="Add Contacts Collection…" hidden="YES" keyEquivalent="C" id="McO-7U-HxW"/>
+                            <menuItem isSeparatorItem="YES" id="igl-0Q-9Ql"/>
+                            <menuItem title="Change Application to Open Files of Type…" id="mBU-GE-fzv">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>

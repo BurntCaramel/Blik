@@ -3,7 +3,7 @@
 //  Blik
 //
 //  Created by Patrick Smith on 9/09/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 #import "GLAModelErrors.h"

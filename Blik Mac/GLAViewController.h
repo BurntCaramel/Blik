@@ -3,7 +3,7 @@
 //  Blik
 //
 //  Created by Patrick Smith on 14/07/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 @import Cocoa;
@@ -59,5 +59,11 @@ typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint
 @interface GLAViewController (ViewIdentifiers)
 
 + (NSView *)viewWithIdentifier:(NSString *)identifier inViews:(NSArray *)views;
+
+@end
+
+@interface GLAViewController (HolderView)
+
+- (instancetype)initWithHolderView:(NSView *)holderView filledWithView:(NSView *)contentView;
 
 @end

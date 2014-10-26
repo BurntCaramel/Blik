@@ -3,7 +3,7 @@
 //  Blik
 //
 //  Created by Patrick Smith on 14/07/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 #import "GLAViewController.h"
@@ -256,6 +256,21 @@
 	else {
 		return matchingViews[0];
 	}
+}
+
+@end
+
+
+@implementation GLAViewController (HolderView)
+
+- (instancetype)initWithHolderView:(NSView *)holderView filledWithView:(NSView *)contentView
+{
+	self = [self init];
+	if (self) {
+		(self.view) = holderView;
+		[self fillViewWithChildView:contentView];
+	}
+	return self;
 }
 
 @end

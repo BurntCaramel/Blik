@@ -3,7 +3,7 @@
 //  Blik
 //
 //  Created by Patrick Smith on 27/09/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 #import "GLAAddNewCollectionViewController.h"
@@ -23,7 +23,7 @@
 {
 	[super prepareView];
 	
-	(self.chosenCollectionColor) = [GLACollectionColor lightBlue];
+	(self.chosenCollectionColor) = [GLACollectionColor pastelLightBlue];
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	
