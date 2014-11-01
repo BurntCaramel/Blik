@@ -33,6 +33,8 @@
 
 @property(nonatomic) QLPreviewPanel *activeQuickLookPreviewPanel;
 
+@property(nonatomic) NSIndexSet *draggedRowIndexes;
+
 @end
 
 @implementation GLAFileCollectionViewController
@@ -52,18 +54,22 @@
 	[self stopObservingPreviewFrameChanges];
 }
 
-- (void)loadView
+- (void)prepareView
 {
-	[super loadView];
+	[super prepareView];
+	
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	
 	NSTableView *tableView = (self.sourceFilesListTableView);
 	(tableView.dataSource) = self;
 	(tableView.delegate) = self;
 	(tableView.identifier) = @"filesCollectionViewController.sourceFilesListTableView";
 	(tableView.menu) = (self.sourceFilesListContextualMenu);
-	NSLog(@"FILES LIST MENU %@", (self.sourceFilesListContextualMenu));
-	NSLog(@"FILES LIST NEXT RESPONDER %@", (tableView.nextResponder));
-	[[GLAUIStyle activeStyle] prepareContentTableView:tableView];
+	[uiStyle prepareContentTableView:tableView];
+	
+	[tableView registerForDraggedTypes:@[[GLACollectedFile objectJSONPasteboardType]]];
+	
+	[uiStyle prepareTextLabel:(self.openerApplicationsTextLabel)];
 	
 	// Allow self to handle keyDown: events.
 	(self.nextResponder) = (tableView.nextResponder);
@@ -149,6 +155,19 @@
 	}
 	
 	[(self.sourceFilesListTableView) reloadData];
+	
+	[self updateOpenerApplicationsUIVisible];
+}
+
+- (void)updateOpenerApplicationsUIVisible
+{
+	GLAPopUpButton *popUpButton = (self.openerApplicationsPopUpButton);
+	NSTextField *label = (self.openerApplicationsTextLabel);
+	
+	NSArray *selectedURLs = (self.selectedURLs);
+	BOOL hasNoURLs = (selectedURLs.count) == 0;
+	(popUpButton.hidden) = hasNoURLs;
+	(label.hidden) = hasNoURLs;
 }
 
 - (void)filesListDidChangeNotification:(NSNotification *)note
@@ -325,17 +344,17 @@
 
 #pragma mark -
 
-- (NSArray *)URLsForContextualAction
+- (NSArray *)URLsForActionIsContextual:(BOOL)isContextual
 {
 	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
 	
 	NSInteger clickedRow = (sourceFilesListTableView.clickedRow);
-	if (clickedRow == -1) {
+	if (isContextual && (clickedRow == -1)) {
 		return nil;
 	}
 	
 	NSIndexSet *selectedRows = (sourceFilesListTableView.selectedRowIndexes);
-	if ([selectedRows containsIndex:clickedRow]) {
+	if (isContextual ? [selectedRows containsIndex:clickedRow] : YES) {
 		return (self.selectedURLs);
 	}
 	else {
@@ -513,7 +532,6 @@
 		NSSortDescriptor *titleSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES selector:@selector(localizedStandardCompare:)];
 		
 		[menuItems sortUsingDescriptors:@[titleSortDescriptor]];
-		NSLog(@"MENU ITEMS SORTED %@", menuItems);
 	}
 		
 	NSMenu *menu = (self.openerApplicationsPopUpButton.menu);
@@ -536,10 +554,12 @@
 	for (NSMenuItem *menuItem in menuItems) {
 		[menu addItem:menuItem];
 	}
+	
+	[self updateOpenerApplicationsUIVisible];
 }
 
 - (void)setNeedsToUpdateOpenerApplicationsUI
-{NSLog(@"setNeedsToUpdateOpenerApplicationsPopUpButton");
+{
 	if (self.openerApplicationsPopUpButtonNeedsUpdate) {
 		return;
 	}
@@ -547,7 +567,6 @@
 	(self.openerApplicationsPopUpButtonNeedsUpdate) = YES;
 	
 	[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-		NSLog(@"DOING MENU UPDATE");
 		[self refreshOpenerApplicationsUI];
 		//[(self.openerApplicationsPopUpButton.menu) update];
 		
@@ -586,7 +605,8 @@
 	}
 	
 	[pm editFilesListOfCollection:filesListCollection usingBlock:^(id<GLAArrayEditing> filesListEditor) {
-		[filesListEditor addChildren:collectedFiles];
+		NSArray *filteredItems = [filesListEditor filterArray:collectedFiles whoseValuesIsNotPresentForKeyPath:@"URL.path"];
+		[filesListEditor addChildren:filteredItems];
 	}];
 	
 	[self reloadSourceFiles];
@@ -608,7 +628,7 @@
 
 - (IBAction)revealSelectedFilesInFinder:(id)sender
 {
-	NSArray *selectedURLs = (self.URLsForContextualAction);
+	NSArray *selectedURLs = [self URLsForActionIsContextual:(sender != self)];
 	
 	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:selectedURLs];
 }
@@ -632,13 +652,12 @@
 
 - (IBAction)addSelectedFilesToHighlights:(id)sender
 {
-	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
-	NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
-	if ((selectedIndexes.count) == 0) {
+	NSIndexSet *clickedIndexes = (self.rowIndexesForContextualAction);
+	if (!clickedIndexes) {
 		return;
 	}
 	
-	NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:selectedIndexes];
+	NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:clickedIndexes];
 	
 	GLACollection *filesListCollection = (self.filesListCollection);
 	NSUUID *projectUUID = (filesListCollection.projectUUID);
@@ -657,9 +676,15 @@
 		[highlightedItems addObject:highlightedCollectedFile];
 	}
 	
+	NSTableView *tableView = (self.sourceFilesListTableView);
+	[tableView beginUpdates];
+	
 	[pm editHighlightsOfProject:project usingBlock:^(id<GLAArrayEditing> highlightsEditor) {
-		[highlightsEditor addChildren:highlightedItems];
+		NSArray *filteredItems = [highlightsEditor filterArray:highlightedItems whoseValuesIsNotPresentForKeyPath:@"collectedFile.UUID"];
+		[highlightsEditor addChildren:filteredItems];
 	}];
+	
+	[tableView endUpdates];
 }
 
 #pragma mark Events
@@ -667,14 +692,19 @@
 - (void)keyDown:(NSEvent *)theEvent
 {
 	unichar u = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
+	NSEventModifierFlags modifierFlags = (theEvent.modifierFlags);
+	
 	if (u == NSEnterCharacter || u == NSCarriageReturnCharacter) {
-		[self openSelectedFiles:self];
+		if (modifierFlags & NSCommandKeyMask) {
+			[self revealSelectedFilesInFinder:self];
+		}
+		else {
+			[self openSelectedFiles:self];
+		}
 	}
 	else if (u == ' ') {
 		[self quickLookPreviewItems:self];
 	}
-	
-	NSLog(@"KEY DOWN");
 	
 #if 0
 	CFArrayRef applicationURLs_cf = LSCopyApplicationURLsForURL((__bridge CFURLRef)fileURL, kLSRolesViewer | kLSRolesEditor);
@@ -789,6 +819,103 @@
 	//[self addAccessedSecurityScopedFileURL:(collectedFile.URL)];
 	
 	return collectedFile;
+}
+
+- (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row
+{
+	GLACollectedFile *collectedFile = (self.collectedFiles)[row];
+	return collectedFile;
+}
+
+- (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forRowIndexes:(NSIndexSet *)rowIndexes
+{
+	(self.draggedRowIndexes) = rowIndexes;
+	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
+}
+
+- (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation
+{
+	// Does not work for some reason.
+	if (operation == NSDragOperationDelete) {
+		GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+		
+		[projectManager editFilesListOfCollection:(self.filesListCollection) usingBlock:^(id<GLAArrayEditing> filesListEditor) {
+			NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
+			(self.draggedRowIndexes) = nil;
+			
+			[filesListEditor removeChildrenAtIndexes:sourceRowIndexes];
+		}];
+		
+		[self reloadSourceFiles];
+	}
+}
+
+- (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
+{
+	//NSLog(@"proposed row %ld %ld", (long)row, (long)dropOperation);
+	
+	NSPasteboard *pboard = (info.draggingPasteboard);
+	if (![GLACollectedFile canCopyObjectsFromPasteboard:pboard]) {
+		return NSDragOperationNone;
+	}
+	
+	if (dropOperation == NSTableViewDropOn) {
+		[tableView setDropRow:row dropOperation:NSTableViewDropAbove];
+	}
+	
+	NSDragOperation sourceOperation = (info.draggingSourceOperationMask);
+	if (sourceOperation & NSDragOperationMove) {
+		return NSDragOperationMove;
+	}
+	else if (sourceOperation & NSDragOperationCopy) {
+		return NSDragOperationCopy;
+	}
+	else if (sourceOperation & NSDragOperationDelete) {
+		return NSDragOperationDelete;
+	}
+	else {
+		return NSDragOperationNone;
+	}
+}
+
+- (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation
+{
+	NSPasteboard *pboard = (info.draggingPasteboard);
+	if (![GLACollectedFile canCopyObjectsFromPasteboard:pboard]) {
+		return NO;
+	}
+	
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	
+	__block BOOL acceptDrop = YES;
+	NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
+	(self.draggedRowIndexes) = nil;
+	
+	[projectManager editFilesListOfCollection:(self.filesListCollection) usingBlock:^(id<GLAArrayEditing> filesListEditor) {
+		NSDragOperation sourceOperation = (info.draggingSourceOperationMask);
+		if (sourceOperation & NSDragOperationMove) {
+			// The row index is the final destination, so reduce it by the number of rows being moved before it.
+			NSInteger adjustedRow = row - [sourceRowIndexes countOfIndexesInRange:NSMakeRange(0, row)];
+			
+			[filesListEditor moveChildrenAtIndexes:sourceRowIndexes toIndex:adjustedRow];
+		}
+		else if (sourceOperation & NSDragOperationCopy) {
+			//TODO: actually make copies.
+			NSArray *childrenToCopy = [filesListEditor childrenAtIndexes:sourceRowIndexes];
+			childrenToCopy = [childrenToCopy valueForKey:@"duplicate"];
+			[filesListEditor insertChildren:childrenToCopy atIndexes:[NSIndexSet indexSetWithIndex:row]];
+		}
+		else if (sourceOperation & NSDragOperationDelete) {
+			[filesListEditor removeChildrenAtIndexes:sourceRowIndexes];
+		}
+		else {
+			acceptDrop = NO;
+		}
+	}];
+	
+	[self reloadSourceFiles];
+	
+	return acceptDrop;
 }
 
 #pragma mark Table View Delegate

@@ -24,11 +24,6 @@
     return self;
 }
 
-- (GLAView *)view
-{
-	return (id)[super view];
-}
-
 - (void)loadView
 {
 	[super loadView];
@@ -57,23 +52,27 @@
 
 - (void)prepareView
 {
-	
+	// For subclasses.
 }
 
 - (void)viewWillAppear
 {
+	// For subclasses.
 }
 
 - (void)viewDidAppear
 {
+	// For subclasses.
 }
 
 - (void)viewWillDisappear
 {
+	// For subclasses.
 }
 
 - (void)viewDidDisappear
 {
+	// For subclasses.
 }
 
 - (void)updateConstraintsWithAnimatedDuration:(NSTimeInterval)duration
@@ -142,13 +141,6 @@
 - (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier
 {
 	return [self addLayoutConstraintToMatchAttribute:attribute withChildView:innerView identifier:identifier priority:NSLayoutPriorityRequired];
-}
-
-- (NSLayoutConstraint *)addLayoutConstraintForAttribute:(NSLayoutAttribute)attribute withValue:(CGFloat)value
-{
-	NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:(self.view) attribute:attribute relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:value];
-	
-	return (constraint);
 }
 
 - (void)fillViewWithChildView:(NSView *)innerView

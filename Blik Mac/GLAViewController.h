@@ -8,19 +8,19 @@
 
 @import Cocoa;
 @import QuartzCore;
-#import "GLAView.h"
 
 
 typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint *oldConstraint, NSLayoutConstraint *newConstraint);
 
 
-@interface GLAViewController : NSViewController <GLAViewDelegate>
-
-@property(readonly, nonatomic) GLAView *view;
+@interface GLAViewController : NSViewController
 
 - (void)prepareViewIfNeeded;
 @property(nonatomic) BOOL hasPreparedViews;
-- (void)prepareView;
+
+// Subclass these, no super call required:
+
+- (void)prepareView; // Like 10.10's -viewDidLoad method.
 
 - (void)viewWillAppear;
 - (void)viewDidAppear;
@@ -41,8 +41,6 @@ typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint
 - (void)fillViewWithChildView:(NSView *)innerView;
 - (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier priority:(NSLayoutPriority)priority;
 - (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier;
-
-//- (NSLayoutConstraint *)addLayoutConstraintForAttribute:(NSLayoutAttribute)attribute withValue:(CGFloat)value;
 
 - (NSArray *)allLayoutConstraintsWithChildView:(NSView *)innerView;
 

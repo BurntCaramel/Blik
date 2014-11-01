@@ -10,7 +10,7 @@
 #import "GLAView.h"
 #import "GLAButton.h"
 
-@interface GLAProjectActionsBarController : GLAViewController
+@interface GLAProjectActionsBarController : GLAViewController <GLAViewDelegate>
 
 @property(strong, nonatomic) IBOutlet GLAView *normalView;
 @property(strong, nonatomic) IBOutlet GLAView *editingItemsView;

@@ -86,14 +86,17 @@
 {
 	return @"com.burntcaramel.GLAHighlightedCollectedFile.JSONPasteboardType";
 }
+
 + (NSValueTransformer *)collectedFileJSONTransformer
 {
 	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLACollectedFile class]];
 }
+
 + (NSValueTransformer *)holdingCollectionJSONTransformer
 {
 	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLACollection class]];
 }
+
 + (NSValueTransformer *)applicationToOpenFileJSONTransformer
 {
 	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLACollectedFile class]];

@@ -170,7 +170,7 @@
 	GLAProjectManager *projectManager = (note.object);
 	GLAProject *nowProject = (projectManager.nowProject);
 	GLAMainContentSection *currentSection = (self.currentSection);
-	NSLog(@"WC projectManagerNowProjectDidChangeNotification %@ CURRENT %@", nowProject, currentSection);
+	
 	if (currentSection.isNow) {
 		GLAMainContentEditProjectSection *newNowSection = [GLAMainContentEditProjectSection nowProjectSectionWithProject:nowProject];
 		[self goToSection:newNowSection];
@@ -183,7 +183,7 @@
 		return;
 	}
 	
-	NSLog(@"GO TO SECTION %@", newSection);
+	//NSLog(@"GO TO SECTION %@", newSection);
 	(self.currentSection) = newSection;
 	
 	[(self.mainContentViewController) goToSection:newSection];
@@ -192,7 +192,6 @@
 
 - (void)goToPreviousSection
 {
-	NSLog(@"-goToPreviousSection %@", (self.currentSection.previousSection));
 	[self goToSection:(self.currentSection.previousSection)];
 }
 
@@ -207,7 +206,6 @@
 
 - (void)editProject:(GLAProject *)project
 {
-	NSLog(@"editProject; %@", (self.currentSection));
 	[self goToSection:[GLAMainContentEditProjectSection editProjectSectionWithProject:project previousSection:(self.currentSection)]];
 }
 

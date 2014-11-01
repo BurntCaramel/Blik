@@ -7,7 +7,6 @@
 //
 
 #import "GLACollectedFile.h"
-#import "NSValueTransformer+GLAModel.h"
 
 
 @interface GLACollectedFile ()
@@ -15,7 +14,6 @@
 	NSData *_bookmarkData;
 }
 
-@property(readwrite, nonatomic) NSUUID *UUID;
 @property(readwrite, nonatomic) NSURL *URL;
 
 @property(readwrite, nonatomic) NSString *filePath;
@@ -34,7 +32,6 @@
 {
 	self = [super init];
 	if (self) {
-		_UUID = [NSUUID new];
 		_URL = URL;
 	}
 	return self;
@@ -61,6 +58,11 @@
 	return [(self.URL) isEqual:(other.URL)];
 }
 
++ (NSString *)objectJSONPasteboardType
+{
+	return @"com.burntcaramel.GLACollectedFile.JSONPasteboardType";
+}
+
 + (NSDictionary *)JSONKeyPathsByPropertyKey
 {
 	NSNull *null = [NSNull null];
@@ -72,11 +74,6 @@
 	@"isDirectory": null,
 	@"isExecutable": null
 	};
-}
-
-+ (NSValueTransformer *)UUIDJSONTransformer
-{
-	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
 }
 
 + (NSValueTransformer *)bookmarkDataJSONTransformer

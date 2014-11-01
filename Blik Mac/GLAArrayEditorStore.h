@@ -33,11 +33,13 @@
 @property(nonatomic, copy, readonly) NSURL *JSONFileURL;
 @property(nonatomic, copy, readonly) NSString *JSONDictionaryKeyForArray;
 
+@property(nonatomic, readonly) BOOL needsLoading;
+
 @property(nonatomic, readonly) BOOL loading;
-//@property(nonatomic, readonly) BOOL finishedLoading;
+@property(nonatomic, readonly) BOOL finishedLoading;
 //@property(nonatomic, readonly) BOOL hasMadeChangesSinceLoading;
 @property(nonatomic, readonly) BOOL saving;
-//@property(nonatomic, readonly) BOOL finishedSaving;
+@property(nonatomic, readonly) BOOL finishedSaving;
 
 - (NSArray *)copyChildren;
 
@@ -45,6 +47,8 @@
 
 - (BOOL)loadWithCompletionBlock:(dispatch_block_t)completionBlock;
 - (BOOL)saveWithCompletionBlock:(dispatch_block_t)completionBlock;
+
+- (NSArray *)background_processLoadedChildren:(NSArray *)children;
 
 @end
 
@@ -58,11 +62,12 @@
 
 @optional
 
-//- (NSArray *)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore processAddedChildrenInBackground:(NSArray *)addedItems childrenWereLoaded:(BOOL)loaded;
+- (NSArray *)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore processLoadedChildrenInBackground:(NSArray *)children;
 
-- (NSArray *)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore processAddedChildren:(NSArray *)addedItems childrenWereLoaded:(BOOL)loaded;
+- (void)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore didLoadChildren:(NSArray *)children;
 
 - (void)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore didAddChildren:(NSArray *)addedChildren;
 - (void)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore didRemoveChildren:(NSArray *)removedChildren;
+- (void)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore didReplaceChildren:(NSArray *)replacedChildrenBefore with:(NSArray *)replacedChildrenAfter;
 
 @end

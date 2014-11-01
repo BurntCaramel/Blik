@@ -6,11 +6,10 @@
 //  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
-@import Foundation;
+#import "GLAModel.h"
 #import "GLACollection.h"
 #import "GLAReminder.h"
 #import "GLAArrayEditing.h"
-#import "Mantle/Mantle.h"
 
 
 @protocol GLAProjectEditing <NSObject>
@@ -20,14 +19,14 @@
 @end
 
 
-@interface GLAProject : MTLModel <MTLJSONSerializing>
+@interface GLAProject : GLAModel
 
 // Designated init
-- (instancetype)initWithUUID:(NSUUID *)UUID name:(NSString *)name dateCreated:(NSDate *)dateCreated;
+- (instancetype)initWithName:(NSString *)name dateCreated:(NSDate *)dateCreated;
 
-@property(readonly, nonatomic) NSUUID *UUID;
-@property(readonly, copy, nonatomic) NSString *name;
 @property(readonly, nonatomic) NSDate *dateCreated;
+
+@property(readonly, copy, nonatomic) NSString *name;
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAProjectEditing> editor))editingBlock;
 

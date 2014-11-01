@@ -83,8 +83,6 @@
 		return;
 	}
 	
-	NSLog(@"setUpAllProjectsViewControllerIfNeeded");
-	
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
@@ -139,7 +137,7 @@
 #pragma mark Now Project
 
 - (void)setUpNowProjectViewControllerIfNeeded
-{NSLog(@"setUpNowProjectViewControllerIfNeeded");
+{
 	if (self.nowProjectViewController) {
 		return;
 	}
@@ -151,7 +149,6 @@
 	
 	[projectManager loadNowProject];
 	GLAProject *nowProject = (projectManager.nowProject);
-	NSLog(@"CURRENT NOW PROJECT %@", nowProject);
 	if (nowProject) {
 		(controller.project) = nowProject;
 	}
@@ -241,7 +238,6 @@
 {
 	GLAProjectManager *projectManager = (note.object);
 	GLAProjectsListViewController *allProjectsViewController = (self.allProjectsViewController);
-	NSLog(@"projectManagerAllProjectsDidChangeNotification %@ %@", allProjectsViewController, (projectManager.allProjectsSortedByDateCreatedNewestToOldest));
 	if (allProjectsViewController) {
 		(allProjectsViewController.projects) = (projectManager.allProjectsSortedByDateCreatedNewestToOldest);
 	}
@@ -256,7 +252,6 @@
 {
 	GLAProjectManager *projectManager = (note.object);
 	GLAProjectViewController *nowProjectViewController = (self.nowProjectViewController);
-	NSLog(@"projectManagerNowProjectDidChangeNotification %@", nowProjectViewController);
 	
 	if (nowProjectViewController) {
 		(nowProjectViewController.project) = (projectManager.nowProject);
@@ -737,10 +732,7 @@
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 		(view.hidden) = NO;
 		
-		//NSLog(@"Show running %@", (view.identifier));
-		//NSLog(@"SHOW RUNNING %f %f %@", (leadingConstraint.constant), (leadingConstraint.animator.constant), (leadingConstraint.animations));
 		CGFloat fractionFromDestination = (constraint.constant) / (constraint.animator.constant);
-		//NSLog(@"%f", fractionFromDestination);
 		
 		if (animate) {
 			(context.duration) = fractionFromDestination * [self transitionDurationGoingInForChildView:view];

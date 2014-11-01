@@ -9,11 +9,39 @@
 #import "GLAModel.h"
 
 
+@interface GLAModel ()
+
+@property(readwrite, nonatomic) NSUUID *UUID;
+
+@end
+
 @implementation GLAModel
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey
 {
 	return @{};
+}
+
++ (NSValueTransformer *)UUIDJSONTransformer
+{
+	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
+}
+
+- (instancetype)init
+{
+	self = [super init];
+	if (self) {
+		_UUID = [NSUUID new];
+	}
+	return self;
+}
+
+- (instancetype)duplicate
+{
+	GLAModel *copy = [self copy];
+	(copy.UUID) = [NSUUID new];
+	
+	return copy;
 }
 
 @end
@@ -23,7 +51,7 @@
 
 + (NSString *)objectJSONPasteboardType
 {
-	NSAssert(NO, @"+[GLAModel objectJSONPasteboardType] must be overridden.");
+	NSAssert(NO, @"+[GLAModel objectJSONPasteboardType] must be overridden with e.g. com.yourcompany.class-name.JSONPasteboardType");
 	return nil;
 }
 
@@ -41,7 +69,8 @@
 
 - (instancetype)initWithPasteboardPropertyList:(id)propertyList ofType:(NSString *)type
 {
-	if (![type isEqualToString:[[self class] objectJSONPasteboardType]] || [propertyList isKindOfClass:[NSData class]]) {
+	BOOL isValid = [type isEqualToString:[[self class] objectJSONPasteboardType]] && [propertyList isKindOfClass:[NSData class]];
+	if (!isValid) {
 		return nil;
 	}
 	

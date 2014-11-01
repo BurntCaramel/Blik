@@ -101,7 +101,7 @@
 }
 
 - (void)didChangeCurrentSectionFrom:(GLAMainContentSection *)previousSection to:(GLAMainContentSection *)newSection
-{NSLog(@"NEW SECTION %@", newSection);
+{
 	if ((previousSection.isAllProjects) || (previousSection.isPlannedProjects) || (previousSection.isNow)) {
 		[self hideMainButtons];
 	}
@@ -387,7 +387,7 @@
 	(self.collectionTitleButton) = titleButton;
 	
 
-	(buttonGroup.centerButtonInDuration) = 2.3 / 12.0;
+	(buttonGroup.centerButtonInDuration) = 2.0 / 12.0;
 	(buttonGroup.leadingButtonInDuration) = 2.4 / 12.0;
 	[buttonGroup animateButtonsIn];
 	
@@ -581,11 +581,6 @@
 	return button;
 }
 
-- (void)viewUpdateConstraints:(GLANavigationBar *)view
-{
-	
-}
-
 #pragma mark -
 
 #if 0
@@ -606,14 +601,14 @@
 }
 
 - (void)editCollectionDetailsPopoverChosenColorDidChangeNotification:(NSNotification *)note
-{NSLog(@"editCollectionDetailsPopoverChosenColorDidChangeNotification");
+{
 	GLAEditCollectionDetailsPopover *popover = (note.object);
 	GLACollectionColor *color = (popover.chosenCollectionColor);
 	[self changeColor:color forCollection:(self.collectionWithDetailsBeingEdited)];
 }
 
 - (void)editCollectionDetailsPopupDidCloseNotification:(NSNotification *)note
-{NSLog(@"EC DID CLOSE");
+{
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc removeObserver:self name:nil object:(self.editCollectionPopover)];
 	

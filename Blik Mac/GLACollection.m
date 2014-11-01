@@ -15,7 +15,6 @@
 
 @property(readwrite, copy, nonatomic) NSUUID *projectUUID;
 
-@property(readwrite, nonatomic) NSUUID *UUID;
 @property(readwrite, copy, nonatomic) NSString *name;
 
 @property(readwrite, nonatomic) NSString *type;
@@ -27,6 +26,11 @@
 
 @implementation GLACollection
 
++ (NSString *)objectJSONPasteboardType
+{
+	return @"com.burntcaramel.GLACollection.JSONPasteboardType";
+}
+
 + (NSDictionary *)JSONKeyPathsByPropertyKey
 {
 	return
@@ -35,23 +39,9 @@
 	};
 }
 
-+ (NSValueTransformer *)UUIDJSONTransformer
-{
-	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
-}
-
 + (NSValueTransformer *)projectUUIDJSONTransformer
 {
 	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
-}
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _UUID = [NSUUID new];
-    }
-    return self;
 }
 
 - (NSString *)colorIdentifier
@@ -79,82 +69,6 @@
 	collectionEditingBlock(copy);
 	
 	return copy;
-}
-
-@end
-
-
-@implementation GLACollection (PasteboardSupport)
-
-NSString *GLACollectionJSONPasteboardType = @"com.burntcaramel.GLACollection.JSONPasteboardType";
-
-#pragma mark NSPasteboardReading
-
-+ (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard
-{
-	return @[GLACollectionJSONPasteboardType];
-}
-
-+ (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard
-{
-	return NSPasteboardReadingAsData;
-}
-
-- (instancetype)initWithPasteboardPropertyList:(id)propertyList ofType:(NSString *)type
-{
-	if (![type isEqualToString:GLACollectionJSONPasteboardType] || [propertyList isKindOfClass:[NSData class]]) {
-		return nil;
-	}
-	
-	NSData *jsonData = propertyList;
-	NSError *error = nil;
-	NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
-	if (!jsonDictionary) {
-		return nil;
-	}
-	
-	self = [super initWithDictionary:jsonDictionary error:&error];
-	if (self) {
-		
-	}
-	return self;
-}
-
-#pragma mark NSPasteboardWriting
-
-- (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard
-{
-	return @[GLACollectionJSONPasteboardType];
-}
-
-- (id)pasteboardPropertyListForType:(NSString *)type
-{
-	NSDictionary *selfAsJSON = [MTLJSONAdapter JSONDictionaryFromModel:self];
-	NSError *error = nil;
-	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:selfAsJSON options:0 error:&error];
-	return jsonData;
-}
-
-#pragma mark -
-
-+ (BOOL)canCopyCollectionsFromPasteboard:(NSPasteboard *)pboard
-{
-	NSString *pboardType = [pboard availableTypeFromArray:@[GLACollectionJSONPasteboardType]];
-	if (!pboardType) {
-		return NO;
-	}
-	
-	return YES;
-}
-
-+ (NSArray *)copyCollectionsFromPasteboard:(NSPasteboard *)pboard
-{
-	NSString *pboardType = [pboard availableTypeFromArray:@[GLACollectionJSONPasteboardType]];
-	if (!pboardType) {
-		return nil;
-	}
-	
-	return [pboard readObjectsForClasses:@[[GLACollection class]] options:nil];
 }
 
 @end

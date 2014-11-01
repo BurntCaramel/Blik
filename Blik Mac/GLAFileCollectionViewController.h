@@ -22,6 +22,7 @@
 @property(strong, nonatomic) IBOutlet NSMenu *sourceFilesListContextualMenu;
 
 @property(strong, nonatomic) IBOutlet GLAPopUpButton *openerApplicationsPopUpButton;
+@property(strong, nonatomic) IBOutlet NSTextField *openerApplicationsTextLabel;
 
 @property(nonatomic) IBOutlet GLAViewController *previewHolderViewController;
 @property(nonatomic) IBOutlet NSView *previewHolderView;

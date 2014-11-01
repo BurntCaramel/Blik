@@ -126,27 +126,51 @@
 }
 
 
-- (NSIndexSet *)indexesOfChildrenWhoseKey:(NSString *)key isEqualToValue:(id)value
+- (NSIndexSet *)indexesOfChildrenWhoseKeyPath:(NSString *)keyPath hasValue:(id)value
 {
 	return [(self.mutableChildren) indexesOfObjectsPassingTest:^BOOL(id originalObject, NSUInteger idx, BOOL *stop) {
-		id objectValue = [originalObject valueForKey:key];
+		id objectValue = [originalObject valueForKeyPath:keyPath];
 		BOOL found = (objectValue != nil) && [objectValue isEqual:value];
 		return found;
 	}];
 }
 
-- (BOOL)replaceFirstChildWhoseKey:(NSString *)key isEqualToValue:(id)value withTransformer:(id (^)(id originalObject))objectTransformer
+- (NSIndexSet *)indexesOfChildrenWhoseKeyPath:(NSString *)keyPath hasValueContainedInSet:(NSSet *)valuesSet
 {
-	NSIndexSet *indexes = [self indexesOfChildrenWhoseKey:key isEqualToValue:value];
+	return [(self.mutableChildren) indexesOfObjectsPassingTest:^BOOL(id originalObject, NSUInteger idx, BOOL *stop) {
+		id objectValue = [originalObject valueForKeyPath:keyPath];
+		BOOL found = (objectValue != nil) && [valuesSet containsObject:objectValue];
+		return found;
+	}];
+}
+
+- (NSArray *)filterArray:(NSArray *)objects whoseValuesIsNotPresentForKeyPath:(NSString *)keyPath
+{
+	NSMutableArray *mutableChildren = (self.mutableChildren);
+	// Make a set of the childrens' property.
+	NSSet *objectPropertyValues = [NSSet setWithArray:[mutableChildren valueForKeyPath:keyPath]];
+	//
+	NSIndexSet *indexes = [objects indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+		id objectValue = [obj valueForKeyPath:keyPath];
+		// We want the objects that aren't present.
+		BOOL found = [objectPropertyValues containsObject:objectValue];
+		return !found;
+	}];
+	return [objects objectsAtIndexes:indexes];
+}
+
+- (BOOL)replaceFirstChildWhoseKeyPath:(NSString *)keyPath hasValue:(id)value usingChangeBlock:(id (^)(id originalObject))objectChanger
+{
+	NSIndexSet *indexes = [self indexesOfChildrenWhoseKeyPath:keyPath hasValue:value];
 	
 	if (indexes.count == 0) {
 		return NO;
 	}
 	
 	indexes = [NSIndexSet indexSetWithIndex:(indexes.firstIndex)];
-	
 	NSArray *originalObject = [self childrenAtIndexes:indexes][0];
-	id replacementObject = objectTransformer(originalObject);
+	
+	id replacementObject = objectChanger(originalObject);
 	[self replaceChildrenAtIndexes:indexes withObjects:@[replacementObject]];
 	
 	return YES;

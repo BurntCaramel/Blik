@@ -45,7 +45,12 @@ NSString *const GLADateRFC3339ValueTransformerName = @"GLADateRFC3339ValueTransf
 		
 		
 		MTLValueTransformer *dataBase64ValueTransformer = [MTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSString *base64String) {
-			return [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
+			if (base64String) {
+				return [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
+			}
+			else {
+				return nil;
+			}
 		} reverseBlock:^id(NSData *data) {
 			return [data base64EncodedStringWithOptions:0];
 		}];

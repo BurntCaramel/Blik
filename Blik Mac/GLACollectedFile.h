@@ -6,8 +6,7 @@
 //  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
-#import "MTLModel.h"
-#import "Mantle/Mantle.h"
+#import "GLAModel.h"
 #import "GLACollection.h"
 
 /*
@@ -18,12 +17,11 @@
 @end
 */
 
-@interface GLACollectedFile : MTLModel <MTLJSONSerializing, GLACollectedItem>
+@interface GLACollectedFile : GLAModel <GLACollectedItem>
 
 - (instancetype)initWithFileURL:(NSURL *)URL;
 + (instancetype)collectedFileWithFileURL:(NSURL *)URL;
 
-@property(readonly, nonatomic) NSUUID *UUID;
 @property(readonly, nonatomic) NSURL *URL;
 
 //- (NSOperation *)newOperationToUpdateInformation;

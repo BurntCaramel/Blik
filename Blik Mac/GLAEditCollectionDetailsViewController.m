@@ -63,7 +63,7 @@
 }
 
 - (void)chosenColorDidChange:(NSNotification *)note
-{NSLog(@"chosenColorDidChange:");
+{
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAEditCollectionDetailsViewControllerChosenColorDidChangeNotification object:self userInfo:(note.userInfo)];
 }
 

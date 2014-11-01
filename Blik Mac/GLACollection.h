@@ -6,8 +6,7 @@
 //  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
-@import Foundation;
-#import "Mantle/Mantle.h"
+#import "GLAModel.h"
 @class GLAProject;
 @class GLACollectionColor;
 
@@ -34,11 +33,10 @@ extern NSString *GLACollectionTypeFilesList;
 @end
 
 
-@interface GLACollection : MTLModel <GLACollectedItem, MTLJSONSerializing>
+@interface GLACollection : GLAModel <GLACollectedItem>
 
 @property(readonly, copy, nonatomic) NSUUID *projectUUID;
 
-@property(readonly, nonatomic) NSUUID *UUID;
 @property(readonly, copy, nonatomic) NSString *name;
 
 @property(readonly, nonatomic) NSString *type;
@@ -48,16 +46,6 @@ extern NSString *GLACollectionTypeFilesList;
 + (instancetype)newWithType:(NSString *)collectionType creatingFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock;
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock;
-
-@end
-
-
-@interface GLACollection (PasteboardSupport) <NSPasteboardReading, NSPasteboardWriting>
-
-extern NSString *GLACollectionJSONPasteboardType;
-
-+ (BOOL)canCopyCollectionsFromPasteboard:(NSPasteboard *)pboard;
-+ (NSArray *)copyCollectionsFromPasteboard:(NSPasteboard *)pboard;
 
 @end
 

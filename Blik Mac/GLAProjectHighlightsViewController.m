@@ -9,6 +9,7 @@
 #import "GLAProjectHighlightsViewController.h"
 #import "GLAProjectManager.h"
 #import "GLAUIStyle.h"
+#import "GLAHighlightsTableCellView.h"
 
 
 @interface GLAProjectHighlightsViewController ()
@@ -26,7 +27,10 @@
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	
 	NSTableView *tableView = (self.tableView);
+	(tableView.menu) = (self.contextualMenu);
 	[uiStyle prepareContentTableView:tableView];
+	
+	[tableView registerForDraggedTypes:@[[GLAHighlightedCollection objectJSONPasteboardType], [GLAHighlightedCollectedFile objectJSONPasteboardType]]];
 	
 	NSScrollView *scrollView = (tableView.enclosingScrollView);
 	// I think Apple says this is better for scrolling performance.
@@ -56,7 +60,8 @@
 	
 	if (!isSameProject) {
 		GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-		[projectManager loadHighlightsForProject:project];
+		[projectManager loadCollectionsForProjectIfNeeded:project];
+		[projectManager loadHighlightsForProjectIfNeeded:project];
 	}
 }
 
@@ -88,6 +93,33 @@
 	[nc removeObserver:self name:nil object:[pm notificationObjectForProject:project]];
 }
 
+- (void)startCollectionObserving
+{
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	for (GLAHighlightedItem *highlightedItem in (self.highlightedItems)) {
+		GLACollection *collection = nil;
+		
+		if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+			GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
+			collection = (highlightedCollectedFile.holdingCollection);
+		}
+		
+		if (!collection) {
+			continue;
+		}
+		
+		[nc addObserver:self selector:@selector(collectionDidChangeNotification:) name:GLACollectionDidChangeNotification object:[pm notificationObjectForCollection:collection]];
+	}
+}
+
+- (void)stopCollectionObserving
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc removeObserver:self name:GLACollectionDidChangeNotification object:nil];
+}
+
 - (void)reloadHighlightedItems
 {
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
@@ -99,12 +131,48 @@
 	}
 	(self.highlightedItems) = highlightedItems;
 	
+	[self stopCollectionObserving];
+	[self startCollectionObserving];
+	
 	[(self.tableView) reloadData];
 }
 
 - (void)projectHighlightsDidChangeNotification:(NSNotification *)note
 {
 	[self reloadHighlightedItems];
+}
+
+- (void)collectionDidChangeNotification:(NSNotification *)note
+{
+	[self reloadHighlightedItems];
+}
+
+#pragma mark Actions
+
+- (GLAHighlightedItem *)clickedHighlightedItem
+{
+	NSTableView *tableView = (self.tableView);
+	NSInteger clickedRow = (tableView.clickedRow);
+	if (clickedRow == -1) {
+		return nil;
+	}
+	
+	return (self.highlightedItems)[clickedRow];
+}
+
+- (IBAction)removedClickedItem:(id)sender
+{
+	NSTableView *tableView = (self.tableView);
+	NSInteger clickedRow = (tableView.clickedRow);
+	if (clickedRow == -1) {
+		return;
+	}
+	
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	
+	[projectManager editHighlightsOfProject:(self.project) usingBlock:^(id<GLAArrayEditing> highlightsEditor) {
+		[highlightsEditor removeChildrenAtIndexes:[NSIndexSet indexSetWithIndex:clickedRow]];
+	}];
 }
 
 #pragma mark Table View Data Source
@@ -138,7 +206,7 @@
 	if (operation == NSDragOperationDelete) {
 		GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 		
-		[projectManager editProjectCollections:(self.project) usingBlock:^(id<GLAArrayEditing> collectionsEditor) {
+		[projectManager editCollectionsOfProject:(self.project) usingBlock:^(id<GLAArrayEditing> collectionsEditor) {
 			NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
 			(self.draggedRowIndexes) = nil;
 			
@@ -154,7 +222,7 @@
 	//NSLog(@"proposed row %ld %ld", (long)row, (long)dropOperation);
 	
 	NSPasteboard *pboard = (info.draggingPasteboard);
-	if (![GLAHighlightedItem canCopyObjectsFromPasteboard:pboard]) {
+	if (![GLAHighlightedCollectedFile canCopyObjectsFromPasteboard:pboard]) {
 		return NSDragOperationNone;
 	}
 	
@@ -180,7 +248,7 @@
 - (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation
 {
 	NSPasteboard *pboard = (info.draggingPasteboard);
-	if (![GLAHighlightedItem canCopyObjectsFromPasteboard:pboard]) {
+	if (![GLAHighlightedCollectedFile canCopyObjectsFromPasteboard:pboard]) {
 		return NO;
 	}
 	
@@ -225,22 +293,25 @@
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
+	GLAHighlightsTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	(cellView.canDrawSubviewsIntoLayer) = YES;
 	
 	GLAHighlightedItem *highlightedItem = (self.highlightedItems)[row];
-	NSString *name;
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	NSString *name = @"Loading…";
 	
-	if ([highlightedItem isKindOfClass:[GLAHighlightedCollection class]]) {
-		GLAHighlightedCollection *highlightedCollection = (GLAHighlightedCollection *)highlightedItem;
-		GLACollection *collection = (highlightedCollection.collection);
-		name = (collection.name);
-	}
-	else if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+	if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
 		GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 		GLACollectedFile *collectedFile = (highlightedCollectedFile.collectedFile);
-		NSLog(@"%@ NAME %@", collectedFile, (collectedFile.name));
+		//NSLog(@"%@ NAME %@", collectedFile, (collectedFile.name));
 		name = (collectedFile.name);
+		
+		GLACollectionIndicationButton *collectionIndicationButton = (cellView.collectionIndicationButton);
+		
+		GLACollection *holdingCollection = (highlightedCollectedFile.holdingCollection);
+		holdingCollection = [pm latestVersionOfCollection:holdingCollection];
+		
+		(collectionIndicationButton.collection) = holdingCollection;
 	}
 	else {
 		NSAssert(NO, @"highlightedItem not a valid class.");

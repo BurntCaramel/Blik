@@ -21,6 +21,8 @@
 @property(nonatomic) NSColor *textHighlightColor;
 @property(nonatomic) NSColor *backgroundColor;
 @property(nonatomic) CGFloat backgroundInsetAmount;
+@property(nonatomic) CGFloat backgroundInsetXAmount;
+@property(nonatomic) CGFloat backgroundInsetYAmount;
 @property(nonatomic) CGFloat highlightAmount;
 
 @property(readonly, nonatomic, getter = isOnAndShowsOnState) BOOL onAndShowsOnState;
@@ -37,10 +39,33 @@
 + (NSColor *)textColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button;
 
 + (void)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView;
+
++ (NSRect)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell adjustTitleRect:(NSRect)titleRect;
 + (NSRect)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawTitle:(NSAttributedString *)title withFrame:(NSRect)frame inView:(NSView *)controlView;
 
 @end
 
+/*
+@interface GLAButtonCellStyle : NSObject
+
+@property(nonatomic) CGFloat leftSpacing;
+@property(nonatomic) CGFloat rightSpacing;
+@property(nonatomic) CGFloat verticalOffsetDown;
+
+@property(nonatomic, getter = isAlwaysHighlighted) BOOL alwaysHighlighted;
+
+@property(nonatomic) NSColor *textHighlightColor;
+@property(nonatomic) NSColor *backgroundColor;
+@property(nonatomic) CGFloat backgroundInsetAmount;
+@property(nonatomic) CGFloat highlightAmount;
+
+@property(readonly, nonatomic, getter = isOnAndShowsOnState) BOOL onAndShowsOnState;
+
+@property(nonatomic) BOOL hasPrimaryStyle;
+@property(nonatomic) BOOL hasSecondaryStyle;
+
+@end
+*/
 
 @interface GLAButton : NSButton <GLAButtonStyling>
 
@@ -51,23 +76,6 @@
 
 @interface GLAButtonCell : NSButtonCell <GLAButtonStyling>
 
-@property(nonatomic) CGFloat leftSpacing;
-@property(nonatomic) CGFloat rightSpacing;
-@property(nonatomic) CGFloat verticalOffsetDown;
-
-@property(nonatomic, getter = isAlwaysHighlighted) BOOL alwaysHighlighted;
-
-@property(nonatomic) NSColor *textHighlightColor;
-@property(nonatomic) CGFloat highlightAmount;
-@property(nonatomic) NSColor *backgroundColor;
-@property(nonatomic) CGFloat backgroundInsetAmount;
-
-@property(readonly, nonatomic, getter = isOnAndShowsOnState) BOOL onAndShowsOnState;
-
-@property(nonatomic) BOOL hasPrimaryStyle;
-@property(nonatomic) BOOL hasSecondaryStyle;
-
-@property(readonly, nonatomic) NSColor *textColorForDrawing;
-@property(readonly, nonatomic) NSColor *backgroundColorForDrawing;
+//@property(nonatomic) GLAButtonCellStyle *gla_style;
 
 @end

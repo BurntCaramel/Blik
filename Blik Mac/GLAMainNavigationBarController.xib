@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -36,6 +37,12 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
                             <integer key="value" value="-1"/>
                         </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.leftSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.rightSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="goToToday:" target="-2" id="d4V-Ag-cYM"/>
@@ -54,6 +61,12 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
                             <integer key="value" value="-1"/>
                         </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.leftSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.rightSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="goToAll:" target="-2" id="5Wn-2y-L3z"/>
@@ -69,19 +82,25 @@
                         <font key="font" size="36" name="Avenir-Light"/>
                     </buttonCell>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                        <userDefinedRuntimeAttribute type="number" keyPath="verticalOffsetDown">
                             <integer key="value" value="-5"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="cell.alwaysHighlighted" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="alwaysHighlighted" value="NO"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="addNewProject:" target="-2" id="P9p-bQ-DaO"/>
                     </connections>
                 </button>
                 <button identifier="template" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="WcU-G7-cKy" customClass="GLAButton">
-                    <rect key="frame" x="0.0" y="0.0" width="43" height="43"/>
+                    <rect key="frame" x="0.0" y="0.0" width="43" height="42"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="43" id="wvq-Rs-ptV"/>
+                        <constraint firstAttribute="height" constant="42" id="wvq-Rs-ptV"/>
                     </constraints>
                     <buttonCell key="cell" type="square" title="Back to ..." bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0bt-YE-fFF" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -92,8 +111,17 @@
                             <integer key="value" value="-1"/>
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="cell.hasSecondaryStyle" value="YES"/>
-                        <userDefinedRuntimeAttribute type="number" keyPath="cell.backgroundInsetAmount">
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
                             <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.leftSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.rightSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetYAmount">
+                            <integer key="value" value="9"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </button>
@@ -106,7 +134,7 @@
                 <constraint firstItem="xNl-pT-6vZ" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="ZGD-xQ-RJh"/>
                 <constraint firstItem="WcU-G7-cKy" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="gpz-tb-53A"/>
                 <constraint firstItem="xNl-pT-6vZ" firstAttribute="leading" secondItem="qAd-jv-zj2" secondAttribute="trailing" id="nPk-jH-dn7"/>
-                <constraint firstItem="WcU-G7-cKy" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="rCa-hS-nCn"/>
+                <constraint firstItem="WcU-G7-cKy" firstAttribute="bottom" secondItem="Hz6-mo-xeY" secondAttribute="bottom" id="rCa-hS-nCn"/>
             </constraints>
         </customView>
     </objects>

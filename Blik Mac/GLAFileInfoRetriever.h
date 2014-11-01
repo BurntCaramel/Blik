@@ -12,8 +12,6 @@
 
 @interface GLAFileInfoRetriever : NSObject
 
-//+ (instancetype)sharedFileInfoRetrieverForMainQueue;
-
 @property(weak, nonatomic) id<GLAFileInfoRetrieverDelegate> delegate;
 
 #pragma mark File Properties
@@ -46,11 +44,3 @@
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didRetrieveApplicationURLsToOpenURL:(NSURL *)URL;
 
 @end
-
-/*
- extern NSString *GLAFileInfoRetrieverDidLoadResourceValuesNotification;
- 
- extern NSString *GLAFileInfoRetrieverDidExperienceErrorNotification;
- extern NSString *GLAFileInfoRetrieverDidExperienceErrorNotificationErrorKey;
- extern NSString *GLAFileInfoRetrieverDidExperienceErrorNotificationSelectorKey;
- */

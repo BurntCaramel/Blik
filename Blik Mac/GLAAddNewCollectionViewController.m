@@ -130,7 +130,6 @@
 	GLACollectionColor *color = (self.chosenCollectionColor);
 	
 	GLACollection *collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilesList color:color inProject:project];
-	NSLog(@"CREATED COLLECTION %@", collection);
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAAddNewCollectionViewControllerDidConfirmCreatingNotification object:self userInfo:@{@"collection": collection}];
 }

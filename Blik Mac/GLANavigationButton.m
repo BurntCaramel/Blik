@@ -32,7 +32,7 @@
 	GLANavigationButtonCell *cell = (self.cell);
 	(cell.highlightAmount) = highlightAmount;
 	
-	[self setNeedsDisplayInRect:[cell highlightRectForBounds:[self bounds]]];
+	[self setNeedsDisplayInRect:[cell highlightRectForBounds:(self.bounds)]];
 }
 
 @end

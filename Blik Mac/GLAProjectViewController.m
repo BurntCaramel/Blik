@@ -136,8 +136,6 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	
 	_project = project;
 	
-	NSLog(@"PVC %@", project);
-	
 	if (!isSameProject) {
 		(self.collectionsViewController.project) = project;
 		(self.highlightsViewController.project) = project;
@@ -169,7 +167,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 }
 
 - (IBAction)addNewCollection:(id)sender
-{NSLog(@"addNewCollection:");
+{
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerRequestAddNewCollectionNotification object:self];
 }
 
@@ -330,7 +328,6 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 		
 		// Resize item view to be taller, and animate plan view off.
 		(self.itemsViewHeightConstraintDefaultConstant) = NSHeight(itemsScrollView.frame);
-		NSLog(@"(self.planViewBottomConstraint) %@", (self.planViewBottomConstraint));
 		[projectView removeConstraint:(self.planViewBottomConstraint)];
 		
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {

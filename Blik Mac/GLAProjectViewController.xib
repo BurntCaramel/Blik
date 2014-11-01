@@ -148,7 +148,7 @@
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
-                                            <tableCellView placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="Asp-zL-oFT">
+                                            <tableCellView placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="Asp-zL-oFT" customClass="GLAHighlightsTableCellView">
                                                 <rect key="frame" x="1" y="1" width="297" height="36"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
@@ -160,16 +160,24 @@
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="BTJ-R3-LvA" customClass="GLAToggleButton">
+                                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="BTJ-R3-LvA" customClass="GLACollectionIndicationButton">
                                                         <rect key="frame" x="261" y="0.0" width="16" height="36"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="16" id="iAf-ba-H5t"/>
                                                             <constraint firstAttribute="height" relation="lessThanOrEqual" constant="36" id="m2p-xs-rfK"/>
                                                         </constraints>
-                                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ger-iq-ZxW" customClass="GLAToggleButtonCell">
+                                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ger-iq-ZxW">
                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="diameter">
+                                                                <integer key="value" value="10"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="verticalOffsetDown">
+                                                                <integer key="value" value="2"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
                                                     </button>
                                                 </subviews>
                                                 <constraints>
@@ -180,6 +188,7 @@
                                                     <constraint firstItem="CNu-U7-Yfv" firstAttribute="leading" secondItem="Asp-zL-oFT" secondAttribute="leading" id="r2o-BF-ixs"/>
                                                 </constraints>
                                                 <connections>
+                                                    <outlet property="collectionIndicationButton" destination="BTJ-R3-LvA" id="VrJ-fb-Vev"/>
                                                     <outlet property="textField" destination="CNu-U7-Yfv" id="Obx-XR-DKc"/>
                                                 </connections>
                                             </tableCellView>
@@ -236,6 +245,7 @@
         </viewController>
         <viewController title="Highlights View Controller" id="aDf-pc-aeE" customClass="GLAProjectHighlightsViewController">
             <connections>
+                <outlet property="contextualMenu" destination="Vkd-RN-V0D" id="99Y-nb-wbQ"/>
                 <outlet property="parentViewController" destination="-2" id="kAI-Y6-LNm"/>
                 <outlet property="tableView" destination="qcb-6b-Ekp" id="WeB-DQ-KSM"/>
             </connections>
@@ -243,7 +253,6 @@
         <viewController id="fD5-0A-qdK" customClass="GLAProjectActionsBarController">
             <connections>
                 <outlet property="editItemsButton" destination="UAD-cb-caO" id="9Xe-pe-OcN"/>
-                <outlet property="editPlanButton" destination="OLf-jb-seP" id="b1s-af-Iu9"/>
                 <outlet property="editingItemsView" destination="eQO-U4-biO" id="ryt-9G-9Hu"/>
                 <outlet property="editingPlanView" destination="s2J-94-MlT" id="wOr-Y9-Q9o"/>
                 <outlet property="finishEditingItemsButton" destination="dcZ-cK-qd4" id="evE-un-UNb"/>
@@ -268,32 +277,11 @@
                     </buttonCell>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                            <integer key="value" value="-3"/>
+                            <integer key="value" value="0"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="addNewCollection:" target="-2" id="8Vo-eW-Kmc"/>
-                    </connections>
-                </button>
-                <button placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="OLf-jb-seP" customClass="GLAButton">
-                    <rect key="frame" x="333" y="0.0" width="120" height="30"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="30" id="ZUS-dC-Lli"/>
-                    </constraints>
-                    <buttonCell key="cell" type="square" title="Edit Highlights" bezelStyle="shadowlessSquare" alignment="right" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Bjc-C1-2DG" customClass="GLAButtonCell">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" size="13" name="AvenirNext-Medium"/>
-                    </buttonCell>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="cell.rightSpacing">
-                            <integer key="value" value="8"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                            <integer key="value" value="-2"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <action selector="editPlan:" target="-2" id="oSn-rw-B3J"/>
                     </connections>
                 </button>
                 <popUpButton hidden="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SUp-2J-5hc" customClass="GLAPopUpButton">
@@ -309,27 +297,8 @@
                         </menu>
                     </popUpButtonCell>
                 </popUpButton>
-                <button placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="idT-cZ-Pfb" customClass="GLAButton">
-                    <rect key="frame" x="463" y="0.0" width="37" height="30"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="37" id="Af7-GP-hUj"/>
-                        <constraint firstAttribute="height" constant="30" id="yP4-sE-ydQ"/>
-                    </constraints>
-                    <buttonCell key="cell" type="square" title="+" bezelStyle="shadowlessSquare" alignment="left" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mNU-PF-7mq" customClass="GLAButtonCell">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" size="22" name="AvenirNext-Regular"/>
-                    </buttonCell>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                            <integer key="value" value="-3"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <action selector="editPlan:" target="-2" id="J96-y4-GYL"/>
-                    </connections>
-                </button>
-                <button placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="UAD-cb-caO" customClass="GLAButton">
-                    <rect key="frame" x="47" y="0.0" width="120" height="30"/>
+                <button hidden="YES" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="UAD-cb-caO" customClass="GLAButton">
+                    <rect key="frame" x="37" y="0.0" width="120" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="RyI-AQ-d6Q"/>
                     </constraints>
@@ -342,7 +311,7 @@
                             <integer key="value" value="8"/>
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                            <integer key="value" value="-2"/>
+                            <integer key="value" value="0"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
@@ -351,20 +320,14 @@
                 </button>
             </subviews>
             <constraints>
-                <constraint firstItem="idT-cZ-Pfb" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" id="13N-W5-jns"/>
                 <constraint firstItem="UAD-cb-caO" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" id="3G8-0V-NRb"/>
                 <constraint firstItem="SUp-2J-5hc" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" constant="4" id="8FN-sr-VHl"/>
                 <constraint firstItem="SUp-2J-5hc" firstAttribute="centerY" secondItem="UAD-cb-caO" secondAttribute="centerY" id="Abh-M8-Rw4"/>
                 <constraint firstAttribute="bottom" secondItem="m3I-Co-wZM" secondAttribute="bottom" id="Ari-Y1-C7k"/>
-                <constraint firstAttribute="trailing" secondItem="idT-cZ-Pfb" secondAttribute="trailing" id="BkC-iR-BcR"/>
-                <constraint firstAttribute="bottom" secondItem="idT-cZ-Pfb" secondAttribute="bottom" id="FG1-dM-CWF"/>
                 <constraint firstItem="m3I-Co-wZM" firstAttribute="leading" secondItem="8EB-qb-bNQ" secondAttribute="leading" id="FN7-jj-iJW"/>
-                <constraint firstItem="OLf-jb-seP" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" id="FrT-WX-nf3"/>
-                <constraint firstItem="idT-cZ-Pfb" firstAttribute="leading" secondItem="OLf-jb-seP" secondAttribute="trailing" constant="10" id="Hlt-hs-1N4"/>
-                <constraint firstItem="UAD-cb-caO" firstAttribute="leading" secondItem="m3I-Co-wZM" secondAttribute="trailing" constant="10" id="PaM-vf-s9d"/>
+                <constraint firstItem="UAD-cb-caO" firstAttribute="leading" secondItem="m3I-Co-wZM" secondAttribute="trailing" id="PaM-vf-s9d"/>
                 <constraint firstItem="SUp-2J-5hc" firstAttribute="centerX" secondItem="8EB-qb-bNQ" secondAttribute="centerX" id="Tvc-qy-n0p"/>
                 <constraint firstAttribute="bottom" secondItem="UAD-cb-caO" secondAttribute="bottom" id="XmI-Jc-umb"/>
-                <constraint firstAttribute="bottom" secondItem="OLf-jb-seP" secondAttribute="bottom" id="YxR-fB-v6q"/>
                 <constraint firstItem="m3I-Co-wZM" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" id="zkI-9z-aem"/>
             </constraints>
         </customView>
@@ -409,9 +372,6 @@
                             <integer key="value" value="-2"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
-                    <connections>
-                        <action selector="editPlan:" target="-2" id="Dfg-2Q-hPe"/>
-                    </connections>
                 </button>
             </subviews>
             <constraints>
@@ -483,6 +443,7 @@
                     </connections>
                 </menuItem>
             </items>
+            <point key="canvasLocation" x="424.5" y="159.5"/>
         </menu>
         <customView placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="30" id="xFc-GO-dGI" customClass="GLAView">
             <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
@@ -515,5 +476,16 @@
                 <constraint firstAttribute="trailing" secondItem="zdL-Rb-okh" secondAttribute="trailing" id="lgr-gK-eUq"/>
             </constraints>
         </customView>
+        <menu id="Vkd-RN-V0D">
+            <items>
+                <menuItem title="Remove from List…" id="CCv-nW-cRP">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="removedClickedItem:" target="aDf-pc-aeE" id="KGO-Tx-rSu"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="424" y="250.5"/>
+        </menu>
     </objects>
 </document>

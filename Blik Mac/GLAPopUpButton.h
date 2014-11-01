@@ -7,20 +7,17 @@
 //
 
 @import Cocoa;
+#import "GLAButton.h"
 @class GLAPopUpButtonCell;
 
 
-@interface GLAPopUpButton : NSPopUpButton
+@interface GLAPopUpButton : NSPopUpButton <GLAButtonStyling>
 
 @property (nonatomic) GLAPopUpButtonCell *cell;
-
-@property (nonatomic, getter = isAlwaysHighlighted) BOOL alwaysHighlighted;
 
 @end
 
 
-@interface GLAPopUpButtonCell : NSPopUpButtonCell
-
-@property (nonatomic, getter = isAlwaysHighlighted) BOOL alwaysHighlighted;
+@interface GLAPopUpButtonCell : NSPopUpButtonCell <GLAButtonStyling>
 
 @end

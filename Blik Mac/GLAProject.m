@@ -13,7 +13,6 @@
 
 @interface GLAProject () <GLAProjectEditing>
 
-@property(readwrite, nonatomic) NSUUID *UUID;
 @property(readwrite, copy, nonatomic) NSString *name;
 @property(readwrite, nonatomic) NSDate *dateCreated;
 
@@ -21,19 +20,9 @@
 
 @implementation GLAProject
 
-+ (NSDictionary *)JSONKeyPathsByPropertyKey
++ (NSString *)objectJSONPasteboardType
 {
-	return
-	@{
-	  @"UUID": @"UUID",
-	  @"name": @"name",
-	  @"dateCreated": @"dateCreated"
-	  };
-}
-
-+ (NSValueTransformer *)UUIDJSONTransformer
-{
-	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
+	return @"com.burntcaramel.GLAProject.JSONPasteboardType";
 }
 
 + (NSValueTransformer *)dateCreatedJSONTransformer
@@ -41,19 +30,14 @@
 	return [NSValueTransformer valueTransformerForName:GLADateRFC3339ValueTransformerName];
 }
 
-- (instancetype)initWithUUID:(NSUUID *)UUID name:(NSString *)name dateCreated:(NSDate *)dateCreated
+- (instancetype)initWithName:(NSString *)name dateCreated:(NSDate *)dateCreated
 {
 	self = [super init];
 	if (self) {
-		if (!UUID) {
-			UUID = [NSUUID UUID];
-		}
-		
 		if (!dateCreated) {
 			dateCreated = [NSDate date];
 		}
 		
-		_UUID = UUID;
 		_name = name;
 		_dateCreated = dateCreated;
 	}
@@ -62,7 +46,7 @@
 
 - (instancetype)init
 {
-	return [self initWithUUID:nil name:nil dateCreated:nil];
+	return [self initWithName:nil dateCreated:nil];
 }
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAProjectEditing> editor))editingBlock

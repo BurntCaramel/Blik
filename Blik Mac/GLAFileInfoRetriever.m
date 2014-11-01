@@ -165,7 +165,6 @@
 	// No retain cycle with dispatch_sync, unlike dispatch_async.
 	dispatch_sync((self.inputDispatchQueue), ^{
 		NSMutableSet *requestedResourceKeysSet = (self.URLsToMutableSetOfRequestedResourceKeys)[URL];
-		NSLog(@"requestedResourceKeysSet %@", requestedResourceKeysSet);
 		resourceKeysToLoad = [requestedResourceKeysSet mutableCopy];
 		
 		NSMutableSet *loadingResourceKeys = (self.URLsToMutableSetOfLoadingResourceKeys)[URL];
@@ -194,13 +193,11 @@
 	
 	[self runAsyncInBackground:^(GLAFileInfoRetriever *self) {
 		NSSet *resourceKeysToLoad = [self requestedResourceKeysNeedingLoadingForURL:URL setAreLoading:YES];
-		NSLog(@"resourceKeysToLoad %@", resourceKeysToLoad);
 		if (!resourceKeysToLoad || (resourceKeysToLoad.count) == 0) {
 			return;
 		}
 		
 		NSError *error = nil;
-		NSLog(@"LAODING %@", URL);
 		// This blocks, the whole reason why this is all in a background queue.
 		NSDictionary *loadedResourceValues = [URL resourceValuesForKeys:[resourceKeysToLoad allObjects] error:&error];
 		
@@ -240,7 +237,7 @@
 #pragma mark
 
 - (void)requestResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL
-{NSLog(@"requestResourceValuesForKeys");
+{
 	[self addRequestedResourceKeys:keys forURL:URL];
 	[self loadMissingResourceValuesInBackgroundForURL:URL];
 }

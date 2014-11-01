@@ -16,11 +16,14 @@
 @interface GLAProjectHighlightsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
 
 @property(nonatomic) IBOutlet NSTableView *tableView;
+@property(nonatomic) IBOutlet NSMenu *contextualMenu;
 @property(nonatomic) IBOutlet NSLayoutConstraint *scrollLeadingConstraint;
 
 @property(weak) IBOutlet GLAProjectViewController *parentViewController;
 
 @property(nonatomic) GLAProject *project;
 @property(nonatomic) NSArray *highlightedItems;
+
+- (IBAction)removedClickedItem:(id)sender;
 
 @end

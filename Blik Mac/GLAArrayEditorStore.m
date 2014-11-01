@@ -14,8 +14,11 @@
 
 @property(nonatomic) GLAArrayEditor *arrayEditor;
 
-@property(nonatomic) NSBlockOperation *loadOperation;
-@property(nonatomic) NSBlockOperation *saveOperation;
+@property(nonatomic, readwrite) BOOL loading;
+@property(nonatomic, readwrite) BOOL finishedLoading;
+
+@property(nonatomic, readwrite) BOOL saving;
+@property(nonatomic, readwrite) BOOL finishedSaving;
 
 @end
 
@@ -163,20 +166,23 @@
 
 #pragma mark -
 
-- (NSArray *)processAddedChildren:(NSArray *)children childrenWereLoaded:(BOOL)loaded
+- (NSArray *)background_processLoadedChildren:(NSArray *)children
 {
 	id<GLAArrayEditorStoreDelegate> delegate = (self.delegate);
-	if ((delegate == nil) || ![delegate respondsToSelector:@selector(arrayEditorStore:processAddedChildren:childrenWereLoaded:)]) {
-		return children;
+	if ((delegate != nil) && [delegate respondsToSelector:@selector(arrayEditorStore:processLoadedChildrenInBackground:)]) {
+		children = [delegate arrayEditorStore:self processLoadedChildrenInBackground:children];
+		children = [children copy];
 	}
 	
-	return [delegate arrayEditorStore:self processAddedChildren:children childrenWereLoaded:loaded];
+	return children;
 }
 
 - (void)editUsingBlock:(void (^)(id<GLAArrayEditing> arrayEditor))block handleAddedChildren:(void (^)(NSArray *addedChildren))addedBlock handleRemovedChildren:(void (^)(NSArray *removedChildren))removedBlock handleReplacedChildren:(void (^)(NSArray *originalChildren, NSArray *replacementChildren))replacedBlock
 {
 	GLAArrayEditor *arrayEditor = (self.arrayEditor);
 	NSAssert(arrayEditor != nil, @"Can't edit without having loaded.");
+	
+	id<GLAArrayEditorStoreDelegate> delegate = (self.delegate);
 	
 	GLAArrayEditorChanges *changes = [arrayEditor changesMadeInBlock:block];
 	NSArray *addedChildren = (changes.addedChildren);
@@ -185,19 +191,33 @@
 	NSArray *replacedChildrenAfter = (changes.replacedChildrenAfter);
 	
 	if ((addedChildren.count) > 0) {
-		addedChildren = [self processAddedChildren:addedChildren childrenWereLoaded:NO];
+		if ((delegate != nil) && [delegate respondsToSelector:@selector(arrayEditorStore:didAddChildren:)]) {
+			[delegate arrayEditorStore:self didAddChildren:addedChildren];
+		}
 		
 		if (addedBlock) {
 			addedBlock(addedChildren);
 		}
 	}
 	
-	if ((removedChildren.count) > 0 && (removedBlock != nil)) {
-		removedBlock(removedChildren);
+	if ((removedChildren.count) > 0) {
+		if ((delegate != nil) && [delegate respondsToSelector:@selector(arrayEditorStore:didRemoveChildren:)]) {
+			[delegate arrayEditorStore:self didRemoveChildren:removedChildren];
+		}
+		
+		if (removedBlock) {
+			removedBlock(removedChildren);
+		}
 	}
 	
-	if ((replacedChildrenBefore.count) > 0 && (replacedBlock != nil)) {
-		replacedBlock(replacedChildrenBefore, replacedChildrenAfter);
+	if ((replacedChildrenBefore.count) > 0) {
+		if ((delegate != nil) && [delegate respondsToSelector:@selector(arrayEditorStore:didReplaceChildren:with:)]) {
+			[delegate arrayEditorStore:self didReplaceChildren:replacedChildrenBefore with:replacedChildrenAfter];
+		}
+		
+		if (replacedBlock) {
+			replacedBlock(replacedChildrenBefore, replacedChildrenAfter);
+		}
 	}
 	
 	[self saveWithCompletionBlock:nil];
@@ -207,23 +227,38 @@
 	//[delegate arrayEditorStore:self didRemoveChildren:(changes.removedChildren)];
 }
 
+- (BOOL)needsLoading
+{
+	return !(self.loading) && !(self.finishedLoading);
+}
+
 - (BOOL)loadWithCompletionBlock:(dispatch_block_t)completionBlock
 {
 	if ((self.loading) || (self.saving)) {
 		return NO;
 	}
 	
-	(self.loadOperation) = [self runInBackground:^(GLAArrayEditorStore *store) {
+	(self.loading) = YES;
+	(self.finishedLoading) = NO;
+	[self runInBackground:^(GLAArrayEditorStore *store) {
 		NSArray *loadedChildren = [store background_readModelsOfClass:(store.modelClass) atDictionaryKey:(store.JSONDictionaryKeyForArray) fromJSONFileURL:(store.JSONFileURL)];
 		
 		if (!loadedChildren) {
 			loadedChildren = @[];
 		}
 		
+		NSArray *processedChildren = [store background_processLoadedChildren:loadedChildren];
+		
 		[store runInForeground:^(GLAArrayEditorStore *store) {
-			NSArray *processedChildren = [store processAddedChildren:loadedChildren childrenWereLoaded:YES];
-			
 			(store.arrayEditor) = [[GLAArrayEditor alloc] initWithObjects:processedChildren];
+			
+			id<GLAArrayEditorStoreDelegate> delegate = (self.delegate);
+			if ((delegate != nil) && [delegate respondsToSelector:@selector(arrayEditorStore:didLoadChildren:)]) {
+				[delegate arrayEditorStore:self didLoadChildren:processedChildren];
+			}
+			
+			(store.loading) = NO;
+			(store.finishedLoading) = YES;
 			
 			if (completionBlock) {
 				completionBlock();
@@ -234,16 +269,6 @@
 	return YES;
 }
 
-- (BOOL)loading
-{
-	NSBlockOperation *loadOperation = (self.loadOperation);
-	if (!loadOperation) {
-		return NO;
-	}
-	
-	return (loadOperation.isExecuting);
-}
-
 - (BOOL)saveWithCompletionBlock:(dispatch_block_t)completionBlock
 {
 	if ((self.loading) || (self.saving)) {
@@ -252,7 +277,9 @@
 	
 	NSArray *array = [self copyChildren];
 	
-	(self.saveOperation) = [self runInBackground:^(GLAArrayEditorStore *store) {
+	(self.saving) = YES;
+	(self.finishedSaving) = NO;
+	[self runInBackground:^(GLAArrayEditorStore *store) {
 		NSArray *JSONArray = [MTLJSONAdapter JSONArrayFromModels:array];
 		NSString *JSONKey = (self.JSONDictionaryKeyForArray);
 		
@@ -264,6 +291,9 @@
 		[store background_writeJSONDictionary:JSONDictionary toFileURL:(self.JSONFileURL)];
 		
 		[store runInForeground:^(GLAArrayEditorStore *store) {
+			(self.saving) = NO;
+			(self.finishedSaving) = YES;
+			
 			if (completionBlock) {
 				completionBlock();
 			}
@@ -271,16 +301,6 @@
 	}];
 	
 	return YES;
-}
-
-- (BOOL)saving
-{
-	NSBlockOperation *saveOperation = (self.saveOperation);
-	if (!saveOperation) {
-		return NO;
-	}
-	
-	return (saveOperation.isExecuting);
 }
 
 @end

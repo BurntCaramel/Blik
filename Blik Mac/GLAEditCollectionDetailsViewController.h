@@ -7,6 +7,7 @@
 //
 
 #import "GLAViewController.h"
+#import "GLAView.h"
 #import "GLACollection.h"
 #import "GLACollectionColorPickerViewController.h"
 #import "GLATextField.h"

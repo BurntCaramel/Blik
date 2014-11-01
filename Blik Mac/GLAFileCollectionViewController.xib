@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="contextualMenu" destination="JOI-as-pHF" id="bXO-xT-2Sa"/>
                 <outlet property="openerApplicationsPopUpButton" destination="jMc-nP-hVX" id="0jn-hq-TEq"/>
+                <outlet property="openerApplicationsTextLabel" destination="zgF-es-4hh" id="yzZ-kZ-8x6"/>
                 <outlet property="previewHolderView" destination="6AY-TK-2zL" id="7Nm-7C-IYh"/>
                 <outlet property="sourceFilesListContextualMenu" destination="JOI-as-pHF" id="iGc-jX-Z2G"/>
                 <outlet property="sourceFilesListTableView" destination="c1y-ic-1X0" id="goW-cZ-wXb"/>
@@ -29,7 +30,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <scrollView verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="tfH-M0-yVk">
-                                    <rect key="frame" x="0.0" y="32" width="171" height="240"/>
+                                    <rect key="frame" x="0.0" y="40" width="171" height="232"/>
                                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Njf-Kp-haE">
                                         <rect key="frame" x="0.0" y="0.0" width="171" height="240"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -106,9 +107,9 @@
                                     </scroller>
                                 </scrollView>
                                 <button identifier="template" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="nP5-Bs-Exh" customClass="GLAButton">
-                                    <rect key="frame" x="0.0" y="0.0" width="171" height="32"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="171" height="40"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="32" id="gBf-ry-0vu"/>
+                                        <constraint firstAttribute="height" constant="40" id="gBf-ry-0vu"/>
                                     </constraints>
                                     <buttonCell key="cell" type="square" title="Choose File Or Folder" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="g8u-or-1o2" customClass="GLAButtonCell">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -116,9 +117,15 @@
                                     </buttonCell>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                                            <integer key="value" value="-2"/>
+                                            <integer key="value" value="-1"/>
                                         </userDefinedRuntimeAttribute>
-                                        <userDefinedRuntimeAttribute type="boolean" keyPath="cell.alwaysHighlighted" value="NO"/>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                                            <integer key="value" value="8"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetYAmount">
+                                            <integer key="value" value="8"/>
+                                        </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
                                     <connections>
                                         <action selector="chooseFilesToAdd:" target="-2" id="HeQ-yt-2yG"/>
@@ -141,13 +148,17 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <subviews>
                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="6AY-TK-2zL">
-                                    <rect key="frame" x="0.0" y="0.0" width="308" height="245"/>
+                                    <rect key="frame" x="0.0" y="27" width="308" height="245"/>
                                 </customView>
                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="H9V-ZF-W4B">
-                                    <rect key="frame" x="0.0" y="245" width="308" height="27"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="308" height="27"/>
                                     <subviews>
-                                        <popUpButton misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jMc-nP-hVX" customClass="GLAPopUpButton">
-                                            <rect key="frame" x="20" y="3" width="268" height="4"/>
+                                        <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="jMc-nP-hVX" customClass="GLAPopUpButton">
+                                            <rect key="frame" x="248" y="4" width="40" height="20"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="3SW-Y6-OyY"/>
+                                                <constraint firstAttribute="width" constant="40" id="qJr-Wm-CnT"/>
+                                            </constraints>
                                             <popUpButtonCell key="cell" type="roundTextured" title="Item 1" bezelStyle="texturedRounded" imagePosition="only" alignment="left" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" selectedItem="yNj-Td-Ih0" id="BfJ-wi-eZT" customClass="GLAPopUpButtonCell">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -159,11 +170,29 @@
                                                     </items>
                                                 </menu>
                                             </popUpButtonCell>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                                                    <integer key="value" value="4"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
                                         </popUpButton>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zgF-es-4hh">
+                                            <rect key="frame" x="122" y="4" width="124" height="23"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="tBu-ym-vsV"/>
+                                            </constraints>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Open in:" id="L6g-CK-B1w">
+                                                <font key="font" size="13" name="AvenirNext-MediumItalic"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="zgF-es-4hh" firstAttribute="centerY" secondItem="jMc-nP-hVX" secondAttribute="centerY" constant="-2" id="94c-gD-tar"/>
                                         <constraint firstAttribute="height" constant="27" id="D3Y-e5-MYs"/>
-                                        <constraint firstItem="jMc-nP-hVX" firstAttribute="leading" secondItem="H9V-ZF-W4B" secondAttribute="leading" constant="20" id="fqF-em-uzH"/>
+                                        <constraint firstItem="jMc-nP-hVX" firstAttribute="leading" secondItem="zgF-es-4hh" secondAttribute="trailing" constant="4" id="QTm-Ie-yM7"/>
                                         <constraint firstAttribute="centerY" secondItem="jMc-nP-hVX" secondAttribute="centerY" id="pUN-Zj-sFW"/>
                                         <constraint firstAttribute="trailing" secondItem="jMc-nP-hVX" secondAttribute="trailing" constant="20" id="xgy-uw-1Nh"/>
                                     </constraints>
@@ -172,10 +201,10 @@
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="H9V-ZF-W4B" secondAttribute="trailing" id="39x-4q-eb6"/>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="5jA-Ie-OV8"/>
+                                <constraint firstAttribute="bottom" secondItem="H9V-ZF-W4B" secondAttribute="bottom" id="6eY-Ex-Mbm"/>
                                 <constraint firstItem="6AY-TK-2zL" firstAttribute="leading" secondItem="3CV-3s-0jt" secondAttribute="leading" id="OPx-H5-yjH"/>
-                                <constraint firstItem="H9V-ZF-W4B" firstAttribute="top" secondItem="3CV-3s-0jt" secondAttribute="top" id="QZ9-uu-Abp"/>
-                                <constraint firstAttribute="bottom" secondItem="6AY-TK-2zL" secondAttribute="bottom" id="hCb-ah-HUt"/>
-                                <constraint firstItem="6AY-TK-2zL" firstAttribute="top" secondItem="H9V-ZF-W4B" secondAttribute="bottom" id="qsE-nX-XbN"/>
+                                <constraint firstItem="H9V-ZF-W4B" firstAttribute="top" secondItem="6AY-TK-2zL" secondAttribute="bottom" id="U1c-Cr-wr2"/>
+                                <constraint firstItem="6AY-TK-2zL" firstAttribute="top" secondItem="3CV-3s-0jt" secondAttribute="top" id="ZfE-40-fCK"/>
                                 <constraint firstItem="H9V-ZF-W4B" firstAttribute="leading" secondItem="3CV-3s-0jt" secondAttribute="leading" id="r4o-eS-Mx6"/>
                                 <constraint firstAttribute="trailing" secondItem="6AY-TK-2zL" secondAttribute="trailing" id="uzo-gS-0PH"/>
                             </constraints>

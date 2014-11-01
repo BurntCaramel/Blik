@@ -32,6 +32,29 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	[self stopProjectObserving];
 }
 
+- (void)prepareView
+{
+	[super prepareView];
+	
+	NSTableView *tableView = (self.tableView);
+	[[GLAUIStyle activeStyle] prepareContentTableView:tableView];
+	
+	(tableView.target) = self;
+	(tableView.action) = @selector(tableViewWasClicked:);
+	
+	(tableView.menu) = (self.contextualMenu);
+	
+	[tableView registerForDraggedTypes:@[[GLACollection objectJSONPasteboardType]]];
+	
+	// I think Apple (from a WWDC video) says this is better for scrolling performance.
+	(tableView.enclosingScrollView.wantsLayer) = YES;
+	
+	[self wrapScrollView];
+	[self setUpEditingActionsView];
+	
+	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
+}
+
 @synthesize project = _project;
 
 - (void)setProject:(GLAProject *)project
@@ -50,7 +73,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 		
 	if (!isSameProject) {
 		GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-		[projectManager loadCollectionsForProject:project];
+		[projectManager loadCollectionsForProjectIfNeeded:project];
 	}
 }
 
@@ -66,29 +89,6 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	(self.collections) = collections;
 	
 	[(self.tableView) reloadData];
-}
-
-- (void)prepareView
-{
-	[super prepareView];
-	
-	NSTableView *tableView = (self.tableView);
-	[[GLAUIStyle activeStyle] prepareContentTableView:tableView];
-	
-	(tableView.target) = self;
-	(tableView.action) = @selector(tableViewWasClicked:);
-	
-	(tableView.menu) = (self.contextualMenu);
-	
-	[tableView registerForDraggedTypes:@[GLACollectionJSONPasteboardType]];
-	
-	// I think Apple (from a WWDC video) says this is better for scrolling performance.
-	(tableView.enclosingScrollView.wantsLayer) = YES;
-	
-	[self wrapScrollView];
-	[self setUpEditingActionsView];
-	
-	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
 }
 
 - (void)startProjectObserving
@@ -227,7 +227,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 }
 
 - (void)changeColor:(GLACollectionColor *)color forCollection:(GLACollection *)collection
-{NSLog(@"CHANGE COLOR FROM VC");
+{
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	
 	[projectManager changeColorOfCollection:collection inProject:(self.project) toColor:color];
@@ -250,14 +250,14 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 }
 
 - (void)editCollectionDetailsPopoverChosenColorDidChangeNotification:(NSNotification *)note
-{NSLog(@"editCollectionDetailsPopoverChosenColorDidChangeNotification");
+{
 	GLAEditCollectionDetailsPopover *popover = (note.object);
 	GLACollectionColor *color = (popover.chosenCollectionColor);
 	[self changeColor:color forCollection:(self.collectionWithDetailsBeingEdited)];
 }
 
 - (void)editCollectionDetailsPopupDidCloseNotification:(NSNotification *)note
-{NSLog(@"EC DID CLOSE");
+{
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc removeObserver:self name:nil object:(self.editCollectionPopover)];
 	
@@ -304,7 +304,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 }
 
 - (void)collectionColorPickerPopupDidCloseNotification:(NSNotification *)note
-{NSLog(@"COLOR POPUP CLOSE");
+{
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc removeObserver:self name:nil object:(self.colorPickerPopover)];
 	
@@ -442,7 +442,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	if (operation == NSDragOperationDelete) {
 		GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 		
-		[projectManager editProjectCollections:(self.project) usingBlock:^(id<GLAArrayEditing> collectionsEditor) {
+		[projectManager editCollectionsOfProject:(self.project) usingBlock:^(id<GLAArrayEditing> collectionsEditor) {
 			NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
 			(self.draggedRowIndexes) = nil;
 			
@@ -458,7 +458,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	//NSLog(@"proposed row %ld %ld", (long)row, (long)dropOperation);
 	
 	NSPasteboard *pboard = (info.draggingPasteboard);
-	if (![GLACollection canCopyCollectionsFromPasteboard:pboard]) {
+	if (![GLACollection canCopyObjectsFromPasteboard:pboard]) {
 		return NSDragOperationNone;
 	}
 	
@@ -484,7 +484,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 - (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation
 {
 	NSPasteboard *pboard = (info.draggingPasteboard);
-	if (![GLACollection canCopyCollectionsFromPasteboard:pboard]) {
+	if (![GLACollection canCopyObjectsFromPasteboard:pboard]) {
 		return NO;
 	}
 	
@@ -494,7 +494,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
 	(self.draggedRowIndexes) = nil;
 	
-	[projectManager editProjectCollections:(self.project) usingBlock:^(id<GLAArrayEditing> collectionsEditor) {
+	[projectManager editCollectionsOfProject:(self.project) usingBlock:^(id<GLAArrayEditing> collectionsEditor) {
 		NSDragOperation sourceOperation = (info.draggingSourceOperationMask);
 		if (sourceOperation & NSDragOperationMove) {
 			// The row index is the final destination, so reduce it by the number of rows being moved before it.

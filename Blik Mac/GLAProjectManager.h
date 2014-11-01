@@ -54,14 +54,14 @@
 
 #pragma mark Collections
 
-- (void)loadCollectionsForProject:(GLAProject *)project;
+- (void)loadCollectionsForProjectIfNeeded:(GLAProject *)project;
 - (NSArray *)copyCollectionsForProject:(GLAProject *)project;
 
-- (NSUUID *)projectUUIDHoldingCollectionWithUUID:(NSUUID *)collectionUUID;
-- (GLAProject *)projectHoldingCollection:(Collection *)collection;
-- (GLACollection *)canonicalCollectionForCollection:(GLACollection *)collection;
+//- (NSUUID *)projectUUIDHoldingCollectionWithUUID:(NSUUID *)collectionUUID;
+//- (GLAProject *)projectHoldingCollection:(Collection *)collection;
+- (GLACollection *)latestVersionOfCollection:(GLACollection *)collection;
 
-- (BOOL)editProjectCollections:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionListEditor))block;
+- (BOOL)editCollectionsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionListEditor))block;
 //- (id<GLAProjectEditing>)editProject:(GLAProject *)project;
 
 - (GLACollection *)createNewCollectionWithName:(NSString *)name type:(NSString *)type color:(GLACollectionColor *)color inProject:(GLAProject *)project;
@@ -75,7 +75,7 @@
 
 #pragma mark Highlights
 
-- (void)loadHighlightsForProject:(GLAProject *)project;
+- (void)loadHighlightsForProjectIfNeeded:(GLAProject *)project;
 - (NSArray /* GLAHighlightedItem */ *)copyHighlightsForProject:(GLAProject *)project;
 
 - (BOOL)editHighlightsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> highlightsEditor))block;
@@ -108,7 +108,7 @@
 
 - (void)filesListForCollectionDidChange:(GLACollection *)collection; // Added, removed, reordered
 
-- (void)collectionDidChange:(GLACollection *)collection insideProject:(GLAProject *)project; // Renamed, color changed, content changed.
+- (void)collectionDidChange:(GLACollection *)collection; // Renamed, color changed, content changed.
 
 //- (void)reminderDidChange:(GLACollection *)collection insideProject:(GLAProject *)project;
 
@@ -131,6 +131,7 @@ extern NSString *GLAProjectCollectionsDidChangeNotification;
 extern NSString *GLAProjectHighlightsDidChangeNotification;
 
 // Object: GLACollection
+extern NSString *GLACollectionDidChangeNotification;
 extern NSString *GLACollectionFilesListDidChangeNotification;
 
 //extern NSString *GLAProjectManagerProjectRemindersDidChangeNotification;

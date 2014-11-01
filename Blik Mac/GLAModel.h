@@ -7,16 +7,19 @@
 //
 
 #import "Mantle/Mantle.h"
+#import "NSValueTransformer+GLAModel.h"
 
 
 @interface GLAModel : MTLModel <MTLJSONSerializing>
+
+@property(readonly, nonatomic) NSUUID *UUID;
+
+- (instancetype)duplicate;
 
 @end
 
 
 @interface GLAModel (PasteboardSupport) <NSPasteboardReading, NSPasteboardWriting>
-
-//extern NSString *GLACollectionJSONPasteboardType;
 
 + (NSString *)objectJSONPasteboardType;
 

@@ -34,7 +34,7 @@
 {
 	if ([key isEqualToString:@"highlightAmount"]) {
 		CABasicAnimation *animation = [CABasicAnimation animation];
-		(animation.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+		(animation.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
 		return animation;
 	}
 	else {
