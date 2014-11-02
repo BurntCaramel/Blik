@@ -59,10 +59,9 @@
 
 //- (NSUUID *)projectUUIDHoldingCollectionWithUUID:(NSUUID *)collectionUUID;
 //- (GLAProject *)projectHoldingCollection:(Collection *)collection;
-- (GLACollection *)latestVersionOfCollection:(GLACollection *)collection;
+- (GLACollection *)collectionWithUUID:(NSUUID *)collectionUUID;
 
 - (BOOL)editCollectionsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionListEditor))block;
-//- (id<GLAProjectEditing>)editProject:(GLAProject *)project;
 
 - (GLACollection *)createNewCollectionWithName:(NSString *)name type:(NSString *)type color:(GLACollectionColor *)color inProject:(GLAProject *)project;
 
@@ -84,8 +83,10 @@
 
 #pragma mark Collection Files List
 
-- (void)loadFilesListForCollection:(GLACollection *)filesListCollection;
+- (BOOL)hasLoadedFilesForCollection:(GLACollection *)filesListCollection;
+- (void)loadFilesListForCollectionIfNeeded:(GLACollection *)filesListCollection;
 - (NSArray *)copyFilesListForCollection:(GLACollection *)filesListCollection;
+- (GLACollectedFile *)collectedFileWithUUID:(NSUUID *)collectionUUID insideCollection:(GLACollection *)filesListCollection;
 
 - (BOOL)editFilesListOfCollection:(GLACollection *)filesListCollection usingBlock:(void (^)(id<GLAArrayEditing> filesListEditor))block;
 
@@ -100,22 +101,12 @@
 - (void)requestSaveCollectionsForProject:(GLAProject *)project;
 - (void)requestSaveFilesListForCollections:(GLACollection *)filesListCollection;
 
-#pragma mark Project Changes
-
-- (void)collectionListForProjectDidChange:(GLAProject *)project; // Added, removed, reordered
-
-- (void)projectRemindersListDidChange:(GLAProject *)project; // Added, removed
-
-- (void)filesListForCollectionDidChange:(GLACollection *)collection; // Added, removed, reordered
-
-- (void)collectionDidChange:(GLACollection *)collection; // Renamed, color changed, content changed.
-
-//- (void)reminderDidChange:(GLACollection *)collection insideProject:(GLAProject *)project;
-
 #pragma mark Notifications
 
 - (id)notificationObjectForProject:(GLAProject *)project;
+- (id)notificationObjectForProjectUUID:(NSUUID *)projectUUID;
 - (id)notificationObjectForCollection:(GLACollection *)collection;
+- (id)notificationObjectForCollectionUUID:(NSUUID *)collectionUUID;
 
 //- (void)addObserver:(id)observer selector:(SEL)aSelector name:(NSString *)aName project:(GLAProject *)project;
 

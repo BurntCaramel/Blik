@@ -236,7 +236,9 @@
 {
 	CGRect topBarRect = [self rectOfActiveHighlightForBounds:bounds time:t];
 	
-	//color = [color colorWithAlphaComponent:t * (color.alphaComponent)];
+    CGFloat alphaFraction = 0.8 + t * 0.2;
+	color = [color colorWithAlphaComponent:alphaFraction * (color.alphaComponent)];
+    
 	[color setFill];
 	
 	NSRectFill(topBarRect);

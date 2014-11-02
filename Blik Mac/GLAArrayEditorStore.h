@@ -42,6 +42,7 @@
 @property(nonatomic, readonly) BOOL finishedSaving;
 
 - (NSArray *)copyChildren;
+- (id<GLAArrayInspecting>)inspectArray;
 
 - (void)editUsingBlock:(void (^)(id<GLAArrayEditing> arrayEditor))block handleAddedChildren:(void (^)(NSArray *addedChildren))addedBlock handleRemovedChildren:(void (^)(NSArray *removedChildren))removedBlock handleReplacedChildren:(void (^)(NSArray *originalChildren, NSArray *replacementChildren))replacedBlock;
 

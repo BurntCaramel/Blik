@@ -27,7 +27,7 @@
 
 @property(readonly, nonatomic) GLACollection *collection;
 
-+ (instancetype)newCreatingFromEditing:(void(^)(id<GLAHighlightedCollectionEditing> editor))editingBlock;
++ (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedCollectionEditing> editor))editingBlock;
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedCollectionEditing>editor))editingBlock;
 
@@ -37,23 +37,22 @@
 
 @protocol GLAHighlightedCollectedFileEditing <NSObject>
 
-@property(readwrite, nonatomic) GLACollectedFile *collectedFile;
-@property(readwrite, nonatomic) GLACollection *holdingCollection;
+@property(readwrite, nonatomic) NSUUID *holdingCollectionUUID;
+@property(readwrite, nonatomic) NSUUID *collectedFileUUID;
 
 @property(readwrite, nonatomic) GLACollectedFile *applicationToOpenFile;
-
 
 @end
 
 @interface GLAHighlightedCollectedFile : GLAHighlightedItem
 
-@property(readonly, nonatomic) GLACollectedFile *collectedFile;
-@property(readonly, nonatomic) GLACollection *holdingCollection;
+@property(readonly, nonatomic) NSUUID *holdingCollectionUUID;
+@property(readonly, nonatomic) NSUUID *collectedFileUUID;
 
 @property(readonly, nonatomic) GLACollectedFile *applicationToOpenFile;
 
-+ (instancetype)newCreatingFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock;
++ (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock;
 
-- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing>editor))editingBlock;
+- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock;
 
 @end

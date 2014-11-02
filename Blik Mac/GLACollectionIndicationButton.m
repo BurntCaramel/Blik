@@ -43,7 +43,7 @@
 	
 	_collection = collection;
 	
-	[self setNeedsDisplay:YES];
+	(self.needsDisplay) = YES;
 }
 
 - (NSColor *)colorForDrawing
@@ -64,7 +64,7 @@
 	}
 	
 	NSColor *color = (self.colorForDrawing);
-	
+	NSLog(@"COLLECTION INDICATION %@", color);
 	if (color) {
 		(dotLayer.backgroundColor) = (color.CGColor);
 	}

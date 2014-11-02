@@ -99,18 +99,19 @@
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
 	for (GLAHighlightedItem *highlightedItem in (self.highlightedItems)) {
-		GLACollection *collection = nil;
+		NSUUID *collectionUUID = nil;
 		
 		if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
 			GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
-			collection = (highlightedCollectedFile.holdingCollection);
+			collectionUUID = (highlightedCollectedFile.holdingCollectionUUID);
 		}
 		
-		if (!collection) {
+		if (!collectionUUID) {
 			continue;
 		}
 		
-		[nc addObserver:self selector:@selector(collectionDidChangeNotification:) name:GLACollectionDidChangeNotification object:[pm notificationObjectForCollection:collection]];
+		[nc addObserver:self selector:@selector(collectionDidChangeNotification:) name:GLACollectionDidChangeNotification object:[pm notificationObjectForCollectionUUID:collectionUUID]];
+		[nc addObserver:self selector:@selector(collectionDidChangeNotification:) name:GLACollectionFilesListDidChangeNotification object:[pm notificationObjectForCollectionUUID:collectionUUID]];
 	}
 }
 
@@ -302,22 +303,31 @@
 	
 	if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
 		GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
-		GLACollectedFile *collectedFile = (highlightedCollectedFile.collectedFile);
-		//NSLog(@"%@ NAME %@", collectedFile, (collectedFile.name));
-		name = (collectedFile.name);
+		
+		NSUUID *holdingCollectionUUID = (highlightedCollectedFile.holdingCollectionUUID);
+		GLACollection *holdingCollection = [pm collectionWithUUID:holdingCollectionUUID];
+		
+		if (holdingCollection) {
+			BOOL hasLoadedFilesList = [pm hasLoadedFilesForCollection:holdingCollection];
+			if (hasLoadedFilesList) {
+				NSUUID *collectedFileUUID = (highlightedCollectedFile.collectedFileUUID);
+				GLACollectedFile *collectedFile = [pm collectedFileWithUUID:collectedFileUUID insideCollection:holdingCollection];
+				
+				if (collectedFile) {
+					name = (collectedFile.name);
+				}
+			}
+			else {
+				[pm loadFilesListForCollectionIfNeeded:holdingCollection];
+			}
+		}
 		
 		GLACollectionIndicationButton *collectionIndicationButton = (cellView.collectionIndicationButton);
-		
-		GLACollection *holdingCollection = (highlightedCollectedFile.holdingCollection);
-		holdingCollection = [pm latestVersionOfCollection:holdingCollection];
-		
 		(collectionIndicationButton.collection) = holdingCollection;
 	}
 	else {
 		NSAssert(NO, @"highlightedItem not a valid class.");
 	}
-	
-	NSLog(@"HIGHLIGHTED ITEM %@", highlightedItem);
 	
 	(cellView.objectValue) = highlightedItem;
 	

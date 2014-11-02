@@ -72,17 +72,19 @@
 - (void)requestCollectionsForProject:(GLAProject *)project;
 - (GLAArrayEditorStore *)collectionsEditorStoreForProject:(GLAProject *)project;
 - (NSArray *)copyCollectionsForProject:(GLAProject *)project;
-- (GLACollection *)latestVersionOfCollection:(GLACollection *)collection;
+- (GLACollection *)collectionWithUUID:(NSUUID *)collectionUUID;
 
 - (void)requestSaveCollectionsForProject:(GLAProject *)project;
 
 #pragma mark Collection Files List
 
+- (BOOL)hasLoadedFilesForCollection:(GLACollection *)filesListCollection;
 - (void)requestFilesListForCollection:(GLACollection *)filesListCollection;
 
 - (GLAArrayEditorStore *)filesListEditorStoreForCollection:(GLACollection *)filesListCollection;
 
 - (NSArray *)copyFilesListForCollection:(GLACollection *)filesListCollection;
+- (GLACollectedFile *)collectedFileWithUUID:(NSUUID *)collectionUUID insideCollection:(GLACollection *)filesListCollection;
 
 - (void)requestSaveFilesListForCollection:(GLACollection *)filesListCollection;
 
@@ -264,10 +266,10 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	return [(self.store) copyCollectionsForProject:project];
 }
 
-- (GLACollection *)latestVersionOfCollection:(GLACollection *)collection
+- (GLACollection *)collectionWithUUID:(NSUUID *)collectionUUID
 {
-	NSAssert(collection != nil, @"Collection must not be nil.");
-	return [(self.store) latestVersionOfCollection:collection];
+	NSAssert(collectionUUID != nil, @"Collection UUID must not be nil.");
+	return [(self.store) collectionWithUUID:collectionUUID];
 }
 
 - (BOOL)editCollectionsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionsEditor))block
@@ -379,7 +381,13 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 #pragma mark Collection Files List
 
-- (void)loadFilesListForCollection:(GLACollection *)filesListCollection
+- (BOOL)hasLoadedFilesForCollection:(GLACollection *)filesListCollection
+{
+	NSAssert(filesListCollection != nil, @"Collection must not be nil.");
+	return [(self.store) hasLoadedFilesForCollection:filesListCollection];
+}
+
+- (void)loadFilesListForCollectionIfNeeded:(GLACollection *)filesListCollection
 {
 	NSAssert(filesListCollection != nil, @"Collection must not be nil.");
 	[(self.store) requestFilesListForCollection:filesListCollection];
@@ -389,6 +397,13 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 {
 	NSAssert(filesListCollection != nil, @"Collection must not be nil.");
 	return [(self.store) copyFilesListForCollection:filesListCollection];
+}
+
+- (GLACollectedFile *)collectedFileWithUUID:(NSUUID *)collectedFileUUID insideCollection:(GLACollection *)filesListCollection
+{
+	NSAssert(collectedFileUUID != nil, @"Collected file UUID must not be nil.");
+	NSAssert(filesListCollection != nil, @"Collection must not be nil.");
+	return [(self.store) collectedFileWithUUID:collectedFileUUID insideCollection:filesListCollection];
 }
 
 - (BOOL)editFilesListOfCollection:(GLACollection *)filesListCollection usingBlock:(void (^)(id<GLAArrayEditing> filesListEditor))block
@@ -455,14 +470,18 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (id)notificationObjectForProject:(GLAProject *)project
 {
-	NSAssert(project != nil, @"Passed project must not be nil.");
+	return [self notificationObjectForProjectUUID:(project.UUID)];
+}
+
+- (id)notificationObjectForProjectUUID:(NSUUID *)projectUUID
+{
+	NSAssert(projectUUID != nil, @"Passed project UUID must not be nil.");
 	
 	NSMutableDictionary *notificationRepresenters = (self.projectUUIDNotificationRepresenters);
 	if (!notificationRepresenters) {
 		notificationRepresenters = (self.projectUUIDNotificationRepresenters) = [NSMutableDictionary new];
 	}
 	
-	NSUUID *projectUUID = (project.UUID);
 	GLAObjectNotificationRepresenter *representer = notificationRepresenters[projectUUID];
 	
 	if (!representer) {
@@ -474,14 +493,18 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (id)notificationObjectForCollection:(GLACollection *)collection
 {
-	NSAssert(collection != nil, @"Passed collection must not be nil.");
+	return [self notificationObjectForCollectionUUID:(collection.UUID)];
+}
+
+- (id)notificationObjectForCollectionUUID:(NSUUID *)collectionUUID
+{
+	NSAssert(collectionUUID != nil, @"Passed collection UUID must not be nil.");
 	
 	NSMutableDictionary *notificationRepresenters = (self.collectionUUIDNotificationRepresenters);
 	if (!notificationRepresenters) {
 		notificationRepresenters = (self.collectionUUIDNotificationRepresenters) = [NSMutableDictionary new];
 	}
 	
-	NSUUID *collectionUUID = (collection.UUID);
 	GLAObjectNotificationRepresenter *representer = notificationRepresenters[collectionUUID];
 	
 	if (!representer) {
@@ -525,7 +548,6 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (void)collectionDidChange:(GLACollection *)collection
 {
-	collection = [self latestVersionOfCollection:collection];
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLACollectionDidChangeNotification object:[self notificationObjectForCollection:collection]];
 }
 
@@ -1180,10 +1202,10 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	}
 }
 
-- (GLACollection *)latestVersionOfCollection:(GLACollection *)collection
+- (GLACollection *)collectionWithUUID:(NSUUID *)collectionUUID
 {
 	GLAModelUUIDMap *collectionUUIDMap = (self.collectionUUIDMap);
-	return (GLACollection *)[collectionUUIDMap objectWithUUID:(collection.UUID)];
+	return (GLACollection *)[collectionUUIDMap objectWithUUID:collectionUUID];
 }
 
 - (void)permanentlyDeleteAssociatedFilesForCollections:(NSArray *)collections
@@ -1263,7 +1285,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 #pragma mark Load Files List
 
-- (GLAArrayEditorStore *)filesListEditorStoreForCollection:(GLACollection *)filesListCollection
+- (GLAArrayEditorStore *)filesListEditorStoreForCollection:(GLACollection *)filesListCollection createIfNeeded:(BOOL)create
 {
 	NSMutableDictionary *collectionIDsToFilesListEditorStores = (self.collectionIDsToFilesListEditorStores);
 	if (collectionIDsToFilesListEditorStores == nil) {
@@ -1274,6 +1296,9 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	GLAArrayEditorStore *filesListEditorStore = collectionIDsToFilesListEditorStores[collectionUUID];
 	if (filesListEditorStore) {
 		return filesListEditorStore;
+	}
+	else if (!create) {
+		return nil;
 	}
 	
 	NSURL *JSONFileURL = [self filesListJSONFileURLForCollectionID:collectionUUID];
@@ -1287,6 +1312,21 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	collectionIDsToFilesListEditorStores[collectionUUID] = filesListEditorStore;
 	
 	return filesListEditorStore;
+}
+
+- (GLAArrayEditorStore *)filesListEditorStoreForCollection:(GLACollection *)filesListCollection
+{
+	return [self filesListEditorStoreForCollection:filesListCollection createIfNeeded:YES];
+}
+
+- (BOOL)hasLoadedFilesForCollection:(GLACollection *)filesListCollection
+{
+	GLAArrayEditorStore *filesListEditorStore = [self filesListEditorStoreForCollection:filesListCollection createIfNeeded:NO];
+	if (!filesListEditorStore) {
+		return NO;
+	}
+	
+	return (filesListEditorStore.finishedLoading);
 }
 
 - (void)requestFilesListForCollection:(GLACollection *)filesListCollection
@@ -1309,6 +1349,23 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	if (filesListEditorStore) {
 		return [filesListEditorStore copyChildren];
 	}
+	else {
+		return nil;
+	}
+}
+
+- (GLACollectedFile *)collectedFileWithUUID:(NSUUID *)collectedFileUUID insideCollection:(GLACollection *)filesListCollection
+{
+	GLAArrayEditorStore *filesListEditorStore = [self filesListEditorStoreForCollection:filesListCollection];
+	id<GLAArrayInspecting> arrayInspector = (filesListEditorStore.inspectArray);
+	
+	NSIndexSet *indexes = [arrayInspector indexesOfChildrenWhoseKeyPath:@"UUID" hasValue:collectedFileUUID];
+	if ((indexes.count) == 1) {
+		NSArray *childInArray = [arrayInspector childrenAtIndexes:indexes];
+		GLACollectedFile *collectedFile = childInArray[0];
+		return collectedFile;
+	}
+	// No index or multiple indexes in invalid.
 	else {
 		return nil;
 	}

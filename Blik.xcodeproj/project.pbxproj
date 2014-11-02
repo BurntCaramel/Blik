@@ -349,7 +349,7 @@
 				B24B3608196E336E0094FA1F /* GLAMainNavigationBarController.h */,
 				B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */,
 				B24B360A196E336E0094FA1F /* GLAMainNavigationBarController.xib */,
-				B26B6F4A19EBDB0700D17ECD /* Project View */,
+				B26B6F4A19EBDB0700D17ECD /* Project */,
 				B2C7F29919739925005780B4 /* Project Related */,
 				B2C7F29A1973993A005780B4 /* Projects List */,
 				B226E9521988CFCA00D607CC /* Collections */,
@@ -459,7 +459,7 @@
 			name = "Status Item";
 			sourceTree = "<group>";
 		};
-		B26B6F4A19EBDB0700D17ECD /* Project View */ = {
+		B26B6F4A19EBDB0700D17ECD /* Project */ = {
 			isa = PBXGroup;
 			children = (
 				B26B6F4B19EBDB3200D17ECD /* GLAProjectCollectionsViewController.h */,
@@ -472,7 +472,7 @@
 				B219DAB0196AD462007900DF /* GLAProjectViewController.m */,
 				B219DAB1196AD462007900DF /* GLAProjectViewController.xib */,
 			);
-			name = "Project View";
+			name = Project;
 			sourceTree = "<group>";
 		};
 		B2ADDBC51963DA2E0014EF84 = {
@@ -1111,7 +1111,7 @@
 					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Glance Prototype A/Glance Prototype A-Prefix.pch";
+				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1133,7 +1133,7 @@
 					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Glance Prototype A/Glance Prototype A-Prefix.pch";
+				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
 				INFOPLIST_FILE = "Blik Tests/BlikTests-Info.plist";
 				PRODUCT_NAME = BlikTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";

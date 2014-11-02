@@ -13,6 +13,11 @@
 
 @interface GLAArrayEditorChanges ()
 
+- (void)includeAddedChildren:(NSArray *)addedChildren;
+- (void)includeRemovedChildren:(NSArray *)removedChildren;
+- (void)includeReplacedChildrenFrom:(NSArray *)originalChildren to:(NSArray *)replacementChildren;
+
+@property(readwrite, nonatomic) BOOL hasChanges;
 @property(nonatomic) NSMutableArray *mutableAddedChildren;
 @property(nonatomic) NSMutableArray *mutableRemovedChildren;
 @property(nonatomic) NSMutableArray *mutableReplacedChildrenBefore;
@@ -86,7 +91,7 @@
 	
 	GLAArrayEditorChanges *changes = (self.currentChanges);
 	if (changes) {
-		[(changes.mutableAddedChildren) addObjectsFromArray:objects];
+		[changes includeAddedChildren:objects];
 	}
 }
 
@@ -97,7 +102,7 @@
 	GLAArrayEditorChanges *changes = (self.currentChanges);
 	if (changes) {
 		NSArray *removedChildren = [mutableChildren objectsAtIndexes:indexes];
-		[(changes.mutableRemovedChildren) addObjectsFromArray:removedChildren];
+		[changes includeRemovedChildren:removedChildren];
 	}
 	
 	[mutableChildren removeObjectsAtIndexes:indexes];
@@ -110,8 +115,7 @@
 	GLAArrayEditorChanges *changes = (self.currentChanges);
 	if (changes) {
 		NSArray *originalChildren = [mutableChildren objectsAtIndexes:indexes];
-		[(changes.mutableReplacedChildrenBefore) addObjectsFromArray:originalChildren];
-		[(changes.mutableReplacedChildrenAfter) addObjectsFromArray:objects];
+		[changes includeReplacedChildrenFrom:originalChildren to:objects];
 	}
 	
 	[mutableChildren replaceObjectsAtIndexes:indexes withObjects:objects];
@@ -123,6 +127,8 @@
 	NSArray *objectsToMove = [mutableChildren objectsAtIndexes:indexes];
 	[mutableChildren removeObjectsAtIndexes:indexes];
 	[mutableChildren insertObjects:objectsToMove atIndexes:[NSIndexSet indexSetWithIndex:toIndex]];
+	
+	// No changes tracked, as objects are moved not actually added or removed.
 }
 
 
@@ -193,24 +199,46 @@
 	return self;
 }
 
+- (void)includeAddedChildren:(NSArray *)addedChildren
+{
+	[_mutableAddedChildren addObjectsFromArray:addedChildren];
+	
+	(self.hasChanges) = YES;
+}
+
+- (void)includeRemovedChildren:(NSArray *)removedChildren
+{
+	[_mutableRemovedChildren addObjectsFromArray:removedChildren];
+	
+	(self.hasChanges) = YES;
+}
+
+- (void)includeReplacedChildrenFrom:(NSArray *)originalChildren to:(NSArray *)replacementChildren
+{
+	[_mutableReplacedChildrenBefore addObjectsFromArray:originalChildren];
+	[_mutableReplacedChildrenAfter addObjectsFromArray:replacementChildren];
+	
+	(self.hasChanges) = YES;
+}
+
 - (NSArray *)addedChildren
 {
-	return _mutableAddedChildren;
+	return [_mutableAddedChildren copy];
 }
 
 - (NSArray *)removeChildren
 {
-	return _mutableRemovedChildren;
+	return [_mutableRemovedChildren copy];
 }
 
 - (NSArray *)replacedChildrenBefore
 {
-	return _mutableReplacedChildrenBefore;
+	return [_mutableReplacedChildrenBefore copy];
 }
 
 - (NSArray *)replacedChildrenAfter
 {
-	return _mutableReplacedChildrenAfter;
+	return [_mutableReplacedChildrenAfter copy];
 }
 
 @end

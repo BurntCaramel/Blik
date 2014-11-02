@@ -18,11 +18,11 @@
 
 + (Class)classForParsingJSONDictionary:(NSDictionary *)JSONDictionary
 {
-	if (JSONDictionary[@"collection"]) {
-		return [GLAHighlightedCollection class];
-	}
-	else if (JSONDictionary[@"collectedFile"]) {
+	if (JSONDictionary[@"collectedFileUUID"]) {
 		return [GLAHighlightedCollectedFile class];
+	}
+	else if (JSONDictionary[@"collection"]) {
+		return [GLAHighlightedCollection class];
 	}
 	else {
 		return nil;
@@ -51,7 +51,7 @@
 	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLACollection class]];
 }
 
-+ (instancetype)newCreatingFromEditing:(void(^)(id<GLAHighlightedCollectionEditing> editor))editingBlock
++ (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedCollectionEditing> editor))editingBlock
 {
 	GLAHighlightedCollection *instance = [self new];
 	editingBlock(instance);
@@ -73,8 +73,8 @@
 
 @interface GLAHighlightedCollectedFile () <GLAHighlightedCollectedFileEditing>
 
-@property(readwrite, nonatomic) GLACollectedFile *collectedFile;
-@property(readwrite, nonatomic) GLACollection *holdingCollection;
+@property(readwrite, nonatomic) NSUUID *holdingCollectionUUID;
+@property(readwrite, nonatomic) NSUUID *collectedFileUUID;
 
 @property(readwrite, nonatomic) GLACollectedFile *applicationToOpenFile;
 
@@ -87,14 +87,14 @@
 	return @"com.burntcaramel.GLAHighlightedCollectedFile.JSONPasteboardType";
 }
 
-+ (NSValueTransformer *)collectedFileJSONTransformer
++ (NSValueTransformer *)holdingCollectionUUIDJSONTransformer
 {
-	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLACollectedFile class]];
+	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
 }
 
-+ (NSValueTransformer *)holdingCollectionJSONTransformer
++ (NSValueTransformer *)collectedFileUUIDJSONTransformer
 {
-	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLACollection class]];
+	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
 }
 
 + (NSValueTransformer *)applicationToOpenFileJSONTransformer
@@ -102,7 +102,7 @@
 	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLACollectedFile class]];
 }
 
-+ (instancetype)newCreatingFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock
++ (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock
 {
 	GLAHighlightedCollectedFile *instance = [self new];
 	editingBlock(instance);

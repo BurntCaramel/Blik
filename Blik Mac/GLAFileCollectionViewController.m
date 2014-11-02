@@ -144,7 +144,7 @@
 		
 		NSArray *collectedFiles = [pm copyFilesListForCollection:filesListCollection];
 		if (!collectedFiles) {
-			[pm loadFilesListForCollection:filesListCollection];
+			[pm loadFilesListForCollectionIfNeeded:filesListCollection];
 			collectedFiles = @[];
 		}
 		
@@ -156,18 +156,7 @@
 	
 	[(self.sourceFilesListTableView) reloadData];
 	
-	[self updateOpenerApplicationsUIVisible];
-}
-
-- (void)updateOpenerApplicationsUIVisible
-{
-	GLAPopUpButton *popUpButton = (self.openerApplicationsPopUpButton);
-	NSTextField *label = (self.openerApplicationsTextLabel);
-	
-	NSArray *selectedURLs = (self.selectedURLs);
-	BOOL hasNoURLs = (selectedURLs.count) == 0;
-	(popUpButton.hidden) = hasNoURLs;
-	(label.hidden) = hasNoURLs;
+	[self updateOpenerApplicationsUIVisibility];
 }
 
 - (void)filesListDidChangeNotification:(NSNotification *)note
@@ -503,10 +492,24 @@
 	(menuItem.title) = values[NSURLLocalizedNameKey];
 	(menuItem.image) = iconImage;
 	
+	(menuItem.representedObject) = applicationURL;
+	
 	return menuItem;
 }
 
-- (void)refreshOpenerApplicationsUI
+- (void)updateOpenerApplicationsUIVisibility
+{
+	GLAPopUpButton *popUpButton = (self.openerApplicationsPopUpButton);
+	NSTextField *label = (self.openerApplicationsTextLabel);
+	
+	NSArray *selectedURLs = (self.selectedURLs);
+	BOOL hasNoURLs = (selectedURLs.count) == 0;
+	
+	(popUpButton.hidden) = hasNoURLs;
+	(label.hidden) = hasNoURLs;
+}
+
+- (void)updateOpenerApplicationsUIMenu
 {
 	NSMutableSet *combinedOpenerApplicationURLs = (self.combinedOpenerApplicationURLs);
 	NSURL *combinedDefaultOpenerApplicationURL = (self.combinedDefaultOpenerApplicationURL);
@@ -521,6 +524,10 @@
 	
 	if ((combinedOpenerApplicationURLs.count) > 0) {
 		for (NSURL *applicationURL in combinedOpenerApplicationURLs) {
+			if ([(combinedDefaultOpenerApplicationURL.path) isEqual:(applicationURL.path)]) {
+				continue;
+			}
+			
 			NSMenuItem *menuItem = [self newMenuItemForApplicationURL:applicationURL];
 			if (!menuItem) {
 				continue;
@@ -555,7 +562,7 @@
 		[menu addItem:menuItem];
 	}
 	
-	[self updateOpenerApplicationsUIVisible];
+	[self updateOpenerApplicationsUIVisibility];
 }
 
 - (void)setNeedsToUpdateOpenerApplicationsUI
@@ -567,11 +574,29 @@
 	(self.openerApplicationsPopUpButtonNeedsUpdate) = YES;
 	
 	[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-		[self refreshOpenerApplicationsUI];
+		[self updateOpenerApplicationsUIMenu];
 		//[(self.openerApplicationsPopUpButton.menu) update];
 		
 		(self.openerApplicationsPopUpButtonNeedsUpdate) = NO;
 	}];
+}
+
+- (NSURL *)chosenOpenerApplicationForSelection
+{
+	NSPopUpButton *openerApplicationsPopUpButton = (self.openerApplicationsPopUpButton);
+	
+	NSMenuItem *selectedItem = (openerApplicationsPopUpButton.selectedItem);
+	if (!selectedItem) {
+		return nil;
+	}
+	
+	NSURL *applicationURL = (selectedItem.representedObject);
+	if ((applicationURL != nil) && [applicationURL isKindOfClass:[NSURL class]]) {
+		return applicationURL;
+	}
+	else {
+		return nil;
+	}
 }
 
 #pragma mark Actions
@@ -615,15 +640,37 @@
 - (IBAction)openSelectedFiles:(id)sender
 {
 	NSMutableArray *selectedURLs = (self.selectedURLs);
+	if ((selectedURLs.count) == 0) {
+		return;
+	}
+	
 	if ((selectedURLs.count) == 1) {
 		NSURL *fileURL = selectedURLs[0];
 		NSNumber *isDirectoryValue;
 		if ([fileURL getResourceValue:&isDirectoryValue forKey:NSURLIsDirectoryKey error:nil]) {
-			if ([[NSNumber numberWithBool:YES] isEqualToNumber:isDirectoryValue]) {
+			if ([@(YES) isEqualToNumber:isDirectoryValue]) {
 				[[NSWorkspace sharedWorkspace] openFile:(fileURL.path) withApplication:@"Finder"];
+				return;
 			}
 		}
 	}
+	
+	NSURL *applicationURL = (self.chosenOpenerApplicationForSelection);
+	if (!applicationURL) {
+		return;
+	}
+	
+	LSLaunchURLSpec launchURLSpec = {
+		.appURL =  (__bridge CFURLRef)(applicationURL),
+		.itemURLs = (__bridge CFArrayRef)selectedURLs,
+		.passThruParams = NULL,
+		.launchFlags = kLSLaunchDefaults,
+		.asyncRefCon = NULL
+	};
+	CFURLRef openedApplicationURL_cf;
+	LSOpenFromURLSpec(&launchURLSpec, &openedApplicationURL_cf);
+	
+	NSURL *openedApplicationURL = CFBridgingRelease(openedApplicationURL_cf);
 }
 
 - (IBAction)revealSelectedFilesInFinder:(id)sender
@@ -669,9 +716,9 @@
 	
 	NSMutableArray *highlightedItems = [NSMutableArray array];
 	for (GLACollectedFile *collectedFile in collectedFiles) {
-		GLAHighlightedCollectedFile *highlightedCollectedFile = [GLAHighlightedCollectedFile newCreatingFromEditing:^(id<GLAHighlightedCollectedFileEditing> editor) {
-			(editor.collectedFile) = collectedFile;
-			(editor.holdingCollection) = filesListCollection;
+		GLAHighlightedCollectedFile *highlightedCollectedFile = [GLAHighlightedCollectedFile newCreatedFromEditing:^(id<GLAHighlightedCollectedFileEditing> editor) {
+			(editor.holdingCollectionUUID) = (filesListCollection.UUID);
+			(editor.collectedFileUUID) = (collectedFile.UUID);
 		}];
 		[highlightedItems addObject:highlightedCollectedFile];
 	}
@@ -680,7 +727,7 @@
 	[tableView beginUpdates];
 	
 	[pm editHighlightsOfProject:project usingBlock:^(id<GLAArrayEditing> highlightsEditor) {
-		NSArray *filteredItems = [highlightsEditor filterArray:highlightedItems whoseValuesIsNotPresentForKeyPath:@"collectedFile.UUID"];
+		NSArray *filteredItems = [highlightsEditor filterArray:highlightedItems whoseValuesIsNotPresentForKeyPath:@"collectedFileUUID"];
 		[highlightsEditor addChildren:filteredItems];
 	}];
 	
@@ -896,7 +943,7 @@
 		if (sourceOperation & NSDragOperationMove) {
 			// The row index is the final destination, so reduce it by the number of rows being moved before it.
 			NSInteger adjustedRow = row - [sourceRowIndexes countOfIndexesInRange:NSMakeRange(0, row)];
-			
+			NSLog(@"MOVE CHILDREN AT INDEXES %@ TO INDEX %@", sourceRowIndexes, @(adjustedRow));
 			[filesListEditor moveChildrenAtIndexes:sourceRowIndexes toIndex:adjustedRow];
 		}
 		else if (sourceOperation & NSDragOperationCopy) {
@@ -1019,7 +1066,7 @@
 
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
-	//[self refreshOpenerApplicationsUI];
+	//[self updateOpenerApplicationsUIMenu];
 }
 
 @end

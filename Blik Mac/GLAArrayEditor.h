@@ -9,26 +9,41 @@
 @import Foundation;
 #import "GLAArrayEditing.h"
 
+@protocol GLAArrayEditorConstraining;
 @class GLAArrayEditorChanges;
 
 
 @interface GLAArrayEditor : NSObject <GLAArrayEditing>
 
 // Designated init
+//- (instancetype)initWithObjects:(NSArray *)objects constrainers:(NSArray *)constrainers;
 - (instancetype)initWithObjects:(NSArray *)objects;
 - (instancetype)init;
 
 - (GLAArrayEditorChanges *)changesMadeInBlock:(void (^)(id<GLAArrayEditing> arrayEditor))editorBlock;
+
+//@property(readonly, copy, nonatomic) NSArray *constrainers;
+
+@end
+
+
+@protocol GLAArrayEditorConstraining <NSObject>
+
+- (void)didMakeChanges:(GLAArrayEditorChanges *)changes toArray:(id<GLAArrayInspecting>)array;
+
+- (NSArray *)filterPotentialChildren:(NSArray *)objects;
 
 @end
 
 
 @interface GLAArrayEditorChanges : NSObject
 
-@property(nonatomic) NSArray *addedChildren;
-@property(nonatomic) NSArray *removedChildren;
+@property(readonly, nonatomic) BOOL hasChanges;
 
-@property(nonatomic) NSArray *replacedChildrenBefore;
-@property(nonatomic) NSArray *replacedChildrenAfter;
+@property(readonly, copy, nonatomic) NSArray *addedChildren;
+@property(readonly, copy, nonatomic) NSArray *removedChildren;
+
+@property(readonly, copy, nonatomic) NSArray *replacedChildrenBefore;
+@property(readonly, copy, nonatomic) NSArray *replacedChildrenAfter;
 
 @end

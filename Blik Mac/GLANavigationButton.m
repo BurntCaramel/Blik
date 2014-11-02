@@ -57,7 +57,6 @@
 	
 	NSColor *barColor = (self.isEnabled) ? (uiStyle.activeButtonHighlightColor) : (uiStyle.activeButtonDisabledHighlightColor);
 	[uiStyle drawActiveHighlightForBounds:frame withColor:barColor time:(self.highlightAmount)];
-	//}
 }
 
 @end

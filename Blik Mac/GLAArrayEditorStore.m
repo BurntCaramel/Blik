@@ -164,6 +164,12 @@
 	return [arrayEditor copyChildren];
 }
 
+- (id<GLAArrayInspecting>)inspectArray
+{
+	GLAArrayEditor *arrayEditor = (self.arrayEditor);
+	return arrayEditor;
+}
+
 #pragma mark -
 
 - (NSArray *)background_processLoadedChildren:(NSArray *)children
@@ -279,6 +285,7 @@
 	
 	(self.saving) = YES;
 	(self.finishedSaving) = NO;
+	
 	[self runInBackground:^(GLAArrayEditorStore *store) {
 		NSArray *JSONArray = [MTLJSONAdapter JSONArrayFromModels:array];
 		NSString *JSONKey = (self.JSONDictionaryKeyForArray);

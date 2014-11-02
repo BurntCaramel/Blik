@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14A388a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
@@ -160,7 +160,7 @@
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="BTJ-R3-LvA" customClass="GLACollectionIndicationButton">
+                                                    <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BTJ-R3-LvA" customClass="GLACollectionIndicationButton">
                                                         <rect key="frame" x="261" y="0.0" width="16" height="36"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="16" id="iAf-ba-H5t"/>
@@ -429,7 +429,7 @@
         </customView>
         <menu id="GiZ-xZ-qxO">
             <items>
-                <menuItem title="Rename Collection…" id="5AV-kD-8fd">
+                <menuItem title="Rename or Recolor Collection…" id="5AV-kD-8fd">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="renameClickedCollection:" target="raF-W4-b8E" id="0E8-6W-27y"/>
@@ -443,7 +443,7 @@
                     </connections>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="424.5" y="159.5"/>
+            <point key="canvasLocation" x="419.5" y="72.5"/>
         </menu>
         <customView placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="30" id="xFc-GO-dGI" customClass="GLAView">
             <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
