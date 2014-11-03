@@ -25,7 +25,7 @@
 
 - (void)requestApplicationURLsToOpenURL:(NSURL *)URL;
 - (NSArray *)applicationsURLsToOpenURL:(NSURL *)URL;
-- (NSURL *)defaultApplicationsURLToOpenURL:(NSURL *)URL;
+- (NSURL *)defaultApplicationURLToOpenURL:(NSURL *)URL;
 
 #pragma mark -
 
@@ -37,6 +37,8 @@
 
 
 @protocol GLAFileInfoRetrieverDelegate <NSObject>
+
+@optional
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didLoadResourceValuesForURL:(NSURL *)URL;
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didFailWithError:(NSError *)error loadingResourceValuesForURL:(NSURL *)URL;

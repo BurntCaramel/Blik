@@ -54,6 +54,7 @@
 
 #pragma mark Collections
 
+- (BOOL)hasLoadedCollectionsForProject:(GLAProject *)project;
 - (void)loadCollectionsForProjectIfNeeded:(GLAProject *)project;
 - (NSArray *)copyCollectionsForProject:(GLAProject *)project;
 
@@ -79,8 +80,6 @@
 
 - (BOOL)editHighlightsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> highlightsEditor))block;
 
-//- (void)addCollectedItemToHighlights:(id<GLACollectedItem>)collectedItem;
-
 #pragma mark Collection Files List
 
 - (BOOL)hasLoadedFilesForCollection:(GLACollection *)filesListCollection;
@@ -89,6 +88,11 @@
 - (GLACollectedFile *)collectedFileWithUUID:(NSUUID *)collectionUUID insideCollection:(GLACollection *)filesListCollection;
 
 - (BOOL)editFilesListOfCollection:(GLACollection *)filesListCollection usingBlock:(void (^)(id<GLAArrayEditing> filesListEditor))block;
+
+#pragma mark Highlighted Collected File
+
+- (GLACollection *)collectionForHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile loadIfNeeded:(BOOL)load;
+- (GLACollectedFile *)collectedFileForHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile loadIfNeeded:(BOOL)load;
 
 #pragma mark Validating
 

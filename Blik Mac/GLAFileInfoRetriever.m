@@ -332,7 +332,7 @@
 	return applicationURLs;
 }
 
-- (NSURL *)defaultApplicationsURLToOpenURL:(NSURL *)URL
+- (NSURL *)defaultApplicationURLToOpenURL:(NSURL *)URL
 {
 	__block NSURL *defaultApplicationURL;
 	

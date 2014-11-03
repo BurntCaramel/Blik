@@ -10,6 +10,7 @@
 #import "GLAProjectManager.h"
 #import "GLAUIStyle.h"
 #import "GLAHighlightsTableCellView.h"
+#import "GLAFileOpenerApplicationCombiner.h"
 
 
 @interface GLAProjectHighlightsViewController ()
@@ -30,7 +31,7 @@
 	(tableView.menu) = (self.contextualMenu);
 	[uiStyle prepareContentTableView:tableView];
 	
-	[tableView registerForDraggedTypes:@[[GLAHighlightedCollection objectJSONPasteboardType], [GLAHighlightedCollectedFile objectJSONPasteboardType]]];
+	[tableView registerForDraggedTypes:@[[GLAHighlightedCollectedFile objectJSONPasteboardType]]];
 	
 	NSScrollView *scrollView = (tableView.enclosingScrollView);
 	// I think Apple says this is better for scrolling performance.
@@ -62,6 +63,8 @@
 		GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 		[projectManager loadCollectionsForProjectIfNeeded:project];
 		[projectManager loadHighlightsForProjectIfNeeded:project];
+		
+		[self reloadHighlightedItems];
 	}
 }
 
@@ -174,6 +177,29 @@
 	[projectManager editHighlightsOfProject:(self.project) usingBlock:^(id<GLAArrayEditing> highlightsEditor) {
 		[highlightsEditor removeChildrenAtIndexes:[NSIndexSet indexSetWithIndex:clickedRow]];
 	}];
+}
+
+- (IBAction)openClickedItem:(id)sender
+{
+	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
+	if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+		GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
+	
+		GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+		GLACollectedFile *collectedFile = [pm collectedFileForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
+		if (!collectedFile) {
+			return;
+		}
+		
+		NSURL *applicationURL = nil;
+		GLACollectedFile *applicationToOpenFileCollected = (highlightedCollectedFile.applicationToOpenFile);
+		if (applicationToOpenFileCollected) {
+			applicationURL = (applicationToOpenFileCollected.URL);
+		}
+		
+		NSURL *fileURL = (collectedFile.URL);
+		[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL];
+	}
 }
 
 #pragma mark Table View Data Source
@@ -304,22 +330,10 @@
 	if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
 		GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 		
-		NSUUID *holdingCollectionUUID = (highlightedCollectedFile.holdingCollectionUUID);
-		GLACollection *holdingCollection = [pm collectionWithUUID:holdingCollectionUUID];
-		
-		if (holdingCollection) {
-			BOOL hasLoadedFilesList = [pm hasLoadedFilesForCollection:holdingCollection];
-			if (hasLoadedFilesList) {
-				NSUUID *collectedFileUUID = (highlightedCollectedFile.collectedFileUUID);
-				GLACollectedFile *collectedFile = [pm collectedFileWithUUID:collectedFileUUID insideCollection:holdingCollection];
-				
-				if (collectedFile) {
-					name = (collectedFile.name);
-				}
-			}
-			else {
-				[pm loadFilesListForCollectionIfNeeded:holdingCollection];
-			}
+		GLACollection *holdingCollection = [pm collectionForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
+		GLACollectedFile *collectedFile = [pm collectedFileForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
+		if (collectedFile) {
+			name = (collectedFile.name);
 		}
 		
 		GLACollectionIndicationButton *collectionIndicationButton = (cellView.collectionIndicationButton);

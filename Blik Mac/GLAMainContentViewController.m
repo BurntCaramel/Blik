@@ -541,7 +541,7 @@
 		animate = NO;
 	}
 	
-	CGFloat outLeading = NAN, inLeading = NAN;
+	CGFloat outLeading = -500.0, inLeading = 500.0;
 	
 	if (newSection.isAllProjects) {
 		//[self setUpAllProjectsViewControllerIfNeeded];
@@ -600,14 +600,11 @@
 			}
 		}
 	}
-	else {
-		// isEditProject
-		// isEditCollection
-		// isAddNewProject
-		// isAddNewCollection
-		
-		outLeading = -500.0;
-		inLeading = 500.0;
+	else if (newSection.isEditProject) {
+		if (outSection.isEditCollection) {
+			outLeading = 500.0;
+			inLeading = -500.0;
+		}
 	}
 	
 	// HIDE OUT

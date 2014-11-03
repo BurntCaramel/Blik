@@ -9,6 +9,16 @@
 #import "GLAHighlightedItem.h"
 
 
+@interface GLAHighlightedItem ()
+
+@property(readwrite, copy, nonatomic) NSUUID *projectUUID;
+
+@end
+
+@interface GLAHighlightedItem (GLAHighlightedItemEditing) <GLAHighlightedItemEditing>
+
+@end
+
 @implementation GLAHighlightedItem
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey
@@ -21,17 +31,33 @@
 	if (JSONDictionary[@"collectedFileUUID"]) {
 		return [GLAHighlightedCollectedFile class];
 	}
-	else if (JSONDictionary[@"collection"]) {
-		return [GLAHighlightedCollection class];
-	}
 	else {
 		return nil;
 	}
 }
 
++ (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedItemEditing> editor))editingBlock
+{
+	GLAHighlightedItem *instance = [self new];
+	editingBlock(instance);
+	
+	return instance;
+}
+
+- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedItemEditing>editor))editingBlock
+{
+	GLAHighlightedItem *copy = [self copy];
+	editingBlock(copy);
+	
+	return copy;
+}
+
 @end
 
 
+#pragma mark -
+
+#if 0
 
 @interface GLAHighlightedCollection () <GLAHighlightedCollectionEditing>
 
@@ -69,7 +95,10 @@
 
 @end
 
+#endif
 
+
+#pragma mark -
 
 @interface GLAHighlightedCollectedFile () <GLAHighlightedCollectedFileEditing>
 
@@ -104,18 +133,12 @@
 
 + (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock
 {
-	GLAHighlightedCollectedFile *instance = [self new];
-	editingBlock(instance);
-	
-	return instance;
+	return [super newCreatedFromEditing:editingBlock];
 }
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing>editor))editingBlock
 {
-	GLAHighlightedCollectedFile *copy = [self copy];
-	editingBlock(copy);
-	
-	return copy;
+	return [super copyWithChangesFromEditing:editingBlock];
 }
 
 @end

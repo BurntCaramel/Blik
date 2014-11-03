@@ -11,6 +11,7 @@
 #import "GLAProjectManager.h"
 #import "GLACollectedFile.h"
 #import "GLAFileInfoRetriever.h"
+#import "GLAFileOpenerApplicationCombiner.h"
 
 
 @interface GLAFileCollectionViewController ()
@@ -264,7 +265,7 @@
 	}
 }
 
-- (void)finishAccessingSecurityScopedFileURLs
+- (void)finishAccessingAllSecurityScopedFileURLs
 {
 	NSSet *accessedSecurityScopedURLs = (self.accessedSecurityScopedURLs);
 	if (accessedSecurityScopedURLs) {
@@ -328,7 +329,7 @@
 	
 	(self.doNotUpdateViews) = YES;
 	[self stopObservingPreviewFrameChanges];
-	[self finishAccessingSecurityScopedFileURLs];
+	[self finishAccessingAllSecurityScopedFileURLs];
 }
 
 #pragma mark -
@@ -432,7 +433,7 @@
 		return;
 	}
 	
-	NSURL *defaultOpenerApplicationURL = [fileInfoRetriever defaultApplicationsURLToOpenURL:URL];
+	NSURL *defaultOpenerApplicationURL = [fileInfoRetriever defaultApplicationURLToOpenURL:URL];
 	
 	NSMutableSet *combinedOpenerApplicationURLs = (self.combinedOpenerApplicationURLs);
 	if (!combinedOpenerApplicationURLs) {
@@ -656,21 +657,8 @@
 	}
 	
 	NSURL *applicationURL = (self.chosenOpenerApplicationForSelection);
-	if (!applicationURL) {
-		return;
-	}
 	
-	LSLaunchURLSpec launchURLSpec = {
-		.appURL =  (__bridge CFURLRef)(applicationURL),
-		.itemURLs = (__bridge CFArrayRef)selectedURLs,
-		.passThruParams = NULL,
-		.launchFlags = kLSLaunchDefaults,
-		.asyncRefCon = NULL
-	};
-	CFURLRef openedApplicationURL_cf;
-	LSOpenFromURLSpec(&launchURLSpec, &openedApplicationURL_cf);
-	
-	NSURL *openedApplicationURL = CFBridgingRelease(openedApplicationURL_cf);
+	[GLAFileOpenerApplicationCombiner openFileURLs:selectedURLs withApplicationURL:applicationURL];
 }
 
 - (IBAction)revealSelectedFilesInFinder:(id)sender
@@ -1016,9 +1004,9 @@
 		return;
 	}
 	
-	NSSet *collectedFilesToUpdate = [self collectedFilesUsingURL:fileURL];
-	NSIndexSet *indexesToUpdate = [(self.collectedFiles) indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-		return [collectedFilesToUpdate containsObject:obj];
+	//NSSet *collectedFilesToUpdate = [self collectedFilesUsingURL:fileURL];
+	NSIndexSet *indexesToUpdate = [(self.collectedFiles) indexesOfObjectsPassingTest:^BOOL(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
+		return [fileURL isEqual:(collectedFile.URL)];
 	}];
 	
 	//[(self.sourceFilesListTableView) reloadData];
@@ -1052,7 +1040,7 @@
 		URLsToDefaultOpenerApplicationURLs = (self.URLsToDefaultOpenerApplicationURLs) = [NSMutableDictionary new];
 	}
 	
-	NSURL *defaultApplicationURL = [fileInfoRetriever defaultApplicationsURLToOpenURL:URL];
+	NSURL *defaultApplicationURL = [fileInfoRetriever defaultApplicationURLToOpenURL:URL];
 	URLsToDefaultOpenerApplicationURLs[URL] = defaultApplicationURL;
 	
 	if ([selectedURLs containsObject:URL]) {

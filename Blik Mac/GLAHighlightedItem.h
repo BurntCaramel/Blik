@@ -11,13 +11,25 @@
 #import "GLACollectedFile.h"
 
 
+@protocol GLAHighlightedItemEditing <NSObject>
+
+@property(readwrite, copy, nonatomic) NSUUID *projectUUID;
+
+@end
+
 @interface GLAHighlightedItem : GLAModel
+
+@property(readonly, copy, nonatomic) NSUUID *projectUUID;
+
++ (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedItemEditing> editor))editingBlock;
+
+- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedItemEditing> editor))editingBlock;
 
 @end
 
 
-
-@protocol GLAHighlightedCollectionEditing <NSObject>
+#if 0
+@protocol GLAHighlightedCollectionEditing <GLAHighlightedItemEditing>
 
 @property(readwrite, nonatomic) GLACollection *collection;
 
@@ -32,10 +44,10 @@
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedCollectionEditing>editor))editingBlock;
 
 @end
+#endif
 
 
-
-@protocol GLAHighlightedCollectedFileEditing <NSObject>
+@protocol GLAHighlightedCollectedFileEditing <GLAHighlightedItemEditing>
 
 @property(readwrite, nonatomic) NSUUID *holdingCollectionUUID;
 @property(readwrite, nonatomic) NSUUID *collectedFileUUID;

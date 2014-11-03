@@ -72,7 +72,7 @@
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="verticalOffsetDown">
-                                                                <integer key="value" value="0"/>
+                                                                <integer key="value" value="-1"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetAmount">
                                                                 <integer key="value" value="6"/>

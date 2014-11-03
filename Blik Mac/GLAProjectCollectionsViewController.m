@@ -74,6 +74,8 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	if (!isSameProject) {
 		GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 		[projectManager loadCollectionsForProjectIfNeeded:project];
+		
+		[self reloadCollections];
 	}
 }
 
