@@ -79,48 +79,6 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	}
 }
 
-- (void)reloadCollections
-{
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	
-	NSArray *collections = [projectManager copyCollectionsForProject:(self.project)];
-	
-	if (!collections) {
-		collections = @[];
-	}
-	(self.collections) = collections;
-	
-	[(self.tableView) reloadData];
-}
-
-- (void)startProjectObserving
-{
-	GLAProject *project = (self.project);
-	if (!project) {
-		return;
-	}
-	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	
-	// Project Collection List
-	[nc addObserver:self selector:@selector(projectCollectionsDidChangeNotification:) name:GLAProjectCollectionsDidChangeNotification object:[pm notificationObjectForProject:project]];
-}
-
-- (void)stopProjectObserving
-{
-	GLAProject *project = (self.project);
-	if (!project) {
-		return;
-	}
-	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	
-	// Stop observing any notifications on the project manager.
-	[nc removeObserver:self name:nil object:[pm notificationObjectForProject:project]];
-}
-
 - (void)wrapScrollView
 {
 	// Wrap the plan scroll view with a holder view
@@ -155,6 +113,86 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeWidth withChildView:scrollView identifier:@"width"];
 	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:scrollView identifier:@"top"];
 	//(self.scrollLeadingConstraint) = [self addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:scrollView identifier:@"leading"];
+}
+
+- (void)startProjectObserving
+{
+	GLAProject *project = (self.project);
+	if (!project) {
+		return;
+	}
+	
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	// Project Collection List
+	[nc addObserver:self selector:@selector(projectCollectionsDidChangeNotification:) name:GLAProjectCollectionsDidChangeNotification object:[pm notificationObjectForProject:project]];
+}
+
+- (void)stopProjectObserving
+{
+	GLAProject *project = (self.project);
+	if (!project) {
+		return;
+	}
+	
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	// Stop observing any notifications on the project manager.
+	[nc removeObserver:self name:nil object:[pm notificationObjectForProject:project]];
+}
+
+- (void)showInstructions
+{
+	NSView *instructionsView = (self.instructionsViewController.view);
+	if (!(instructionsView.superview)) {
+		[self fillViewWithChildView:instructionsView];
+	}
+	else {
+		(instructionsView.hidden) = NO;
+	}
+}
+
+- (void)hideInstructions
+{
+	NSView *instructionsView = (self.instructionsViewController.view);
+	if ((instructionsView.superview)) {
+		(instructionsView.hidden) = YES;
+	}
+}
+
+- (void)showTable
+{
+	(self.tableView.enclosingScrollView.hidden) = NO;
+}
+
+- (void)hideTable
+{
+	(self.tableView.enclosingScrollView.hidden) = YES;
+}
+
+- (void)reloadCollections
+{
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	
+	NSArray *collections = [projectManager copyCollectionsForProject:(self.project)];
+	
+	if (!collections) {
+		collections = @[];
+	}
+	(self.collections) = collections;
+	
+	if ((collections.count) > 0) {
+		[self showTable];
+		[self hideInstructions];
+		
+		[(self.tableView) reloadData];
+	}
+	else {
+		[self showInstructions];
+		[self hideTable];
+	}
 }
 
 - (void)setUpEditingActionsView

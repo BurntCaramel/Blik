@@ -7,9 +7,13 @@
 //
 
 #import "GLAProjectHighlightsViewController.h"
-#import "GLAProjectManager.h"
+// VIEW
+#import "GLAProjectViewController.h"
 #import "GLAUIStyle.h"
+#import "GLAView.h"
 #import "GLAHighlightsTableCellView.h"
+// MODEL
+#import "GLAProjectManager.h"
 #import "GLAFileOpenerApplicationCombiner.h"
 
 
@@ -36,6 +40,44 @@
 	NSScrollView *scrollView = (tableView.enclosingScrollView);
 	// I think Apple says this is better for scrolling performance.
 	(scrollView.wantsLayer) = YES;
+	
+	[self wrapScrollView];
+}
+
+- (void)wrapScrollView
+{
+	// Wrap the plan scroll view with a holder view
+	// to allow constraints to be more easily worked with
+	// and enable an actions view to be added underneath.
+	
+	NSScrollView *scrollView = (self.tableView.enclosingScrollView);
+	(scrollView.identifier) = @"tableScrollView";
+	(scrollView.translatesAutoresizingMaskIntoConstraints) = NO;
+	
+	GLAView *holderView = [[GLAView alloc] init];
+	(holderView.identifier) = @"highlightsListHolderView";
+	(holderView.translatesAutoresizingMaskIntoConstraints) = NO;
+	
+	GLAProjectViewController *projectViewController = (self.parentViewController);
+	NSLayoutConstraint *planViewTrailingConstraint = (projectViewController.planViewTrailingConstraint);
+	NSLayoutConstraint *planViewBottomConstraint = (projectViewController.planViewBottomConstraint);
+	
+	[projectViewController wrapChildViewKeepingOutsideConstraints:scrollView withView:holderView constraintVisitor:^ (NSLayoutConstraint *oldConstraint, NSLayoutConstraint *newConstraint) {
+		if (oldConstraint == planViewTrailingConstraint) {
+			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"trailing" forChildView:holderView];
+			(projectViewController.planViewTrailingConstraint) = newConstraint;
+		}
+		else if (oldConstraint == planViewBottomConstraint) {
+			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"bottom" forChildView:holderView];
+			(projectViewController.planViewBottomConstraint) = newConstraint;
+		}
+	}];
+	
+	(self.view) = holderView;
+	
+	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeWidth withChildView:scrollView identifier:@"width"];
+	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:scrollView identifier:@"top"];
+	(self.scrollLeadingConstraint) = [self addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:scrollView identifier:@"leading"];
 }
 
 - (void)dealloc
@@ -124,6 +166,35 @@
 	[nc removeObserver:self name:GLACollectionDidChangeNotification object:nil];
 }
 
+- (void)showInstructions
+{
+	NSView *instructionsView = (self.instructionsViewController.view);
+	if (!(instructionsView.superview)) {
+		[self fillViewWithChildView:instructionsView];
+	}
+	else {
+		(instructionsView.hidden) = NO;
+	}
+}
+
+- (void)hideInstructions
+{
+	NSView *instructionsView = (self.instructionsViewController.view);
+	if ((instructionsView.superview)) {
+		(instructionsView.hidden) = YES;
+	}
+}
+
+- (void)showTable
+{
+	(self.tableView.enclosingScrollView.hidden) = NO;
+}
+
+- (void)hideTable
+{
+	(self.tableView.enclosingScrollView.hidden) = YES;
+}
+
 - (void)reloadHighlightedItems
 {
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
@@ -138,7 +209,18 @@
 	[self stopCollectionObserving];
 	[self startCollectionObserving];
 	
-	[(self.tableView) reloadData];
+	if ((highlightedItems.count) > 0) {
+		NSLog(@"SOHW TABLE");
+		[self showTable];
+		[self hideInstructions];
+		
+		[(self.tableView) reloadData];
+	}
+	else {
+		NSLog(@"SOHW INSTRUCITONO");
+		[self showInstructions];
+		[self hideTable];
+	}
 }
 
 - (void)projectHighlightsDidChangeNotification:(NSNotification *)note

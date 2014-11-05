@@ -15,6 +15,7 @@
 #import "GLACollectionColorPickerPopover.h"
 #import "GLACollectionColorPickerViewController.h"
 #import "GLATextField.h"
+#import "GLAProjectInstructionsViewController.h"
 // MODEL
 #import "GLAProject.h"
 #import "GLACollection.h"
@@ -29,6 +30,8 @@
 @property(strong, nonatomic) IBOutlet NSMenu *contextualMenu;
 
 @property(weak) IBOutlet GLAProjectViewController *parentViewController;
+
+@property(strong, nonatomic) IBOutlet GLAProjectInstructionsViewController *instructionsViewController;
 
 @property(readonly, nonatomic) GLACollectionColorPickerPopover *colorPickerPopover;
 @property(nonatomic) NSPopover *colorChoicePopover;

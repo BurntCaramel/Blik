@@ -239,6 +239,7 @@
             <connections>
                 <outlet property="contextualMenu" destination="GiZ-xZ-qxO" id="HrY-Ve-era"/>
                 <outlet property="editingActionsView" destination="xFc-GO-dGI" id="rrU-hh-ceJ"/>
+                <outlet property="instructionsViewController" destination="5dd-3O-WRK" id="TIN-OS-jb5"/>
                 <outlet property="makeNewCollectionButton" destination="zdL-Rb-okh" id="aJA-O9-qb4"/>
                 <outlet property="parentViewController" destination="-2" id="zhQ-Yp-077"/>
                 <outlet property="tableView" destination="0t7-tp-C0y" id="Hfm-aj-nu4"/>
@@ -247,6 +248,7 @@
         <viewController title="Highlights View Controller" id="aDf-pc-aeE" customClass="GLAProjectHighlightsViewController">
             <connections>
                 <outlet property="contextualMenu" destination="Vkd-RN-V0D" id="99Y-nb-wbQ"/>
+                <outlet property="instructionsViewController" destination="bNf-jR-Sti" id="Tir-3F-xV0"/>
                 <outlet property="parentViewController" destination="-2" id="kAI-Y6-LNm"/>
                 <outlet property="tableView" destination="qcb-6b-Ekp" id="WeB-DQ-KSM"/>
             </connections>
@@ -428,6 +430,18 @@
                 <constraint firstAttribute="bottom" relation="lessThanOrEqual" secondItem="gya-ze-oT1" secondAttribute="bottom" id="vFh-jk-2QI"/>
             </constraints>
         </customView>
+        <viewController title="Collections List Instructions" id="5dd-3O-WRK" customClass="GLAProjectInstructionsViewController">
+            <connections>
+                <outlet property="mainInstructionTextLabel" destination="chl-Vp-HVE" id="kBj-cE-IQ9"/>
+                <outlet property="view" destination="Idz-io-wKr" id="EYu-4j-kHe"/>
+            </connections>
+        </viewController>
+        <viewController title="Highlights List Instructions" id="bNf-jR-Sti" customClass="GLAProjectInstructionsViewController">
+            <connections>
+                <outlet property="mainInstructionTextLabel" destination="kal-bU-mMW" id="1sf-Hq-v4K"/>
+                <outlet property="view" destination="OZm-di-0Uz" id="jOR-Lo-xCd"/>
+            </connections>
+        </viewController>
         <menu id="GiZ-xZ-qxO">
             <items>
                 <menuItem title="Rename or Recolor Collection…" id="5AV-kD-8fd">
@@ -488,5 +502,54 @@
             </items>
             <point key="canvasLocation" x="424" y="250.5"/>
         </menu>
+        <customView identifier="collectionsListInstructions" id="Idz-io-wKr">
+            <rect key="frame" x="0.0" y="0.0" width="206" height="199"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="chl-Vp-HVE">
+                    <rect key="frame" x="-2" y="20" width="210" height="179"/>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="Pd7-v0-Fcz">
+                        <font key="font" size="13" name="AvenirNext-MediumItalic"/>
+                        <string key="title">Collections are groups to hold your files and folders. Collect similar items together inside, even from separate location or cloud services.</string>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="chl-Vp-HVE" secondAttribute="bottom" constant="20" id="84D-vp-xl3"/>
+                <constraint firstAttribute="trailing" secondItem="chl-Vp-HVE" secondAttribute="trailing" id="N3E-7p-ov8"/>
+                <constraint firstItem="chl-Vp-HVE" firstAttribute="leading" secondItem="Idz-io-wKr" secondAttribute="leading" id="NEm-DX-azq"/>
+                <constraint firstItem="chl-Vp-HVE" firstAttribute="top" secondItem="Idz-io-wKr" secondAttribute="top" id="lXo-zu-pbl"/>
+            </constraints>
+            <point key="canvasLocation" x="-346" y="-155.5"/>
+        </customView>
+        <customView identifier="highlightsListInstructions" id="OZm-di-0Uz">
+            <rect key="frame" x="0.0" y="0.0" width="250" height="199"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kal-bU-mMW">
+                    <rect key="frame" x="18" y="20" width="214" height="179"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="210" id="OhI-J3-OPk"/>
+                    </constraints>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" id="kVx-69-vmP">
+                        <font key="font" size="13" name="AvenirNext-MediumItalic"/>
+                        <string key="title">Highlights are the most important items from your collections that you need quick regular access to.
+ 
+Add items here using the right-click menu when inside a collection.</string>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="kal-bU-mMW" firstAttribute="top" secondItem="OZm-di-0Uz" secondAttribute="top" id="UU3-wR-2mV"/>
+                <constraint firstItem="kal-bU-mMW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="OZm-di-0Uz" secondAttribute="leading" constant="20" id="bMe-hd-luO"/>
+                <constraint firstAttribute="trailing" secondItem="kal-bU-mMW" secondAttribute="trailing" constant="20" symbolic="YES" id="e3h-pu-8iC"/>
+                <constraint firstAttribute="bottom" secondItem="kal-bU-mMW" secondAttribute="bottom" constant="20" id="roh-Bk-Ros"/>
+            </constraints>
+            <point key="canvasLocation" x="573" y="-131.5"/>
+        </customView>
     </objects>
 </document>

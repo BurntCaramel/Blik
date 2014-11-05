@@ -7,6 +7,7 @@
 //
 
 #import "GLAViewController.h"
+#import "GLAProjectInstructionsViewController.h"
 #import "GLAProject.h"
 #import "GLAHighlightedItem.h"
 
@@ -20,6 +21,8 @@
 @property(nonatomic) IBOutlet NSLayoutConstraint *scrollLeadingConstraint;
 
 @property(weak) IBOutlet GLAProjectViewController *parentViewController;
+
+@property(strong, nonatomic) IBOutlet GLAProjectInstructionsViewController *instructionsViewController;
 
 @property(nonatomic) GLAProject *project;
 @property(nonatomic) NSArray *highlightedItems;

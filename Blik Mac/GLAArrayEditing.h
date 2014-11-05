@@ -30,6 +30,6 @@
 - (void)replaceChildrenAtIndexes:(NSIndexSet *)indexes withObjects:(NSArray *)objects;
 - (void)moveChildrenAtIndexes:(NSIndexSet *)indexes toIndex:(NSUInteger)toIndex;
 
-- (BOOL)replaceFirstChildWhoseKey:(NSString *)key hasValue:(id)value usingChangeBlock:(id (^)(id originalObject))objectChanger;
+- (BOOL)replaceFirstChildWhoseKeyPath:(NSString *)key hasValue:(id)value usingChangeBlock:(id (^)(id originalObject))objectChanger;
 
 @end

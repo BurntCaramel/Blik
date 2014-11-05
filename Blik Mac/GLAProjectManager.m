@@ -311,7 +311,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	__block GLACollection *changedCollection = nil;
 	
 	[self editCollectionsOfProject:project usingBlock:^(id<GLAArrayEditing> collectionListEditor) {
-		[collectionListEditor replaceFirstChildWhoseKey:@"UUID" hasValue:(collection.UUID) usingChangeBlock:^GLACollection *(GLACollection *originalCollection) {
+		[collectionListEditor replaceFirstChildWhoseKeyPath:@"UUID" hasValue:(collection.UUID) usingChangeBlock:^GLACollection *(GLACollection *originalCollection) {
 			changedCollection = [originalCollection copyWithChangesFromEditing:editBlock];
 			return changedCollection;
 		}];

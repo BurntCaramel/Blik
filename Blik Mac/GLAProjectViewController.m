@@ -10,6 +10,7 @@
 #import "GLAProjectViewController.h"
 #import "GLAProjectCollectionsViewController.h"
 #import "GLAProjectHighlightsViewController.h"
+#import "GLAProjectInstructionsViewController.h"
 //#import "GLAProjectPlanViewController.h"
 #import "GLAUIStyle.h"
 #import "GLAProjectManager.h"
