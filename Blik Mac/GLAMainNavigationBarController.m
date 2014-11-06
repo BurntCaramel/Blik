@@ -208,6 +208,26 @@
 	return (self.private_enabled);
 }
 
+#pragma mark Accessing State
+
+- (GLAProject *)currentProject
+{
+	GLAMainContentSection *currentSection = (self.currentSection);
+	NSAssert([currentSection isKindOfClass:[GLAMainContentEditProjectSection class]], @"Current section (%@) must be a GLAMainContentEditProjectSection when calling -currentProject", currentSection);
+	
+	GLAMainContentEditProjectSection *editProjectSection = (GLAMainContentEditProjectSection *)currentSection;
+	return (editProjectSection.project);
+}
+
+- (GLACollection *)currentCollection
+{
+	GLAMainContentSection *currentSection = (self.currentSection);
+	NSAssert([currentSection isKindOfClass:[GLAMainContentEditCollectionSection class]], @"Current section (%@) must be a GLAMainContentEditCollectedSection when calling -currentCollection", currentSection);
+	
+	GLAMainContentEditCollectionSection *editCollectionSection = (GLAMainContentEditCollectionSection *)currentSection;
+	return (editCollectionSection.collection);
+}
+
 #pragma mark Hiding and Showing Buttons
 
 - (void)showMainButtons
@@ -288,11 +308,22 @@
 
 - (void)showButtonsForEditingExistingProject
 {
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProject *nowProject = (pm.nowProject);
+	GLAProject *currentProject = (self.currentProject);
+	
 	NSString *backTitle = (self.titleForEditingProjectBackButton);
 	GLAButton *backButton = [self addLeadingButtonWithTitle:backTitle action:@selector(exitEditedProject:) identifier:@"back-editingProject"];
 	(self.editingProjectBackButton) = backButton;
 	
-	NSString *workOnNowTitle = NSLocalizedString(@"Work on Now", @"Title for Work on Now button in an edited project");
+	NSString *workOnNowTitle = nil;
+	if ((nowProject != nil) && [(nowProject.UUID) isEqual:(currentProject.UUID)]) {
+		workOnNowTitle = NSLocalizedString(@"Already Working on Now", @"Title for Work on Now button in an edited project that is already the now project");
+	}
+	else {
+		workOnNowTitle = NSLocalizedString(@"Work on Now", @"Title for Work on Now button in an edited project");
+	}
+	
 	GLAButton *workOnNowButton = [self addTrailingButtonWithTitle:workOnNowTitle action:@selector(workOnCurrentProjectNow:) identifier:@"workOnNow-editingProject"];
 	(workOnNowButton.hasSecondaryStyle) = NO;
 	(workOnNowButton.hasPrimaryStyle) = YES;
@@ -357,15 +388,6 @@
 		(self.addingNewProjectCancelButton) = nil;
 		(self.addingNewProjectButtonGroup) = nil;
 	}];
-}
-
-- (GLACollection *)currentCollection
-{
-	GLAMainContentSection *currentSection = (self.currentSection);
-	NSAssert([currentSection isKindOfClass:[GLAMainContentEditCollectionSection class]], @"Current section (%@) must be a GLAMainContentEditCollectedSection when calling -showButtonsForCurrentCollection", currentSection);
-	
-	GLAMainContentEditCollectionSection *editCollectionSection = (GLAMainContentEditCollectionSection *)currentSection;
-	return (editCollectionSection.collection);
 }
 
 - (void)showButtonsForCurrentCollection

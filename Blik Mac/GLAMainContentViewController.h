@@ -87,6 +87,8 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 
 - (void)enterCollection:(GLACollection *)collection;
 
+- (IBAction)addNewFilesListCollection:(id)sender;
+
 #pragma mark -
 
 - (void)projectViewControllerDidBecomeActive:(GLAProjectViewController *)projectViewController;

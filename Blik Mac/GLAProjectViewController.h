@@ -55,6 +55,7 @@
 - (IBAction)editCollections:(id)sender;
 @property(readonly, nonatomic) BOOL editingCollections;
 - (IBAction)addNewCollection:(id)sender;
+- (IBAction)addNewFilesListCollection:(id)sender;
 
 - (IBAction)editPlan:(id)sender;
 @property(readonly, nonatomic) BOOL editingPlan;

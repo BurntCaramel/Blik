@@ -16,8 +16,6 @@
             <connections>
                 <outlet property="activityStatusMenuItem" destination="i0u-LY-wXa" id="ZsJ-xQ-cty"/>
                 <outlet property="mainHelpMenu" destination="F2S-fz-NVQ" id="6Va-3s-85r"/>
-                <outlet property="prototypeAMenuItem" destination="snW-S8-Cw5" id="AzG-9Z-dgI"/>
-                <outlet property="prototypeBMenuItem" destination="HIr-Z5-ajm" id="RhG-Rf-BmS"/>
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
@@ -351,7 +349,11 @@ DQ
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Collections" id="y5R-d6-Gfj">
                         <items>
-                            <menuItem title="Add Files Collection…" keyEquivalent="N" id="jfO-Ol-vRE"/>
+                            <menuItem title="Add Files Collection…" keyEquivalent="N" id="jfO-Ol-vRE">
+                                <connections>
+                                    <action selector="addNewFilesListCollection:" target="-1" id="dQd-Ke-bDS"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Add Contacts Collection…" hidden="YES" keyEquivalent="C" id="McO-7U-HxW"/>
                             <menuItem isSeparatorItem="YES" id="igl-0Q-9Ql"/>
                             <menuItem title="Change Application to Open Files of Type…" id="mBU-GE-fzv">
@@ -360,7 +362,7 @@ DQ
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Highlights" id="96z-eX-NDn">
+                <menuItem title="Highlights" hidden="YES" id="96z-eX-NDn">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Highlights" id="5cF-uk-BG1">
                         <items>
@@ -415,25 +417,6 @@ DQ
                                         </menuItem>
                                     </items>
                                 </menu>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
-                <menuItem title="Prototype" id="H8h-7b-M4v">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Prototype" id="HyV-fh-RgO">
-                        <items>
-                            <menuItem title="Show Prototype A" id="snW-S8-Cw5">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="toggleShowingPrototypeA:" target="Voe-Tx-rLC" id="PhB-p7-Bya"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Show Prototype B" id="HIr-Z5-ajm">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="toggleShowingMainWindow:" target="Voe-Tx-rLC" id="SAT-QC-zMy"/>
-                                </connections>
                             </menuItem>
                         </items>
                     </menu>

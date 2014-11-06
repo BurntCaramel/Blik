@@ -36,6 +36,8 @@
 
 @property(nonatomic) NSIndexSet *draggedRowIndexes;
 
+@property(nonatomic) NSMutableArray *highlightedItemsToAddOnceLoaded;
+
 @end
 
 @implementation GLAFileCollectionViewController
@@ -66,6 +68,7 @@
 	(tableView.delegate) = self;
 	(tableView.identifier) = @"filesCollectionViewController.sourceFilesListTableView";
 	(tableView.menu) = (self.sourceFilesListContextualMenu);
+	(tableView.doubleAction) = @selector(openSelectedFiles:);
 	[uiStyle prepareContentTableView:tableView];
 	
 	[tableView registerForDraggedTypes:@[[GLACollectedFile objectJSONPasteboardType]]];
@@ -83,6 +86,19 @@
 	[self reloadSourceFiles];
 }
 
+- (GLAProject *)project
+{
+	GLACollection *filesListCollection = (self.filesListCollection);
+	NSUUID *projectUUID = (filesListCollection.projectUUID);
+	NSAssert(projectUUID != nil, @"Collection must have a project associated with it.");
+	
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProject *project = [pm projectWithUUID:projectUUID];
+	NSAssert(project != nil, @"Must be able to find project with UUID.");
+	
+	return project;
+}
+
 - (void)startCollectionObserving
 {
 	GLACollection *collection = (self.filesListCollection);
@@ -95,6 +111,11 @@
 	
 	// Project Collection List
 	[nc addObserver:self selector:@selector(filesListDidChangeNotification:) name:GLACollectionFilesListDidChangeNotification object:[pm notificationObjectForCollection:collection]];
+	
+	GLAProject *project = (self.project);
+	if (project) {
+		[nc addObserver:self selector:@selector(highlightedItemsDidChangeNotification:) name:GLAProjectHighlightsDidChangeNotification object:[pm notificationObjectForProject:project]];
+	}
 }
 
 - (void)stopCollectionObserving
@@ -109,6 +130,11 @@
 	
 	// Stop observing any notifications on the project manager.
 	[nc removeObserver:self name:nil object:[pm notificationObjectForCollection:collection]];
+	
+	GLAProject *project = (self.project);
+	if (project) {
+		[nc removeObserver:self name:nil object:[pm notificationObjectForProject:project]];
+	}
 }
 
 - (void)setUpFileInfoRetriever
@@ -163,6 +189,11 @@
 - (void)filesListDidChangeNotification:(NSNotification *)note
 {
 	[self reloadSourceFiles];
+}
+
+- (void)highlightedItemsDidChangeNotification:(NSNotification *)note
+{
+	[self addAnyPendingHighlightedItems];
 }
 
 - (void)updateQuickLookPreview
@@ -695,12 +726,6 @@
 	NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:clickedIndexes];
 	
 	GLACollection *filesListCollection = (self.filesListCollection);
-	NSUUID *projectUUID = (filesListCollection.projectUUID);
-	NSAssert(projectUUID != nil, @"Collection must have a project associated with it.");
-	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-	GLAProject *project = [pm projectWithUUID:projectUUID];
-	NSAssert(projectUUID != nil, @"Must be able to find project with UUID.");
 	
 	NSMutableArray *highlightedItems = [NSMutableArray array];
 	for (GLACollectedFile *collectedFile in collectedFiles) {
@@ -711,15 +736,47 @@
 		[highlightedItems addObject:highlightedCollectedFile];
 	}
 	
-	NSTableView *tableView = (self.sourceFilesListTableView);
-	[tableView beginUpdates];
-	
-	[pm editHighlightsOfProject:project usingBlock:^(id<GLAArrayEditing> highlightsEditor) {
+	[self addHighlightedItemsToHighlights:highlightedItems loadIfNeeded:YES];
+}
+
+- (void)addHighlightedItemsToHighlights:(NSArray *)highlightedItems loadIfNeeded:(BOOL)load
+{
+	void (^editingBlock)(id<GLAArrayEditing> highlightsEditor) = ^(id<GLAArrayEditing> highlightsEditor) {
 		NSArray *filteredItems = [highlightsEditor filterArray:highlightedItems whoseValuesIsNotPresentForKeyPath:@"collectedFileUUID"];
 		[highlightsEditor addChildren:filteredItems];
-	}];
+	};
 	
-	[tableView endUpdates];
+	GLAProject *project = (self.project);
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	
+	if ([pm hasLoadedHighlightsForProject:project]) {
+		NSTableView *tableView = (self.sourceFilesListTableView);
+		[tableView beginUpdates];
+		
+		[pm editHighlightsOfProject:project usingBlock:editingBlock];
+		
+		[tableView endUpdates];
+	}
+	else if (load) {
+		[pm loadHighlightsForProjectIfNeeded:project];
+		
+		NSMutableArray *highlightedItemsToAddOnceLoaded = (self.highlightedItemsToAddOnceLoaded);
+		if (!highlightedItemsToAddOnceLoaded) {
+			(self.highlightedItemsToAddOnceLoaded) = highlightedItemsToAddOnceLoaded = [NSMutableArray new];
+		}
+		
+		[highlightedItemsToAddOnceLoaded addObjectsFromArray:highlightedItems];
+	}
+}
+
+- (void)addAnyPendingHighlightedItems
+{
+	NSMutableArray *highlightedItemsToAddOnceLoaded = (self.highlightedItemsToAddOnceLoaded);
+	
+	if (highlightedItemsToAddOnceLoaded) {
+		[self addHighlightedItemsToHighlights:highlightedItemsToAddOnceLoaded loadIfNeeded:NO];
+		(self.highlightedItemsToAddOnceLoaded) = nil;
+	}
 }
 
 #pragma mark Events

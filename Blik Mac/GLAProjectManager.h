@@ -75,6 +75,7 @@
 
 #pragma mark Highlights
 
+- (BOOL)hasLoadedHighlightsForProject:(GLAProject *)project;
 - (void)loadHighlightsForProjectIfNeeded:(GLAProject *)project;
 - (NSArray /* GLAHighlightedItem */ *)copyHighlightsForProject:(GLAProject *)project;
 

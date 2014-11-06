@@ -69,12 +69,20 @@
 
 #pragma mark Collections
 
+- (BOOL)hasLoadedCollectionsForProject:(GLAProject *)project;
 - (void)requestCollectionsForProject:(GLAProject *)project;
 - (GLAArrayEditorStore *)collectionsEditorStoreForProject:(GLAProject *)project;
 - (NSArray *)copyCollectionsForProject:(GLAProject *)project;
 - (GLACollection *)collectionWithUUID:(NSUUID *)collectionUUID;
 
 - (void)requestSaveCollectionsForProject:(GLAProject *)project;
+
+#pragma mark Highlights
+
+- (BOOL)hasLoadedHighlightsForProject:(GLAProject *)project;
+- (void)loadHighlightsForProjectIfNeeded:(GLAProject *)project;
+- (GLAArrayEditorStore *)highlightsEditorStoreForProject:(GLAProject *)project;
+- (NSArray /*id<GLACollectedItem>*/ *)copyHighlightsForProject:(GLAProject *)project;
 
 #pragma mark Collection Files List
 
@@ -87,12 +95,6 @@
 - (GLACollectedFile *)collectedFileWithUUID:(NSUUID *)collectionUUID insideCollection:(GLACollection *)filesListCollection;
 
 - (void)requestSaveFilesListForCollection:(GLACollection *)filesListCollection;
-
-#pragma mark Highlights
-
-- (void)loadHighlightsForProjectIfNeeded:(GLAProject *)project;
-- (GLAArrayEditorStore *)highlightsEditorStoreForProject:(GLAProject *)project;
-- (NSArray /*id<GLACollectedItem>*/ *)copyHighlightsForProject:(GLAProject *)project;
 
 #pragma mark Saving
 
@@ -255,6 +257,12 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 #pragma mark Collections
 
+- (BOOL)hasLoadedCollectionsForProject:(GLAProject *)project
+{
+	NSAssert(project != nil, @"Project must not be nil.");
+	return [(self.store) hasLoadedCollectionsForProject:project];
+}
+
 - (void)loadCollectionsForProjectIfNeeded:(GLAProject *)project
 {
 	NSAssert(project != nil, @"Project must not be nil.");
@@ -297,6 +305,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	GLACollection *collection = [GLACollection newWithType:type creatingFromEditing:^(id<GLACollectionEditing> collectionEditor) {
 		(collectionEditor.name) = name;
 		(collectionEditor.color) = color;
+		(collectionEditor.projectUUID) = (project.UUID);
 	}];
 	
 	[self editCollectionsOfProject:project usingBlock:^(id<GLAArrayEditing> collectionListEditor) {
@@ -343,6 +352,12 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 }
 
 #pragma mark Highlights
+
+- (BOOL)hasLoadedHighlightsForProject:(GLAProject *)project
+{
+	NSAssert(project != nil, @"Project must not be nil.");
+	return [(self.store) hasLoadedHighlightsForProject:project];
+}
 
 - (void)loadHighlightsForProjectIfNeeded:(GLAProject *)project
 {
@@ -1286,7 +1301,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 #pragma mark Highlights
 
-- (GLAArrayEditorStore *)highlightsEditorStoreForProject:(GLAProject *)project
+- (GLAArrayEditorStore *)highlightsEditorStoreForProject:(GLAProject *)project createIfNeeded:(BOOL)create
 {
 	NSMutableDictionary *projectIDsToHighlightsEditorStores = (self.projectIDsToHighlightsEditorStores);
 	if (projectIDsToHighlightsEditorStores == nil) {
@@ -1297,6 +1312,9 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	GLAArrayEditorStore *highlightsEditorStore = projectIDsToHighlightsEditorStores[projectUUID];
 	if (highlightsEditorStore) {
 		return highlightsEditorStore;
+	}
+	else if (!create) {
+		return nil;
 	}
 	
 	NSURL *JSONFileURL = [self highlightsListJSONFileURLForProjectID:projectUUID];
@@ -1310,6 +1328,21 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	projectIDsToHighlightsEditorStores[projectUUID] = highlightsEditorStore;
 	
 	return highlightsEditorStore;
+}
+
+- (GLAArrayEditorStore *)highlightsEditorStoreForProject:(GLAProject *)project
+{
+	return [self highlightsEditorStoreForProject:project createIfNeeded:YES];
+}
+
+- (BOOL)hasLoadedHighlightsForProject:(GLAProject *)project
+{
+	GLAArrayEditorStore *highlightsEditorStore = [self highlightsEditorStoreForProject:project createIfNeeded:NO];
+	if (!highlightsEditorStore) {
+		return NO;
+	}
+	
+	return (highlightsEditorStore.finishedLoading);
 }
 
 - (void)loadHighlightsForProjectIfNeeded:(GLAProject *)project

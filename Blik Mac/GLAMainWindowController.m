@@ -228,6 +228,11 @@
 
 #pragma mark New Collection
 
+- (IBAction)addNewFilesListCollection:(id)sender
+{
+	[(self.mainContentViewController) addNewFilesListCollection:sender];
+}
+
 #pragma mark Collections
 
 - (void)enterCollection:(GLACollection *)collection
@@ -408,8 +413,7 @@
 
 - (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewProjectViewController:(GLAAddNewProjectViewController *)addNewProjectViewController didConfirmCreatingProject:(GLAProject *)project
 {
-	[self workOnProjectNow:project];
-	//[self goToPreviousSection];
+	[self editProject:project];
 }
 
 - (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewController:(GLAAddNewCollectionViewController *)addNewCollectionViewController didConfirmCreatingCollection:(GLACollection *)collection

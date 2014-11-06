@@ -46,7 +46,7 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UnQ-Ry-Bvo">
-                                                        <rect key="frame" x="18" y="6" width="358" height="28"/>
+                                                        <rect key="frame" x="18" y="6" width="364" height="28"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="28" id="Ayg-4M-gxk"/>
                                                         </constraints>
@@ -64,7 +64,7 @@
                                                         </buttonCell>
                                                     </button>
                                                     <button horizontalHuggingPriority="300" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RUk-GO-gyx" customClass="GLAButton">
-                                                        <rect key="frame" x="382" y="0.0" width="95" height="40"/>
+                                                        <rect key="frame" x="388" y="0.0" width="95" height="40"/>
                                                         <buttonCell key="cell" type="square" title="Work On Now" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eD0-2P-IqQ" customClass="GLAButtonCell">
                                                             <behavior key="behavior" lightByContents="YES"/>
                                                             <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -90,7 +90,7 @@
                                                     <constraint firstItem="UnQ-Ry-Bvo" firstAttribute="top" secondItem="LCw-fj-f7m" secondAttribute="top" constant="6" id="22V-nJ-Fuc"/>
                                                     <constraint firstAttribute="bottom" secondItem="UnQ-Ry-Bvo" secondAttribute="bottom" constant="6" id="4Te-Tm-d4E"/>
                                                     <constraint firstItem="RUk-GO-gyx" firstAttribute="top" secondItem="LCw-fj-f7m" secondAttribute="top" id="Hjh-b0-buq"/>
-                                                    <constraint firstAttribute="trailing" secondItem="RUk-GO-gyx" secondAttribute="trailing" constant="20" id="XvU-v1-5AI"/>
+                                                    <constraint firstAttribute="trailing" secondItem="RUk-GO-gyx" secondAttribute="trailing" constant="14" id="XvU-v1-5AI"/>
                                                     <constraint firstAttribute="bottom" secondItem="RUk-GO-gyx" secondAttribute="bottom" id="g33-ec-Gd0"/>
                                                     <constraint firstItem="RUk-GO-gyx" firstAttribute="leading" secondItem="UnQ-Ry-Bvo" secondAttribute="trailing" constant="8" id="qZg-fJ-5O9"/>
                                                     <constraint firstItem="UnQ-Ry-Bvo" firstAttribute="leading" secondItem="LCw-fj-f7m" secondAttribute="leading" constant="20" symbolic="YES" id="rDn-CG-94M"/>

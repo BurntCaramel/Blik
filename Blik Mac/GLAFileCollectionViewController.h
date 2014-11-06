@@ -29,6 +29,7 @@
 @property(nonatomic) QLPreviewView *quickLookPreviewView;
 
 @property(nonatomic) GLACollection *filesListCollection;
+@property(nonatomic) GLAProject *project;
 
 @property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
 

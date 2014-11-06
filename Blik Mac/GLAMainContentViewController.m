@@ -443,6 +443,14 @@
 	[self goToSection:section];
 }
 
+- (IBAction)addNewFilesListCollection:(id)sender
+{
+	GLAProjectViewController *activeProjectViewController = (self.activeProjectViewController);
+	if (activeProjectViewController) {
+		[activeProjectViewController addNewFilesListCollection:sender];
+	}
+}
+
 #pragma mark -
 
 #pragma mark Active/Inactive Project View Controller

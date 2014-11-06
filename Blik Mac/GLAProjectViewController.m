@@ -173,6 +173,11 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerRequestAddNewCollectionNotification object:self];
 }
 
+- (IBAction)addNewFilesListCollection:(id)sender
+{
+	[self addNewCollection:sender];
+}
+
 #if 0
 
 - (IBAction)editPlan:(id)sender
