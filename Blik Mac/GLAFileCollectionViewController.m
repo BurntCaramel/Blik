@@ -676,7 +676,7 @@
 		return;
 	}
 	
-	if ((selectedURLs.count) == 1) {
+	/*if ((selectedURLs.count) == 1) {
 		NSURL *fileURL = selectedURLs[0];
 		NSNumber *isDirectoryValue;
 		if ([fileURL getResourceValue:&isDirectoryValue forKey:NSURLIsDirectoryKey error:nil]) {
@@ -685,7 +685,7 @@
 				return;
 			}
 		}
-	}
+	}*/
 	
 	NSURL *applicationURL = (self.chosenOpenerApplicationForSelection);
 	
