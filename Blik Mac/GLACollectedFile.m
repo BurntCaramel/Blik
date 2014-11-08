@@ -18,6 +18,7 @@
 
 @property(readwrite, nonatomic) NSString *filePath;
 
+@property(readwrite, nonatomic) BOOL isMissing;
 @property(readwrite, nonatomic) BOOL isDirectory;
 @property(readwrite, nonatomic) BOOL isExecutable;
 @property(readwrite, copy, nonatomic) NSString *name;
@@ -33,6 +34,15 @@
 	self = [super init];
 	if (self) {
 		_URL = URL;
+	}
+	return self;
+}
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionaryValue error:(NSError *__autoreleasing *)error
+{
+	self = [super initWithDictionary:dictionaryValue error:error];
+	if (self) {
+		
 	}
 	return self;
 }
@@ -71,6 +81,7 @@
   @{
 	@"URL": null,
 	@"name": null,
+	@"isMissing": null,
 	@"isDirectory": null,
 	@"isExecutable": null
 	};
@@ -134,35 +145,74 @@
 
 - (void)setBookmarkData:(NSData *)bookmarkData
 {
-	_bookmarkData = bookmarkData;
-	
-	BOOL isStale = NO;
 	NSError *error = nil;
-	NSURL *URL = [NSURL URLByResolvingBookmarkData:bookmarkData options:NSURLBookmarkResolutionWithSecurityScope relativeToURL:nil bookmarkDataIsStale:&isStale error:&error];
-	(self.URL) = URL;
+	BOOL isValid = [self validateBookmarkData:&bookmarkData updateProperties:YES error:&error];
+	if (!isValid) {
+		_bookmarkData = nil;
+		return;
+	}
+	
+	_bookmarkData = bookmarkData;
 	
 	NSArray *resourceValueKeys = [[self class] coreResourceValueKeys];
 	NSDictionary *resourceValues = [NSURL resourceValuesForKeys:resourceValueKeys fromBookmarkData:bookmarkData];
 	[self updateInformationFromURLResourceValues:resourceValues];
 }
 
+#if 1
 - (BOOL)validateBookmarkData:(inout __autoreleasing NSData **)ioBookmarkData error:(out NSError *__autoreleasing *)outError
+{
+	return [self validateBookmarkData:ioBookmarkData updateProperties:NO error:outError];
+}
+
+- (BOOL)validateBookmarkData:(inout __autoreleasing NSData **)ioBookmarkData updateProperties:(BOOL)update error:(out NSError *__autoreleasing *)outError
 {
 	NSData *bookmarkData = *ioBookmarkData;
 	BOOL isStale = NO;
+	NSError *error = nil;
 	// Resolve the bookmark data.
-	NSURL *URL = [NSURL URLByResolvingBookmarkData:bookmarkData options:NSURLBookmarkResolutionWithSecurityScope relativeToURL:nil bookmarkDataIsStale:&isStale error:outError];
+	NSURL *URL = [NSURL URLByResolvingBookmarkData:bookmarkData options:NSURLBookmarkResolutionWithSecurityScope relativeToURL:nil bookmarkDataIsStale:&isStale error:&error];
 	// No URL could be found: invalid.
 	if (!URL) {
-		return NO;
+		switch (error.code) {
+			case NSFileNoSuchFileError:
+			case NSFileReadUnknownError:
+			case NSFileReadNoSuchFileError:
+			if (update) {
+				(self.isMissing) = YES;
+			}
+			return YES;
+			
+			default:
+			*outError = error;
+			return NO;
+		}
+	}
+	
+	if (update) {
+		(self.URL) = URL;
+		
+		//BOOL isReachable = [URL checkResourceIsReachableAndReturnError:&error];
 	}
 	
 	// Is stale: needs updating to new bookmark data.
 	if (isStale) {
 		NSArray *resourceValues = [[self class] coreResourceValueKeys];
-		bookmarkData = [URL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys:resourceValues relativeToURL:nil error:outError];
+		bookmarkData = [URL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys:resourceValues relativeToURL:nil error:&error];
 		if (!bookmarkData) {
-			return NO;
+			switch (error.code) {
+				case NSFileNoSuchFileError:
+				case NSFileReadUnknownError:
+				case NSFileReadNoSuchFileError:
+				if (update) {
+					(self.isMissing) = YES;
+				}
+				return YES;
+				
+				default:
+				*outError = error;
+				return NO;
+			}
 		}
 		
 		*ioBookmarkData = bookmarkData;
@@ -170,5 +220,6 @@
 	
 	return YES;
 }
+#endif
 
 @end

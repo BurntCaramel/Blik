@@ -36,12 +36,18 @@
 	}
 }
 
+- (instancetype)initByEditing:(void(^)(id<GLAHighlightedItemEditing> editor))editingBlock
+{
+	self = [super init];
+	if (self) {
+		editingBlock(self);
+	}
+	return self;
+}
+
 + (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedItemEditing> editor))editingBlock
 {
-	GLAHighlightedItem *instance = [self new];
-	editingBlock(instance);
-	
-	return instance;
+	return [[self alloc] initByEditing:editingBlock];
 }
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedItemEditing>editor))editingBlock
@@ -77,12 +83,9 @@
 	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLACollection class]];
 }
 
-+ (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedCollectionEditing> editor))editingBlock
+- (instancetype)initByEditing:(void(^)(id<GLAHighlightedCollectionEditing> editor))editingBlock
 {
-	GLAHighlightedCollection *instance = [self new];
-	editingBlock(instance);
-	
-	return instance;
+	return [super initByEditing:editingBlock];
 }
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedCollectionEditing>editor))editingBlock
@@ -131,9 +134,14 @@
 	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLACollectedFile class]];
 }
 
+- (instancetype)initByEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock
+{
+	return [super initByEditing:editingBlock];
+}
+
 + (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock
 {
-	return [super newCreatedFromEditing:editingBlock];
+	return [[self alloc] initByEditing:editingBlock];
 }
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing>editor))editingBlock

@@ -54,13 +54,19 @@
 	(self.color) = [[GLACollectionColor alloc] initWithIdentifier:colorIdentifier];
 }
 
+- (instancetype)initWithType:(NSString *)collectionType creatingFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock
+{
+	self = [super init];
+	if (self) {
+		(self.type) = collectionType;
+		editingBlock(self);
+	}
+	return self;
+}
+
 + (instancetype)newWithType:(NSString *)collectionType creatingFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock
 {
-	GLACollection *collection = [self new];
-	(collection.type) = collectionType;
-	editingBlock(collection);
-	
-	return collection;
+	return [[self alloc] initWithType:collectionType creatingFromEditing:editingBlock];
 }
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLACollectionEditing>editor))collectionEditingBlock

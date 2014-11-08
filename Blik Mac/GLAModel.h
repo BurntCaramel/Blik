@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
+@import Cocoa;
 #import "Mantle/Mantle.h"
 #import "NSValueTransformer+GLAModel.h"
 

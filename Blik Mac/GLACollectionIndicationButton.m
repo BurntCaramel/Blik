@@ -64,7 +64,6 @@
 	}
 	
 	NSColor *color = (self.colorForDrawing);
-	NSLog(@"COLLECTION INDICATION %@", color);
 	if (color) {
 		(dotLayer.backgroundColor) = (color.CGColor);
 	}

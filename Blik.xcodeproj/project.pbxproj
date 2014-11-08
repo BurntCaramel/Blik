@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		984EA831E1971325C5DB4783 /* libPods-BlikTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 10BFA027B9AC2E4B2BAD65B4 /* libPods-BlikTests.a */; };
 		ACAA15FDD8554126A606F258 /* libPods-Blik.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 659FE625B2454CA095734DA4 /* libPods-Blik.a */; };
 		B20362C11A0779F3007169C2 /* GLACollectedFilesSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = B20362C01A0779F3007169C2 /* GLACollectedFilesSetting.m */; };
 		B20362C41A077C87007169C2 /* GLAFileOpenerApplicationCombiner.m in Sources */ = {isa = PBXBuildFile; fileRef = B20362C31A077C87007169C2 /* GLAFileOpenerApplicationCombiner.m */; };
@@ -74,7 +75,6 @@
 		B2ADDBF11963DA2E0014EF84 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBF01963DA2E0014EF84 /* XCTest.framework */; };
 		B2ADDBF21963DA2E0014EF84 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */; };
 		B2ADDBFA1963DA2E0014EF84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBF81963DA2E0014EF84 /* InfoPlist.strings */; };
-		B2ADDBFC1963DA2E0014EF84 /* Glance_Prototype_ATests.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ADDBFB1963DA2E0014EF84 /* Glance_Prototype_ATests.m */; };
 		B2ADDC081963DA970014EF84 /* GLAPrototypeAWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ADDC061963DA970014EF84 /* GLAPrototypeAWindowController.m */; };
 		B2ADDC091963DA970014EF84 /* GLAPrototypeAWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDC071963DA970014EF84 /* GLAPrototypeAWindowController.xib */; };
 		B2ADDC0D1964E3E10014EF84 /* GLAPrototypeAFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ADDC0B1964E3E10014EF84 /* GLAPrototypeAFilesViewController.m */; };
@@ -98,20 +98,25 @@
 		B2F0DBC719936321001AB5EE /* GLAChooseRemindersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2F0DBC519936321001AB5EE /* GLAChooseRemindersViewController.xib */; };
 		B2F0DBCA199449FB001AB5EE /* GLAPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B2F0DBC9199449FB001AB5EE /* GLAPopUpButton.m */; };
 		B2F0DBCD1994C854001AB5EE /* GLATextField.m in Sources */ = {isa = PBXBuildFile; fileRef = B2F0DBCC1994C854001AB5EE /* GLATextField.m */; };
+		E240A36C1A0DA7E70043AE93 /* GLATestCollections.swift in Sources */ = {isa = PBXBuildFile; fileRef = E240A36B1A0DA7E70043AE93 /* GLATestCollections.swift */; };
+		E240A36E1A0DAAA70043AE93 /* GLATestCollectionsObjC.m in Sources */ = {isa = PBXBuildFile; fileRef = E240A36D1A0DAAA70043AE93 /* GLATestCollectionsObjC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		B2ADDBF31963DA2E0014EF84 /* PBXContainerItemProxy */ = {
+		E240A3721A0DD3620043AE93 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B2ADDBC61963DA2E0014EF84 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = B2ADDBCD1963DA2E0014EF84;
-			remoteInfo = "Glance Prototype A";
+			remoteInfo = Blik;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0B4ACAFDF5CB4F2F9F98B3F3 /* Pods-Blik.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blik.xcconfig"; path = "Pods/Pods-Blik.xcconfig"; sourceTree = "<group>"; };
+		10BFA027B9AC2E4B2BAD65B4 /* libPods-BlikTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BlikTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1EA2B9BA7A505AD231D594E9 /* Pods-BlikTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BlikTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BlikTests/Pods-BlikTests.release.xcconfig"; sourceTree = "<group>"; };
+		3318411E92DD9A60CC0431E0 /* Pods-BlikTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BlikTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BlikTests/Pods-BlikTests.debug.xcconfig"; sourceTree = "<group>"; };
+		4D5189C1BFA28955BC50B886 /* Pods-Blik.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blik.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Blik/Pods-Blik.debug.xcconfig"; sourceTree = "<group>"; };
 		659FE625B2454CA095734DA4 /* libPods-Blik.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Blik.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B20362BF1A0779F3007169C2 /* GLACollectedFilesSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLACollectedFilesSetting.h; sourceTree = "<group>"; };
 		B20362C01A0779F3007169C2 /* GLACollectedFilesSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLACollectedFilesSetting.m; sourceTree = "<group>"; };
@@ -236,7 +241,6 @@
 		B2ADDBF01963DA2E0014EF84 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		B2ADDBF71963DA2E0014EF84 /* BlikTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BlikTests-Info.plist"; sourceTree = "<group>"; };
 		B2ADDBF91963DA2E0014EF84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		B2ADDBFB1963DA2E0014EF84 /* Glance_Prototype_ATests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Glance_Prototype_ATests.m; sourceTree = "<group>"; };
 		B2ADDC051963DA970014EF84 /* GLAPrototypeAWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLAPrototypeAWindowController.h; path = ../GLAPrototypeAWindowController.h; sourceTree = "<group>"; };
 		B2ADDC061963DA970014EF84 /* GLAPrototypeAWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GLAPrototypeAWindowController.m; path = ../GLAPrototypeAWindowController.m; sourceTree = "<group>"; };
 		B2ADDC071963DA970014EF84 /* GLAPrototypeAWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GLAPrototypeAWindowController.xib; path = ../GLAPrototypeAWindowController.xib; sourceTree = "<group>"; };
@@ -279,6 +283,12 @@
 		B2F0DBC9199449FB001AB5EE /* GLAPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPopUpButton.m; sourceTree = "<group>"; };
 		B2F0DBCB1994C854001AB5EE /* GLATextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLATextField.h; sourceTree = "<group>"; };
 		B2F0DBCC1994C854001AB5EE /* GLATextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLATextField.m; sourceTree = "<group>"; };
+		DB9B4E5529B5EA7EDC5EF68E /* Pods-Blik.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blik.release.xcconfig"; path = "Pods/Target Support Files/Pods-Blik/Pods-Blik.release.xcconfig"; sourceTree = "<group>"; };
+		E240A36A1A0DA7E60043AE93 /* BlikTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BlikTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		E240A36B1A0DA7E70043AE93 /* GLATestCollections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLATestCollections.swift; sourceTree = "<group>"; };
+		E240A36D1A0DAAA70043AE93 /* GLATestCollectionsObjC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLATestCollectionsObjC.m; sourceTree = "<group>"; };
+		E240A36F1A0DC6DE0043AE93 /* libPods-BlikTests-Mantle.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-BlikTests-Mantle.a"; path = "../../Library/Developer/Xcode/DerivedData/Blik-gkryvinxzxpeskevxpdvegyaqtwa/Build/Products/Debug/libPods-BlikTests-Mantle.a"; sourceTree = "<group>"; };
+		E240A3711A0DC8080043AE93 /* BlikModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlikModel.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -297,6 +307,7 @@
 			files = (
 				B2ADDBF21963DA2E0014EF84 /* Cocoa.framework in Frameworks */,
 				B2ADDBF11963DA2E0014EF84 /* XCTest.framework in Frameworks */,
+				984EA831E1971325C5DB4783 /* libPods-BlikTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -453,6 +464,7 @@
 				B2174F7B19BEDBDF00BAE041 /* GLAModelErrors.m */,
 				B208E3FE19F914A7000EF97B /* GLAObjectNotificationRepresenter.h */,
 				B208E3FF19F914A7000EF97B /* GLAObjectNotificationRepresenter.m */,
+				E240A3711A0DC8080043AE93 /* BlikModel.h */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -507,7 +519,7 @@
 				B2F0DBB319923887001AB5EE /* QuickLook Preview */,
 				B2ADDBD01963DA2E0014EF84 /* Frameworks */,
 				B2ADDBCF1963DA2E0014EF84 /* Products */,
-				0B4ACAFDF5CB4F2F9F98B3F3 /* Pods-Blik.xcconfig */,
+				BB8F3BC1C722507F051B0067 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -524,11 +536,13 @@
 		B2ADDBD01963DA2E0014EF84 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E240A36F1A0DC6DE0043AE93 /* libPods-BlikTests-Mantle.a */,
 				B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */,
 				B2ADDBF01963DA2E0014EF84 /* XCTest.framework */,
 				B2F0DBB119923887001AB5EE /* Foundation.framework */,
 				B2ADDBD31963DA2E0014EF84 /* Other Frameworks */,
 				659FE625B2454CA095734DA4 /* libPods-Blik.a */,
+				10BFA027B9AC2E4B2BAD65B4 /* libPods-BlikTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -576,8 +590,10 @@
 		B2ADDBF51963DA2E0014EF84 /* Blik Tests */ = {
 			isa = PBXGroup;
 			children = (
-				B2ADDBFB1963DA2E0014EF84 /* Glance_Prototype_ATests.m */,
+				E240A36D1A0DAAA70043AE93 /* GLATestCollectionsObjC.m */,
+				E240A36B1A0DA7E70043AE93 /* GLATestCollections.swift */,
 				B2ADDBF61963DA2E0014EF84 /* Supporting Files */,
+				E240A36A1A0DA7E60043AE93 /* BlikTests-Bridging-Header.h */,
 			);
 			path = "Blik Tests";
 			sourceTree = "<group>";
@@ -701,6 +717,17 @@
 			name = State;
 			sourceTree = "<group>";
 		};
+		BB8F3BC1C722507F051B0067 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4D5189C1BFA28955BC50B886 /* Pods-Blik.debug.xcconfig */,
+				DB9B4E5529B5EA7EDC5EF68E /* Pods-Blik.release.xcconfig */,
+				3318411E92DD9A60CC0431E0 /* Pods-BlikTests.debug.xcconfig */,
+				1EA2B9BA7A505AD231D594E9 /* Pods-BlikTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -727,14 +754,16 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B2ADDC021963DA2E0014EF84 /* Build configuration list for PBXNativeTarget "BlikTests" */;
 			buildPhases = (
+				B4592EEBC9492F9FE06A3002 /* Check Pods Manifest.lock */,
 				B2ADDBEB1963DA2E0014EF84 /* Sources */,
 				B2ADDBEC1963DA2E0014EF84 /* Frameworks */,
 				B2ADDBED1963DA2E0014EF84 /* Resources */,
+				2AC3AA8FF15EF812690C3B14 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				B2ADDBF41963DA2E0014EF84 /* PBXTargetDependency */,
+				E240A3731A0DD3620043AE93 /* PBXTargetDependency */,
 			);
 			name = BlikTests;
 			productName = "Glance Prototype ATests";
@@ -844,7 +873,37 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		2AC3AA8FF15EF812690C3B14 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BlikTests/Pods-BlikTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		4A811E2FAFA944E1853AEFED /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		B4592EEBC9492F9FE06A3002 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -871,7 +930,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-Blik-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Blik/Pods-Blik-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -953,7 +1012,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B2ADDBFC1963DA2E0014EF84 /* Glance_Prototype_ATests.m in Sources */,
+				E240A36C1A0DA7E70043AE93 /* GLATestCollections.swift in Sources */,
+				E240A36E1A0DAAA70043AE93 /* GLATestCollectionsObjC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -968,10 +1028,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		B2ADDBF41963DA2E0014EF84 /* PBXTargetDependency */ = {
+		E240A3731A0DD3620043AE93 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B2ADDBCD1963DA2E0014EF84 /* Blik */;
-			targetProxy = B2ADDBF31963DA2E0014EF84 /* PBXContainerItemProxy */;
+			targetProxy = E240A3721A0DD3620043AE93 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1091,14 +1151,14 @@
 		};
 		B2ADDC001963DA2E0014EF84 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0B4ACAFDF5CB4F2F9F98B3F3 /* Pods-Blik.xcconfig */;
+			baseConfigurationReference = 4D5189C1BFA28955BC50B886 /* Pods-Blik.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = Blik.entitlements;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
@@ -1110,14 +1170,14 @@
 		};
 		B2ADDC011963DA2E0014EF84 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0B4ACAFDF5CB4F2F9F98B3F3 /* Pods-Blik.xcconfig */;
+			baseConfigurationReference = DB9B4E5529B5EA7EDC5EF68E /* Pods-Blik.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = Blik.entitlements;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
@@ -1129,8 +1189,10 @@
 		};
 		B2ADDC031963DA2E0014EF84 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3318411E92DD9A60CC0431E0 /* Pods-BlikTests.debug.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Blik.app/Contents/MacOS/Blik";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -1143,16 +1205,27 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Blik Tests/BlikTests-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					"\"Foundation\"",
+				);
 				PRODUCT_NAME = BlikTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Blik Tests/BlikTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Blik.app/Contents/MacOS/Blik";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
 		};
 		B2ADDC041963DA2E0014EF84 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1EA2B9BA7A505AD231D594E9 /* Pods-BlikTests.release.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Blik.app/Contents/MacOS/Blik";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -1161,8 +1234,16 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
 				INFOPLIST_FILE = "Blik Tests/BlikTests-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					"\"Foundation\"",
+				);
 				PRODUCT_NAME = BlikTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Blik Tests/BlikTests-Bridging-Header.h";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Blik.app/Contents/MacOS/Blik";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;

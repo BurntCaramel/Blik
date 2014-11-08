@@ -21,6 +21,7 @@
 
 @property(readonly, copy, nonatomic) NSUUID *projectUUID;
 
+- (instancetype)initByEditing:(void(^)(id<GLAHighlightedItemEditing> editor))editingBlock;
 + (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedItemEditing> editor))editingBlock;
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedItemEditing> editor))editingBlock;
@@ -39,7 +40,7 @@
 
 @property(readonly, nonatomic) GLACollection *collection;
 
-+ (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedCollectionEditing> editor))editingBlock;
+- (instancetype)initByEditing:(void(^)(id<GLAHighlightedCollectionEditing> editor))editingBlock;
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedCollectionEditing>editor))editingBlock;
 
@@ -63,6 +64,7 @@
 
 @property(readonly, nonatomic) GLACollectedFile *applicationToOpenFile;
 
+- (instancetype)initByEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock;
 + (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock;
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock;

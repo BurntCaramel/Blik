@@ -35,14 +35,14 @@ extern NSString *GLACollectionTypeFilesList;
 
 @interface GLACollection : GLAModel <GLACollectedItem>
 
+@property(readonly, nonatomic) NSString *type;
+
 @property(readonly, copy, nonatomic) NSUUID *projectUUID;
 
 @property(readonly, copy, nonatomic) NSString *name;
-
-@property(readonly, nonatomic) NSString *type;
-
 @property(readonly, nonatomic) GLACollectionColor *color;
 
+- (instancetype)initWithType:(NSString *)collectionType creatingFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock;
 + (instancetype)newWithType:(NSString *)collectionType creatingFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock;
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock;

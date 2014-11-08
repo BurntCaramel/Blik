@@ -38,6 +38,7 @@ struct _POPPropertyAnimationState : _POPAnimationState
   VectorRef previousVec;
   VectorRef previous2Vec;
   VectorRef velocityVec;
+  VectorRef originalVelocityVec;
   VectorRef distanceVec;
   CGFloat roundingFactor;
   NSUInteger clampMode;
@@ -57,6 +58,7 @@ struct _POPPropertyAnimationState : _POPAnimationState
   previousVec(nullptr),
   previous2Vec(nullptr),
   velocityVec(nullptr),
+  originalVelocityVec(nullptr),
   distanceVec(nullptr),
   roundingFactor(0),
   clampMode(0),
@@ -145,27 +147,19 @@ struct _POPPropertyAnimationState : _POPAnimationState
     dynamicsThreshold = property.threshold;
   }
 
-  bool advanceProgress(CGFloat p)
+  void finalizeProgress()
   {
-    bool advanced = progress != p;
-    if (advanced) {
-      progress = p;
-      NSUInteger count = valueCount;
-      VectorRef outVec(Vector::new_vector(count, NULL));
+    progress = 1.0;
+    NSUInteger count = valueCount;
+    VectorRef outVec(Vector::new_vector(count, NULL));
 
-      if (1.0 == progress) {
-        if (outVec && toVec) {
-          *outVec = *toVec;
-        }
-      } else {
-        POPInterpolateVector(count, vec_data(outVec), vec_data(fromVec), vec_data(toVec), progress);
-      }
-
-      currentVec = outVec;
-      clampCurrentValue();
-      delegateProgress();
+    if (outVec && toVec) {
+      *outVec = *toVec;
     }
-    return advanced;
+
+    currentVec = outVec;
+    clampCurrentValue();
+    delegateProgress();
   }
 
   void computeProgress() {
@@ -292,6 +286,9 @@ struct _POPPropertyAnimationState : _POPAnimationState
       // ensure velocity values
       if (!velocityVec) {
         velocityVec = VectorRef(Vector::new_vector(valueCount, NULL));
+      }
+      if (!originalVelocityVec) {
+        originalVelocityVec = VectorRef(Vector::new_vector(valueCount, NULL));
       }
     }
 

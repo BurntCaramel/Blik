@@ -138,7 +138,6 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	_project = project;
 	
 	if (!isSameProject) {
-		NSLog(@" SETTING PROJECT ON COLLECTIONS AND HIGHLIGHTS VC %@", project);
 		(self.collectionsViewController.project) = project;
 		(self.highlightsViewController.project) = project;
 	}

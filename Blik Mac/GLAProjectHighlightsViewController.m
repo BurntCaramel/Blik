@@ -210,14 +210,12 @@
 	[self startCollectionObserving];
 	
 	if ((highlightedItems.count) > 0) {
-		NSLog(@"SOHW TABLE");
 		[self showTable];
 		[self hideInstructions];
 		
 		[(self.tableView) reloadData];
 	}
 	else {
-		NSLog(@"SOHW INSTRUCITONO");
 		[self showInstructions];
 		[self hideTable];
 	}
@@ -404,6 +402,7 @@
 {
 	GLAHighlightsTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	(cellView.canDrawSubviewsIntoLayer) = YES;
+	(cellView.alphaValue) = 1.0;
 	
 	GLAHighlightedItem *highlightedItem = (self.highlightedItems)[row];
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
@@ -416,6 +415,10 @@
 		GLACollectedFile *collectedFile = [pm collectedFileForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
 		if (collectedFile) {
 			name = (collectedFile.name);
+			
+			if (collectedFile.isMissing) {
+				(cellView.alphaValue) = 0.5;
+			}
 		}
 		
 		GLACollectionIndicationButton *collectionIndicationButton = (cellView.collectionIndicationButton);

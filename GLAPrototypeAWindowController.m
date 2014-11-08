@@ -48,7 +48,6 @@
 
 - (IBAction)showWorkingFiles:(id)sender
 {
-	NSLog(@"SOHW OWKRING FILES");
 	[self createWorkingFiles];
 	NSPopover *workingFilesPopover = (self.workingFilesPopover);
 	if (!(workingFilesPopover.isShown)) {
