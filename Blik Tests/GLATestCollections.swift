@@ -25,11 +25,11 @@ class GLATestCollections: XCTestCase {
         super.tearDown()
     }
 	
-	func newCollection() -> GLACollection
+	func newCollection(name: String = "Test collection") -> GLACollection
 	{
 		let collection = GLACollection(type: GLACollectionTypeFilesList) { (editor) -> Void in
 			editor.projectUUID = NSUUID()
-			editor.name = "Test collection"
+			editor.name = name
 		}
 	
 		return collection
@@ -37,13 +37,15 @@ class GLATestCollections: XCTestCase {
 
     func testCreateCollection()
 	{
-		let collection = newCollection()
+		let name = "ABCDEF"
+		let collection = newCollection(name: name)
 		XCTAssertNotNil(collection, "Collection was made");
+		XCTAssertEqual(collection.name, name, "Name is correct");
     }
 	
 	func testJSONifyCollection()
 	{
-		let collection = newCollection();
+		let collection = newCollection(name: "Test collection");
 		XCTAssertNotNil(collection, "Collection was created")
 	
 		let JSONDictionary = MTLJSONAdapter.JSONDictionaryFromModel(collection)
@@ -51,6 +53,14 @@ class GLATestCollections: XCTestCase {
 	
 		let isValidJSON = NSJSONSerialization.isValidJSONObject(JSONDictionary)
 		XCTAssertTrue(isValidJSON, "JSON dictionary is valid")
+		
+		let modelClass = GLACollection.self
+		var error: NSError?
+		let collectionFromJSON: GLACollection = MTLJSONAdapter.modelOfClass(modelClass, fromJSONDictionary: JSONDictionary, error: &error) as GLACollection
+		
+		XCTAssertNotNil(collectionFromJSON, "Created collection from JSON")
+		XCTAssertEqual(collection.UUID, collectionFromJSON.UUID, "Have same UUID")
+		XCTAssertEqual(collection.name, collectionFromJSON.name, "Have same name")
 	}
 	
 	func testCreateCollectedFile()
@@ -83,6 +93,7 @@ class GLATestCollections: XCTestCase {
 		var error: NSError?
 		let highlightedItemFromJSON: GLAHighlightedCollectedFile = MTLJSONAdapter.modelOfClass(modelClass, fromJSONDictionary: JSONDictionary, error: &error) as GLAHighlightedCollectedFile
 		
+		XCTAssertNotNil(highlightedItemFromJSON, "Created highlighted item from JSON")
 		XCTAssertEqual(highlightedItem.UUID, highlightedItemFromJSON.UUID, "Have same UUID")
 		XCTAssertEqual(highlightedItem.holdingCollectionUUID, highlightedItemFromJSON.holdingCollectionUUID, "Have same holdingCollectionUUID")
 		XCTAssertEqual(highlightedItem.collectedFileUUID, highlightedItemFromJSON.collectedFileUUID, "Have same collectedFileUUID")

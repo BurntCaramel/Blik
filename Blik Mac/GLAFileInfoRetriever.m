@@ -28,10 +28,12 @@
 
 @implementation GLAFileInfoRetriever
 
-- (instancetype)init
+- (instancetype)initWithDelegate:(id<GLAFileInfoRetrieverDelegate>)delegate
 {
 	self = [super init];
 	if (self) {
+		_delegate = delegate;
+		
 		_backgroundOperationQueue = [NSOperationQueue new];
 		(_backgroundOperationQueue.name) = @"com.burntcaramel.GLAFileInfoRetriever.background";
 		_inputDispatchQueue = dispatch_queue_create("com.burntcaramel.GLAFileInfoRetriever.input", DISPATCH_QUEUE_SERIAL);
@@ -89,22 +91,17 @@
 	}];
 }
 
-- (void)inputQueue_checkDelegate:(__weak id<GLAFileInfoRetrieverDelegate>)delegateWhenStartingWeak useOnMainQueue:(void (^)(GLAFileInfoRetriever *retriever, id<GLAFileInfoRetrieverDelegate> delegate))block
+- (void)inputQueue_useDelegateOnMainQueue:(void (^)(GLAFileInfoRetriever *retriever, id<GLAFileInfoRetrieverDelegate> delegate))block
 {
-	if (delegateWhenStartingWeak == nil) {
-		return;
-	}
-	
 	__weak GLAFileInfoRetriever *weakSelf = self;
 	[[NSOperationQueue mainQueue] addOperationWithBlock:^{
 		GLAFileInfoRetriever *retriever = weakSelf;
-		GLAFileInfoRetriever *delegateWhenStarting = delegateWhenStartingWeak;
-		if ((retriever == nil) || (delegateWhenStarting == nil)) {
+		if (!retriever) {
 			return;
 		}
 		
 		id<GLAFileInfoRetrieverDelegate> delegate = (self.delegate);
-		if (delegate != delegateWhenStarting) {
+		if (!delegate) {
 			return;
 		}
 		
@@ -189,8 +186,6 @@
 
 - (void)loadMissingResourceValuesInBackgroundForURL:(NSURL *)URL
 {
-	__weak id<GLAFileInfoRetrieverDelegate> delegateWhenStarting = (self.delegate);
-	
 	[self runAsyncInBackground:^(GLAFileInfoRetriever *self) {
 		NSSet *resourceKeysToLoad = [self requestedResourceKeysNeedingLoadingForURL:URL setAreLoading:YES];
 		if (!resourceKeysToLoad || (resourceKeysToLoad.count) == 0) {
@@ -201,11 +196,11 @@
 		// This blocks, the whole reason why this is all in a background queue.
 		NSDictionary *loadedResourceValues = [URL resourceValuesForKeys:[resourceKeysToLoad allObjects] error:&error];
 		
-		[self background_processLoadedResourceValues:loadedResourceValues error:error forURL:URL checkingDelegate:delegateWhenStarting];
+		[self background_processLoadedResourceValues:loadedResourceValues error:error forURL:URL];
 	}];
 }
 
-- (void)background_processLoadedResourceValues:(NSDictionary *)loadedResourceValues error:(NSError *)error forURL:(NSURL *)URL checkingDelegate:(__weak id<GLAFileInfoRetrieverDelegate>)delegateWhenStarting
+- (void)background_processLoadedResourceValues:(NSDictionary *)loadedResourceValues error:(NSError *)error forURL:(NSURL *)URL
 {
 	[self runAsyncOnInputQueue:^(GLAFileInfoRetriever *self) {
 		if (loadedResourceValues) {
@@ -223,7 +218,7 @@
 			URLsToLoadingErrors[URL] = error;
 		}
 		
-		[self inputQueue_checkDelegate:delegateWhenStarting useOnMainQueue:^(GLAFileInfoRetriever *retriever, id<GLAFileInfoRetrieverDelegate> delegate) {
+		[self inputQueue_useDelegateOnMainQueue:^(GLAFileInfoRetriever *retriever, id<GLAFileInfoRetrieverDelegate> delegate) {
 			if (loadedResourceValues) {
 				[delegate fileInfoRetriever:self didLoadResourceValuesForURL:URL];
 			}
@@ -274,8 +269,6 @@
 
 - (void)requestApplicationURLsToOpenURL:(NSURL *)URL
 {
-	__weak id<GLAFileInfoRetrieverDelegate> delegateWhenStarting = (self.delegate);
-	
 	[self runAsyncOnInputQueue:^(GLAFileInfoRetriever *retriever) {
 		NSMutableSet *URLsHavingApplicationURLsLoaded = (retriever.URLsHavingApplicationURLsLoaded);
 		if ([URLsHavingApplicationURLsLoaded containsObject:URL]) {
@@ -296,12 +289,12 @@
 			NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
 			NSURL *defaultApplicationURL = [workspace URLForApplicationToOpenURL:URL];
 			
-			[retriever background_processLoadedApplicationURLs:applicationURLs defaultApplicationURL:defaultApplicationURL forURL:URL checkingDelegate:delegateWhenStarting];
+			[retriever background_processLoadedApplicationURLs:applicationURLs defaultApplicationURL:defaultApplicationURL forURL:URL];
 		}];
 	}];
 }
 
-- (void)background_processLoadedApplicationURLs:(NSArray *)applicationURLs defaultApplicationURL:(NSURL *)defaultApplicationURL forURL:(NSURL *)URL checkingDelegate:(__weak id<GLAFileInfoRetrieverDelegate>)delegateWhenStarting
+- (void)background_processLoadedApplicationURLs:(NSArray *)applicationURLs defaultApplicationURL:(NSURL *)defaultApplicationURL forURL:(NSURL *)URL
 {
 	[self runAsyncOnInputQueue:^(GLAFileInfoRetriever *retriever) {
 		NSMutableSet *URLsHavingApplicationURLsLoaded = (retriever.URLsHavingApplicationURLsLoaded);
@@ -313,7 +306,7 @@
 		NSCache *cacheOfURLsToDefaultApplicationURLs = (retriever.cacheOfURLsToDefaultApplicationURLs);
 		[cacheOfURLsToDefaultApplicationURLs setObject:defaultApplicationURL forKey:URL];
 		
-		[retriever inputQueue_checkDelegate:delegateWhenStarting useOnMainQueue:^(GLAFileInfoRetriever *retriever, id<GLAFileInfoRetrieverDelegate> delegate) {
+		[retriever inputQueue_useDelegateOnMainQueue:^(GLAFileInfoRetriever *retriever, id<GLAFileInfoRetrieverDelegate> delegate) {
 			[delegate fileInfoRetriever:self didRetrieveApplicationURLsToOpenURL:URL];
 		}];
 	}];

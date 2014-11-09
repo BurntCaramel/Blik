@@ -10,15 +10,18 @@
 #import "GLAProjectInstructionsViewController.h"
 #import "GLAProject.h"
 #import "GLAHighlightedItem.h"
+#import "GLAFileOpenerApplicationCombiner.h"
 
 @class GLAProjectViewController;
 
 
-@interface GLAProjectHighlightsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
+@interface GLAProjectHighlightsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource, NSMenuDelegate>
 
 @property(nonatomic) IBOutlet NSTableView *tableView;
-@property(nonatomic) IBOutlet NSMenu *contextualMenu;
 @property(nonatomic) IBOutlet NSLayoutConstraint *scrollLeadingConstraint;
+
+@property(nonatomic) IBOutlet NSMenu *contextualMenu;
+@property(nonatomic) IBOutlet NSMenu *openerApplicationMenu;
 
 @property(weak) IBOutlet GLAProjectViewController *parentViewController;
 
@@ -26,6 +29,8 @@
 
 @property(nonatomic) GLAProject *project;
 @property(nonatomic) NSArray *highlightedItems;
+
+@property(nonatomic) GLAFileOpenerApplicationCombiner *openerApplicationCombiner;
 
 - (IBAction)removedClickedItem:(id)sender;
 

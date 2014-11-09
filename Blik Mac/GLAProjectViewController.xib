@@ -48,7 +48,7 @@
                     </connections>
                 </textField>
                 <scrollView verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="aK9-xA-IHE">
-                    <rect key="frame" x="20" y="38" width="160" height="177"/>
+                    <rect key="frame" x="0.0" y="38" width="180" height="177"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="3UR-hc-b9q">
                         <rect key="frame" x="0.0" y="0.0" width="160" height="177"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -59,7 +59,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
-                                    <tableColumn width="157" minWidth="40" maxWidth="1000" id="oFd-vg-g1H">
+                                    <tableColumn width="177" minWidth="40" maxWidth="1000" id="oFd-vg-g1H">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -73,11 +73,11 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="34" id="Nwp-Xs-PAf">
-                                                <rect key="frame" x="1" y="1" width="157" height="32"/>
+                                                <rect key="frame" x="1" y="1" width="177" height="32"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="aE0-1H-naF">
-                                                        <rect key="frame" x="-2" y="0.0" width="161" height="32"/>
+                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aE0-1H-naF">
+                                                        <rect key="frame" x="18" y="0.0" width="141" height="32"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="32" id="i8C-5E-2yP"/>
                                                         </constraints>
@@ -92,7 +92,7 @@
                                                     <constraint firstAttribute="bottom" secondItem="aE0-1H-naF" secondAttribute="bottom" id="2ya-Pi-Ad8"/>
                                                     <constraint firstItem="aE0-1H-naF" firstAttribute="top" secondItem="Nwp-Xs-PAf" secondAttribute="top" id="WMf-g6-ClS"/>
                                                     <constraint firstAttribute="trailing" secondItem="aE0-1H-naF" secondAttribute="trailing" id="jS6-Si-GVA"/>
-                                                    <constraint firstItem="aE0-1H-naF" firstAttribute="leading" secondItem="Nwp-Xs-PAf" secondAttribute="leading" id="tRV-Va-cXi"/>
+                                                    <constraint firstItem="aE0-1H-naF" firstAttribute="leading" secondItem="Nwp-Xs-PAf" secondAttribute="leading" constant="20" id="tRV-Va-cXi"/>
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="textField" destination="aE0-1H-naF" id="673-t5-Eto"/>
@@ -112,7 +112,7 @@
                     <constraints>
                         <constraint firstAttribute="height" priority="749" constant="175" id="B9G-tJ-wrx"/>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="163" id="bAy-Ej-emY"/>
-                        <constraint firstAttribute="width" constant="160" id="yQu-cr-U1i"/>
+                        <constraint firstAttribute="width" constant="180" id="yQu-cr-U1i"/>
                     </constraints>
                     <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="tck-an-PxB">
                         <rect key="frame" x="-100" y="-100" width="223" height="15"/>
@@ -183,6 +183,7 @@
                                                 <constraints>
                                                     <constraint firstItem="BTJ-R3-LvA" firstAttribute="leading" secondItem="CNu-U7-Yfv" secondAttribute="trailing" constant="8" id="3Ic-C5-Oh8"/>
                                                     <constraint firstItem="BTJ-R3-LvA" firstAttribute="centerY" secondItem="CNu-U7-Yfv" secondAttribute="centerY" id="IPp-68-NxT"/>
+                                                    <constraint firstItem="CNu-U7-Yfv" firstAttribute="top" secondItem="Asp-zL-oFT" secondAttribute="top" constant="6" id="NTw-0Y-jSq"/>
                                                     <constraint firstAttribute="centerY" secondItem="CNu-U7-Yfv" secondAttribute="centerY" id="WOU-hN-Q3X"/>
                                                     <constraint firstAttribute="trailing" secondItem="BTJ-R3-LvA" secondAttribute="trailing" constant="20" id="app-rP-YQ3"/>
                                                     <constraint firstItem="CNu-U7-Yfv" firstAttribute="leading" secondItem="Asp-zL-oFT" secondAttribute="leading" id="r2o-BF-ixs"/>
@@ -220,7 +221,7 @@
                 </scrollView>
             </subviews>
             <constraints>
-                <constraint firstItem="aK9-xA-IHE" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" priority="750" constant="20" id="4N2-fG-NN0"/>
+                <constraint firstItem="aK9-xA-IHE" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" priority="750" id="4N2-fG-NN0"/>
                 <constraint firstAttribute="bottom" secondItem="8vi-0s-ZAk" secondAttribute="bottom" id="52E-z7-sjo"/>
                 <constraint firstItem="8vi-0s-ZAk" firstAttribute="top" secondItem="b3Y-jm-1gd" secondAttribute="bottom" priority="750" constant="8" id="9SR-1S-pao"/>
                 <constraint firstAttribute="trailing" secondItem="b3Y-jm-1gd" secondAttribute="trailing" priority="750" id="GXN-5G-oay"/>
@@ -249,6 +250,7 @@
             <connections>
                 <outlet property="contextualMenu" destination="Vkd-RN-V0D" id="99Y-nb-wbQ"/>
                 <outlet property="instructionsViewController" destination="bNf-jR-Sti" id="Tir-3F-xV0"/>
+                <outlet property="openerApplicationMenu" destination="gy9-Mo-SHK" id="CqZ-Wu-YgD"/>
                 <outlet property="parentViewController" destination="-2" id="kAI-Y6-LNm"/>
                 <outlet property="tableView" destination="qcb-6b-Ekp" id="WeB-DQ-KSM"/>
             </connections>
@@ -442,7 +444,7 @@
                 <outlet property="view" destination="OZm-di-0Uz" id="jOR-Lo-xCd"/>
             </connections>
         </viewController>
-        <menu id="GiZ-xZ-qxO">
+        <menu title="Collection Menu" id="GiZ-xZ-qxO">
             <items>
                 <menuItem title="Rename or Recolor Collection…" id="5AV-kD-8fd">
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -491,7 +493,7 @@
                 <constraint firstAttribute="trailing" secondItem="zdL-Rb-okh" secondAttribute="trailing" id="lgr-gK-eUq"/>
             </constraints>
         </customView>
-        <menu id="Vkd-RN-V0D">
+        <menu title="Highlighted Item Menu" id="Vkd-RN-V0D">
             <items>
                 <menuItem title="Remove from List…" id="CCv-nW-cRP">
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -499,8 +501,19 @@
                         <action selector="removedClickedItem:" target="aDf-pc-aeE" id="KGO-Tx-rSu"/>
                     </connections>
                 </menuItem>
+                <menuItem isSeparatorItem="YES" id="gvF-3d-HKU"/>
+                <menuItem title="Open With" id="g7T-tV-92P">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Open With" id="gy9-Mo-SHK">
+                        <items>
+                            <menuItem title="Item" id="e75-xR-iFE">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
             </items>
-            <point key="canvasLocation" x="424" y="250.5"/>
+            <point key="canvasLocation" x="487" y="-88.5"/>
         </menu>
         <customView identifier="collectionsListInstructions" id="Idz-io-wKr">
             <rect key="frame" x="0.0" y="0.0" width="206" height="199"/>

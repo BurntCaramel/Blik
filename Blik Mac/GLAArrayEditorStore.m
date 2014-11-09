@@ -141,10 +141,17 @@
 {
 	NSError *error = nil;
 	
-	NSData *JSONData = [NSJSONSerialization dataWithJSONObject:JSONDictionary options:0 error:&error];
-	if (!JSONData) {
-		[self handleError:error fromMethodWithSelector:_cmd];
-		return NO;
+	NSData *JSONData = nil;
+	@try {
+		JSONData = [NSJSONSerialization dataWithJSONObject:JSONDictionary options:0 error:&error];
+		if (!JSONData) {
+			[self handleError:error fromMethodWithSelector:_cmd];
+			return NO;
+		}
+	}
+	@catch (NSException *e) {
+		NSLog(@"EXCEPTION converting to JSON %@", JSONDictionary);
+		@throw e;
 	}
 	
 	[JSONData writeToURL:fileURL atomically:YES];

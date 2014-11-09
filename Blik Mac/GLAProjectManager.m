@@ -744,6 +744,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 		(self.projectManager) = projectManager;
 		
 		_backgroundOperationQueue = [NSOperationQueue new];
+		(_backgroundOperationQueue.name) = @"com.burntcaramel.GLAProjectManager.background";
 		(_backgroundOperationQueue.maxConcurrentOperationCount) = 1;
 		
 		_foregroundState = [GLAProjectManagerStoreState new];

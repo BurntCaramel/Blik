@@ -21,9 +21,9 @@
 
 @implementation GLAHighlightedItem
 
-+ (NSDictionary *)JSONKeyPathsByPropertyKey
++ (NSValueTransformer *)projectUUIDJSONTransformer
 {
-	return @{};
+	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
 }
 
 + (Class)classForParsingJSONDictionary:(NSDictionary *)JSONDictionary

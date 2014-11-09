@@ -7,11 +7,12 @@
 //
 
 #import "GLAFileOpenerApplicationCombiner.h"
+#import "GLAFileInfoRetriever.h"
 
 
 @interface GLAFileOpenerApplicationCombiner () <GLAFileInfoRetrieverDelegate>
 
-@property(readwrite, nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
+@property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
 
 @property(nonatomic) NSMutableSet *mutableFileURLs;
 
@@ -20,7 +21,7 @@
 
 @property(nonatomic) NSUInteger combinedCountSoFar;
 @property(nonatomic) NSMutableSet *mutableCombinedOpenerApplicationURLs;
-@property(nonatomic) NSURL *combinedDefaultOpenerApplicationURL;
+@property(readwrite, nonatomic) NSURL *combinedDefaultOpenerApplicationURL;
 
 - (void)recombineAllFileURLs;
 
@@ -32,26 +33,25 @@
 {
 	self = [super init];
 	if (self) {
-		[self setUpFileInfoRetriever];
+		(self.fileInfoRetriever) = [[GLAFileInfoRetriever alloc] initWithDelegate:self];
+		_mutableFileURLs = [NSMutableSet new];
 	}
 	return self;
 }
 
-- (void)setUpFileInfoRetriever
-{
-	GLAFileInfoRetriever *fileInfoRetriever = [GLAFileInfoRetriever new];
-	(fileInfoRetriever.delegate) = self;
-	
-	(self.fileInfoRetriever) = fileInfoRetriever;
-}
-
 - (void)addFileURLs:(NSSet *)fileURLsSet
 {
-	[(self.mutableFileURLs) unionSet:fileURLsSet];
+	NSMutableSet *mutableFileURLs = (self.mutableFileURLs);
 	
 	for (NSURL *fileURL in fileURLsSet) {
+		if ([mutableFileURLs containsObject:fileURL]) {
+			continue;
+		}
+		
 		[self combineOpenerApplicationURLsForFileURL:fileURL loadIfNeeded:YES];
 	}
+	
+	[mutableFileURLs unionSet:fileURLsSet];
 }
 
 - (void)removeFileURLs:(NSSet *)fileURLsSet
@@ -73,6 +73,10 @@
 
 - (void)setFileURLs:(NSSet *)fileURLs
 {
+	if (!fileURLs) {
+		fileURLs = [NSSet set];
+	}
+	
 	NSMutableSet *mutableFileURLs = (self.mutableFileURLs);
 	
 	NSMutableSet *fileURLsBeingAdded = [fileURLs mutableCopy];
@@ -102,7 +106,60 @@
 	}
 }
 
+- (BOOL)hasLoadedAll
+{
+	return (self.combinedCountSoFar) == (self.mutableFileURLs.count);
+}
+
 #pragma mark -
+
+- (void)setOpenerApplicationURLs:(NSArray *)applicationURLs forFileURL:(NSURL *)fileURL
+{
+	NSMutableDictionary *URLsToOpenerApplicationURLs = (self.URLsToOpenerApplicationURLs);
+	if (!URLsToOpenerApplicationURLs) {
+		URLsToOpenerApplicationURLs = (self.URLsToOpenerApplicationURLs) = [NSMutableDictionary new];
+	}
+	
+	URLsToOpenerApplicationURLs[fileURL] = [applicationURLs copy];
+}
+
+- (NSArray *)openerApplicationURLsForFileURL:(NSURL *)fileURL
+{
+	NSMutableDictionary *URLsToOpenerApplicationURLs = (self.URLsToOpenerApplicationURLs);
+	if (!URLsToOpenerApplicationURLs) {
+		return nil;
+	}
+	
+	NSArray *applicationURLs = URLsToOpenerApplicationURLs[fileURL];
+	return applicationURLs;
+
+}
+
+- (void)setDefaultOpenerApplicationURL:(NSURL *)applicationURL forFileURL:(NSURL *)fileURL
+{
+	NSMutableDictionary *URLsToDefaultOpenerApplicationURL = (self.URLsToDefaultOpenerApplicationURL);
+	if (!URLsToDefaultOpenerApplicationURL) {
+		URLsToDefaultOpenerApplicationURL = (self.URLsToDefaultOpenerApplicationURL) = [NSMutableDictionary new];
+	}
+	
+	URLsToDefaultOpenerApplicationURL[fileURL] = applicationURL;
+}
+
+- (NSURL *)defaultOpenerApplicationURLForFileURL:(NSURL *)fileURL
+{
+	NSMutableDictionary *URLsToDefaultOpenerApplicationURL = (self.URLsToDefaultOpenerApplicationURL);
+	if (!URLsToDefaultOpenerApplicationURL) {
+		return nil;
+	}
+	
+	NSURL *applicationURL = URLsToDefaultOpenerApplicationURL[fileURL];
+	return applicationURL;
+}
+
+- (NSSet *)combinedOpenerApplicationURLs
+{
+	return [(self.mutableCombinedOpenerApplicationURLs) copy];
+}
 
 - (void)clearCombinedApplicationURLs
 {
@@ -114,33 +171,32 @@
 	}
 }
 
-- (void)combineOpenerApplicationURLsForFileURL:(NSURL *)URL loadIfNeeded:(BOOL)load
+- (void)combineOpenerApplicationURLsForFileURL:(NSURL *)fileURL loadIfNeeded:(BOOL)load
 {
-	NSMutableDictionary *URLsToOpenerApplicationURLs = (self.URLsToOpenerApplicationURLs);
-	NSArray *applicationURLs = URLsToOpenerApplicationURLs ? URLsToOpenerApplicationURLs[URL] : nil;
-	
-	GLAFileInfoRetriever *fileInfoRetriever = (self.fileInfoRetriever);
+	NSArray *applicationURLs = [self openerApplicationURLsForFileURL:fileURL];
 	
 	if (!applicationURLs) {
 		if (load) {
-			[fileInfoRetriever requestApplicationURLsToOpenURL:URL];
+			[(self.fileInfoRetriever) requestApplicationURLsToOpenURL:fileURL];
 		}
 		return;
 	}
 	
-	NSURL *defaultOpenerApplicationURL = [fileInfoRetriever defaultApplicationURLToOpenURL:URL];
+	NSURL *defaultOpenerApplicationURL = [self defaultOpenerApplicationURLForFileURL:fileURL];
 	
 	NSMutableSet *mutableCombinedOpenerApplicationURLs = (self.mutableCombinedOpenerApplicationURLs);
 	if (!mutableCombinedOpenerApplicationURLs) {
 		mutableCombinedOpenerApplicationURLs = (self.mutableCombinedOpenerApplicationURLs) = [NSMutableSet new];
 	}
 	
+	// If this is the first set to be combined, just add them straight in as is.
 	if ((self.combinedCountSoFar) == 0) {
 		[mutableCombinedOpenerApplicationURLs addObjectsFromArray:applicationURLs];
 		(self.combinedDefaultOpenerApplicationURL) = defaultOpenerApplicationURL;
 		
 		[self didChangeCombinedOpenerApplicationURLs];
 	}
+	// Otherwise we need to combine by only keeping the applications that can open all files.
 	else {
 		NSUInteger countBefore = (mutableCombinedOpenerApplicationURLs.count);
 		[mutableCombinedOpenerApplicationURLs intersectSet:[NSSet setWithArray:applicationURLs]];
@@ -171,28 +227,21 @@
 - (void)didChangeCombinedOpenerApplicationURLs
 {
 	NSNotification *note = [NSNotification notificationWithName:GLAFileURLOpenerApplicationCombinerDidChangeNotification object:self];
-	[[NSNotificationQueue defaultQueue] enqueueNotification:note postingStyle:NSPostWhenIdle];
+	
+	// Allows notifications to be sent as one, and common mode allows it to work during menu tracking.
+	NSNotificationQueue *nq = [NSNotificationQueue defaultQueue];
+	[nq enqueueNotification:note postingStyle:NSPostASAP coalesceMask:(NSNotificationCoalescingOnName & NSNotificationCoalescingOnSender) forModes:@[NSRunLoopCommonModes]];
 }
 
 #pragma mark File Info Retriever Delegate
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didRetrieveApplicationURLsToOpenURL:(NSURL *)URL
 {
-	NSMutableDictionary *URLsToOpenerApplicationURLs = (self.URLsToOpenerApplicationURLs);
-	if (!URLsToOpenerApplicationURLs) {
-		URLsToOpenerApplicationURLs = (self.URLsToOpenerApplicationURLs) = [NSMutableDictionary new];
-	}
-	
 	NSArray *applicationURLs = [fileInfoRetriever applicationsURLsToOpenURL:URL];
-	URLsToOpenerApplicationURLs[URL] = applicationURLs;
-	
-	NSMutableDictionary *URLsToDefaultOpenerApplicationURL = (self.URLsToDefaultOpenerApplicationURL);
-	if (!URLsToDefaultOpenerApplicationURL) {
-		URLsToDefaultOpenerApplicationURL = (self.URLsToDefaultOpenerApplicationURL) = [NSMutableDictionary new];
-	}
+	[self setOpenerApplicationURLs:applicationURLs forFileURL:URL];
 	
 	NSURL *defaultApplicationURL = [fileInfoRetriever defaultApplicationURLToOpenURL:URL];
-	URLsToDefaultOpenerApplicationURL[URL] = defaultApplicationURL;
+	[self setDefaultOpenerApplicationURL:defaultApplicationURL forFileURL:URL];
 	
 	if ([self hasFileURL:URL]) {
 		[self combineOpenerApplicationURLsForFileURL:URL loadIfNeeded:NO];
@@ -203,7 +252,7 @@
 
 + (void)openFileURLs:(NSArray *)fileURLs withApplicationURL:(NSURL *)applicationURL
 {
-	LSLaunchURLSpec launchURLSpec = {
+	const LSLaunchURLSpec launchURLSpec = {
 		.appURL =  (__bridge CFURLRef)(applicationURL),
 		.itemURLs = (__bridge CFArrayRef)fileURLs,
 		.passThruParams = NULL,
@@ -217,3 +266,85 @@
 @end
 
 NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileURLOpenerApplicationCombinerDidChangeNotification";
+
+
+@implementation GLAFileOpenerApplicationCombiner (MenuAdditions)
+
+- (NSMenuItem *)newMenuItemForApplicationURL:(NSURL *)applicationURL target:(id)target action:(SEL)action
+{
+	NSError *error = nil;
+	NSDictionary *values = [applicationURL resourceValuesForKeys:@[NSURLLocalizedNameKey, NSURLEffectiveIconKey] error:&error];
+	if (!values) {
+		return nil;
+	}
+	
+	NSImage *iconImage = values[NSURLEffectiveIconKey];
+	iconImage = [iconImage copy];
+	(iconImage.size) = NSMakeSize(16.0, 16.0);
+	
+	NSMenuItem *menuItem = [NSMenuItem new];
+	(menuItem.title) = values[NSURLLocalizedNameKey];
+	(menuItem.image) = iconImage;
+	
+	(menuItem.representedObject) = applicationURL;
+	
+	(menuItem.target) = target;
+	(menuItem.action) = action;
+	
+	return menuItem;
+}
+
+- (void)updateMenuWithOpenerApplications:(NSMenu *)menu target:(id)target action:(SEL)action
+{
+	NSSet *combinedOpenerApplicationURLs = (self.combinedOpenerApplicationURLs);
+	NSURL *combinedDefaultOpenerApplicationURL = (self.combinedDefaultOpenerApplicationURL);
+	NSLog(@"combinedOpenerApplicationURLs %@", combinedOpenerApplicationURLs);
+	NSMenuItem *defaultApplicationMenuItem = nil;
+	NSMutableArray *menuItems = [NSMutableArray new];
+	
+	if (combinedDefaultOpenerApplicationURL) {
+		defaultApplicationMenuItem = [self newMenuItemForApplicationURL:combinedDefaultOpenerApplicationURL target:target action:action];
+		(defaultApplicationMenuItem.title) = [NSString localizedStringWithFormat:NSLocalizedString(@"%@ (default)", @"Menu item title format for default application."), (defaultApplicationMenuItem.title)];
+	}
+	
+	if ((combinedOpenerApplicationURLs.count) > 0) {
+		for (NSURL *applicationURL in combinedOpenerApplicationURLs) {
+			if ([(combinedDefaultOpenerApplicationURL.path) isEqual:(applicationURL.path)]) {
+				continue;
+			}
+			
+			NSMenuItem *menuItem = [self newMenuItemForApplicationURL:applicationURL target:target action:action];
+			if (!menuItem) {
+				continue;
+			}
+			
+			[menuItems addObject:menuItem];
+		}
+		
+		NSSortDescriptor *titleSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES selector:@selector(localizedStandardCompare:)];
+		
+		[menuItems sortUsingDescriptors:@[titleSortDescriptor]];
+	}
+	
+	[menu removeAllItems];
+	
+	if (defaultApplicationMenuItem) {
+		[menu addItem:defaultApplicationMenuItem];
+		
+		if ((menuItems.count) > 0) {
+			[menu addItem:[NSMenuItem separatorItem]];
+		}
+	}
+	else if ((menuItems.count) == 0) {
+		NSMenuItem *menuItem = [NSMenuItem new];
+		(menuItem.title) = NSLocalizedString(@"No Application", @"Menu item title when no application is available to open the selected files.");
+		(menuItem.enabled) = NO;
+		[menu addItem:menuItem];
+	}
+	
+	for (NSMenuItem *menuItem in menuItems) {
+		[menu addItem:menuItem];
+	}
+}
+
+@end

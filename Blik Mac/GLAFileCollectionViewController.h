@@ -12,6 +12,7 @@
 // Model
 #import "GLACollection.h"
 #import "GLAFileInfoRetriever.h"
+#import "GLAFileOpenerApplicationCombiner.h"
 // Frameworks
 @import Quartz;
 
@@ -32,6 +33,7 @@
 @property(nonatomic) GLAProject *project;
 
 @property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
+@property(nonatomic) GLAFileOpenerApplicationCombiner *openerApplicationCombiner;
 
 - (void)makeSourceFilesListFirstResponder;
 

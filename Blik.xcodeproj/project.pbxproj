@@ -418,10 +418,6 @@
 				B2214E1719D6848200DE2C71 /* GLAAddNewCollectionViewController.xib */,
 				B226E9561988D00C00D607CC /* GLAFileCollectionViewController.h */,
 				B226E9571988D00C00D607CC /* GLAFileCollectionViewController.m */,
-				B20362BF1A0779F3007169C2 /* GLACollectedFilesSetting.h */,
-				B20362C01A0779F3007169C2 /* GLACollectedFilesSetting.m */,
-				B20362C21A077C87007169C2 /* GLAFileOpenerApplicationCombiner.h */,
-				B20362C31A077C87007169C2 /* GLAFileOpenerApplicationCombiner.m */,
 				B226E9581988D00C00D607CC /* GLAFileCollectionViewController.xib */,
 				B25591F619C8456F0039D2AC /* Color Pickers */,
 				B208E3F319F51607000EF97B /* Collection Details */,
@@ -434,8 +430,6 @@
 			children = (
 				B22E80C2198CAE38005C4108 /* GLACollectedFile.h */,
 				B22E80C3198CAE38005C4108 /* GLACollectedFile.m */,
-				B22E80C9198F8971005C4108 /* GLAFileInfoRetriever.h */,
-				B22E80CA198F8971005C4108 /* GLAFileInfoRetriever.m */,
 			);
 			name = "Collection Content";
 			sourceTree = "<group>";
@@ -569,6 +563,7 @@
 				B219DAA4196AB665007900DF /* View Controller */,
 				B2C7F284196FFFC1005780B4 /* View */,
 				B24B3604196D1F4D0094FA1F /* Model */,
+				E240A3751A0EF3090043AE93 /* File Helpers */,
 				B2C5FD2E1988AB0A00AEFBAF /* Model Controllers */,
 				B2ADDBD81963DA2E0014EF84 /* Supporting Files */,
 			);
@@ -726,6 +721,19 @@
 				1EA2B9BA7A505AD231D594E9 /* Pods-BlikTests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		E240A3751A0EF3090043AE93 /* File Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B22E80C9198F8971005C4108 /* GLAFileInfoRetriever.h */,
+				B22E80CA198F8971005C4108 /* GLAFileInfoRetriever.m */,
+				B20362BF1A0779F3007169C2 /* GLACollectedFilesSetting.h */,
+				B20362C01A0779F3007169C2 /* GLACollectedFilesSetting.m */,
+				B20362C21A077C87007169C2 /* GLAFileOpenerApplicationCombiner.h */,
+				B20362C31A077C87007169C2 /* GLAFileOpenerApplicationCombiner.m */,
+			);
+			name = "File Helpers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

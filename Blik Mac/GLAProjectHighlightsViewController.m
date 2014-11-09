@@ -42,6 +42,11 @@
 	(scrollView.wantsLayer) = YES;
 	
 	[self wrapScrollView];
+	
+	NSMenu *openerApplicationMenu = (self.openerApplicationMenu);
+	(openerApplicationMenu.delegate) = self;
+	
+	[self setUpFileHelpers];
 }
 
 - (void)wrapScrollView
@@ -78,6 +83,15 @@
 	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeWidth withChildView:scrollView identifier:@"width"];
 	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:scrollView identifier:@"top"];
 	(self.scrollLeadingConstraint) = [self addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:scrollView identifier:@"leading"];
+}
+
+- (void)setUpFileHelpers
+{
+	GLAFileOpenerApplicationCombiner * openerApplicationCombiner = [GLAFileOpenerApplicationCombiner new];
+	(self.openerApplicationCombiner) = openerApplicationCombiner;
+	
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver:self selector:@selector(openerApplicationCombinerDidChangeNotification:) name:GLAFileURLOpenerApplicationCombinerDidChangeNotification object:openerApplicationCombiner];
 }
 
 - (void)dealloc
@@ -231,7 +245,7 @@
 	[self reloadHighlightedItems];
 }
 
-#pragma mark Actions
+#pragma mark -
 
 - (GLAHighlightedItem *)clickedHighlightedItem
 {
@@ -243,6 +257,53 @@
 	
 	return (self.highlightedItems)[clickedRow];
 }
+
+- (GLACollectedFile *)collectedFileForHighlightedItem:(GLAHighlightedItem *)highlightedItem
+{
+	if (![highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+		return nil;
+	}
+	
+	GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
+	
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLACollectedFile *collectedFile = [pm collectedFileForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
+	
+	return collectedFile;
+}
+
+- (NSURL *)fileURLForHighlightedItem:(GLAHighlightedItem *)highlightedItem
+{
+	GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
+	if (!collectedFile) {
+		return nil;
+	}
+	
+	return (collectedFile.URL);
+}
+
+- (void)updateOpenerApplicationsUIMenu
+{
+	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
+	
+	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
+	NSURL *fileURL = nil;
+	if (highlightedItem) {
+		fileURL = [self fileURLForHighlightedItem:highlightedItem];
+	}
+	
+	if (fileURL) {
+		(openerApplicationCombiner.fileURLs) = [NSSet setWithObject:fileURL];
+	}
+	else {
+		(openerApplicationCombiner.fileURLs) = [NSSet set];
+	}
+
+	NSMenu *menu = (self.openerApplicationMenu);
+	[openerApplicationCombiner updateMenuWithOpenerApplications:menu target:self action:@selector(openWithChosenApplication:)];
+}
+
+#pragma mark Actions
 
 - (IBAction)removedClickedItem:(id)sender
 {
@@ -262,24 +323,64 @@
 - (IBAction)openClickedItem:(id)sender
 {
 	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
-	if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
-		GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
-	
-		GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-		GLACollectedFile *collectedFile = [pm collectedFileForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
-		if (!collectedFile) {
-			return;
-		}
-		
-		NSURL *applicationURL = nil;
-		GLACollectedFile *applicationToOpenFileCollected = (highlightedCollectedFile.applicationToOpenFile);
-		if (applicationToOpenFileCollected) {
-			applicationURL = (applicationToOpenFileCollected.URL);
-		}
-		
-		NSURL *fileURL = (collectedFile.URL);
-		[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL];
+	if ((!highlightedItem) || ![highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+		return;
 	}
+	
+	GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
+	
+	NSURL *fileURL = [self fileURLForHighlightedItem:highlightedCollectedFile];
+	if (!fileURL) {
+		return;
+	}
+		
+	NSURL *applicationURL = nil;
+	GLACollectedFile *applicationToOpenFileCollected = (highlightedCollectedFile.applicationToOpenFile);
+	if (applicationToOpenFileCollected) {
+		applicationURL = (applicationToOpenFileCollected.URL);
+	}
+	
+	if (!applicationURL) {
+		NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+		applicationURL = [workspace URLForApplicationToOpenURL:fileURL];
+	}
+	
+	[fileURL startAccessingSecurityScopedResource];
+	
+	[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL];
+	
+	[fileURL stopAccessingSecurityScopedResource];
+}
+
+- (IBAction)openWithChosenApplication:(NSMenuItem *)menuItem
+{
+	id representedObject = (menuItem.representedObject);
+	if ((!representedObject) || ![representedObject isKindOfClass:[NSURL class]]) {
+		return;
+	}
+	
+	NSURL *applicationURL = representedObject;
+	
+	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
+	
+	NSURL *fileURL = [self fileURLForHighlightedItem:highlightedItem];
+	if (!fileURL) {
+		return;
+	}
+	
+	[fileURL startAccessingSecurityScopedResource];
+	
+	[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL];
+	
+	[fileURL stopAccessingSecurityScopedResource];
+
+}
+
+#pragma mark Notifications
+
+- (void)openerApplicationCombinerDidChangeNotification:(NSNotification *)note
+{
+	[self updateOpenerApplicationsUIMenu];
 }
 
 #pragma mark Table View Data Source
@@ -439,6 +540,16 @@
 	//(cellView.textField.textColor) = [uiStyle colorForCollectionColor:(collection.color)];
 	
 	return cellView;
+}
+
+#pragma mark Menu Delegate
+
+- (void)menuNeedsUpdate:(NSMenu *)menu
+{
+	NSMenu *openerApplicationMenu = (self.openerApplicationMenu);
+	if (menu == openerApplicationMenu) {
+		[self updateOpenerApplicationsUIMenu];
+	}
 }
 
 @end

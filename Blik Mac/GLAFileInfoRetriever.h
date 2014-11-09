@@ -12,6 +12,9 @@
 
 @interface GLAFileInfoRetriever : NSObject
 
+// Designated Init
+- (instancetype)initWithDelegate:(id<GLAFileInfoRetrieverDelegate>)delegate;
+
 @property(weak, nonatomic) id<GLAFileInfoRetrieverDelegate> delegate;
 
 #pragma mark File Properties

@@ -7,17 +7,16 @@
 //
 
 @import Foundation;
-#import "GLAFileInfoRetriever.h"
 
 
 @interface GLAFileOpenerApplicationCombiner : NSObject
-
-@property(readonly, nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
 
 - (void)addFileURLs:(NSSet *)fileURLsSet;
 - (void)removeFileURLs:(NSSet *)fileURLsSet;
 - (BOOL)hasFileURL:(NSURL *)fileURL;
 @property(copy, nonatomic) NSSet *fileURLs;
+
+@property(readonly, nonatomic) BOOL hasLoadedAll;
 
 @property(readonly, copy, nonatomic) NSSet *combinedOpenerApplicationURLs;
 @property(readonly, nonatomic) NSURL *combinedDefaultOpenerApplicationURL;
@@ -29,3 +28,11 @@
 @end
 
 extern NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification;
+
+
+@interface GLAFileOpenerApplicationCombiner (MenuAdditions)
+
+- (NSMenuItem *)newMenuItemForApplicationURL:(NSURL *)applicationURL target:(id)target action:(SEL)action;
+- (void)updateMenuWithOpenerApplications:(NSMenu *)menu target:(id)target action:(SEL)action;
+
+@end

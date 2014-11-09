@@ -47,11 +47,6 @@
 	return self;
 }
 
-+ (instancetype)collectedFileWithFileURL:(NSURL *)URL
-{
-	return [[self alloc] initWithFileURL:URL];
-}
-
 #pragma mark -
 
 - (NSUInteger)hash
@@ -127,7 +122,13 @@
 	NSURL *URL = (self.URL);
 	NSArray *resourceValueKeys = [[self class] coreResourceValueKeys];
 	NSDictionary *resourceValues = [URL resourceValuesForKeys:resourceValueKeys error:error];
+	if (!resourceValues) {
+		return;
+	}
 	[self updateInformationFromURLResourceValues:resourceValues];
+	
+	BOOL isReachable = [URL checkResourceIsReachableAndReturnError:error];
+	(self.isMissing) = !isReachable;
 }
 
 - (NSData *)bookmarkDataWithError:(NSError *__autoreleasing *)error

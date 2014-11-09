@@ -11,12 +11,15 @@
 #import "GLAProjectManager.h"
 #import "GLACollectedFile.h"
 #import "GLAFileInfoRetriever.h"
+#import "GLACollectedFilesSetting.h"
 #import "GLAFileOpenerApplicationCombiner.h"
 
 
 @interface GLAFileCollectionViewController ()
 
 @property(copy, nonatomic) NSArray *collectedFiles;
+
+@property(nonatomic) GLACollectedFilesSetting *collectedFilesSetting;
 
 @property(nonatomic) BOOL doNotUpdateViews;
 
@@ -27,9 +30,6 @@
 @property(nonatomic) NSMutableDictionary *URLsToOpenerApplicationURLs;
 @property(nonatomic) NSMutableDictionary *URLsToDefaultOpenerApplicationURLs;
 
-@property(nonatomic) NSUInteger combinedOpenerApplicationURLsCountSoFar;
-@property(nonatomic) NSMutableSet *combinedOpenerApplicationURLs;
-@property(nonatomic) NSURL *combinedDefaultOpenerApplicationURL;
 @property(nonatomic) BOOL openerApplicationsPopUpButtonNeedsUpdate;
 
 @property(nonatomic) QLPreviewPanel *activeQuickLookPreviewPanel;
@@ -55,6 +55,7 @@
 {
 	[self stopCollectionObserving];
 	[self stopObservingPreviewFrameChanges];
+	[self stopAccessingAllSecurityScopedFileURLs];
 }
 
 - (void)prepareView
@@ -81,7 +82,7 @@
 	
 	(self.openerApplicationsPopUpButton.menu.delegate) = self;
 	
-	[self setUpFileInfoRetriever];
+	[self setUpFileHelpers];
 	
 	[self reloadSourceFiles];
 }
@@ -137,12 +138,17 @@
 	}
 }
 
-- (void)setUpFileInfoRetriever
+- (void)setUpFileHelpers
 {
-	GLAFileInfoRetriever *fileInfoRetriever = [GLAFileInfoRetriever new];
-	(fileInfoRetriever.delegate) = self;
+	(self.collectedFilesSetting) = [GLACollectedFilesSetting new];
 	
-	(self.fileInfoRetriever) = fileInfoRetriever;
+	(self.fileInfoRetriever) = [[GLAFileInfoRetriever alloc] initWithDelegate:self];
+	
+	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = [GLAFileOpenerApplicationCombiner new];
+	(self.openerApplicationCombiner) = openerApplicationCombiner;
+	
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver:self selector:@selector(openerApplicationCombinerDidChangeNotification:) name:GLAFileURLOpenerApplicationCombinerDidChangeNotification object:openerApplicationCombiner];
 	
 }
 
@@ -283,59 +289,14 @@
 	}
 }
 
-- (void)addAccessedSecurityScopedFileURL:(NSURL *)URL
-{
-	if (!(self.accessedSecurityScopedURLs)) {
-		(self.accessedSecurityScopedURLs) = [NSMutableSet new];
-	}
-	
-	NSMutableSet *accessedSecurityScopedURLs = (self.accessedSecurityScopedURLs);
-	if (![accessedSecurityScopedURLs containsObject:URL]) {
-		[URL startAccessingSecurityScopedResource];
-		[accessedSecurityScopedURLs addObject:URL];
-	}
-}
-
-- (void)finishAccessingAllSecurityScopedFileURLs
-{
-	NSSet *accessedSecurityScopedURLs = (self.accessedSecurityScopedURLs);
-	if (accessedSecurityScopedURLs) {
-		[(self.fileInfoRetriever) clearCacheForURLs:[accessedSecurityScopedURLs allObjects]];
-		
-		for (NSURL *URL in accessedSecurityScopedURLs) {
-			[URL stopAccessingSecurityScopedResource];
-		}
-	}
-}
-
 - (void)addUsedURLForCollectedFile:(GLACollectedFile *)collectedFile
 {
-	if (!(self.usedURLsToCollectedFiles)) {
-		(self.usedURLsToCollectedFiles) = [NSMutableDictionary new];
-	}
-	
-	NSURL *fileURL = (collectedFile.URL);
-	
-	NSMutableDictionary *usedURLsToCollectedFiles = (self.usedURLsToCollectedFiles);
-	if (!usedURLsToCollectedFiles[fileURL]) {
-		usedURLsToCollectedFiles[fileURL] = [NSMutableSet new];
-	}
-	
-	NSMutableSet *collectedFiles = usedURLsToCollectedFiles[fileURL];
-	[collectedFiles addObject:collectedFile];
-	
-	[self addAccessedSecurityScopedFileURL:fileURL];
+	[(self.collectedFilesSetting) startUsingURLForCollectedFile:collectedFile];
 }
 
-- (NSSet *)collectedFilesUsingURL:(NSURL *)fileURL
+- (void)stopAccessingAllSecurityScopedFileURLs
 {
-	NSMutableDictionary *usedURLsToCollectedFiles = (self.usedURLsToCollectedFiles);
-	if (!usedURLsToCollectedFiles) {
-		return nil;
-	}
-	
-	NSMutableSet *collectedFiles = usedURLsToCollectedFiles[fileURL];
-	return [collectedFiles copy];
+	[(self.collectedFilesSetting) stopUsingURLsForAllCollectedFiles];
 }
 
 - (void)makeSourceFilesListFirstResponder
@@ -360,7 +321,7 @@
 	
 	(self.doNotUpdateViews) = YES;
 	[self stopObservingPreviewFrameChanges];
-	[self finishAccessingAllSecurityScopedFileURLs];
+	[self stopAccessingAllSecurityScopedFileURLs];
 }
 
 #pragma mark -
@@ -442,91 +403,10 @@
 	return rowIndex;
 }
 
-- (void)clearCombinedApplicationURLs
-{
-	(self.combinedOpenerApplicationURLsCountSoFar) = 0;
-	
-	NSMutableSet *combinedOpenerApplicationURLs = (self.combinedOpenerApplicationURLs);
-	if (combinedOpenerApplicationURLs) {
-		[combinedOpenerApplicationURLs removeAllObjects];
-	}
-}
-
-- (void)combineOpenerApplicationURLsForFileURL:(NSURL *)URL loadIfNeeded:(BOOL)load
-{
-	NSMutableDictionary *URLsToOpenerApplicationURLs = (self.URLsToOpenerApplicationURLs);
-	NSArray *applicationURLs = URLsToOpenerApplicationURLs ? URLsToOpenerApplicationURLs[URL] : nil;
-	
-	GLAFileInfoRetriever *fileInfoRetriever = (self.fileInfoRetriever);
-	
-	if (load && (applicationURLs == nil)) {
-		[fileInfoRetriever requestApplicationURLsToOpenURL:URL];
-		return;
-	}
-	
-	NSURL *defaultOpenerApplicationURL = [fileInfoRetriever defaultApplicationURLToOpenURL:URL];
-	
-	NSMutableSet *combinedOpenerApplicationURLs = (self.combinedOpenerApplicationURLs);
-	if (!combinedOpenerApplicationURLs) {
-		combinedOpenerApplicationURLs = (self.combinedOpenerApplicationURLs) = [NSMutableSet new];
-	}
-	
-	if ((self.combinedOpenerApplicationURLsCountSoFar) == 0) {
-		[combinedOpenerApplicationURLs addObjectsFromArray:applicationURLs];
-		(self.combinedDefaultOpenerApplicationURL) = defaultOpenerApplicationURL;
-		
-		[self setNeedsToUpdateOpenerApplicationsUI];
-	}
-	else {
-		NSUInteger countBefore = (combinedOpenerApplicationURLs.count);
-		[combinedOpenerApplicationURLs intersectSet:[NSSet setWithArray:applicationURLs]];
-		NSUInteger countAfter = (combinedOpenerApplicationURLs.count);
-		
-		if (defaultOpenerApplicationURL != (self.combinedDefaultOpenerApplicationURL)) {
-			(self.combinedDefaultOpenerApplicationURL) = nil;
-		}
-		
-		if (countBefore != countAfter) {
-			[self setNeedsToUpdateOpenerApplicationsUI];
-		}
-	}
-	
-	(self.combinedOpenerApplicationURLsCountSoFar)++;
-}
-
 - (void)retrieveApplicationsToOpenSelection
 {
-	NSMutableArray *selectedURLs = (self.selectedURLs);
-	if (!selectedURLs) {
-		return;
-	}
-	
-	[self clearCombinedApplicationURLs];
-	
-	for (NSURL *fileURL in selectedURLs) {
-		[self combineOpenerApplicationURLsForFileURL:fileURL loadIfNeeded:YES];
-	}
-}
-
-- (NSMenuItem *)newMenuItemForApplicationURL:(NSURL *)applicationURL
-{
-	NSError *error = nil;
-	NSDictionary *values = [applicationURL resourceValuesForKeys:@[NSURLLocalizedNameKey, NSURLEffectiveIconKey] error:&error];
-	if (!values) {
-		return nil;
-	}
-	
-	NSImage *iconImage = values[NSURLEffectiveIconKey];
-	iconImage = [iconImage copy];
-	(iconImage.size) = NSMakeSize(16.0, 16.0);
-	
-	NSMenuItem *menuItem = [NSMenuItem new];
-	(menuItem.title) = values[NSURLLocalizedNameKey];
-	(menuItem.image) = iconImage;
-	
-	(menuItem.representedObject) = applicationURL;
-	
-	return menuItem;
+	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
+	(openerApplicationCombiner.fileURLs) = [NSSet setWithArray:(self.selectedURLs)];
 }
 
 - (void)updateOpenerApplicationsUIVisibility
@@ -543,56 +423,10 @@
 
 - (void)updateOpenerApplicationsUIMenu
 {
-	NSMutableSet *combinedOpenerApplicationURLs = (self.combinedOpenerApplicationURLs);
-	NSURL *combinedDefaultOpenerApplicationURL = (self.combinedDefaultOpenerApplicationURL);
+	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
 	
-	NSMenuItem *defaultApplicationMenuItem = nil;
-	NSMutableArray *menuItems = [NSMutableArray new];
-	
-	if (combinedDefaultOpenerApplicationURL) {
-		defaultApplicationMenuItem = [self newMenuItemForApplicationURL:combinedDefaultOpenerApplicationURL];
-		(defaultApplicationMenuItem.title) = [NSString localizedStringWithFormat:NSLocalizedString(@"%@ (default)", @"Menu item title format for default application."), (defaultApplicationMenuItem.title)];
-	}
-	
-	if ((combinedOpenerApplicationURLs.count) > 0) {
-		for (NSURL *applicationURL in combinedOpenerApplicationURLs) {
-			if ([(combinedDefaultOpenerApplicationURL.path) isEqual:(applicationURL.path)]) {
-				continue;
-			}
-			
-			NSMenuItem *menuItem = [self newMenuItemForApplicationURL:applicationURL];
-			if (!menuItem) {
-				continue;
-			}
-			
-			[menuItems addObject:menuItem];
-		}
-		
-		NSSortDescriptor *titleSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES selector:@selector(localizedStandardCompare:)];
-		
-		[menuItems sortUsingDescriptors:@[titleSortDescriptor]];
-	}
-		
 	NSMenu *menu = (self.openerApplicationsPopUpButton.menu);
-	[menu removeAllItems];
-	
-	if (defaultApplicationMenuItem) {
-		[menu addItem:defaultApplicationMenuItem];
-		
-		if ((menuItems.count) > 0) {
-			[menu addItem:[NSMenuItem separatorItem]];
-		}
-	}
-	else if ((menuItems.count) == 0) {
-		NSMenuItem *menuItem = [NSMenuItem new];
-		(menuItem.title) = NSLocalizedString(@"No Application", @"");
-		(menuItem.enabled) = NO;
-		[menu addItem:menuItem];
-	}
-	
-	for (NSMenuItem *menuItem in menuItems) {
-		[menu addItem:menuItem];
-	}
+	[openerApplicationCombiner updateMenuWithOpenerApplications:menu target:nil action:NULL];
 	
 	[self updateOpenerApplicationsUIVisibility];
 }
@@ -656,7 +490,7 @@
 	NSMutableArray *collectedFiles = [NSMutableArray array];
 	NSError *error = nil;
 	for (NSURL *fileURL in fileURLs) {
-		GLACollectedFile *collectedFile = [GLACollectedFile collectedFileWithFileURL:fileURL];
+		GLACollectedFile *collectedFile = [[GLACollectedFile alloc] initWithFileURL:fileURL];
 		[collectedFile updateInformationWithError:&error];
 		[collectedFiles addObject:collectedFile];
 	}
@@ -908,7 +742,6 @@
 	GLACollectedFile *collectedFile = (self.collectedFiles)[row];
 	
 	[self addUsedURLForCollectedFile:collectedFile];
-	//[self addAccessedSecurityScopedFileURL:(collectedFile.URL)];
 	
 	return collectedFile;
 }
@@ -1061,12 +894,10 @@
 		return;
 	}
 	
-	//NSSet *collectedFilesToUpdate = [self collectedFilesUsingURL:fileURL];
 	NSIndexSet *indexesToUpdate = [(self.collectedFiles) indexesOfObjectsPassingTest:^BOOL(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
 		return [fileURL isEqual:(collectedFile.URL)];
 	}];
 	
-	//[(self.sourceFilesListTableView) reloadData];
 	[(self.sourceFilesListTableView) reloadDataForRowIndexes:indexesToUpdate columnIndexes:[NSIndexSet indexSetWithIndex:0]];
 }
 
@@ -1077,41 +908,18 @@
 	}
 }
 
-- (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didRetrieveApplicationURLsToOpenURL:(NSURL *)URL
-{
-	NSMutableArray *selectedURLs = (self.selectedURLs);
-	if (!selectedURLs) {
-		return;
-	}
-	
-	NSMutableDictionary *URLsToOpenerApplicationURLs = (self.URLsToOpenerApplicationURLs);
-	if (!URLsToOpenerApplicationURLs) {
-		URLsToOpenerApplicationURLs = (self.URLsToOpenerApplicationURLs) = [NSMutableDictionary new];
-	}
-	
-	NSArray *applicationURLs = [fileInfoRetriever applicationsURLsToOpenURL:URL];
-	URLsToOpenerApplicationURLs[URL] = applicationURLs;
-	
-	NSMutableDictionary *URLsToDefaultOpenerApplicationURLs = (self.URLsToDefaultOpenerApplicationURLs);
-	if (!URLsToDefaultOpenerApplicationURLs) {
-		URLsToDefaultOpenerApplicationURLs = (self.URLsToDefaultOpenerApplicationURLs) = [NSMutableDictionary new];
-	}
-	
-	NSURL *defaultApplicationURL = [fileInfoRetriever defaultApplicationURLToOpenURL:URL];
-	URLsToDefaultOpenerApplicationURLs[URL] = defaultApplicationURL;
-	
-	if ([selectedURLs containsObject:URL]) {
-		[self combineOpenerApplicationURLsForFileURL:URL loadIfNeeded:NO];
-	}
-	
-	//NSLog(@"APPLICATION URLS %@", applicationURLs);
-}
-
 #pragma mark Menu Delegate
 
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
 	//[self updateOpenerApplicationsUIMenu];
+}
+
+#pragma mark Opener Application Combiner Notifications
+
+- (void)openerApplicationCombinerDidChangeNotification:(NSNotification *)note
+{
+	[self updateOpenerApplicationsUIMenu];
 }
 
 @end
