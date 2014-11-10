@@ -37,6 +37,11 @@
 	return self;
 }
 
+- (void)setUpArrayEditorOptions:(GLAArrayEditorOptions *)options
+{
+	
+}
+
 - (NSOperationQueue *)foregroundOperationQueue
 {
 	id<GLAArrayEditorStoreDelegate> delegate = (self.delegate);
@@ -251,6 +256,9 @@
 		return NO;
 	}
 	
+	GLAArrayEditorOptions *arrayEditorOptions = [GLAArrayEditorOptions new];
+	[self setUpArrayEditorOptions:arrayEditorOptions];
+	
 	(self.loading) = YES;
 	(self.finishedLoading) = NO;
 	[self runInBackground:^(GLAArrayEditorStore *store) {
@@ -263,7 +271,7 @@
 		NSArray *processedChildren = [store background_processLoadedChildren:loadedChildren];
 		
 		[store runInForeground:^(GLAArrayEditorStore *store) {
-			(store.arrayEditor) = [[GLAArrayEditor alloc] initWithObjects:processedChildren];
+			(store.arrayEditor) = [[GLAArrayEditor alloc] initWithObjects:processedChildren options:arrayEditorOptions];
 			
 			id<GLAArrayEditorStoreDelegate> delegate = (self.delegate);
 			if ((delegate != nil) && [delegate respondsToSelector:@selector(arrayEditorStore:didLoadChildren:)]) {

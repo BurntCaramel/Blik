@@ -19,6 +19,10 @@
 
 @interface GLAProjectHighlightsViewController ()
 
+@property(nonatomic) BOOL doNotUpdateViews;
+
+@property(nonatomic) GLAHighlightsTableCellView *measuringTableCellView;
+
 @property(nonatomic) NSIndexSet *draggedRowIndexes;
 
 @end
@@ -40,6 +44,9 @@
 	NSScrollView *scrollView = (tableView.enclosingScrollView);
 	// I think Apple says this is better for scrolling performance.
 	(scrollView.wantsLayer) = YES;
+	
+	NSTableColumn *mainColumn = (tableView.tableColumns)[0];
+	(self.measuringTableCellView) = [tableView makeViewWithIdentifier:(mainColumn.identifier) owner:nil];
 	
 	[self wrapScrollView];
 	
@@ -211,6 +218,10 @@
 
 - (void)reloadHighlightedItems
 {
+	if (self.doNotUpdateViews) {
+		return;
+	}
+	
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	
 	NSArray *highlightedItems = [projectManager copyHighlightsForProject:(self.project)];
@@ -243,6 +254,25 @@
 - (void)collectionDidChangeNotification:(NSNotification *)note
 {
 	[self reloadHighlightedItems];
+}
+
+- (void)viewWillAppear
+{
+	[super viewWillAppear];
+	
+	(self.doNotUpdateViews) = NO;
+	[self reloadHighlightedItems];
+	
+	[self startProjectObserving];
+}
+
+- (void)viewWillDisappear
+{NSLog(@"HIGHLIGHTS VIEW viewWillDisappear");
+	[super viewWillDisappear];
+	
+	(self.doNotUpdateViews) = YES;
+	[self stopProjectObserving];
+	[self stopCollectionObserving];
 }
 
 #pragma mark -
@@ -373,7 +403,6 @@
 	[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL];
 	
 	[fileURL stopAccessingSecurityScopedResource];
-
 }
 
 #pragma mark Notifications
@@ -499,9 +528,97 @@
 	return NO;
 }
 
+- (void)setUpTableCellView:(GLAHighlightsTableCellView *)cellView forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+	(cellView.backgroundStyle) = NSBackgroundStyleDark;
+	
+	NSTextField *textField = (cellView.textField);
+	
+	(cellView.canDrawSubviewsIntoLayer) = YES;
+	(cellView.alphaValue) = 1.0;
+	
+	GLAHighlightedItem *highlightedItem = (self.highlightedItems)[row];
+	(cellView.objectValue) = highlightedItem;
+	
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	NSString *name = @"Loading…";
+	
+	if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+		GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
+		
+		GLACollection *holdingCollection = [pm collectionForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
+		GLACollectedFile *collectedFile = [pm collectedFileForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
+		if (collectedFile) {
+			name = (collectedFile.name);
+			
+			if (collectedFile.isMissing) {
+				(cellView.alphaValue) = 0.5;
+			}
+		}
+		
+		GLACollectionIndicationButton *collectionIndicationButton = (cellView.collectionIndicationButton);
+		(collectionIndicationButton.collection) = holdingCollection;
+	}
+	else {
+		NSAssert(NO, @"highlightedItem not a valid class.");
+	}
+	
+	//name = [NSString stringWithFormat:@"%@ %@ %@", name, name, name];
+	
+	GLAUIStyle *activeStyle = [GLAUIStyle activeStyle];
+	
+	NSFont *titleFont = (activeStyle.smallReminderFont);
+	
+	NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+	(paragraphStyle.alignment) = NSRightTextAlignment;
+	(paragraphStyle.maximumLineHeight) = 18.0;
+	
+	NSColor *textColor = (activeStyle.lightTextColor);
+	
+	NSDictionary *titleAttributes =
+	@{
+	  NSFontAttributeName: titleFont,
+	  NSParagraphStyleAttributeName: paragraphStyle,
+	  NSForegroundColorAttributeName: textColor
+	  };
+	
+	NSAttributedString *wholeAttrString = [[NSAttributedString alloc] initWithString:name attributes:titleAttributes];
+	
+	(textField.attributedStringValue) = wholeAttrString;
+	
+	//(textField.preferredMaxLayoutWidth) = (tableColumn.width);
+}
+
+#if 1
+- (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
+{
+	GLAHighlightsTableCellView *cellView = (self.measuringTableCellView);
+	[self setUpTableCellView:cellView forTableColumn:nil row:row];
+	
+	NSTableColumn *tableColumn = (tableView.tableColumns)[0];
+	CGFloat cellWidth = (tableColumn.width);
+	(cellView.frameSize) = NSMakeSize(cellWidth, 100.0);
+	[cellView layoutSubtreeIfNeeded];
+	
+	NSTextField *textField = (cellView.textField);
+	//(textField.preferredMaxLayoutWidth) = (tableColumn.width);
+	(textField.preferredMaxLayoutWidth) = NSWidth(textField.bounds);
+#if 0
+	NSLog(@"textField.intrinsicContentSize %@ %f %f", [textField valueForKey:@"intrinsicContentSize"], (textField.preferredMaxLayoutWidth), (tableColumn.width));
+#endif
+	
+	CGFloat extraPadding = 13.0;
+	
+	return (textField.intrinsicContentSize.height) + extraPadding;
+}
+#endif
+
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
 	GLAHighlightsTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
+#if 1
+	[self setUpTableCellView:cellView forTableColumn:tableColumn row:row];
+#else
 	(cellView.canDrawSubviewsIntoLayer) = YES;
 	(cellView.alphaValue) = 1.0;
 	
@@ -529,6 +646,8 @@
 		NSAssert(NO, @"highlightedItem not a valid class.");
 	}
 	
+	name = [NSString stringWithFormat:@"%@ %@ %@", name, name, name];
+	
 	(cellView.objectValue) = highlightedItem;
 	
 	if (name) {
@@ -538,6 +657,7 @@
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	(cellView.textField.textColor) = (uiStyle.lightTextColor);
 	//(cellView.textField.textColor) = [uiStyle colorForCollectionColor:(collection.color)];
+#endif
 	
 	return cellView;
 }

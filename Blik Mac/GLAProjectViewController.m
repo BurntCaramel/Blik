@@ -109,7 +109,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	(self.planViewHeightConstraintDefaultConstant) = (self.planViewHeightConstraint.constant);
 	
 	
-	GLAView *actionsBarView = (self.actionsBarController.view);
+	NSView *actionsBarView = (self.actionsBarController.view);
 	(actionsBarView.wantsLayer) = YES;
 	(actionsBarView.layer.backgroundColor) = (activeStyle.contentBackgroundColor.CGColor);
 	
@@ -117,12 +117,39 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	[activeStyle prepareContentTextField:(self.nameTextField)];
 }
 
+- (void)viewWillAppear
+{
+	[super viewWillAppear];
+	
+	[(self.collectionsViewController) viewWillAppear];
+	[(self.highlightsViewController) viewWillAppear];
+}
+
 - (void)viewDidAppear
 {
 	[super viewDidAppear];
 	
-	[(self.itemsScrollView.contentView) scrollToPoint:NSZeroPoint];
+	[(self.collectionsViewController) viewDidAppear];
+	[(self.highlightsViewController) viewDidAppear];
+	
+	[(self.collectionsScrollView.contentView) scrollToPoint:NSZeroPoint];
 	[(self.highlightsScrollView.contentView) scrollToPoint:NSZeroPoint];
+}
+
+- (void)viewWillDisappear
+{
+	[super viewWillDisappear];
+	
+	[(self.collectionsViewController) viewWillDisappear];
+	[(self.highlightsViewController) viewWillDisappear];
+}
+
+- (void)viewDidDisappear
+{
+	[super viewDidDisappear];
+	
+	[(self.collectionsViewController) viewDidDisappear];
+	[(self.highlightsViewController) viewDidDisappear];
 }
 
 @synthesize project = _project;
@@ -253,18 +280,9 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	return (self.highlightsViewController.tableView.enclosingScrollView);
 }
 
-#if 0
-
-- (NSScrollView *)planScrollView
-{
-	return (self.planViewController.tableView.enclosingScrollView);
-}
-
-#endif
-
 - (void)matchWithOtherProjectViewController:(GLAProjectViewController *)otherController
 {
-	[(self.itemsScrollView.contentView) scrollToPoint:(otherController.itemsScrollView.contentView.bounds).origin];
+	[(self.collectionsScrollView.contentView) scrollToPoint:(otherController.collectionsScrollView.contentView.bounds).origin];
 	
 	[(self.highlightsScrollView.contentView) scrollToPoint:(otherController.highlightsScrollView.contentView.bounds).origin];
 	
@@ -313,8 +331,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	(self.animatingFocusChange) = YES;
 	
 	GLAProjectView *projectView = (self.projectView);
-	NSScrollView *itemsScrollView = (self.collectionsScrollView);
-	NSScrollView *highlightsScrollView = (self.highlightsScrollView);
+	NSScrollView *collectionsScrollView = (self.collectionsScrollView);
 	
 	if (isEditing) {
 		[self didBeginEditingInnerSection];
@@ -324,7 +341,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 			(context.duration) = 6.0 / 12.0;
 			(context.allowsImplicitAnimation) = YES;
 			
-			//(self.itemsViewXConstraint) = [self addConstraintForCenteringView:itemsScrollView inView:projectView];
+			//(self.itemsViewXConstraint) = [self addConstraintForCenteringView:collectionsScrollView inView:projectView];
 			(self.itemsViewXConstraint) = [self addConstraintForCenteringView:(self.collectionsViewController.view) inView:projectView];
 			
 			[projectView layoutSubtreeIfNeeded];
@@ -333,7 +350,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 		}];
 		
 		// Resize item view to be taller, and animate plan view off.
-		(self.itemsViewHeightConstraintDefaultConstant) = NSHeight(itemsScrollView.frame);
+		(self.itemsViewHeightConstraintDefaultConstant) = NSHeight(collectionsScrollView.frame);
 		[projectView removeConstraint:(self.planViewBottomConstraint)];
 		
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -412,7 +429,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	(self.animatingFocusChange) = YES;
 	
 	GLAProjectView *projectView = (self.projectView);
-	NSScrollView *itemsScrollView = (self.collectionsScrollView);
+	NSScrollView *collectionsScrollView = (self.collectionsScrollView);
 	NSScrollView *highlightsScrollView = (self.highlightsScrollView);
 	
 	if (isEditing) {
@@ -448,7 +465,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 			(context.duration) = 2.5 / 12.0;
 			
-			(itemsScrollView.animator.alphaValue) = 0.0;
+			(collectionsScrollView.animator.alphaValue) = 0.0;
 		} completionHandler:nil];
 	}
 	else {
@@ -478,7 +495,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 			(context.duration) = 6.0 / 12.0;
 			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
 			
-			(itemsScrollView.animator.alphaValue) = 1.0;
+			(collectionsScrollView.animator.alphaValue) = 1.0;
 			(self.itemsViewLeadingConstraint.animator.constant) = (self.itemsViewLeadingConstraintDefaultConstant);
 		} completionHandler:nil];
 	}

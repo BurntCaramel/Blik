@@ -57,10 +57,10 @@
 - (IBAction)addNewCollection:(id)sender;
 - (IBAction)addNewFilesListCollection:(id)sender;
 
-- (IBAction)editPlan:(id)sender;
+//- (IBAction)editPlan:(id)sender;
 @property(readonly, nonatomic) BOOL editingPlan;
 
-- (IBAction)chooseExistingReminders:(id)sender;
+//- (IBAction)chooseExistingReminders:(id)sender;
 @property(readonly, nonatomic) BOOL choosingExistingReminders;
 @property(nonatomic) GLAChooseRemindersViewController *chooseRemindersViewController;
 
@@ -68,8 +68,8 @@
 - (void)focusNameTextField;
 - (IBAction)changeName:(id)sender;
 
-@property(readonly, nonatomic) NSScrollView *itemsScrollView;
-@property(readonly, nonatomic) NSScrollView *planScrollView;
+@property(readonly, nonatomic) NSScrollView *collectionsScrollView;
+@property(readonly, nonatomic) NSScrollView *highlightsScrollView;
 
 - (void)matchWithOtherProjectViewController:(GLAProjectViewController *)otherController;
 

@@ -14,7 +14,7 @@
 
 @protocol GLAProjectEditing <NSObject>
 
-@property(readwrite, copy, nonatomic) NSString *name;
+@property(copy, nonatomic) NSString *name;
 
 @end
 

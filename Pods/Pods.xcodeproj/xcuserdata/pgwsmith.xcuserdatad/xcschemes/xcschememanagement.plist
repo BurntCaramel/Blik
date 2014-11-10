@@ -25,9 +25,24 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
+		<key>Pods-BlikTests-Mantle.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>5</integer>
+		</dict>
+		<key>Pods-BlikTests.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>1C5362FD6DB8E2D818AFD1BA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>3E1AB3D6FEA64EC9AE24F3FC</key>
 		<dict>
 			<key>primary</key>
@@ -38,7 +53,27 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>6A0551F5EE6F3DD78412D606</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>965B444630116FD0201960FC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>A9211730296848E3A3C1AA26</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D31AE428281D3263C294A756</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E71D4C31D212960FA01AEF05</key>
 		<dict>
 			<key>primary</key>
 			<true/>

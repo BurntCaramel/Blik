@@ -37,13 +37,38 @@
 - (void)removeObjects:(NSArray *)objects
 {
 	NSMutableDictionary *mutableDictionary = (self.mutableDictionary);
-	[mutableDictionary removeObjectsForKeys:[objects valueForKey:@"UUID"]];
+	for (GLAModel *model in objects) {
+		[mutableDictionary removeObjectForKey:(model.UUID)];
+	}
 }
 
 - (GLAModel *)objectWithUUID:(NSUUID *)UUID
 {
 	NSMutableDictionary *mutableDictionary = (self.mutableDictionary);
 	return mutableDictionary[UUID];
+}
+
+- (id)objectForKeyedSubscript:(NSUUID *)UUID
+{
+	return [self objectWithUUID:UUID];
+}
+
+#pragma mark <GLAArrayObserving>
+
+- (void)arrayWasCreated:(id<GLAArrayInspecting>)array
+{NSLog(@"arrayWasCreated");
+	NSArray *children = [array copyChildren];
+	[self addObjectsReplacing:children];
+}
+
+- (void)array:(id<GLAArrayInspecting>)array didMakeChanges:(GLAArrayEditorChanges *)changes
+{
+	[self removeObjects:(changes.removedChildren)];
+	[self removeObjects:(changes.replacedChildrenBefore)];
+	
+	[self addObjectsReplacing:(changes.addedChildren)];
+	[self addObjectsReplacing:(changes.replacedChildrenAfter)];
+
 }
 
 @end

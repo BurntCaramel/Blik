@@ -193,7 +193,7 @@
 
 - (IBAction)chooseExistingReminders:(id)sender
 {
-	[(self.parentViewController) chooseExistingReminders:sender];
+	//[(self.parentViewController) chooseExistingReminders:sender];
 }
 
 #pragma mark Table View Data Source

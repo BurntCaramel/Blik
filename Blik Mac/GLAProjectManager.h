@@ -29,24 +29,25 @@
 
 #pragma mark Projects
 
-- (void)loadAllProjects;
-- (void)loadNowProject;
+- (void)loadAllProjectsIfNeeded;
 
 // All of these may be nil until they are loaded.
 // Use the notifications below to react to when they are ready.
-@property(readonly, copy, nonatomic) NSArray *allProjectsSortedByDateCreatedNewestToOldest;
-//@property(readonly, copy, nonatomic) NSArray *plannedProjects;
-
+- (NSArray *)copyAllProjects;
 - (GLAProject *)projectWithUUID:(NSUUID *)projectUUID;
+
+- (BOOL)editAllProjectsUsingBlock:(void (^)(id<GLAArrayEditing> allProjectsEditor))block;
 
 - (GLAProject *)createNewProjectWithName:(NSString *)name;
 
 - (GLAProject *)renameProject:(GLAProject *)project toName:(NSString *)name;
 
-- (void)deleteProjectPermanently:(GLAProject *)project;
+- (void)permanentlyDeleteProject:(GLAProject *)project;
 
 
 #pragma mark Now Project
+
+- (void)loadNowProjectIfNeeded;
 
 @property(readonly, copy, nonatomic) GLAProject *nowProject;
 
@@ -118,15 +119,18 @@
 @end
 
 
+//extern NSString *GLAProjectManagerChangeWasInitialLoadKey;
+
 extern NSString *GLAProjectManagerAllProjectsDidChangeNotification;
 extern NSString *GLAProjectManagerPlannedProjectsDidChangeNotification;
 extern NSString *GLAProjectManagerNowProjectDidChangeNotification;
 
-// Object GLAProject
+// Object is notificationObjectForProject: GLAProject
+extern NSString *GLAProjectDidChangeNotification;
 extern NSString *GLAProjectCollectionsDidChangeNotification;
 extern NSString *GLAProjectHighlightsDidChangeNotification;
 
-// Object: GLACollection
+// Object is notificationObjectForCollection: GLACollection
 extern NSString *GLACollectionDidChangeNotification;
 extern NSString *GLACollectionFilesListDidChangeNotification;
 

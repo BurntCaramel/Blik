@@ -32,23 +32,62 @@
 
 @property(nonatomic) GLAArrayEditorChanges *currentChanges;
 
+- (void)notifyObserversArrayWasCreated;
+- (void)notifyObserversDidMakeChanges:(GLAArrayEditorChanges *)changes;
+
+- (NSArray *)useConstrainersToFilterPotentialChildren:(NSArray *)potentialChildren;
+
 @end
 
 @implementation GLAArrayEditor
 
+- (instancetype)initWithObjects:(NSArray *)objects options:(GLAArrayEditorOptions *)options
+{
+	self = [super init];
+	if (self) {
+		_mutableChildren = [NSMutableArray arrayWithArray:objects];
+		
+		if (options) {
+			_observers = [(options.observers) copy];
+			_constrainers = [(options.constrainers) copy];
+		}
+		else {
+			_observers = @[];
+			_constrainers = @[];
+		}
+		
+		[self notifyObserversArrayWasCreated];
+	}
+	return self;
+}
+
 - (instancetype)initWithObjects:(NSArray *)objects
 {
-    self = [super init];
-    if (self) {
-        _mutableChildren = [NSMutableArray arrayWithArray:objects];
-    }
-    return self;
+	return [self initWithObjects:objects options:nil];
 }
 
 - (instancetype)init
 {
 	return [self initWithObjects:@[]];
 }
+
+#pragma mark Observers
+
+- (void)notifyObserversArrayWasCreated
+{
+	for (id<GLAArrayObserving> observer in (self.observers)) {
+		[observer arrayWasCreated:self];
+	}
+}
+
+- (void)notifyObserversDidMakeChanges:(GLAArrayEditorChanges *)changes
+{
+	for (id<GLAArrayObserving> observer in (self.observers)) {
+		[observer array:self didMakeChanges:changes];
+	}
+}
+
+#pragma mark -
 
 - (NSArray *)childrenAtIndexes:(NSIndexSet *)indexes
 {
@@ -68,10 +107,25 @@
 	
 	editorBlock(self);
 	
+	[self notifyObserversDidMakeChanges:changes];
+	
 	(self.currentChanges) = nil;
 	
 	return changes;
 }
+
+#pragma mark Constrainers
+
+- (NSArray *)useConstrainersToFilterPotentialChildren:(NSArray *)potentialChildren
+{
+	for (id<GLAArrayConstraining> constrainer in (self.constrainers)) {
+		potentialChildren = [constrainer array:self filterPotentialChildren:potentialChildren];
+	}
+	
+	return potentialChildren;
+}
+
+#pragma mark - <GLAArrayEditing>
 
 - (void)addChildren:(NSArray *)objects
 {
@@ -165,12 +219,12 @@
 	return [objects objectsAtIndexes:indexes];
 }
 
-- (BOOL)replaceFirstChildWhoseKeyPath:(NSString *)keyPath hasValue:(id)value usingChangeBlock:(id (^)(id originalObject))objectChanger
+- (id)replaceFirstChildWhoseKeyPath:(NSString *)keyPath hasValue:(id)value usingChangeBlock:(id (^)(id originalObject))objectChanger
 {
 	NSIndexSet *indexes = [self indexesOfChildrenWhoseKeyPath:keyPath hasValue:value];
 	
 	if (indexes.count == 0) {
-		return NO;
+		return nil;
 	}
 	
 	indexes = [NSIndexSet indexSetWithIndex:(indexes.firstIndex)];
@@ -179,7 +233,7 @@
 	id replacementObject = objectChanger(originalObject);
 	[self replaceChildrenAtIndexes:indexes withObjects:@[replacementObject]];
 	
-	return YES;
+	return replacementObject;
 }
 
 @end
@@ -239,6 +293,55 @@
 - (NSArray *)replacedChildrenAfter
 {
 	return [_mutableReplacedChildrenAfter copy];
+}
+
+@end
+
+
+@interface GLAArrayEditorOptions ()
+
+@property(nonatomic) NSMutableArray *mutableObservers;
+@property(nonatomic) NSMutableArray *mutableConstrainers;
+
+@end
+
+@implementation GLAArrayEditorOptions
+
+- (instancetype)init
+{
+	self = [super init];
+	if (self) {
+		_mutableObservers = [NSMutableArray new];
+		_mutableConstrainers = [NSMutableArray new];
+	}
+	return self;
+}
+
+- (void)addObserver:(id<GLAArrayObserving>)observer
+{
+	NSMutableArray *mutableObservers = (self.mutableObservers);
+	[mutableObservers addObject:observer];
+}
+
+- (void)addConstrainer:(id<GLAArrayConstraining>)constrainer
+{
+	NSMutableArray *mutableConstrainers = (self.mutableConstrainers);
+	[mutableConstrainers addObject:constrainer];
+	
+	NSMutableArray *mutableObservers = (self.mutableObservers);
+	if ([mutableObservers indexOfObjectIdenticalTo:constrainer] == NSNotFound) {
+		[mutableObservers addObject:constrainer];
+	}
+}
+
+- (NSArray *)observers
+{
+	return [(self.mutableObservers) copy];
+}
+
+- (NSArray *)constrainers
+{
+	return [(self.mutableConstrainers) copy];
 }
 
 @end

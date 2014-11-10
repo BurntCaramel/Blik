@@ -117,18 +117,20 @@
 	(self.name) = resourceValues[NSURLLocalizedNameKey];
 }
 
-- (void)updateInformationWithError:(NSError *__autoreleasing *)error
+- (BOOL)updateInformationWithError:(NSError *__autoreleasing *)error
 {
 	NSURL *URL = (self.URL);
 	NSArray *resourceValueKeys = [[self class] coreResourceValueKeys];
 	NSDictionary *resourceValues = [URL resourceValuesForKeys:resourceValueKeys error:error];
 	if (!resourceValues) {
-		return;
+		return NO;
 	}
 	[self updateInformationFromURLResourceValues:resourceValues];
 	
 	BOOL isReachable = [URL checkResourceIsReachableAndReturnError:error];
 	(self.isMissing) = !isReachable;
+	
+	return NO;
 }
 
 - (NSData *)bookmarkDataWithError:(NSError *__autoreleasing *)error

@@ -89,8 +89,8 @@
 	GLAProjectsListViewController *controller = [[GLAProjectsListViewController alloc] initWithNibName:@"GLAProjectsListViewController" bundle:nil];
 	(controller.view.identifier) = @"allProjects";
 	
-	[projectManager loadAllProjects];
-	NSArray *allProjects = (projectManager.allProjectsSortedByDateCreatedNewestToOldest);
+	[projectManager loadAllProjectsIfNeeded];
+	NSArray *allProjects = [projectManager copyAllProjects];
 	if (allProjects) {
 		(controller.projects) = allProjects;
 	}
@@ -113,12 +113,12 @@
 		return;
 	}
 	
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	
 	GLAProjectsListViewController *controller = [[GLAProjectsListViewController alloc] initWithNibName:@"GLAProjectsListViewController" bundle:nil];
 	(controller.view.identifier) = @"plannedProjects";
 	
 	/*
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	
 	[projectManager usePlannedProjects:^(NSArray *plannedProjects) {
 		(controller.projects) = plannedProjects;
 	}];
@@ -147,7 +147,7 @@
 	GLAProjectViewController *controller = [[GLAProjectViewController alloc] initWithNibName:@"GLAProjectViewController" bundle:nil];
 	(controller.view.identifier) = @"nowProject";
 	
-	[projectManager loadNowProject];
+	[projectManager loadNowProjectIfNeeded];
 	GLAProject *nowProject = (projectManager.nowProject);
 	if (nowProject) {
 		(controller.project) = nowProject;
@@ -239,7 +239,7 @@
 	GLAProjectManager *projectManager = (note.object);
 	GLAProjectsListViewController *allProjectsViewController = (self.allProjectsViewController);
 	if (allProjectsViewController) {
-		(allProjectsViewController.projects) = (projectManager.allProjectsSortedByDateCreatedNewestToOldest);
+		(allProjectsViewController.projects) = [projectManager copyAllProjects];
 	}
 	
 #if 0
@@ -709,8 +709,10 @@
 			}];
 		}
 		
+		NSLog(@"HIDE VIEW");
 		if (animate) {
 			if (![currentSection isEqual:(self.currentSection)]) {
+				NSLog(@"viewWillDisappear");
 				[vc viewWillDisappear];
 				[view removeFromSuperview];
 			}

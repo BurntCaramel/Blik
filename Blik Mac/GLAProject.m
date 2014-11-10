@@ -11,10 +11,14 @@
 #import "NSValueTransformer+GLAModel.h"
 
 
-@interface GLAProject () <GLAProjectEditing>
+@interface GLAProject ()
 
 @property(readwrite, copy, nonatomic) NSString *name;
 @property(readwrite, nonatomic) NSDate *dateCreated;
+
+@end
+
+@interface GLAProject (GLAProjectEditing) <GLAProjectEditing>
 
 @end
 

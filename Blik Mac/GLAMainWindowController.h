@@ -66,7 +66,4 @@
 
 - (IBAction)addNewProject:(id)sender;
 
-- (void)projectListViewControllerDidClickOnProjectNotification:(NSNotification *)note;
-- (void)projectListViewControllerDidPerformWorkOnProjectNowNotification:(NSNotification *)note;
-
 @end

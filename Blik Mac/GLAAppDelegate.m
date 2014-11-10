@@ -186,7 +186,7 @@
 
 - (void)helpMenuDidBeginTracking:(NSNotification *)note
 {
-	[self updateActivityStatusMenuItem];
+	//[self updateActivityStatusMenuItem];
 }
 
 #pragma mark Validating UI Items

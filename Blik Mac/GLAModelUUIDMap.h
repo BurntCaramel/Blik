@@ -7,13 +7,16 @@
 //
 
 #import "GLAModel.h"
+#import "GLAArrayEditor.h"
 
 
-@interface GLAModelUUIDMap : NSObject
+@interface GLAModelUUIDMap : NSObject <GLAArrayObserving>
 
 - (void)addObjectsReplacing:(NSArray *)objects;
 - (void)removeObjects:(NSArray *)objects;
 
 - (GLAModel *)objectWithUUID:(NSUUID *)UUID;
+
+- (GLAModel *)objectForKeyedSubscript:(NSUUID *)UUID;
 
 @end

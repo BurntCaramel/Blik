@@ -12,6 +12,11 @@
 
 @implementation GLAMainContentSection
 
++ (NSDictionary *)JSONKeyPathsByPropertyKey
+{
+	return @{};
+}
+
 - (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainContentSection *)previousSection;
 {
 	self = [super init];

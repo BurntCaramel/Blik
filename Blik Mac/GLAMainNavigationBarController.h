@@ -77,7 +77,6 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 - (IBAction)addNewProject:(id)sender;
 - (IBAction)cancelAddingNewProject:(id)sender;
-- (IBAction)confirmAddingNewProject:(id)sender;
 
 - (IBAction)exitEditedCollection:(id)sender;
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B17" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
@@ -154,13 +154,13 @@
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CNu-U7-Yfv">
                                                         <rect key="frame" x="-2" y="7" width="257" height="23"/>
-                                                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="pBN-CX-Mzc">
+                                                        <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="pBN-CX-Mzc">
                                                             <font key="font" size="13" name="AvenirNext-Medium"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BTJ-R3-LvA" customClass="GLACollectionIndicationButton">
+                                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="BTJ-R3-LvA" customClass="GLACollectionIndicationButton">
                                                         <rect key="frame" x="261" y="0.0" width="16" height="36"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="16" id="iAf-ba-H5t"/>
@@ -175,7 +175,7 @@
                                                                 <integer key="value" value="10"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="verticalOffsetDown">
-                                                                <integer key="value" value="2"/>
+                                                                <integer key="value" value="0"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </button>
@@ -516,11 +516,11 @@
             <point key="canvasLocation" x="487" y="-88.5"/>
         </menu>
         <customView identifier="collectionsListInstructions" id="Idz-io-wKr">
-            <rect key="frame" x="0.0" y="0.0" width="206" height="199"/>
+            <rect key="frame" x="0.0" y="0.0" width="217" height="199"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="chl-Vp-HVE">
-                    <rect key="frame" x="-2" y="20" width="210" height="179"/>
+                    <rect key="frame" x="18" y="20" width="201" height="179"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Collections are groups to collect similar files and folders together, even from separate locations or cloud services." id="Pd7-v0-Fcz">
                         <font key="font" size="13" name="AvenirNext-MediumItalic"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -531,7 +531,7 @@
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="chl-Vp-HVE" secondAttribute="bottom" constant="20" id="84D-vp-xl3"/>
                 <constraint firstAttribute="trailing" secondItem="chl-Vp-HVE" secondAttribute="trailing" id="N3E-7p-ov8"/>
-                <constraint firstItem="chl-Vp-HVE" firstAttribute="leading" secondItem="Idz-io-wKr" secondAttribute="leading" id="NEm-DX-azq"/>
+                <constraint firstItem="chl-Vp-HVE" firstAttribute="leading" secondItem="Idz-io-wKr" secondAttribute="leading" constant="20" id="NEm-DX-azq"/>
                 <constraint firstItem="chl-Vp-HVE" firstAttribute="top" secondItem="Idz-io-wKr" secondAttribute="top" id="lXo-zu-pbl"/>
             </constraints>
             <point key="canvasLocation" x="-346" y="-155.5"/>

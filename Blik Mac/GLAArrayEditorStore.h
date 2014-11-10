@@ -19,13 +19,15 @@
  */
 
 
-// For All Projects, Project's Collections, Project's Highlights
+// For All Projects, Project's Collections List, Project's Highlights List
 
 @interface GLAArrayEditorStore : NSObject
 
 - (instancetype)initWithDelegate:(id<GLAArrayEditorStoreDelegate>)delegate modelClass:(Class)modelClass JSONFileURL:(NSURL *)JSONFileURL JSONDictionaryKey:(NSString *)JSONKey userInfo:(NSDictionary *)userInfo;
 
 @property(nonatomic, weak, readonly) id<GLAArrayEditorStoreDelegate> delegate;
+
+- (void)setUpArrayEditorOptions:(GLAArrayEditorOptions *)options;
 
 @property(nonatomic, readonly) Class modelClass;
 @property(nonatomic, copy, readonly) NSDictionary *userInfo;

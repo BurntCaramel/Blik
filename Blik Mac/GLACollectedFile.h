@@ -25,7 +25,7 @@
 
 //- (NSOperation *)newOperationToUpdateInformation;
 //- (void)updateInformation:(dispatch_block_t)completionBlock;
-- (void)updateInformationWithError:(NSError *__autoreleasing *)error; // Blocks: recommended to call this on a background queue.
+- (BOOL)updateInformationWithError:(NSError *__autoreleasing *)error; // Blocks: recommended to call this on a background queue.
 
 @property(readonly, nonatomic) BOOL isMissing;
 @property(readonly, nonatomic) BOOL isDirectory;

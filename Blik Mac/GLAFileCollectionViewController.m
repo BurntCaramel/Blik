@@ -838,7 +838,7 @@
 		}
 	}];
 	
-	[self reloadSourceFiles];
+	//[self reloadSourceFiles];
 	
 	return acceptDrop;
 }

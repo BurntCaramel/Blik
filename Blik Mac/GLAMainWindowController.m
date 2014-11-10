@@ -49,8 +49,8 @@
 	
 	//TODO: add waiting to load animation
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	[projectManager loadNowProject];
-	[projectManager loadAllProjects];
+	[projectManager loadNowProjectIfNeeded];
+	[projectManager loadAllProjectsIfNeeded];
 	
 	[self goToToday:nil];
 }
@@ -158,7 +158,7 @@
 	//[(self.mainNavigationBarController) fillViewWithInnerView:(controller.view)];
 	[self setUpViewController:controller constrainedToFillView:(self.barHolderView)];
 	
-	GLAView *navigationBarView = (controller.view);
+	NSView *navigationBarView = (controller.view);
 	(navigationBarView.wantsLayer) = YES;
 	(navigationBarView.layer.backgroundColor) = ([GLAUIStyle activeStyle].barBackgroundColor.CGColor);
 }
@@ -211,12 +211,12 @@
 
 - (void)showAddNewProject
 {
-	[self goToSection:[GLAMainContentSection addNewProjectSectionWithPreviousSection:(self.currentSection)]];
-}
-
-- (void)showAddNewCollectionToProject:(GLAProject *)project
-{
-	[self goToSection:[GLAMainContentAddNewCollectionSection addNewCollectionSectionToProject:project previousSection:(self.currentSection)]];
+	GLAMainContentSection *previousSection = (self.currentSection);
+	if (!(previousSection.isAllProjects) || !(previousSection.isNow)) {
+		previousSection = [GLAMainContentSection allProjectsSection];
+	}
+	
+	[self goToSection:[GLAMainContentSection addNewProjectSectionWithPreviousSection:previousSection]];
 }
 
 #pragma mark New Project
@@ -228,9 +228,42 @@
 
 #pragma mark New Collection
 
+- (void)showAddNewCollectionToProject:(GLAProject *)project
+{
+	[self goToSection:[GLAMainContentAddNewCollectionSection addNewCollectionSectionToProject:project previousSection:(self.currentSection)]];
+}
+
+- (GLAProject *)projectToAddNewCollectionTo
+{
+	GLAMainContentSection *currentSection = (self.currentSection);
+	NSLog(@"currentSection %@", currentSection);
+	if (!currentSection) {
+		return nil;
+	}
+	
+	if ((currentSection.isEditProject) || (currentSection.isNow)) {
+		GLAMainContentEditProjectSection *editProjectSection = (GLAMainContentEditProjectSection *)currentSection;
+		GLAProject *project = (editProjectSection.project);
+		
+		return project;
+	}
+	else {
+		return nil;
+	}
+}
+
+- (BOOL)canAddNewCollection
+{
+	GLAProject *project = (self.projectToAddNewCollectionTo);
+	return (project != nil);
+}
+
 - (IBAction)addNewFilesListCollection:(id)sender
 {
-	[(self.mainContentViewController) addNewFilesListCollection:sender];
+	GLAProject *project = (self.projectToAddNewCollectionTo);
+	if (project) {
+		[self showAddNewCollectionToProject:project];
+	}
 }
 
 #pragma mark Collections
@@ -287,6 +320,9 @@
 	SEL action = (anItem.action);
 	if (sel_isEqual(@selector(workOnEditedProjectNow:), action)) {
 		return [self canWorkOnEditedProjectNow];
+	}
+	else if (sel_isEqual(@selector(addNewFilesListCollection:), action)) {
+		return [self canAddNewCollection];
 	}
 	
 	if ([(NSObject *)anItem isKindOfClass:[NSMenuItem class]]) {

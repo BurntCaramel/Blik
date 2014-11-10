@@ -38,8 +38,6 @@
 - (void)animateButtonsIn;
 - (void)animateButtonsOutWithCompletionHandler:(dispatch_block_t)completionHandler;
 
-- (void)animateInButtons:(NSArray *)buttons duration:(NSTimeInterval)duration;
-
 - (GLACollection *)currentCollection;
 
 @end
@@ -174,7 +172,7 @@
 {
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	
-	[projectManager loadNowProject];
+	[projectManager loadNowProjectIfNeeded];
 	GLAProject *nowProject = (projectManager.nowProject);
 	
 	[self performChangeCurrentSectionTo:[GLAMainContentEditProjectSection nowProjectSectionWithProject:nowProject]];
@@ -414,10 +412,6 @@
 	[buttonGroup animateButtonsIn];
 	
 	(self.collectionButtonGroup) = buttonGroup;
-	/*
-	 GLAMainNavigationButtonGroup *buttonGroup = ...
-	 [buttonGroup animateInButtonsInWithIDs:@[@"collectionTitle"] duration:(2.1 / 12.0)];
-	*/
 	
 	NSColor *collectionColor = [uiStyle colorForCollectionColor:(collection.color)];
 	//[self animateBackgroundColorTo:collectionColor];

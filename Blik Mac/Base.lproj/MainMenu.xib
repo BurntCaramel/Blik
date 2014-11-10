@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B17" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
@@ -14,7 +14,6 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="GLAAppDelegate">
             <connections>
-                <outlet property="activityStatusMenuItem" destination="i0u-LY-wXa" id="ZsJ-xQ-cty"/>
                 <outlet property="mainHelpMenu" destination="F2S-fz-NVQ" id="6Va-3s-85r"/>
             </connections>
         </customObject>
@@ -454,10 +453,6 @@ DQ
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="y7X-2Q-9no"/>
                                 </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="Moz-ut-eGf"/>
-                            <menuItem title="(Recent Activity)" id="i0u-LY-wXa">
-                                <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                         </items>
                     </menu>
