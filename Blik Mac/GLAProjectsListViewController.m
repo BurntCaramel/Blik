@@ -36,13 +36,21 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
     return self;
 }
 
+- (void)dealloc
+{
+	[self stopProjectManagingObserving];
+}
+
 - (void)prepareView
 {
 	[super prepareView];
 	
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	
 	NSTableView *tableView = (self.tableView);
-	(tableView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
-	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
+	(tableView.backgroundColor) = (uiStyle.contentBackgroundColor);
+	(tableView.enclosingScrollView.backgroundColor) = (uiStyle.contentBackgroundColor);
+	(tableView.menu) = (self.contextualMenu);
 	
 	[tableView registerForDraggedTypes:@[[GLAProject objectJSONPasteboardType]]];
 	
@@ -50,6 +58,16 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	(scrollView.wantsLayer) = YES;
 	
 	(self.tableDraggingHelper) = [[GLAArrayEditorTableDraggingHelper alloc] initWithDelegate:self];
+	
+	[self startProjectManagingObserving];
+}
+
+- (void)viewWillAppear
+{
+	[super viewWillAppear];
+	
+	[self startProjectManagingObserving];
+	[self reloadAllProjects];
 }
 
 - (void)viewDidAppear
@@ -61,25 +79,100 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	[scrollView flashScrollers];
 }
 
+- (void)viewWillDisappear
+{
+	[super viewWillDisappear];
+	
+	[self stopProjectManagingObserving];
+}
+
+- (void)startProjectManagingObserving
+{
+	[self stopProjectManagingObserving];
+	
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	// Project Collection List
+	[nc addObserver:self selector:@selector(allProjectsDidChangeNotification:) name:GLAProjectManagerAllProjectsDidChangeNotification object:pm];
+}
+
+- (void)stopProjectManagingObserving
+{
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	// Stop observing any notifications on the project manager.
+	[nc removeObserver:self name:nil object:pm];
+}
+
+- (void)allProjectsDidChangeNotification:(NSNotification *)note
+{
+	[self reloadAllProjects];
+}
+
 #pragma mark Actions
 
 @synthesize projects = _projects;
 
-- (void)setProjects:(NSArray *)projects
+- (void)reloadAllProjects
 {
-	_projects = projects;
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	
+	[projectManager loadAllProjectsIfNeeded];
+	NSArray *projects = [projectManager copyAllProjects];
+	
+	if (!projects) {
+		projects = @[];
+	}
+	(self.projects) = projects;
+	
 	[(self.tableView) reloadData];
+}
+
+- (GLAProject *)clickedProject
+{
+	NSInteger clickedRow = (self.tableView.clickedRow);
+	if (clickedRow == -1) {
+		return nil;
+	}
+	
+	GLAProject *project = (self.projects)[clickedRow];
+	
+	return project;
 }
 
 - (IBAction)tableViewClicked:(id)sender
 {
-	NSInteger clickedRow = (self.tableView.clickedRow);
-	if (clickedRow == -1) {
+	GLAProject *project = (self.clickedProject);
+	if (!project) {
 		return;
 	}
 	
-	id project = (self.projects)[clickedRow];
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectsListViewControllerDidChooseProjectNotification object:self userInfo:@{@"project": project}];
+}
+
+- (IBAction)permanentlyDeleteClickedProject:(id)sender
+{
+	GLAProject *project = (self.clickedProject);
+	if (!project) {
+		return;
+	}
+	
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	
+	NSAlert *alert = [NSAlert new];
+	[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Button title to delete project.")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title to cancel deleting project.")];
+	(alert.messageText) = NSLocalizedString(@"Delete the project?", @"Message for deleting a project.");
+	(alert.informativeText) = NSLocalizedString(@"The project and its collections will permanently deleted and not able to be restored.", @"Informative text for deleting a project and its collections.");
+	(alert.alertStyle) = NSWarningAlertStyle;
+	
+	[alert beginSheetModalForWindow:(self.view.window) completionHandler:^(NSModalResponse returnCode) {
+		if (returnCode == NSAlertFirstButtonReturn) {
+			[projectManager permanentlyDeleteProject:project];
+		}
+	}];
 }
 
 - (IBAction)workOnProjectNowClicked:(NSButton *)senderButton

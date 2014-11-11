@@ -28,6 +28,12 @@
 }
  */
 
+- (void)dealloc
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc removeObserver:self name:NSScrollViewDidLiveScrollNotification object:nil];
+}
+
 - (void)updateTrackingAreas
 {
 	[super updateTrackingAreas];

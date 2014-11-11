@@ -247,7 +247,15 @@
 
 - (BOOL)needsLoading
 {
-	return !(self.loading) && !(self.finishedLoading);
+	if (self.loading) {
+		return NO;
+	}
+	
+	if (self.finishedLoading) {
+		return NO;
+	}
+	
+	return YES;
 }
 
 - (BOOL)loadWithCompletionBlock:(dispatch_block_t)completionBlock

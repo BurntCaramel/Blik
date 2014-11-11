@@ -33,6 +33,8 @@
 - (void)dealloc
 {
 	[self stopProjectManagerObserving];
+	
+	
 }
 
 - (void)setUpProjectManagerObserving
@@ -40,8 +42,6 @@
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
-	// All Projects
-	[nc addObserver:self selector:@selector(projectManagerAllProjectsDidChangeNotification:) name:GLAProjectManagerAllProjectsDidChangeNotification object:projectManager];
 	// Now Project
 	[nc addObserver:self selector:@selector(projectManagerNowProjectDidChangeNotification:) name:GLAProjectManagerNowProjectDidChangeNotification object:projectManager];
 	
@@ -83,17 +83,10 @@
 		return;
 	}
 	
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
 	GLAProjectsListViewController *controller = [[GLAProjectsListViewController alloc] initWithNibName:@"GLAProjectsListViewController" bundle:nil];
 	(controller.view.identifier) = @"allProjects";
-	
-	[projectManager loadAllProjectsIfNeeded];
-	NSArray *allProjects = [projectManager copyAllProjects];
-	if (allProjects) {
-		(controller.projects) = allProjects;
-	}
 	
 	(self.allProjectsViewController) = controller;
 	
@@ -233,20 +226,6 @@
 }
 
 #pragma mark - Project Manager Notifications
-
-- (void)projectManagerAllProjectsDidChangeNotification:(NSNotification *)note
-{
-	GLAProjectManager *projectManager = (note.object);
-	GLAProjectsListViewController *allProjectsViewController = (self.allProjectsViewController);
-	if (allProjectsViewController) {
-		(allProjectsViewController.projects) = [projectManager copyAllProjects];
-	}
-	
-#if 0
-	// TEST
-	[projectManager requestSaveAllProjects];
-#endif
-}
 
 - (void)projectManagerNowProjectDidChangeNotification:(NSNotification *)note
 {

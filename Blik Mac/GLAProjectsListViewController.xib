@@ -7,6 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAProjectsListViewController">
             <connections>
+                <outlet property="contextualMenu" destination="twI-F8-TmJ" id="ptn-ea-Olj"/>
                 <outlet property="tableView" destination="GZN-Pm-4Iy" id="BGr-Fc-fHq"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
@@ -133,5 +134,16 @@
                 <constraint firstAttribute="trailing" secondItem="W9B-ly-3lZ" secondAttribute="trailing" id="tQx-Ip-kPC"/>
             </constraints>
         </customView>
+        <menu title="Collection Menu" id="twI-F8-TmJ">
+            <items>
+                <menuItem title="Delete Project…" id="V9R-46-JFh">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="permanentlyDeleteClickedProject:" target="-2" id="QTC-s4-gMb"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="81.5" y="401.5"/>
+        </menu>
     </objects>
 </document>
