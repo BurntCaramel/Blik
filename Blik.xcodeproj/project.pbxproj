@@ -14,6 +14,7 @@
 		B20362C81A0A3D2E007169C2 /* GLAProjectInstructionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B20362C71A0A3D2E007169C2 /* GLAProjectInstructionsViewController.m */; };
 		B20763391A0F76EA003C5922 /* GLAArrayUniqueKeyPathConstrainer.m in Sources */ = {isa = PBXBuildFile; fileRef = B20763381A0F76EA003C5922 /* GLAArrayUniqueKeyPathConstrainer.m */; };
 		B207633C1A0F7CBE003C5922 /* GLAModelArrayEditorStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B207633B1A0F7CBE003C5922 /* GLAModelArrayEditorStore.m */; };
+		B207633F1A114AC9003C5922 /* GLAArrayEditorTableDraggingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B207633E1A114AC9003C5922 /* GLAArrayEditorTableDraggingHelper.m */; };
 		B208E3EB19F1E1D2000EF97B /* GLAArrayEditorStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B208E3EA19F1E1D2000EF97B /* GLAArrayEditorStore.m */; };
 		B208E3F119F51551000EF97B /* GLAEditCollectionDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B208E3EF19F51551000EF97B /* GLAEditCollectionDetailsViewController.m */; };
 		B208E3F219F51551000EF97B /* GLAEditCollectionDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B208E3F019F51551000EF97B /* GLAEditCollectionDetailsViewController.xib */; };
@@ -130,6 +131,8 @@
 		B20763381A0F76EA003C5922 /* GLAArrayUniqueKeyPathConstrainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAArrayUniqueKeyPathConstrainer.m; sourceTree = "<group>"; };
 		B207633A1A0F7CBE003C5922 /* GLAModelArrayEditorStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAModelArrayEditorStore.h; sourceTree = "<group>"; };
 		B207633B1A0F7CBE003C5922 /* GLAModelArrayEditorStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAModelArrayEditorStore.m; sourceTree = "<group>"; };
+		B207633D1A114AC9003C5922 /* GLAArrayEditorTableDraggingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAArrayEditorTableDraggingHelper.h; sourceTree = "<group>"; };
+		B207633E1A114AC9003C5922 /* GLAArrayEditorTableDraggingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAArrayEditorTableDraggingHelper.m; sourceTree = "<group>"; };
 		B208E3E919F1E1D2000EF97B /* GLAArrayEditorStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAArrayEditorStore.h; sourceTree = "<group>"; };
 		B208E3EA19F1E1D2000EF97B /* GLAArrayEditorStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAArrayEditorStore.m; sourceTree = "<group>"; };
 		B208E3EE19F51551000EF97B /* GLAEditCollectionDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAEditCollectionDetailsViewController.h; sourceTree = "<group>"; };
@@ -505,6 +508,8 @@
 				B26B6F4819EBDB0100D17ECD /* GLAProjectPlanViewController.m */,
 				B208E3FB19F90CFA000EF97B /* GLAProjectHighlightsViewController.h */,
 				B208E3FC19F90CFA000EF97B /* GLAProjectHighlightsViewController.m */,
+				B207633D1A114AC9003C5922 /* GLAArrayEditorTableDraggingHelper.h */,
+				B207633E1A114AC9003C5922 /* GLAArrayEditorTableDraggingHelper.m */,
 				B219DAAF196AD462007900DF /* GLAProjectViewController.h */,
 				B219DAB0196AD462007900DF /* GLAProjectViewController.m */,
 				B20362C61A0A3D2E007169C2 /* GLAProjectInstructionsViewController.h */,
@@ -977,6 +982,7 @@
 				B2C7F29D1973998C005780B4 /* GLAProjectActionsBarController.m in Sources */,
 				B25591F519C3CD0D0039D2AC /* GLATableActionsViewController.m in Sources */,
 				B219DAB6196AD698007900DF /* GLAUIStyle.m in Sources */,
+				B207633F1A114AC9003C5922 /* GLAArrayEditorTableDraggingHelper.m in Sources */,
 				B2F0DBC11992607B001AB5EE /* GLAMainContentSection.m in Sources */,
 				B2ADDBDE1963DA2E0014EF84 /* main.m in Sources */,
 				B207633C1A0F7CBE003C5922 /* GLAModelArrayEditorStore.m in Sources */,

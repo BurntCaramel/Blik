@@ -6,7 +6,8 @@
 //  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+@import Cocoa;
+
 
 @interface GLATableView : NSTableView
 

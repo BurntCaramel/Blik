@@ -261,16 +261,17 @@
 	[super viewWillAppear];
 	
 	(self.doNotUpdateViews) = NO;
-	[self reloadHighlightedItems];
 	
+	[self reloadHighlightedItems];
 	[self startProjectObserving];
 }
 
 - (void)viewWillDisappear
-{NSLog(@"HIGHLIGHTS VIEW viewWillDisappear");
+{
 	[super viewWillDisappear];
 	
 	(self.doNotUpdateViews) = YES;
+	
 	[self stopProjectObserving];
 	[self stopCollectionObserving];
 }

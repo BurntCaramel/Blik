@@ -7,17 +7,21 @@
 //
 
 #import "GLAProjectsListViewController.h"
+// MODEL
+#import "GLAProjectManager.h"
+// VIEW
 #import "GLAUIStyle.h"
 #import "GLAProjectOverviewTableCellView.h"
+#import "GLAArrayEditorTableDraggingHelper.h"
 
 
 NSString *GLAProjectsListViewControllerDidChooseProjectNotification = @"GLA.projectListViewController.didChooseProject";
 NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = @"GLA.projectListViewController.didPerformWorkOnProjectNow";
 
 
-@interface GLAProjectsListViewController ()
+@interface GLAProjectsListViewController () <GLAArrayEditorTableDraggingHelperDelegate>
 
-@property(nonatomic) NSArray *private_projects;
+@property(nonatomic) GLAArrayEditorTableDraggingHelper *tableDraggingHelper;
 
 @end
 
@@ -40,8 +44,12 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	(tableView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
 	(tableView.enclosingScrollView.backgroundColor) = ([GLAUIStyle activeStyle].contentBackgroundColor);
 	
+	[tableView registerForDraggedTypes:@[[GLAProject objectJSONPasteboardType]]];
+	
 	NSScrollView *scrollView = [tableView enclosingScrollView];
 	(scrollView.wantsLayer) = YES;
+	
+	(self.tableDraggingHelper) = [[GLAArrayEditorTableDraggingHelper alloc] initWithDelegate:self];
 }
 
 - (void)viewDidAppear
@@ -55,14 +63,11 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 
 #pragma mark Actions
 
-- (NSArray *)projects
-{
-	return (self.private_projects);
-}
+@synthesize projects = _projects;
 
 - (void)setProjects:(NSArray *)projects
 {
-	(self.private_projects) = projects;
+	_projects = projects;
 	[(self.tableView) reloadData];
 }
 
@@ -88,6 +93,19 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification object:self userInfo:@{@"project": project}];
 }
 
+#pragma mark Table Dragging Helper Delegate
+
+- (void)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
+{
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	[pm editAllProjectsUsingBlock:editBlock];
+}
+
+- (BOOL)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard
+{
+	return [GLAProject canCopyObjectsFromPasteboard:draggingPasteboard];
+}
+
 #pragma mark Table View Data Source
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
@@ -99,6 +117,33 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 {
 	GLAProject *project = (self.projects)[row];
 	return project;
+}
+
+- (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row
+{
+	GLAProject *project = (self.projects)[row];
+	return project;
+}
+
+- (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forRowIndexes:(NSIndexSet *)rowIndexes
+{
+	NSLog(@"draggingSession willBeginAtPoint");
+	return [(self.tableDraggingHelper) tableView:tableView draggingSession:session willBeginAtPoint:screenPoint forRowIndexes:rowIndexes];
+}
+
+- (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation
+{
+	return [(self.tableDraggingHelper) tableView:tableView draggingSession:session endedAtPoint:screenPoint operation:operation];
+}
+
+- (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
+{
+	return [(self.tableDraggingHelper) tableView:tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
+}
+
+- (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation
+{
+	return [(self.tableDraggingHelper) tableView:tableView acceptDrop:info row:row dropOperation:dropOperation];
 }
 
 #pragma mark Table View Delegate

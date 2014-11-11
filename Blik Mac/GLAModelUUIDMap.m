@@ -56,7 +56,7 @@
 #pragma mark <GLAArrayObserving>
 
 - (void)arrayWasCreated:(id<GLAArrayInspecting>)array
-{NSLog(@"arrayWasCreated");
+{
 	NSArray *children = [array copyChildren];
 	[self addObjectsReplacing:children];
 }

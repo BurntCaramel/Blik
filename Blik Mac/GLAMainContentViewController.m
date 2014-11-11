@@ -709,10 +709,8 @@
 			}];
 		}
 		
-		NSLog(@"HIDE VIEW");
 		if (animate) {
 			if (![currentSection isEqual:(self.currentSection)]) {
-				NSLog(@"viewWillDisappear");
 				[vc viewWillDisappear];
 				[view removeFromSuperview];
 			}

@@ -33,3 +33,5 @@
 - (id)replaceFirstChildWhoseKeyPath:(NSString *)key hasValue:(id)value usingChangeBlock:(id (^)(id originalObject))objectChanger;
 
 @end
+
+typedef void (^ GLAArrayEditingBlock)(id<GLAArrayEditing> arrayEditor);

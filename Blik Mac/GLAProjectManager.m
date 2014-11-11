@@ -1262,7 +1262,6 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 - (GLAProject *)nowProject
 {
 	NSUUID *nowProjectUUID = (self.nowProjectUUID);
-	NSLog(@"NWO PROJECT %@ %@", nowProjectUUID, [self projectWithUUID:nowProjectUUID]);
 	return [self projectWithUUID:nowProjectUUID];
 }
 
