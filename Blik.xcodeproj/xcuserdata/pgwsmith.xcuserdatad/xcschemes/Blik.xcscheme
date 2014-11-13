@@ -96,7 +96,7 @@
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Release with Symbols"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

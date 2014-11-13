@@ -12,14 +12,15 @@
 #import "GLAUIStyle.h"
 #import "GLAProjectManager.h"
 #import "GLAEditCollectionDetailsPopover.h"
+#import "GLAArrayEditorTableDraggingHelper.h"
 #import <objc/runtime.h>
 
 
 NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"GLA.projectCollectionsViewController.didClickCollection";
 
-@interface GLAProjectCollectionsViewController ()
+@interface GLAProjectCollectionsViewController () <GLAArrayEditorTableDraggingHelperDelegate>
 
-@property(nonatomic) NSIndexSet *draggedRowIndexes;
+@property(nonatomic) GLAArrayEditorTableDraggingHelper *tableDraggingHelper;
 
 - (IBAction)tableViewWasClicked:(id)sender;
 
@@ -51,6 +52,8 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	
 	[self wrapScrollView];
 	[self setUpEditingActionsView];
+	
+	(self.tableDraggingHelper) = [[GLAArrayEditorTableDraggingHelper alloc] initWithDelegate:self];
 	
 	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
 }
@@ -451,6 +454,19 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	[self editDetailsOfCollection:collection atRow:clickedRow];
 }
 
+#pragma mark - Table Dragging Helper Delegate
+
+- (BOOL)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard
+{
+	return [GLACollection canCopyObjectsFromPasteboard:draggingPasteboard];
+}
+
+- (void)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
+{
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	[projectManager editCollectionsOfProject:(self.project) usingBlock:editBlock];
+}
+
 #pragma mark Table View Data Source
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
@@ -472,92 +488,22 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 - (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forRowIndexes:(NSIndexSet *)rowIndexes
 {
-	(self.draggedRowIndexes) = rowIndexes;
-	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
+	return [(self.tableDraggingHelper) tableView:tableView draggingSession:session willBeginAtPoint:screenPoint forRowIndexes:rowIndexes];
 }
 
 - (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation
 {
-	// Does not work for some reason.
-	if (operation == NSDragOperationDelete) {
-		GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-		
-		[projectManager editCollectionsOfProject:(self.project) usingBlock:^(id<GLAArrayEditing> collectionsEditor) {
-			NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
-			(self.draggedRowIndexes) = nil;
-			
-			[collectionsEditor removeChildrenAtIndexes:sourceRowIndexes];
-		}];
-		
-		[self reloadCollections];
-	}
+	return [(self.tableDraggingHelper) tableView:tableView draggingSession:session endedAtPoint:screenPoint operation:operation];
 }
 
 - (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
 {
-	//NSLog(@"proposed row %ld %ld", (long)row, (long)dropOperation);
-	
-	NSPasteboard *pboard = (info.draggingPasteboard);
-	if (![GLACollection canCopyObjectsFromPasteboard:pboard]) {
-		return NSDragOperationNone;
-	}
-	
-	if (dropOperation == NSTableViewDropOn) {
-		[tableView setDropRow:row dropOperation:NSTableViewDropAbove];
-	}
-	
-	NSDragOperation sourceOperation = (info.draggingSourceOperationMask);
-	if (sourceOperation & NSDragOperationMove) {
-		return NSDragOperationMove;
-	}
-	else if (sourceOperation & NSDragOperationCopy) {
-		return NSDragOperationCopy;
-	}
-	else if (sourceOperation & NSDragOperationDelete) {
-		return NSDragOperationDelete;
-	}
-	else {
-		return NSDragOperationNone;
-	}
+	return [(self.tableDraggingHelper) tableView:tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
 }
 
 - (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation
 {
-	NSPasteboard *pboard = (info.draggingPasteboard);
-	if (![GLACollection canCopyObjectsFromPasteboard:pboard]) {
-		return NO;
-	}
-	
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	
-	__block BOOL acceptDrop = YES;
-	NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
-	(self.draggedRowIndexes) = nil;
-	
-	[projectManager editCollectionsOfProject:(self.project) usingBlock:^(id<GLAArrayEditing> collectionsEditor) {
-		NSDragOperation sourceOperation = (info.draggingSourceOperationMask);
-		if (sourceOperation & NSDragOperationMove) {
-			// The row index is the final destination, so reduce it by the number of rows being moved before it.
-			NSInteger adjustedRow = row - [sourceRowIndexes countOfIndexesInRange:NSMakeRange(0, row)];
-			
-			[collectionsEditor moveChildrenAtIndexes:sourceRowIndexes toIndex:adjustedRow];
-		}
-		else if (sourceOperation & NSDragOperationCopy) {
-			//TODO: actually make copies.
-			NSArray *childrenToCopy = [collectionsEditor childrenAtIndexes:sourceRowIndexes];
-			[collectionsEditor insertChildren:childrenToCopy atIndexes:[NSIndexSet indexSetWithIndex:row]];
-		}
-		else if (sourceOperation & NSDragOperationDelete) {
-			[collectionsEditor removeChildrenAtIndexes:sourceRowIndexes];
-		}
-		else {
-			acceptDrop = NO;
-		}
-	}];
-	
-	[self reloadCollections];
-	
-	return acceptDrop;
+	return [(self.tableDraggingHelper) tableView:tableView acceptDrop:info row:row dropOperation:dropOperation];
 }
 
 #pragma mark Table View Delegate

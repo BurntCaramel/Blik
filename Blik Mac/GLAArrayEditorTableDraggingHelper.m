@@ -28,16 +28,33 @@
 	return self;
 }
 
-- (void)makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
+- (instancetype)init
 {
-	id<GLAArrayEditorTableDraggingHelperDelegate> delegate = (self.delegate);
-	[delegate arrayEditorTableDraggingHelper:self makeChangesUsingEditingBlock:editBlock];
+	@throw [NSException exceptionWithName:NSGenericException reason:@"GLAArrayEditorTableDraggingHelper must be initialised with a delegate. Use -initWithDelegate:" userInfo:nil];
+	
+	return nil;
 }
 
 - (BOOL)canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard
 {
 	id<GLAArrayEditorTableDraggingHelperDelegate> delegate = (self.delegate);
 	return [delegate arrayEditorTableDraggingHelper:self canUseDraggingPasteboard:draggingPasteboard];
+}
+
+- (void)makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
+{
+	id<GLAArrayEditorTableDraggingHelperDelegate> delegate = (self.delegate);
+	[delegate arrayEditorTableDraggingHelper:self makeChangesUsingEditingBlock:editBlock];
+}
+
+- (BOOL)canCopyObjects
+{
+	id<GLAArrayEditorTableDraggingHelperDelegate> delegate = (self.delegate);
+	if (![delegate respondsToSelector:@selector(arrayEditorTableDraggingHelper:makeCopiesOfObjects:)]) {
+		return NO;
+	}
+	
+	return YES;
 }
 
 - (NSArray *)makeCopiesOfObjects:(NSArray *)objectsToCopy
@@ -61,10 +78,10 @@
 {
 	// Does not work for some reason.
 	if (operation == NSDragOperationDelete) {
+		NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
+		(self.draggedRowIndexes) = nil;
+		
 		[self makeChangesUsingEditingBlock:^(id<GLAArrayEditing> arrayEditor) {
-			NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
-			(self.draggedRowIndexes) = nil;
-			
 			[arrayEditor removeChildrenAtIndexes:sourceRowIndexes];
 		}];
 	}
@@ -72,6 +89,11 @@
 
 - (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
 {
+	if ([info draggingSource] != tableView) {
+		(self.draggedRowIndexes) = nil;
+		return NSDragOperationNone;
+	}
+	
 	NSPasteboard *pboard = (info.draggingPasteboard);
 	if (![self canUseDraggingPasteboard:pboard]) {
 		(self.draggedRowIndexes) = nil;
@@ -87,7 +109,12 @@
 		return NSDragOperationMove;
 	}
 	else if (sourceOperation & NSDragOperationCopy) {
-		return NSDragOperationCopy;
+		if ([self canCopyObjects]) {
+			return NSDragOperationCopy;
+		}
+		else {
+			return NSDragOperationNone;
+		}
 	}
 	else if (sourceOperation & NSDragOperationDelete) {
 		return NSDragOperationDelete;
@@ -99,6 +126,11 @@
 
 - (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation
 {
+	if ([info draggingSource] != tableView) {
+		(self.draggedRowIndexes) = nil;
+		return NO;
+	}
+	
 	NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
 	(self.draggedRowIndexes) = nil;
 	

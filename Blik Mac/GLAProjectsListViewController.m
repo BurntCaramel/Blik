@@ -220,7 +220,6 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 
 - (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forRowIndexes:(NSIndexSet *)rowIndexes
 {
-	NSLog(@"draggingSession willBeginAtPoint");
 	return [(self.tableDraggingHelper) tableView:tableView draggingSession:session willBeginAtPoint:screenPoint forRowIndexes:rowIndexes];
 }
 

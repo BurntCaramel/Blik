@@ -298,7 +298,7 @@ NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileUR
 {
 	NSSet *combinedOpenerApplicationURLs = (self.combinedOpenerApplicationURLs);
 	NSURL *combinedDefaultOpenerApplicationURL = (self.combinedDefaultOpenerApplicationURL);
-	NSLog(@"combinedOpenerApplicationURLs %@", combinedOpenerApplicationURLs);
+	
 	NSMenuItem *defaultApplicationMenuItem = nil;
 	NSMutableArray *menuItems = [NSMutableArray new];
 	

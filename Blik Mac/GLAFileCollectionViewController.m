@@ -13,9 +13,10 @@
 #import "GLAFileInfoRetriever.h"
 #import "GLACollectedFilesSetting.h"
 #import "GLAFileOpenerApplicationCombiner.h"
+#import "GLAArrayEditorTableDraggingHelper.h"
 
 
-@interface GLAFileCollectionViewController ()
+@interface GLAFileCollectionViewController () <GLAArrayEditorTableDraggingHelperDelegate>
 
 @property(copy, nonatomic) NSArray *collectedFiles;
 
@@ -34,6 +35,7 @@
 
 @property(nonatomic) QLPreviewPanel *activeQuickLookPreviewPanel;
 
+@property(nonatomic) GLAArrayEditorTableDraggingHelper *tableDraggingHelper;
 @property(nonatomic) NSIndexSet *draggedRowIndexes;
 
 @property(nonatomic) NSMutableArray *highlightedItemsToAddOnceLoaded;
@@ -72,7 +74,7 @@
 	(tableView.doubleAction) = @selector(openSelectedFiles:);
 	[uiStyle prepareContentTableView:tableView];
 	
-	[tableView registerForDraggedTypes:@[[GLACollectedFile objectJSONPasteboardType]]];
+	[tableView registerForDraggedTypes:@[[GLACollectedFile objectJSONPasteboardType], (__bridge NSString *)kUTTypeFileURL]];
 	
 	[uiStyle prepareTextLabel:(self.openerApplicationsTextLabel)];
 	
@@ -81,6 +83,8 @@
 	(tableView.nextResponder) = self;
 	
 	(self.openerApplicationsPopUpButton.menu.delegate) = self;
+	
+	(self.tableDraggingHelper) = [[GLAArrayEditorTableDraggingHelper alloc] initWithDelegate:self];
 	
 	[self setUpFileHelpers];
 	
@@ -375,16 +379,20 @@
 	NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
 	if ((selectedIndexes.count) == 0) {
 		[selectedURLs removeAllObjects];
-		return;
+	}
+	else {
+		NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:selectedIndexes];
+		
+		[selectedURLs removeAllObjects];
+		for (GLACollectedFile *collectedFile in collectedFiles) {
+			NSURL *fileURL = (collectedFile.URL);
+			[selectedURLs addObject:fileURL];
+		}
 	}
 	
-	NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:selectedIndexes];
-	
-	[selectedURLs removeAllObjects];
-	for (GLACollectedFile *collectedFile in collectedFiles) {
-		NSURL *fileURL = (collectedFile.URL);
-		[selectedURLs addObject:fileURL];
-	}
+	[self retrieveApplicationsToOpenSelection];
+	[self setNeedsToUpdateOpenerApplicationsUI];
+	[self updateQuickLookPreview];
 }
 
 - (NSInteger)rowIndexForSelectedURL:(NSURL *)URL
@@ -482,11 +490,8 @@
 	}];
 }
 
-- (void)addFileURLs:(NSArray *)fileURLs
+- (NSArray *)createCollectedFileForFileURLs:(NSArray *)fileURLs
 {
-	GLACollection *filesListCollection = (self.filesListCollection);
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-	
 	NSMutableArray *collectedFiles = [NSMutableArray array];
 	NSError *error = nil;
 	for (NSURL *fileURL in fileURLs) {
@@ -495,12 +500,31 @@
 		[collectedFiles addObject:collectedFile];
 	}
 	
+	return collectedFiles;
+}
+
+- (void)insertFilesURLs:(NSArray *)fileURLs atIndex:(NSUInteger)index
+{
+	NSArray *collectedFiles = [self createCollectedFileForFileURLs:fileURLs];
+	
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLACollection *filesListCollection = (self.filesListCollection);
+	
 	[pm editFilesListOfCollection:filesListCollection usingBlock:^(id<GLAArrayEditing> filesListEditor) {
 		NSArray *filteredItems = [filesListEditor filterArray:collectedFiles whoseValuesIsNotPresentForKeyPath:@"URL.path"];
-		[filesListEditor addChildren:filteredItems];
+		
+		if (index == NSNotFound) {
+			[filesListEditor addChildren:filteredItems];
+		}
+		else {
+			[filesListEditor insertChildren:filteredItems atIndexes:[NSIndexSet indexSetWithIndex:index]];
+		}
 	}];
-	
-	[self reloadSourceFiles];
+}
+
+- (void)addFileURLs:(NSArray *)fileURLs
+{
+	[self insertFilesURLs:fileURLs atIndex:NSNotFound];
 }
 
 - (IBAction)openSelectedFiles:(id)sender
@@ -548,6 +572,7 @@
 	}];
 	
 	[self reloadSourceFiles];
+	[self updateSelectedURLs];
 }
 
 - (IBAction)addSelectedFilesToHighlights:(id)sender
@@ -730,6 +755,19 @@
 	return (imageView.image);
 }
 
+#pragma mark - Table Dragging Helper Delegate
+
+- (BOOL)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard
+{
+	return [GLACollectedFile canCopyObjectsFromPasteboard:draggingPasteboard];
+}
+
+- (void)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
+{
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	[projectManager editFilesListOfCollection:(self.filesListCollection) usingBlock:editBlock];
+}
+
 #pragma mark Table View Data Source
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
@@ -754,93 +792,47 @@
 
 - (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forRowIndexes:(NSIndexSet *)rowIndexes
 {
-	(self.draggedRowIndexes) = rowIndexes;
-	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
+	[(self.tableDraggingHelper) tableView:tableView draggingSession:session willBeginAtPoint:screenPoint forRowIndexes:rowIndexes];
 }
 
 - (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation
 {
-	// Does not work for some reason.
-	if (operation == NSDragOperationDelete) {
-		GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-		
-		[projectManager editFilesListOfCollection:(self.filesListCollection) usingBlock:^(id<GLAArrayEditing> filesListEditor) {
-			NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
-			(self.draggedRowIndexes) = nil;
-			
-			[filesListEditor removeChildrenAtIndexes:sourceRowIndexes];
-		}];
-		
-		[self reloadSourceFiles];
-	}
+	[(self.tableDraggingHelper) tableView:tableView draggingSession:session endedAtPoint:screenPoint operation:operation];
 }
 
 - (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
 {
-	//NSLog(@"proposed row %ld %ld", (long)row, (long)dropOperation);
-	
-	NSPasteboard *pboard = (info.draggingPasteboard);
-	if (![GLACollectedFile canCopyObjectsFromPasteboard:pboard]) {
-		return NSDragOperationNone;
-	}
-	
 	if (dropOperation == NSTableViewDropOn) {
 		[tableView setDropRow:row dropOperation:NSTableViewDropAbove];
 	}
 	
-	NSDragOperation sourceOperation = (info.draggingSourceOperationMask);
-	if (sourceOperation & NSDragOperationMove) {
-		return NSDragOperationMove;
+	NSPasteboard *pboard = (info.draggingPasteboard);
+	
+	// canReadObjectForClasses
+	if ([pboard availableTypeFromArray:@[(__bridge NSString *)kUTTypeFileURL]] != nil) {
+		return NSDragOperationLink;
 	}
-	else if (sourceOperation & NSDragOperationCopy) {
-		return NSDragOperationCopy;
-	}
-	else if (sourceOperation & NSDragOperationDelete) {
-		return NSDragOperationDelete;
-	}
-	else {
-		return NSDragOperationNone;
-	}
+	
+	return [(self.tableDraggingHelper) tableView:tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
 }
 
 - (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation
 {
 	NSPasteboard *pboard = (info.draggingPasteboard);
-	if (![GLACollectedFile canCopyObjectsFromPasteboard:pboard]) {
-		return NO;
-	}
 	
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	
-	__block BOOL acceptDrop = YES;
-	NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
-	(self.draggedRowIndexes) = nil;
-	
-	[projectManager editFilesListOfCollection:(self.filesListCollection) usingBlock:^(id<GLAArrayEditing> filesListEditor) {
-		NSDragOperation sourceOperation = (info.draggingSourceOperationMask);
-		if (sourceOperation & NSDragOperationMove) {
-			// The row index is the final destination, so reduce it by the number of rows being moved before it.
-			NSInteger adjustedRow = row - [sourceRowIndexes countOfIndexesInRange:NSMakeRange(0, row)];
-			NSLog(@"MOVE CHILDREN AT INDEXES %@ TO INDEX %@", sourceRowIndexes, @(adjustedRow));
-			[filesListEditor moveChildrenAtIndexes:sourceRowIndexes toIndex:adjustedRow];
-		}
-		else if (sourceOperation & NSDragOperationCopy) {
-			//TODO: actually make copies.
-			NSArray *childrenToCopy = [filesListEditor childrenAtIndexes:sourceRowIndexes];
-			childrenToCopy = [childrenToCopy valueForKey:@"duplicate"];
-			[filesListEditor insertChildren:childrenToCopy atIndexes:[NSIndexSet indexSetWithIndex:row]];
-		}
-		else if (sourceOperation & NSDragOperationDelete) {
-			[filesListEditor removeChildrenAtIndexes:sourceRowIndexes];
+	if ([pboard availableTypeFromArray:@[(__bridge NSString *)kUTTypeFileURL]] != nil) {
+		NSArray *fileURLs = [pboard readObjectsForClasses:@[ [NSURL class] ] options:@{ NSPasteboardURLReadingFileURLsOnlyKey: @(YES) }];
+		if (fileURLs) {
+			[self insertFilesURLs:fileURLs atIndex:row];
+			//[self addFileURLs:fileURLs];
+			return YES;
 		}
 		else {
-			acceptDrop = NO;
+			return NO;
 		}
-	}];
+	}
 	
-	//[self reloadSourceFiles];
-	
-	return acceptDrop;
+	return [(self.tableDraggingHelper) tableView:tableView acceptDrop:info row:row dropOperation:dropOperation];
 }
 
 #pragma mark Table View Delegate
@@ -881,9 +873,6 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
 	[self updateSelectedURLs];
-	[self retrieveApplicationsToOpenSelection];
-	[self setNeedsToUpdateOpenerApplicationsUI];
-	[self updateQuickLookPreview];
 }
 
 #pragma mark File Info Retriever Delegate

@@ -377,6 +377,8 @@
 				B208E3EA19F1E1D2000EF97B /* GLAArrayEditorStore.m */,
 				B20763371A0F76EA003C5922 /* GLAArrayUniqueKeyPathConstrainer.h */,
 				B20763381A0F76EA003C5922 /* GLAArrayUniqueKeyPathConstrainer.m */,
+				B207633D1A114AC9003C5922 /* GLAArrayEditorTableDraggingHelper.h */,
+				B207633E1A114AC9003C5922 /* GLAArrayEditorTableDraggingHelper.m */,
 			);
 			name = "Array Editing";
 			sourceTree = "<group>";
@@ -508,8 +510,6 @@
 				B26B6F4819EBDB0100D17ECD /* GLAProjectPlanViewController.m */,
 				B208E3FB19F90CFA000EF97B /* GLAProjectHighlightsViewController.h */,
 				B208E3FC19F90CFA000EF97B /* GLAProjectHighlightsViewController.m */,
-				B207633D1A114AC9003C5922 /* GLAArrayEditorTableDraggingHelper.h */,
-				B207633E1A114AC9003C5922 /* GLAArrayEditorTableDraggingHelper.m */,
 				B219DAAF196AD462007900DF /* GLAProjectViewController.h */,
 				B219DAB0196AD462007900DF /* GLAProjectViewController.m */,
 				B20362C61A0A3D2E007169C2 /* GLAProjectInstructionsViewController.h */,
@@ -1105,6 +1105,101 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		B20763401A123332003C5922 /* Release with Symbols */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
+				STRIP_INSTALLED_PRODUCT = NO;
+			};
+			name = "Release with Symbols";
+		};
+		B20763411A123332003C5922 /* Release with Symbols */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DB9B4E5529B5EA7EDC5EF68E /* Pods-Blik.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
+				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = Blik.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = "Blik Mac/Blik-Info.plist";
+				PRODUCT_NAME = Blik;
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Release with Symbols";
+		};
+		B20763421A123332003C5922 /* Release with Symbols */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1EA2B9BA7A505AD231D594E9 /* Pods-BlikTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
+				INFOPLIST_FILE = "Blik Tests/BlikTests-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					"\"Foundation\"",
+				);
+				PRODUCT_NAME = BlikTests;
+				SWIFT_OBJC_BRIDGING_HEADER = "Blik Tests/BlikTests-Bridging-Header.h";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Blik.app/Contents/MacOS/Blik";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = "Release with Symbols";
+		};
+		B20763431A123332003C5922 /* Release with Symbols */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "QuickLook Preview/QuickLook Preview-Prefix.pch";
+				INFOPLIST_FILE = "QuickLook Preview/QuickLook Preview-Info.plist";
+				MACH_O_TYPE = mh_execute;
+				PRODUCT_NAME = "com.burntcaramel.Blik.Mac.$(TARGET_NAME:rfc1034identifier)";
+				WRAPPER_EXTENSION = xpc;
+			};
+			name = "Release with Symbols";
+		};
 		B2ADDBFD1963DA2E0014EF84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1312,6 +1407,7 @@
 			buildConfigurations = (
 				B2ADDBFD1963DA2E0014EF84 /* Debug */,
 				B2ADDBFE1963DA2E0014EF84 /* Release */,
+				B20763401A123332003C5922 /* Release with Symbols */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1321,6 +1417,7 @@
 			buildConfigurations = (
 				B2ADDC001963DA2E0014EF84 /* Debug */,
 				B2ADDC011963DA2E0014EF84 /* Release */,
+				B20763411A123332003C5922 /* Release with Symbols */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1330,6 +1427,7 @@
 			buildConfigurations = (
 				B2ADDC031963DA2E0014EF84 /* Debug */,
 				B2ADDC041963DA2E0014EF84 /* Release */,
+				B20763421A123332003C5922 /* Release with Symbols */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1339,6 +1437,7 @@
 			buildConfigurations = (
 				B2F0DBBC19923887001AB5EE /* Debug */,
 				B2F0DBBD19923887001AB5EE /* Release */,
+				B20763431A123332003C5922 /* Release with Symbols */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

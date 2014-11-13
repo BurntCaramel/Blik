@@ -10,9 +10,4 @@
 
 @implementation GLATableView
 
-- (void)keyDown:(NSEvent *)theEvent
-{
-	
-}
-
 @end
