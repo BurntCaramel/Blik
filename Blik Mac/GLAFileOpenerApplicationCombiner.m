@@ -294,13 +294,23 @@ NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileUR
 	return menuItem;
 }
 
-- (void)updateMenuWithOpenerApplications:(NSMenu *)menu target:(id)target action:(SEL)action
+- (void)updateOpenerApplicationsMenu:(NSMenu *)menu target:(id)target action:(SEL)action preferredApplicationURL:(NSURL *)preferredApplicationURL
 {
 	NSSet *combinedOpenerApplicationURLs = (self.combinedOpenerApplicationURLs);
 	NSURL *combinedDefaultOpenerApplicationURL = (self.combinedDefaultOpenerApplicationURL);
 	
+	NSMenuItem *preferredApplicationMenuItem = nil;
 	NSMenuItem *defaultApplicationMenuItem = nil;
 	NSMutableArray *menuItems = [NSMutableArray new];
+	
+	BOOL (^ applicationURLsAreEqual)(NSURL *, NSURL *) = ^ BOOL (NSURL *URL1, NSURL *URL2) {
+		return [(URL1.path) isEqual:(URL2.path)];
+	};
+	
+	if (preferredApplicationURL) {
+		preferredApplicationMenuItem = [self newMenuItemForApplicationURL:preferredApplicationURL target:target action:action];
+		(preferredApplicationMenuItem.title) = [NSString localizedStringWithFormat:NSLocalizedString(@"%@ (preferred)", @"Menu item title format for preferred application."), (preferredApplicationMenuItem.title)];
+	}
 	
 	if (combinedDefaultOpenerApplicationURL) {
 		defaultApplicationMenuItem = [self newMenuItemForApplicationURL:combinedDefaultOpenerApplicationURL target:target action:action];
@@ -309,7 +319,11 @@ NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileUR
 	
 	if ((combinedOpenerApplicationURLs.count) > 0) {
 		for (NSURL *applicationURL in combinedOpenerApplicationURLs) {
-			if ([(combinedDefaultOpenerApplicationURL.path) isEqual:(applicationURL.path)]) {
+			if (applicationURLsAreEqual(combinedDefaultOpenerApplicationURL, applicationURL)) {
+				continue;
+			}
+			
+			if ((preferredApplicationURL != nil) && applicationURLsAreEqual(preferredApplicationURL, applicationURL)) {
 				continue;
 			}
 			
@@ -328,11 +342,21 @@ NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileUR
 	
 	[menu removeAllItems];
 	
-	if (defaultApplicationMenuItem) {
-		[menu addItem:defaultApplicationMenuItem];
+	if ((preferredApplicationMenuItem != nil) || (defaultApplicationMenuItem != nil)) {
+		if (preferredApplicationMenuItem) {
+			[menu addItem:preferredApplicationMenuItem];
+			
+			if ((menuItems.count) > 0) {
+				[menu addItem:[NSMenuItem separatorItem]];
+			}
+		}
 		
-		if ((menuItems.count) > 0) {
-			[menu addItem:[NSMenuItem separatorItem]];
+		if (defaultApplicationMenuItem) {
+			[menu addItem:defaultApplicationMenuItem];
+			
+			if ((menuItems.count) > 0) {
+				[menu addItem:[NSMenuItem separatorItem]];
+			}
 		}
 	}
 	else if ((menuItems.count) == 0) {
@@ -343,6 +367,68 @@ NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileUR
 	}
 	
 	for (NSMenuItem *menuItem in menuItems) {
+		[menu addItem:menuItem];
+	}
+}
+
+- (void)updatePreferredOpenerApplicationsChoiceMenu:(NSMenu *)menu target:(id)target action:(SEL)action chosenPreferredApplicationURL:(NSURL *)preferredApplicationURL
+{
+	NSSet *combinedOpenerApplicationURLs = (self.combinedOpenerApplicationURLs);
+	NSURL *combinedDefaultOpenerApplicationURL = (self.combinedDefaultOpenerApplicationURL);
+	
+	NSMutableArray *menuItems = [NSMutableArray new];
+	
+	BOOL (^ applicationURLsAreEqual)(NSURL *, NSURL *) = ^ BOOL (NSURL *URL1, NSURL *URL2) {
+		return [(URL1.path) isEqual:(URL2.path)];
+	};
+	
+	if ((combinedOpenerApplicationURLs.count) > 0) {
+		for (NSURL *applicationURL in combinedOpenerApplicationURLs) {
+			NSMenuItem *menuItem = [self newMenuItemForApplicationURL:applicationURL target:target action:action];
+			if (!menuItem) {
+				continue;
+			}
+			
+			if ((preferredApplicationURL != nil) && applicationURLsAreEqual(preferredApplicationURL, applicationURL)) {
+				(menuItem.state) = NSOnState;
+			}
+			
+			if (applicationURLsAreEqual(combinedDefaultOpenerApplicationURL, applicationURL)) {
+				(menuItem.title) = [NSString localizedStringWithFormat:NSLocalizedString(@"%@ (default)", @"Menu item title format for default application."), (menuItem.title)];
+			}
+			
+			[menuItems addObject:menuItem];
+		}
+		
+		NSSortDescriptor *titleSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES selector:@selector(localizedStandardCompare:)];
+		
+		[menuItems sortUsingDescriptors:@[titleSortDescriptor]];
+	}
+	
+	[menu removeAllItems];
+	
+	for (NSMenuItem *menuItem in menuItems) {
+		[menu addItem:menuItem];
+	}
+	
+	if ((menuItems.count) == 0) {
+		NSMenuItem *menuItem = [NSMenuItem new];
+		(menuItem.title) = NSLocalizedString(@"No Application", @"Menu item title when no application is available to open the selected files.");
+		(menuItem.enabled) = NO;
+		[menu addItem:menuItem];
+	}
+	else {
+		[menu addItem:[NSMenuItem separatorItem]];
+		
+		NSMenuItem *menuItem = [NSMenuItem new];
+		(menuItem.title) = NSLocalizedString(@"Default Application", @"Menu item title for choosing no preferred application, just using default.");
+		(menuItem.action) = action;
+		(menuItem.target) = target;
+		
+		if (!preferredApplicationURL) {
+			(menuItem.state) = NSOnState;
+		}
+		
 		[menu addItem:menuItem];
 	}
 }

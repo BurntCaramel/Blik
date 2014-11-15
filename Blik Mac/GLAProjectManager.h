@@ -82,6 +82,8 @@
 
 - (BOOL)editHighlightsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> highlightsEditor))block;
 
+- (GLAHighlightedCollectedFile *)editHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile usingBlock:(void(^)(id<GLAHighlightedCollectedFileEditing>editor))editBlock;
+
 #pragma mark Collection Files List
 
 - (BOOL)hasLoadedFilesForCollection:(GLACollection *)filesListCollection;

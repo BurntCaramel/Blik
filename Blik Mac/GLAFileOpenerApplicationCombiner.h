@@ -32,7 +32,10 @@ extern NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification;
 
 @interface GLAFileOpenerApplicationCombiner (MenuAdditions)
 
+- (void)updateOpenerApplicationsMenu:(NSMenu *)menu target:(id)target action:(SEL)action preferredApplicationURL:(NSURL *)preferredApplicationURL;
+
+- (void)updatePreferredOpenerApplicationsChoiceMenu:(NSMenu *)menu target:(id)target action:(SEL)action chosenPreferredApplicationURL:(NSURL *)preferredApplicationURL;
+
 - (NSMenuItem *)newMenuItemForApplicationURL:(NSURL *)applicationURL target:(id)target action:(SEL)action;
-- (void)updateMenuWithOpenerApplications:(NSMenu *)menu target:(id)target action:(SEL)action;
 
 @end

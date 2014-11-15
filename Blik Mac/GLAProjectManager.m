@@ -409,6 +409,22 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	return YES;
 }
 
+- (GLAHighlightedCollectedFile *)editHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile usingBlock:(void(^)(id<GLAHighlightedCollectedFileEditing>editor))editBlock
+{
+	__block GLAHighlightedCollectedFile *changedHighlightedCollectedFile = nil;
+	
+	GLAProject *project = [self projectWithUUID:(highlightedCollectedFile.projectUUID)];
+	NSParameterAssert(project != nil);
+	
+	[self editHighlightsOfProject:project usingBlock:^(id<GLAArrayEditing> highlightsListEditor) {
+		changedHighlightedCollectedFile = [highlightsListEditor replaceFirstChildWhoseKeyPath:@"UUID" hasValue:(highlightedCollectedFile.UUID) usingChangeBlock:^GLAHighlightedCollectedFile *(GLAHighlightedCollectedFile *originalHighlightedCollectedFile) {
+			return [originalHighlightedCollectedFile copyWithChangesFromEditing:editBlock];
+		}];
+	}];
+	
+	return changedHighlightedCollectedFile;
+}
+
 - (void)removeHighlightsWithCollectedFiles:(NSArray *)collectedFiles fromProject:(GLAProject *)project
 {
 	NSSet *removedCollectionFileUUIDs = [NSSet setWithArray:[collectedFiles valueForKey:@"UUID"]];

@@ -22,6 +22,7 @@
 
 @property(nonatomic) IBOutlet NSMenu *contextualMenu;
 @property(nonatomic) IBOutlet NSMenu *openerApplicationMenu;
+@property(nonatomic) IBOutlet NSMenu *preferredOpenerApplicationMenu;
 
 @property(weak) IBOutlet GLAProjectViewController *parentViewController;
 

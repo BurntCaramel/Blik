@@ -252,6 +252,7 @@
                 <outlet property="instructionsViewController" destination="bNf-jR-Sti" id="Tir-3F-xV0"/>
                 <outlet property="openerApplicationMenu" destination="gy9-Mo-SHK" id="CqZ-Wu-YgD"/>
                 <outlet property="parentViewController" destination="-2" id="kAI-Y6-LNm"/>
+                <outlet property="preferredOpenerApplicationMenu" destination="bqf-4d-QNw" id="D7f-kU-wlf"/>
                 <outlet property="tableView" destination="qcb-6b-Ekp" id="WeB-DQ-KSM"/>
             </connections>
         </viewController>
@@ -506,14 +507,24 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Open With" id="gy9-Mo-SHK">
                         <items>
-                            <menuItem title="Item" id="e75-xR-iFE">
+                            <menuItem title="Loading…" id="e75-xR-iFE">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Prefer to Open With" id="Q2d-RN-ASf">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Prefer to Open With" id="bqf-4d-QNw">
+                        <items>
+                            <menuItem title="Loading…" id="NnZ-5l-oAr">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                         </items>
                     </menu>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="487" y="-88.5"/>
+            <point key="canvasLocation" x="567" y="201.5"/>
         </menu>
         <customView identifier="collectionsListInstructions" id="Idz-io-wKr">
             <rect key="frame" x="0.0" y="0.0" width="217" height="199"/>

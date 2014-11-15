@@ -434,7 +434,7 @@
 	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
 	
 	NSMenu *menu = (self.openerApplicationsPopUpButton.menu);
-	[openerApplicationCombiner updateMenuWithOpenerApplications:menu target:nil action:NULL];
+	[openerApplicationCombiner updateOpenerApplicationsMenu:menu target:nil action:NULL preferredApplicationURL:nil];
 	
 	[self updateOpenerApplicationsUIVisibility];
 }

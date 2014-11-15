@@ -1300,6 +1300,7 @@
 				CODE_SIGN_ENTITLEMENTS = Blik.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
 				INFOPLIST_FILE = "Blik Mac/Blik-Info.plist";

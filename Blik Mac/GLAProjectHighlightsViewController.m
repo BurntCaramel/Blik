@@ -54,6 +54,9 @@
 	NSMenu *openerApplicationMenu = (self.openerApplicationMenu);
 	(openerApplicationMenu.delegate) = self;
 	
+	NSMenu *preferredOpenerApplicationMenu = (self.preferredOpenerApplicationMenu);
+	(preferredOpenerApplicationMenu.delegate) = self;
+	
 	(self.tableDraggingHelper) = [[GLAArrayEditorTableDraggingHelper alloc] initWithDelegate:self];
 	
 	[self setUpFileHelpers];
@@ -321,20 +324,27 @@
 	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
 	
 	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
-	NSURL *fileURL = nil;
-	if (highlightedItem) {
-		fileURL = [self fileURLForHighlightedItem:highlightedItem];
+	if (![highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+		return;
 	}
+	GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 	
-	if (fileURL) {
-		(openerApplicationCombiner.fileURLs) = [NSSet setWithObject:fileURL];
-	}
-	else {
-		(openerApplicationCombiner.fileURLs) = [NSSet set];
+	
+	NSURL *fileURL = [self fileURLForHighlightedItem:highlightedItem];
+	(openerApplicationCombiner.fileURLs) = [NSSet setWithObject:fileURL];
+	
+	NSURL *preferredApplicationURL = nil;
+	GLACollectedFile *collectedFileForPreferredApplication = (highlightedCollectedFile.applicationToOpenFile);
+	if (collectedFileForPreferredApplication) {
+		preferredApplicationURL = (collectedFileForPreferredApplication.URL);
 	}
 
-	NSMenu *menu = (self.openerApplicationMenu);
-	[openerApplicationCombiner updateMenuWithOpenerApplications:menu target:self action:@selector(openWithChosenApplication:)];
+	NSMenu *openerApplicationMenu = (self.openerApplicationMenu);
+	[openerApplicationCombiner updateOpenerApplicationsMenu:openerApplicationMenu target:self action:@selector(openWithChosenApplication:) preferredApplicationURL:preferredApplicationURL];
+	
+	
+	NSMenu *preferredOpenerApplicationMenu = (self.preferredOpenerApplicationMenu);
+	[openerApplicationCombiner updatePreferredOpenerApplicationsChoiceMenu:preferredOpenerApplicationMenu target:self action:@selector(changePreferredOpenerApplication:) chosenPreferredApplicationURL:preferredApplicationURL];
 }
 
 #pragma mark Actions
@@ -407,6 +417,31 @@
 	[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL];
 	
 	[fileURL stopAccessingSecurityScopedResource];
+}
+
+- (IBAction)changePreferredOpenerApplication:(NSMenuItem *)menuItem
+{
+	id representedObject = (menuItem.representedObject);
+	if ((representedObject != nil) && ![representedObject isKindOfClass:[NSURL class]]) {
+		return;
+	}
+	NSURL *applicationURL = representedObject;
+	
+	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
+	if (![highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+		return;
+	}
+	GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
+	
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	[pm editHighlightedCollectedFile:highlightedCollectedFile usingBlock:^(id<GLAHighlightedCollectedFileEditing> editor) {
+		if (applicationURL) {
+			(editor.applicationToOpenFile) = [[GLACollectedFile alloc] initWithFileURL:applicationURL];
+		}
+		else {
+			(editor.applicationToOpenFile) = nil;
+		}
+	}];
 }
 
 #pragma mark Notifications
@@ -613,8 +648,7 @@
 
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
-	NSMenu *openerApplicationMenu = (self.openerApplicationMenu);
-	if (menu == openerApplicationMenu) {
+	if ((menu == (self.openerApplicationMenu)) || (menu == (self.preferredOpenerApplicationMenu))) {
 		[self updateOpenerApplicationsUIMenu];
 	}
 }
