@@ -345,4 +345,37 @@
 #endif
 }
 
+- (void)drawImageWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+{
+	NSCellImagePosition imagePosition = (self.imagePosition);
+	if (imagePosition == NSImageOnly) {
+		NSImage *image = (self.image);
+		
+		NSRect holdingRect = NSInsetRect(cellFrame, (self.backgroundInsetXAmount), (self.backgroundInsetYAmount));
+		NSSize imageSize = (image.size);
+		// How does the width scale?
+		CGFloat widthScale = NSWidth(holdingRect) / imageSize.width;
+		// How does the height scale?
+		CGFloat heightScale = NSHeight(holdingRect) / imageSize.height;
+		// Find the smaller of the two, and clamp to 1.0 so it isn't scaling up at all.
+		CGFloat scale = fmin(fmin(widthScale, heightScale), 1.0);
+		
+		NSSize destSize = NSMakeSize(imageSize.width * scale, imageSize.height * scale);
+		NSRect destRect = NSMakeRect
+		(
+		 (NSWidth(cellFrame) - destSize.width) / 2.0,
+		 (NSHeight(cellFrame) - destSize.height) / 2.0,
+		 destSize.width,
+		 destSize.height
+		);
+		
+		destRect = [controlView backingAlignedRect:destRect options:NSAlignAllEdgesNearest];
+		
+		[image drawInRect:destRect];
+	}
+	else {
+		[super drawImageWithFrame:cellFrame inView:controlView];
+	}
+}
+
 @end
