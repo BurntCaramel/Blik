@@ -43,6 +43,7 @@
 	
 	_collection = collection;
 	
+	(self.needsLayout) = YES; // Required by OS X Yosemite, otherwise height is zero.
 	(self.needsDisplay) = YES;
 }
 
@@ -78,10 +79,6 @@
 	
 	(dotLayer.cornerRadius) = diameter / 2.0;
 	//(layer.anchorPoint) = CGPointMake(0.5, 0.5);
-	
-#if 0
-	(layer.backgroundColor) = [NSColor redColor].CGColor;
-#endif
 }
 
 - (void)drawRect:(NSRect)dirtyRect

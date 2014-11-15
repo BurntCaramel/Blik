@@ -156,18 +156,19 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 
 - (void)setProject:(GLAProject *)project
 {
+	// Project instances are immutable objects. If they are the same object, no changes have been made.
 	if (_project == project) {
 		return;
 	}
 	
-	BOOL isSameProject = (_project != nil) && [(_project.UUID) isEqual:(project.UUID)];
+	//BOOL isSameProject = (_project != nil) && [(_project.UUID) isEqual:(project.UUID)];
 	
 	_project = project;
 	
-	if (!isSameProject) {
+	//if (!isSameProject) {
 		(self.collectionsViewController.project) = project;
 		(self.highlightsViewController.project) = project;
-	}
+	//}
 	
 	(self.nameTextField.stringValue) = (project.name);
 }

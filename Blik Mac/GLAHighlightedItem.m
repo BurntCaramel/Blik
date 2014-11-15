@@ -45,11 +45,6 @@
 	return self;
 }
 
-+ (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedItemEditing> editor))editingBlock
-{
-	return [[self alloc] initByEditing:editingBlock];
-}
-
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedItemEditing>editor))editingBlock
 {
 	GLAHighlightedItem *copy = [self copy];
@@ -137,11 +132,6 @@
 - (instancetype)initByEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock
 {
 	return [super initByEditing:editingBlock];
-}
-
-+ (instancetype)newCreatedFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock
-{
-	return [[self alloc] initByEditing:editingBlock];
 }
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing>editor))editingBlock

@@ -588,7 +588,7 @@
 	
 	NSMutableArray *highlightedItems = [NSMutableArray array];
 	for (GLACollectedFile *collectedFile in collectedFiles) {
-		GLAHighlightedCollectedFile *highlightedCollectedFile = [GLAHighlightedCollectedFile newCreatedFromEditing:^(id<GLAHighlightedCollectedFileEditing> editor) {
+		GLAHighlightedCollectedFile *highlightedCollectedFile = [[GLAHighlightedCollectedFile alloc] initByEditing:^(id<GLAHighlightedCollectedFileEditing> editor) {
 			(editor.holdingCollectionUUID) = (filesListCollection.UUID);
 			(editor.collectedFileUUID) = (collectedFile.UUID);
 		}];
