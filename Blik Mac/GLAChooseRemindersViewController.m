@@ -139,9 +139,9 @@
 	return YES;
 }
 
-- (void)viewDidAppear
+- (void)viewDidTransitionIn
 {
-	[super viewDidAppear];
+	[super viewDidTransitionIn];
 	
 	[self reloadReminders];
 }

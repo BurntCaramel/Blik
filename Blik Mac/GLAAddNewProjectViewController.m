@@ -30,9 +30,9 @@
 	[nc addObserver:self selector:@selector(nameTextFieldTextDidChange:) name:NSControlTextDidChangeNotification object:(self.nameTextField)];
 }
 
-- (void)viewWillAppear
+- (void)viewWillTransitionIn
 {
-	[super viewWillAppear];
+	[super viewWillTransitionIn];
 	
 	[self resetAndFocus];
 }

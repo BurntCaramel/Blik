@@ -400,9 +400,9 @@
 {
 	// Remove old view
 	GLAViewController *oldCollectionViewController = (self.activeCollectionViewController);
-	[oldCollectionViewController viewWillDisappear];
+	[oldCollectionViewController viewWillTransitionOut];
 	[(oldCollectionViewController.view) removeFromSuperview];
-	[oldCollectionViewController viewDidDisappear];
+	[oldCollectionViewController viewDidTransitionOut];
 	
 	// Set up new view
 	GLAViewController *collectionViewController = [self createViewControllerForCollection:(section.collection)];
@@ -611,7 +611,7 @@
 
 - (void)didBeginTransitioningInViewController:(GLAViewController *)viewController
 {
-	[viewController viewWillAppear];
+	[viewController viewWillTransitionIn];
 	
 	if (viewController == (self.nowProjectViewController) || viewController == (self.addedProjectViewController) || viewController == (self.editedProjectViewController)) {
 		GLAProjectViewController *projectVC = (GLAProjectViewController *)viewController;
@@ -690,7 +690,7 @@
 		
 		if (animate) {
 			if (![currentSection isEqual:(self.currentSection)]) {
-				[vc viewWillDisappear];
+				[vc viewWillTransitionOut];
 				[view removeFromSuperview];
 			}
 		}
@@ -735,7 +735,7 @@
 		//[view layoutSubtreeIfNeeded];
 	} completionHandler:^ {
 		GLAViewController *vc = [self viewControllerForSection:(self.currentSection)];
-		[vc viewDidAppear];
+		[vc viewDidTransitionIn];
 	}];
 }
 

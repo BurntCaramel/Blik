@@ -117,39 +117,39 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	[activeStyle prepareContentTextField:(self.nameTextField)];
 }
 
-- (void)viewWillAppear
+- (void)viewWillTransitionIn
 {
-	[super viewWillAppear];
+	[super viewWillTransitionIn];
 	
-	[(self.collectionsViewController) viewWillAppear];
-	[(self.highlightsViewController) viewWillAppear];
+	[(self.collectionsViewController) viewWillTransitionIn];
+	[(self.highlightsViewController) viewWillTransitionIn];
 }
 
-- (void)viewDidAppear
+- (void)viewDidTransitionIn
 {
-	[super viewDidAppear];
+	[super viewDidTransitionIn];
 	
-	[(self.collectionsViewController) viewDidAppear];
-	[(self.highlightsViewController) viewDidAppear];
+	[(self.collectionsViewController) viewDidTransitionIn];
+	[(self.highlightsViewController) viewDidTransitionIn];
 	
 	[(self.collectionsScrollView.contentView) scrollToPoint:NSZeroPoint];
 	[(self.highlightsScrollView.contentView) scrollToPoint:NSZeroPoint];
 }
 
-- (void)viewWillDisappear
+- (void)viewWillTransitionOut
 {
-	[super viewWillDisappear];
+	[super viewWillTransitionOut];
 	
-	[(self.collectionsViewController) viewWillDisappear];
-	[(self.highlightsViewController) viewWillDisappear];
+	[(self.collectionsViewController) viewWillTransitionOut];
+	[(self.highlightsViewController) viewWillTransitionOut];
 }
 
-- (void)viewDidDisappear
+- (void)viewDidTransitionOut
 {
-	[super viewDidDisappear];
+	[super viewDidTransitionOut];
 	
-	[(self.collectionsViewController) viewDidDisappear];
-	[(self.highlightsViewController) viewDidDisappear];
+	[(self.collectionsViewController) viewDidTransitionOut];
+	[(self.highlightsViewController) viewDidTransitionOut];
 }
 
 @synthesize project = _project;
@@ -599,7 +599,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	//NSLayoutConstraint *scrollLeadingConstraint = (self.planViewController.scrollLeadingConstraint);
 	
 	GLAChooseRemindersViewController *chooseRemindersViewController = (self.chooseRemindersViewController);
-	[chooseRemindersViewController viewWillAppear];
+	[chooseRemindersViewController viewWillTransitionIn];
 	
 	NSView *chooseRemindersView = (chooseRemindersViewController.view);
 	[self fillViewWithChildView:chooseRemindersView];
@@ -616,7 +616,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	[projectView removeConstraint:[self layoutConstraintWithIdentifier:@"height" forChildView:chooseRemindersView]];
 	[projectView addConstraint:newBottomConstraint];
 	
-	[chooseRemindersViewController viewDidAppear];
+	[chooseRemindersViewController viewDidTransitionIn];
 	
 	
 	NSLayoutConstraint *chooseRemindersLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:chooseRemindersView];
@@ -666,9 +666,9 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 		//(chooseRemindersLeadingConstraint.constant) = 500.0;
 		(chooseRemindersLeadingConstraint.animator.constant) = 500.0;
 	} completionHandler:^ {
-		[chooseRemindersViewController viewWillDisappear];
+		[chooseRemindersViewController viewWillTransitionOut];
 		[chooseRemindersView removeFromSuperview];
-		[chooseRemindersViewController viewDidDisappear];
+		[chooseRemindersViewController viewDidTransitionOut];
 	}];
 	
 	// Animate plan view back in

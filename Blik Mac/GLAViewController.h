@@ -22,11 +22,11 @@ typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint
 
 - (void)prepareView; // Like 10.10's -viewDidLoad method.
 
-- (void)viewWillAppear;
-- (void)viewDidAppear;
+- (void)viewWillTransitionIn;
+- (void)viewDidTransitionIn;
 
-- (void)viewWillDisappear;
-- (void)viewDidDisappear;
+- (void)viewWillTransitionOut;
+- (void)viewDidTransitionOut;
 
 #pragma mark Auto Layout
 

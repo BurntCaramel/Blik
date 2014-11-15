@@ -40,9 +40,9 @@
 	[nc addObserver:self selector:@selector(colorChoiceViewDidClick:) name:GLAColorChoiceViewDidClickNotification object:(self.colorChoiceView)];
 }
 
-- (void)viewWillAppear
+- (void)viewWillTransitionIn
 {
-	[super viewWillAppear];
+	[super viewWillTransitionIn];
 	
 	[self resetAndFocus];
 }

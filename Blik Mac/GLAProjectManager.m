@@ -1464,6 +1464,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (NSArray /* GLAHighlightedItem */ *)copyHighlightsForProject:(GLAProject *)project
 {
+	NSParameterAssert(project != nil);
 	GLAArrayEditorStore *highlightsEditorStore = [self highlightsEditorStoreForProject:project];
 	if (highlightsEditorStore) {
 		return [highlightsEditorStore copyChildren];

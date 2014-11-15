@@ -309,9 +309,9 @@
 	[(sourceFilesListTableView.window) makeFirstResponder:sourceFilesListTableView];
 }
 
-- (void)viewWillAppear
+- (void)viewWillTransitionIn
 {
-	[super viewWillAppear];
+	[super viewWillTransitionIn];
 	
 	(self.doNotUpdateViews) = NO;
 	[self reloadSourceFiles];
@@ -319,9 +319,9 @@
 	[self makeSourceFilesListFirstResponder];
 }
 
-- (void)viewWillDisappear
+- (void)viewWillTransitionOut
 {
-	[super viewWillDisappear];
+	[super viewWillTransitionOut];
 	
 	(self.doNotUpdateViews) = YES;
 	[self stopObservingPreviewFrameChanges];

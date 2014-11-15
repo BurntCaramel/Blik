@@ -55,22 +55,22 @@
 	// For subclasses.
 }
 
-- (void)viewWillAppear
+- (void)viewWillTransitionIn
 {
 	// For subclasses.
 }
 
-- (void)viewDidAppear
+- (void)viewDidTransitionIn
 {
 	// For subclasses.
 }
 
-- (void)viewWillDisappear
+- (void)viewWillTransitionOut
 {
 	// For subclasses.
 }
 
-- (void)viewDidDisappear
+- (void)viewDidTransitionOut
 {
 	// For subclasses.
 }

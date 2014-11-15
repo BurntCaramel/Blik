@@ -228,9 +228,14 @@
 		return;
 	}
 	
+	GLAProject *project = (self.project);
+	if (!project) {
+		return;
+	}
+	
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	
-	NSArray *highlightedItems = [projectManager copyHighlightsForProject:(self.project)];
+	NSArray *highlightedItems = [projectManager copyHighlightsForProject:project];
 	
 	if (!highlightedItems) {
 		highlightedItems = @[];
@@ -262,9 +267,9 @@
 	[self reloadHighlightedItems];
 }
 
-- (void)viewWillAppear
+- (void)viewWillTransitionIn
 {
-	[super viewWillAppear];
+	[super viewWillTransitionIn];
 	
 	(self.doNotUpdateViews) = NO;
 	
@@ -272,9 +277,9 @@
 	[self startProjectObserving];
 }
 
-- (void)viewWillDisappear
+- (void)viewWillTransitionOut
 {
-	[super viewWillDisappear];
+	[super viewWillTransitionOut];
 	
 	(self.doNotUpdateViews) = YES;
 	

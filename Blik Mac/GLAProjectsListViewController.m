@@ -62,26 +62,26 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	[self startProjectManagingObserving];
 }
 
-- (void)viewWillAppear
+- (void)viewWillTransitionIn
 {
-	[super viewWillAppear];
+	[super viewWillTransitionIn];
 	
 	[self startProjectManagingObserving];
 	[self reloadAllProjects];
 }
 
-- (void)viewDidAppear
+- (void)viewDidTransitionIn
 {
-	[super viewDidAppear];
+	[super viewDidTransitionIn];
 	
 	NSTableView *tableView = (self.tableView);
 	NSScrollView *scrollView = [tableView enclosingScrollView];
 	[scrollView flashScrollers];
 }
 
-- (void)viewWillDisappear
+- (void)viewWillTransitionOut
 {
-	[super viewWillDisappear];
+	[super viewWillTransitionOut];
 	
 	[self stopProjectManagingObserving];
 }
