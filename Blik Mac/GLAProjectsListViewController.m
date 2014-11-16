@@ -253,7 +253,6 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	
 	NSTextField *plannedDateTextField = (cellView.plannedDateTextField);
 	(plannedDateTextField.textColor) = (activeStyle.lightTextDisabledColor);
-	//(plannedDateTextField.textColor) = (activeStyle.lightTextSecondaryColor);
 	
 	GLANavigationButton *workOnNowButton = (cellView.workOnNowButton);
 	//(workOnNowButton.alwaysHighlighted) = YES;

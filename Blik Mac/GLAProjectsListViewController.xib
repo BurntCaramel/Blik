@@ -52,7 +52,7 @@
                                                             <constraint firstAttribute="height" constant="28" id="Ayg-4M-gxk"/>
                                                         </constraints>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Table View Cell" id="01t-l7-VUZ">
-                                                            <font key="font" size="16" name="AvenirNext-DemiBold"/>
+                                                            <font key="font" size="16" name="AvenirNext-MediumItalic"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
@@ -76,13 +76,13 @@
                                                                 <integer key="value" value="-1"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetAmount">
-                                                                <integer key="value" value="6"/>
+                                                                <integer key="value" value="7"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
-                                                                <integer key="value" value="10"/>
+                                                                <integer key="value" value="14"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
-                                                                <integer key="value" value="10"/>
+                                                                <integer key="value" value="14"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </button>

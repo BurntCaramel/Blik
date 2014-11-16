@@ -35,6 +35,7 @@
 	[super loadView];
 	
 	NSCollectionView *colorGridCollectionView = (self.colorGridCollectionView);
+	//(colorGridCollectionView.wantsLayer) = YES;
 	(colorGridCollectionView.content) = [self allColors];
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];

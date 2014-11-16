@@ -30,6 +30,8 @@
 {
 	(self.colorChoiceView.togglesOnAndOff) = YES;
 	
+	(self.view.wantsLayer) = YES;
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(colorChoiceViewOnDidChangeNotification:) name:GLAColorChoiceViewOnDidChangeNotification object:(self.colorChoiceView)];
 }
 

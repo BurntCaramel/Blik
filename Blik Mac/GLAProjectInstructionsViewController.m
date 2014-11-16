@@ -21,7 +21,7 @@
 	[super prepareView];
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
-	[uiStyle prepareTextLabel:(self.mainInstructionTextLabel)];
+	[uiStyle prepareInstructionalTextLabel:(self.mainInstructionTextLabel)];
 }
 
 @end

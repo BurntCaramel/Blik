@@ -138,6 +138,8 @@
 
 - (void)addRequestedResourceKeys:(NSArray *)resourceKeys forURL:(NSURL *)URL
 {
+	NSParameterAssert(URL != nil);
+	
 	__weak GLAFileInfoRetriever *weakSelf = self;
 	dispatch_async((self.inputDispatchQueue), ^{
 		GLAFileInfoRetriever *self = weakSelf;

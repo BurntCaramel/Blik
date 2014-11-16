@@ -172,10 +172,10 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	return [NSOperationQueue mainQueue];
 }
 
-- (void)handleError:(NSError *)error
+- (void)handleError:(NSError *)error fromSelector:(SEL)selector
 {
 	[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-		NSLog(@"ERROR %@", error);
+		NSLog(@"ERROR %@ %@", error, NSStringFromSelector(selector));
 		// TODO something a bit more elegant?
 		//[NSApp presentError:error];
 		NSAlert *alert = [NSAlert alertWithError:error];
@@ -860,10 +860,10 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	}
 }
 
-- (void)handleError:(NSError *)error
+- (void)handleError:(NSError *)error fromSelector:(SEL)selector
 {
 	GLAProjectManager *pm = (self.projectManager);
-	[pm handleError:error];
+	[pm handleError:error fromSelector:selector];
 }
 
 #pragma mark Files
@@ -877,7 +877,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	NSURL *directoryURL = [fm URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:&error];
 	
 	if (!directoryURL) {
-		[projectManager handleError:error];
+		[projectManager handleError:error fromSelector:_cmd];
 		return nil;
 	}
 	
@@ -900,7 +900,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	
 	BOOL directorySuccess = [fm createDirectoryAtURL:directoryURL withIntermediateDirectories:YES attributes:nil error:&error];
 	if (!directorySuccess) {
-		[projectManager handleError:error];
+		[projectManager handleError:error fromSelector:_cmd];
 		return nil;
 	}
 	
@@ -992,13 +992,13 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	
 	NSData *JSONData = [NSData dataWithContentsOfURL:fileURL options:0 error:&error];
 	if (!JSONData) {
-		[projectManager handleError:error];
+		[projectManager handleError:error fromSelector:_cmd];
 		return nil;
 	}
 	
 	NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:JSONData options:0 error:&error];
 	if (!JSONDictionary) {
-		[projectManager handleError:error];
+		[projectManager handleError:error fromSelector:_cmd];
 		return nil;
 	}
 	
@@ -1018,13 +1018,13 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	NSArray *JSONArray = JSONDictionary[JSONKey];
 	if (!JSONArray) {
 		error = [GLAModelErrors errorForMissingRequiredKey:JSONKey inJSONFileAtURL:fileURL];
-		[projectManager handleError:error];
+		[projectManager handleError:error fromSelector:_cmd];
 		return nil;
 	}
 	
 	NSArray *models = [MTLJSONAdapter modelsOfClass:modelClass fromJSONArray:JSONArray error:&error];
 	if (!models) {
-		[projectManager handleError:error];
+		[projectManager handleError:error fromSelector:_cmd];
 		return nil;
 	}
 	
@@ -1038,7 +1038,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	
 	NSData *JSONData = [NSJSONSerialization dataWithJSONObject:JSONDictionary options:0 error:&error];
 	if (!JSONData) {
-		[projectManager handleError:error];
+		[projectManager handleError:error fromSelector:_cmd];
 		return NO;
 	}
 	
@@ -1168,7 +1168,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 			
 			BOOL success = [fm removeItemAtURL:directoryURL error:&error];
 			if (!success) {
-				[store handleError:error];
+				[store handleError:error fromSelector:_cmd];
 			}
 		}
 	}];
@@ -1251,13 +1251,13 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	NSDictionary *JSONProject = JSONDictionary[GLAProjectManagerJSONNowProjectKey];
 	if (!JSONProject) {
 		error = [GLAModelErrors errorForMissingRequiredKey:GLAProjectManagerJSONNowProjectKey inJSONFileAtURL:fileURL];
-		[projectManager handleError:error];
+		[projectManager handleError:error fromSelector:_cmd];
 		return nil;
 	}
 	
 	GLAProject *project = [MTLJSONAdapter modelOfClass:[GLAProject class] fromJSONDictionary:JSONProject error:&error];
 	if (!project) {
-		[projectManager handleError:error];
+		[projectManager handleError:error fromSelector:_cmd];
 		return nil;
 	}
 	
@@ -1392,7 +1392,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 			
 			BOOL success = [fm removeItemAtURL:directoryURL error:&error];
 			if (!success) {
-				[store handleError:error];
+				[store handleError:error fromSelector:_cmd];
 			}
 		}
 	}];
@@ -1641,7 +1641,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (void)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore handleError:(NSError *)error fromMethodWithSelector:(SEL)storeMethodSelector
 {
-	[self handleError:error];
+	[self handleError:error fromSelector:storeMethodSelector];
 }
 
 

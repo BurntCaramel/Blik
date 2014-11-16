@@ -386,7 +386,9 @@
 		[selectedURLs removeAllObjects];
 		for (GLACollectedFile *collectedFile in collectedFiles) {
 			NSURL *fileURL = (collectedFile.URL);
-			[selectedURLs addObject:fileURL];
+			if (fileURL) {
+				[selectedURLs addObject:fileURL];
+			}
 		}
 	}
 	
@@ -779,7 +781,9 @@
 {
 	GLACollectedFile *collectedFile = (self.collectedFiles)[row];
 	
-	[self addUsedURLForCollectedFile:collectedFile];
+	if (!(collectedFile.isMissing)) {
+		[self addUsedURLForCollectedFile:collectedFile];
+	}
 	
 	return collectedFile;
 }
@@ -844,24 +848,31 @@
 	GLACollectedFile *collectedFile = (self.collectedFiles)[row];
 	(cellView.objectValue) = collectedFile;
 	
-	GLAFileInfoRetriever *fileInfoRetriever = (self.fileInfoRetriever);
-	NSURL *fileURL = (collectedFile.URL);
+	NSString *displayName = nil;
+	NSImage *iconImage = nil;
 	
-	NSArray *resourceValueKeys =
-	@[
-	  NSURLLocalizedNameKey,
-	  NSURLEffectiveIconKey
-	  ];
+	if (collectedFile.isMissing) {
+		displayName = NSLocalizedString(@"Missing", @"Displayed name when a collected file is missing");
+	}
+	else {
+		GLAFileInfoRetriever *fileInfoRetriever = (self.fileInfoRetriever);
+		NSURL *fileURL = (collectedFile.URL);
+		
+		NSArray *resourceValueKeys =
+		@[
+		  NSURLLocalizedNameKey,
+		  NSURLEffectiveIconKey
+		  ];
+		
+		NSDictionary *resourceValues = [fileInfoRetriever loadedResourceValuesForKeys:resourceValueKeys forURL:fileURL requestIfNeeded:YES];
+		
+		displayName = resourceValues[NSURLLocalizedNameKey];
+		iconImage = resourceValues[NSURLEffectiveIconKey];
+	}
 	
-	NSDictionary *resourceValues = [fileInfoRetriever loadedResourceValuesForKeys:resourceValueKeys forURL:fileURL requestIfNeeded:YES];
-	
-	NSString *displayName = resourceValues[NSURLLocalizedNameKey];
 	(cellView.textField.stringValue) = displayName ?: @"";
-	
-	NSImage *iconImage = resourceValues[NSURLEffectiveIconKey];
 	(cellView.imageView.image) = iconImage;
 	
-	//(cellView.textField.stringValue) = (collectedFile.URL.path);
 	return cellView;
 }
 /*

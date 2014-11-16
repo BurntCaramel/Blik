@@ -171,6 +171,13 @@
 - (BOOL)validateBookmarkData:(inout __autoreleasing NSData **)ioBookmarkData updateProperties:(BOOL)update error:(out NSError *__autoreleasing *)outError
 {
 	NSData *bookmarkData = *ioBookmarkData;
+	if (!bookmarkData) {
+		if (update) {
+			(self.isMissing) = YES;
+		}
+		return YES;
+	}
+	
 	BOOL isStale = NO;
 	NSError *error = nil;
 	// Resolve the bookmark data.
@@ -181,6 +188,7 @@
 			case NSFileNoSuchFileError:
 			case NSFileReadUnknownError:
 			case NSFileReadNoSuchFileError:
+			//case NSFileReadCorruptFileError:
 			if (update) {
 				(self.isMissing) = YES;
 			}

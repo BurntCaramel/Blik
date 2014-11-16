@@ -11,10 +11,13 @@
 
 @interface GLAColorChoiceView : NSView
 
-@property(nonatomic) NSColor *color;
+@property(copy, nonatomic) NSColor *color;
 @property(nonatomic) BOOL on;
 
 @property(nonatomic) BOOL togglesOnAndOff;
+
+@property(nonatomic) NSSize dotSize;
+@property(nonatomic) CALayer *dotLayer;
 
 @end
 

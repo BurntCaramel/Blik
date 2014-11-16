@@ -10,6 +10,9 @@
 #import "NSColor+GLAExtras.h"
 
 
+#define SRGB255(r255, g255, b255) [NSColor colorWithSRGBRed:((CGFloat)(r255))/255.0 green:((CGFloat)(g255))/255.0 blue:((CGFloat)(b255))/255.0 alpha:1.0]
+
+
 @implementation GLAUIStyle
 
 + (instancetype)activeStyle
@@ -30,7 +33,7 @@
 		NSColor *grayDark = [NSColor gla_colorWithSRGBGray:43.0/255.0 alpha:1.0];
 		NSColor *grayExtraDark = [NSColor gla_colorWithSRGBGray:41.0/255.0 alpha:1.0];
 #endif
-		NSColor *whiteAlmost = [NSColor colorWithSRGBRed:252.0/255.0 green:252.0/255.0 blue:252.0/255.0 alpha:1.0];
+		NSColor *whiteAlmost = [NSColor gla_colorWithSRGBGray:252.0/255.0 alpha:1.0];
 		NSColor *activeYellow = [NSColor colorWithSRGBRed:236.0/255.0 green:206.0/255.0 blue:4.0/255.0 alpha:1.0];
 		NSColor *activeYellowText = [NSColor colorWithSRGBRed:255.0/255.0 green:222.0/255.0 blue:0.0/255.0 alpha:1.0];
 		NSColor *deleteRed = [NSColor colorWithCalibratedHue:0.059 saturation:1 brightness:0.983 alpha:1];
@@ -56,8 +59,9 @@
 		(style.secondaryButtonTextColor) = whiteAlmost;
 		
 		(style.lightTextColor) =  whiteAlmost;
+		(style.lightInstructionalTextColor) = whiteAlmost;
+		//(style.lightInstructionalTextColor) = [whiteAlmost blendedColorWithFraction:8.0/32.0 ofColor:grayExtraDark];
 		(style.lightTextDisabledColor) = whiteAlmost30;
-		//(style.lightTextSecondaryColor) = [whiteAlmost colorWithAlphaComponent:0.77];
 		(style.lightTextColorAtLevelBlock) = ^ (GLAUIStyle *style, NSUInteger level) {
 			// Reduce by 1/10 for each level
 			CGFloat reduction = 1.0/8.0 * (CGFloat)level;
@@ -86,34 +90,37 @@
 		
 		(style.splitViewDividerColor) = [whiteAlmost colorWithAlphaComponent:0.057];
 		
-		// Item colors
-		(style.pastelLightBlueItemColor) = [NSColor colorWithSRGBRed:168.0/255.0 green:227.0/255.0 blue:255.0/255.0 alpha:1.0];
-		(style.pastelGreenItemColor) = [NSColor colorWithSRGBRed:191.0/255.0 green:218.0/255.0 blue:126.0/255.0 alpha:1.0];
-		(style.pastelPinkyPurpleItemColor) = [NSColor colorWithSRGBRed:228.0/255.0 green:203.0/255.0 blue:255.0/255.0 alpha:1.0];
-		(style.pastelRedItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:197.0/255.0 blue:132.0/255.0 alpha:1.0];
-		//(style.pastelYellowItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:211.0/255.0 blue:18.0/255.0 alpha:1.0];
-		(style.pastelYellowItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:227.0/255.0 blue:102.0/255.0 alpha:1.0];
-		(style.pastelFullRedItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:131.0/255.0 blue:108.0/255.0 alpha:1.0];
-		(style.pastelPurplyBlueItemColor) = [NSColor colorWithSRGBRed:135.0/255.0 green:172.0/255.0 blue:221.0/255.0 alpha:1.0];
 		
-		(style.strongRedItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:60.0/255.0 blue:0.0 alpha:1.0];
-		(style.strongYellowItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:194.0/255.0 blue:0.0 alpha:1.0];
-		(style.strongPurpleItemColor) = [NSColor colorWithSRGBRed:188.0/255.0 green:106.0/255.0 blue:255.0/255.0 alpha:1.0];
-		(style.strongBlueItemColor) = [NSColor colorWithSRGBRed:0.0/255.0 green:170.0/255.0 blue:255.0/255.0 alpha:1.0];
-		(style.strongPinkItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:64.0/255.0 blue:157.0/255.0 alpha:1.0];
-		(style.strongOrangeItemColor) = [NSColor colorWithSRGBRed:255.0/255.0 green:111.0/255.0 blue:0.0/255.0 alpha:1.0];
-		(style.strongGreenItemColor) = [NSColor colorWithSRGBRed:0.0/255.0 green:217.0/255.0 blue:48.0/255.0 alpha:1.0];
+		// Item colors
+		(style.pastelLightBlueItemColor) = SRGB255(168, 227, 255);
+		(style.pastelGreenItemColor) = SRGB255(191, 218, 126);
+		(style.pastelPinkyPurpleItemColor) = SRGB255(228, 203, 255);
+		(style.pastelRedItemColor) = SRGB255(255, 197, 132);
+		//(style.pastelYellowItemColor) = SRGB255(255, 211, 18);
+		(style.pastelYellowItemColor) = SRGB255(255, 227, 102);
+		(style.pastelFullRedItemColor) = SRGB255(255, 144, 123);
+		(style.pastelPurplyBlueItemColor) = SRGB255(147, 180, 224);
+		
+		(style.strongRedItemColor) = SRGB255(255, 107, 61);
+		(style.strongYellowItemColor) = SRGB255(255, 213, 78);
+		(style.strongPurpleItemColor) = SRGB255(204, 142, 255);
+		(style.strongBlueItemColor) = SRGB255(49, 187, 255);
+		(style.strongPinkItemColor) = SRGB255(255, 109, 180);
+		(style.strongOrangeItemColor) = SRGB255(255, 146, 61);
+		(style.strongGreenItemColor) = SRGB255(70, 227, 105);
 		
 		(style.chooseColorBackgroundColor) = grayExtraDark;
 		
 		// FONTS
 		
-		NSString *fontNameAvenirNextRegular = @"AvenirNext-Regular";
-		NSString *fontNameAvenirNextMedium = @"AvenirNext-Medium";
-		NSString *fontNameAvenirNextMediumItalic = @"AvenirNext-MediumItalic";
-		NSString *fontNameAvenirNextItalic = @"AvenirNext-Italic";
+		static NSString *fontNameAvenirNextRegular = @"AvenirNext-Regular";
+		static NSString *fontNameAvenirNextMedium = @"AvenirNext-Medium";
+		static NSString *fontNameAvenirNextMediumItalic = @"AvenirNext-MediumItalic";
+		static NSString *fontNameAvenirNextItalic = @"AvenirNext-Italic";
 		
-		(style.projectTitleFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:18.0];
+		//(style.projectTitleFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:19.0];
+		//(style.projectTitleFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:16.0];
+		(style.projectTitleFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:17.0];
 		
 #if 0
 		(style.smallReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
@@ -196,6 +203,11 @@
 - (void)prepareTextLabel:(NSTextField *)textField
 {
 	(textField.textColor) = (self.lightTextColor);
+}
+
+- (void)prepareInstructionalTextLabel:(NSTextField *)textField
+{
+	(textField.textColor) = (self.lightInstructionalTextColor);
 }
 
 - (void)prepareOutlinedTextField:(NSTextField *)textField

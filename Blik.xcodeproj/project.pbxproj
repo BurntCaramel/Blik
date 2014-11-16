@@ -432,7 +432,6 @@
 				B226E9561988D00C00D607CC /* GLAFileCollectionViewController.h */,
 				B226E9571988D00C00D607CC /* GLAFileCollectionViewController.m */,
 				B226E9581988D00C00D607CC /* GLAFileCollectionViewController.xib */,
-				B25591F619C8456F0039D2AC /* Color Pickers */,
 				B208E3F319F51607000EF97B /* Collection Details */,
 			);
 			name = Collections;
@@ -481,6 +480,8 @@
 		B25591F619C8456F0039D2AC /* Color Pickers */ = {
 			isa = PBXGroup;
 			children = (
+				B25591FF19C84E4B0039D2AC /* GLAColorChoiceView.h */,
+				B255920019C84E4B0039D2AC /* GLAColorChoiceView.m */,
 				B25591F719C845900039D2AC /* GLACollectionColorPickerViewController.h */,
 				B25591F819C845900039D2AC /* GLACollectionColorPickerViewController.m */,
 				B25591F919C845900039D2AC /* GLACollectionColorPickerViewController.xib */,
@@ -659,10 +660,9 @@
 				B268C2551990EACC000BF39B /* GLASplitView.m */,
 				B26B6F4E19EBE3C800D17ECD /* GLATableView.h */,
 				B26B6F4F19EBE3C800D17ECD /* GLATableView.m */,
-				B25591FF19C84E4B0039D2AC /* GLAColorChoiceView.h */,
-				B255920019C84E4B0039D2AC /* GLAColorChoiceView.m */,
 				B2D0331719FFA3E600C396FB /* GLACollectionIndicationButton.h */,
 				B2D0331819FFA3E600C396FB /* GLACollectionIndicationButton.m */,
+				B25591F619C8456F0039D2AC /* Color Pickers */,
 			);
 			name = View;
 			sourceTree = "<group>";

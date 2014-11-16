@@ -35,6 +35,7 @@
 @property(nonatomic) NSColor *secondaryButtonTextColor;
 
 @property(nonatomic) NSColor *lightTextColor;
+@property(nonatomic) NSColor *lightInstructionalTextColor;
 @property(nonatomic) NSColor *lightTextDisabledColor;
 @property(strong, nonatomic) NSColor *(^lightTextColorAtLevelBlock)(GLAUIStyle *style, NSUInteger level);
 - (NSColor *)lightTextColorAtLevel:(NSUInteger)level;
@@ -100,6 +101,7 @@
 
 - (void)prepareContentTextField:(NSTextField *)textField;
 - (void)prepareTextLabel:(NSTextField *)textField;
+- (void)prepareInstructionalTextLabel:(NSTextField *)textField;
 - (void)prepareOutlinedTextField:(NSTextField *)textField;
 - (void)prepareContentTableView:(NSTableView *)tableView;
 

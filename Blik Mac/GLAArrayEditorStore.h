@@ -55,6 +55,22 @@
 
 @end
 
+@interface GLAArrayEditorStore (Errors)
+
++ (NSString *)errorDomain;
+
+typedef NS_ENUM(NSInteger, GLAArrayEditorStoreErrorCode)
+{
+	GLAArrayEditorStoreErrorCodeGeneral = 1,
+	GLAArrayEditorStoreErrorCodeJSONMissingRequiredKey = 2,
+	GLAArrayEditorStoreErrorCodeCannotMakeModelsFromJSONArray = 3
+};
+
++ (NSError *)errorForMissingRequiredKey:(NSString *)dictionaryKey inJSONFileAtURL:(NSURL *)fileURL;
++ (NSError *)errorForCannotMakeModelsOfClass:(Class)modelClass fromJSONArray:(NSArray *)JSONArray loadedFromFileAtURL:(NSURL *)fileURL mantleError:(NSError *)error;
+
+@end
+
 
 @protocol GLAArrayEditorStoreDelegate <NSObject>
 

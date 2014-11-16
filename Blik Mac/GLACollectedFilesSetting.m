@@ -79,7 +79,9 @@
 	if (![collectedFileUUIDsUsingURLs containsObject:collectedFile]) {
 		[collectedFileUUIDsUsingURLs addObject:collectedFile];
 		
-		[self startAccessingSecurityScopedFileURL:(collectedFile.URL)];
+		NSURL *fileURL = (collectedFile.URL);
+		NSAssert(fileURL != nil, @"Collected file must have a URL.");
+		[self startAccessingSecurityScopedFileURL:fileURL];
 	}
 }
 
@@ -90,7 +92,9 @@
 	if ([collectedFileUUIDsUsingURLs containsObject:collectedFile]) {
 		[collectedFileUUIDsUsingURLs removeObject:collectedFile];
 		
-		[self stopAccessingSecurityScopedFileURL:(collectedFile.URL)];
+		NSURL *fileURL = (collectedFile.URL);
+		NSAssert(fileURL != nil, @"Collected file must have a URL.");
+		[self stopAccessingSecurityScopedFileURL:fileURL];
 	}
 }
 

@@ -7,7 +7,6 @@
 //
 
 #import "GLAArrayEditorStore.h"
-#import "GLAModelErrors.h"
 
 
 @interface GLAArrayEditorStore ()
@@ -128,13 +127,14 @@
 	
 	NSArray *JSONArray = JSONDictionary[JSONKey];
 	if (!JSONArray) {
-		error = [GLAModelErrors errorForMissingRequiredKey:JSONKey inJSONFileAtURL:fileURL];
+		error = [[self class] errorForMissingRequiredKey:JSONKey inJSONFileAtURL:fileURL];
 		[self handleError:error fromMethodWithSelector:_cmd];
 		return nil;
 	}
 	
 	NSArray *models = [MTLJSONAdapter modelsOfClass:modelClass fromJSONArray:JSONArray error:&error];
 	if (!models) {
+		error = [[self class] errorForCannotMakeModelsOfClass:modelClass fromJSONArray:JSONArray loadedFromFileAtURL:fileURL mantleError:error];
 		[self handleError:error fromMethodWithSelector:_cmd];
 		return nil;
 	}
@@ -331,6 +331,50 @@
 	}];
 	
 	return YES;
+}
+
+@end
+
+
+@implementation GLAArrayEditorStore (Errors)
+
++ (NSString *)errorDomain
+{
+	return @"GLAArrayEditorStore.errorDomain";
+}
+
++ (NSError *)errorForMissingRequiredKey:(NSString *)dictionaryKey inJSONFileAtURL:(NSURL *)fileURL
+{
+	NSString *descriptionFilledOut = NSLocalizedString(@"Saved file is missing essential information.", @"Error description for JSON file not containing required key");
+	
+	NSString *failureReasonPlaceholder = NSLocalizedString(@"JSON file (%@) does not contain required key (%@).", @"Error failure reason for JSON file not containing required key");
+	NSString *failureReasonFilledOut = [NSString localizedStringWithFormat:failureReasonPlaceholder, (fileURL.path), dictionaryKey];
+	
+	NSDictionary *errorInfo =
+	@{
+	  NSLocalizedDescriptionKey: descriptionFilledOut,
+	  NSLocalizedFailureReasonErrorKey: failureReasonFilledOut
+	  };
+	
+	return [NSError errorWithDomain:[self errorDomain] code:GLAArrayEditorStoreErrorCodeJSONMissingRequiredKey userInfo:errorInfo];
+}
+
++ (NSError *)errorForCannotMakeModelsOfClass:(Class)modelClass fromJSONArray:(NSArray *)JSONArray loadedFromFileAtURL:(NSURL *)fileURL mantleError:(NSError *)error
+{
+	NSString *descriptionFilledOut = NSLocalizedString(@"Saved JSON file is invalid.", @"Error description for JSON file is invalid");
+	
+	NSString *failureReasonPlaceholder = NSLocalizedString(@"JSON array from file (%@) cannot be made into instances of %@.", @"Error failure reason for JSON file not containing required key");
+	NSString *failureReasonFilledOut = [NSString localizedStringWithFormat:failureReasonPlaceholder, (fileURL.path), NSStringFromClass(modelClass)];
+	
+	NSDictionary *errorInfo =
+	@{
+	  NSLocalizedDescriptionKey: descriptionFilledOut,
+	  NSLocalizedFailureReasonErrorKey: failureReasonFilledOut,
+	  NSURLErrorKey: fileURL,
+	  NSUnderlyingErrorKey: error
+	  };
+	
+	return [NSError errorWithDomain:[self errorDomain] code:GLAArrayEditorStoreErrorCodeCannotMakeModelsFromJSONArray userInfo:errorInfo];
 }
 
 @end

@@ -536,10 +536,12 @@
 		GLACollection *holdingCollection = [pm collectionForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
 		GLACollectedFile *collectedFile = [pm collectedFileForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
 		if (collectedFile) {
-			name = (collectedFile.name);
-			
 			if (collectedFile.isMissing) {
+				name = NSLocalizedString(@"Missing", @"Displayed name when a collected file is missing");
 				(cellView.alphaValue) = 0.5;
+			}
+			else {
+				name = (collectedFile.name);
 			}
 		}
 		

@@ -13,9 +13,6 @@
 
 @interface GLAColorChoiceView ()
 
-@property(nonatomic) NSColor *private_color;
-@property(nonatomic) BOOL private_on;
-
 @end
 
 @implementation GLAColorChoiceView
@@ -35,81 +32,129 @@
 	return YES;
 }
 
+- (NSSize)dotSize
+{
+	return NSMakeSize(32.0, 32.0);
+}
+
+- (CGFloat)scaleWhenOn
+{
+	return 1.35;
+}
+
 - (void)updateLayer
 {
 	CALayer *layer = (self.layer);
+	CALayer *dotLayer = (self.dotLayer);
+	if (!dotLayer) {
+		//(self.dotLayer) = dotLayer = [GLAColorChoiceDotLayer new];
+		(self.dotLayer) = dotLayer = [CALayer new];
+		[layer addSublayer:dotLayer];
+	}
+	
 	NSColor *color = (self.color);
 	BOOL on = (self.on);
 	
 	if (color) {
-		(layer.backgroundColor) = (color.CGColor);
+		[CATransaction begin];
+		{
+			[CATransaction setAnimationDuration:0.21];
+			[CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+			
+			(dotLayer.backgroundColor) = (color.CGColor);
+		}
+		[CATransaction commit];
 	}
 	
-	(layer.borderColor) = on ? [NSColor whiteColor].CGColor : [[NSColor whiteColor] colorWithAlphaComponent:0.0].CGColor;
-	//(layer.borderWidth) = on ? 4.0 : 0.0;
-	(layer.borderWidth) = on ? 4.0 : 4.0;
+	CGRect layerBounds = (layer.bounds);
+	NSSize dotSize = (self.dotSize);
+	(dotLayer.bounds) = CGRectMake(0.0, 0.0, dotSize.width, dotSize.height);
+	(dotLayer.anchorPoint) = CGPointMake(0.5, 0.5);
+	(dotLayer.position) = CGPointMake(NSWidth(layerBounds) / 2.0, NSHeight(layerBounds) / 2.0);
 	
-	(layer.cornerRadius) = NSWidth(layer.bounds) / 2.0;
-	
-	//(layer.contentsScale) = on ? 1.0 : 0.8;
-	
-	//POPSpringAnimation *animation = [POPSpringAnimation animationWithPropertyNamed:@"contentsScale"];
-#if 0
-	POPSpringAnimation *animation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-	(animation.fromValue) = @(0.8);
-	(animation.toValue) = @(0.4);
-	[layer pop_addAnimation:animation forKey:@"scaleSpring"];
-#elseif 0
-	(layer.contentsGravity) = kCAGravityCenter;
-	//(layer.anchorPoint) = CGPointMake(0.5, 0.5);
-	CAKeyframeAnimation *scaleAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
-	(scaleAnimation.values) =
-	@[
-	  @(0.6),
-	  @(1.1),
-	  @(1.2)
-	  ];
-	(scaleAnimation.keyTimes) =
-	@[
-	  @(0.3),
-	  @(0.7),
-	  @(1.0)
-	  ];
-	(scaleAnimation.duration) = 6.0 / 12.0;
+	(dotLayer.cornerRadius) = dotSize.width / 2.0;
 	
 	[CATransaction begin];
-	[layer addAnimation:scaleAnimation forKey:@"pop"];
-	//[layer setValue:@(1.2) forKeyPath:@"transform.scale"];
+	{
+		[CATransaction setAnimationDuration:0.03];
+		
+		(dotLayer.borderColor) = on ? [NSColor whiteColor].CGColor : [[NSColor whiteColor] colorWithAlphaComponent:0.0].CGColor;
+		(dotLayer.borderWidth) = on ? 4.0 : 4.0;
+	}
 	[CATransaction commit];
-#endif
+	
+	
+	[CATransaction begin];
+	{
+		//[CATransaction setDisableActions:YES];
+		[CATransaction setAnimationDuration:0.136];
+		[CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName: (on ? kCAMediaTimingFunctionEaseIn : kCAMediaTimingFunctionEaseOut) ]];
+		
+		CGFloat scale = on ? (self.scaleWhenOn) : 1.0;
+		(dotLayer.transform) = CATransform3DMakeScale(scale, scale, 1.0);
+	}
+	[CATransaction commit];
 }
 
-- (NSColor *)color
-{
-	return (self.private_color);
-}
+@synthesize color = _color;
 
 - (void)setColor:(NSColor *)color
 {
-	(self.private_color) = color;
+	_color = color;
 	(self.needsDisplay) = YES;
 }
 
-- (BOOL)on
+@synthesize on = _on;
+
+- (void)setOn:(BOOL)on animate:(BOOL)animate
 {
-	return (self.private_on);
+	if (_on == on) {
+		return;
+	}
+	
+	_on = on;
+	
+	(self.needsDisplay) = YES;
+	
+	if (animate) {
+#if 0
+		CALayer *dotLayer = (self.dotLayer);
+		
+		CGFloat scaleWhenOff = 1.0;
+		CGFloat scaleWhenOn = (self.scaleWhenOn);
+		
+		[CATransaction begin];
+		
+		CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform"];
+		
+		NSValue *offTransformValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(scaleWhenOff, scaleWhenOff, 1.0)];
+		NSValue *onTransformValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(scaleWhenOn, scaleWhenOn, 1.0)];
+		
+		if (on) {
+			(animation.fromValue) = offTransformValue;
+			(animation.toValue) = onTransformValue;
+			(animation.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+		}
+		else {
+			(animation.fromValue) = onTransformValue;
+			(animation.toValue) = offTransformValue;
+			(animation.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+		}
+		
+		(animation.duration) = 0.14;
+		
+		[dotLayer addAnimation:animation forKey:@"scale"];
+		
+		[CATransaction commit];
+#endif
+	}
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAColorChoiceViewOnDidChangeNotification object:self];
 }
 
 - (void)setOn:(BOOL)on
 {
-	if ((self.private_on) == on) {
-		return;
-	}
-	
-	(self.private_on) = on;
-	(self.needsDisplay) = YES;
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAColorChoiceViewOnDidChangeNotification object:self];
+	[self setOn:on animate:YES];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
@@ -120,7 +165,7 @@
 {
 	if (self.togglesOnAndOff) {
 		if (!(self.on)) {
-			(self.on) = YES;
+			[self setOn:YES animate:YES];
 		}
 	}
 	else {
@@ -129,6 +174,7 @@
 }
 
 @end
+
 
 NSString *GLAColorChoiceViewOnDidChangeNotification = @"GLAColorChoiceViewOnDidChangeNotification";
 NSString *GLAColorChoiceViewDidClickNotification = @"GLAColorChoiceViewDidClickNotification";
