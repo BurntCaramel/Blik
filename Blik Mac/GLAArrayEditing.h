@@ -15,8 +15,8 @@
 - (NSArray *)childrenAtIndexes:(NSIndexSet *)indexes;
 
 // Working with unique children
-- (NSIndexSet *)indexesOfChildrenWhoseKeyPath:(NSString *)keyPath hasValue:(id)value;
-- (NSIndexSet *)indexesOfChildrenWhoseKeyPath:(NSString *)keyPath hasValueContainedInSet:(NSSet *)valuesSet;
+- (NSIndexSet *)indexesOfChildrenWhoseResultFromVisitor:(id (^)(id child))childVisitor hasValueContainedInSet:(NSSet *)valuesSet;
+- (NSIndexSet *)indexesOfChildrenWhoseKey:(NSString *)keyPath hasValue:(id)value;
 - (NSArray *)filterArray:(NSArray *)objects whoseValuesIsNotPresentForKeyPath:(NSString *)keyPath;
 
 @end

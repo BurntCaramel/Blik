@@ -13,17 +13,19 @@
 @protocol GLAArrayEditorStoreDelegate;
 
 /*
-@interface GLAArrayEditorStoreDescriptor : NSObject
+@interface GLAArrayEditorStoreOptions : NSObject
+ 
+@property(nonatomic) Class modelClass;
+ 
+@property(nonatomic, copy) NSURL *JSONFileURL;
+@property(nonatomic, copy) NSString *JSONKey;
 
 @end
  */
 
-
-// For All Projects, Project's Collections List, Project's Highlights List
-
 @interface GLAArrayEditorStore : NSObject
 
-- (instancetype)initWithDelegate:(id<GLAArrayEditorStoreDelegate>)delegate modelClass:(Class)modelClass JSONFileURL:(NSURL *)JSONFileURL JSONDictionaryKey:(NSString *)JSONKey userInfo:(NSDictionary *)userInfo;
+- (instancetype)initWithDelegate:(id<GLAArrayEditorStoreDelegate>)delegate modelClass:(Class)modelClass JSONFileURL:(NSURL *)JSONFileURL JSONDictionaryKey:(NSString *)JSONKey userInfo:(NSDictionary *)userInfo arrayEditorOptions:(GLAArrayEditorOptions *)arrayEditorOptions;
 
 @property(nonatomic, weak, readonly) id<GLAArrayEditorStoreDelegate> delegate;
 
@@ -80,6 +82,8 @@ typedef NS_ENUM(NSInteger, GLAArrayEditorStoreErrorCode)
 - (void)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore handleError:(NSError *)error fromMethodWithSelector:(SEL)storeMethodSelector;
 
 @optional
+
+//- (void)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore setUpArrayEditorOptions:(GLAArrayEditorOptions *)options;
 
 - (NSArray *)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore processLoadedChildrenInBackground:(NSArray *)children;
 

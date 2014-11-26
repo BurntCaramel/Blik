@@ -165,7 +165,7 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Button title to delete project.")];
 	[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title to cancel deleting project.")];
 	(alert.messageText) = NSLocalizedString(@"Delete the project?", @"Message for deleting a project.");
-	(alert.informativeText) = NSLocalizedString(@"The project and its collections will permanently deleted and not able to be restored.", @"Informative text for deleting a project and its collections.");
+	(alert.informativeText) = NSLocalizedString(@"If you wish to restore the project and its collections you must do so manually.", @"Informative text for deleting a project and its collections.");
 	(alert.alertStyle) = NSWarningAlertStyle;
 	
 	[alert beginSheetModalForWindow:(self.view.window) completionHandler:^(NSModalResponse returnCode) {

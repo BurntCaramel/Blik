@@ -22,6 +22,7 @@
 - (instancetype)initWithFileURL:(NSURL *)URL;
 
 @property(readonly, nonatomic) NSURL *URL;
+@property(readonly, nonatomic) BOOL wasCreatedFromBookmarkData; // Needs -startAccessingSecurityScopedResource
 
 //- (NSOperation *)newOperationToUpdateInformation;
 //- (void)updateInformation:(dispatch_block_t)completionBlock;

@@ -70,7 +70,7 @@ NSString *GLAStatusItemShowsItem = @"statusItem.showsItem";
 	
 	(statusItem.target) = self;
 	(statusItem.action) = @selector(toggle:);
-	[statusItem sendActionOn:NSLeftMouseDownMask];
+	[statusItem sendActionOn:NSLeftMouseUpMask];
 	
 	(self.statusItem) = statusItem;
 }

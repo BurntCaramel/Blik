@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
+@import Cocoa;
 #import "GLAFileCollectionViewController.h"
 #import "GLAUIStyle.h"
 #import "GLAProjectManager.h"
@@ -436,7 +437,12 @@
 	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
 	
 	NSMenu *menu = (self.openerApplicationsPopUpButton.menu);
-	[openerApplicationCombiner updateOpenerApplicationsMenu:menu target:nil action:NULL preferredApplicationURL:nil];
+	[openerApplicationCombiner updateOpenerApplicationsMenu:menu target:self action:@selector(openWithChosenApplication:) preferredApplicationURL:nil];
+	
+	NSMenuItem *firstItem = (menu.itemArray)[0];
+	if (firstItem) {
+		[menu insertItem:[firstItem copy] atIndex:0];
+	}
 	
 	[self updateOpenerApplicationsUIVisibility];
 }
@@ -483,6 +489,10 @@
 	(openPanel.canChooseFiles) = YES;
 	(openPanel.canChooseDirectories) = YES;
 	(openPanel.allowsMultipleSelection) = YES;
+	
+	NSString *chooseString = NSLocalizedString(@"Choose", @"NSOpenPanel button for choosing file/folder to add to collected files list.");
+	(openPanel.title) = chooseString;
+	(openPanel.prompt) = chooseString;
 	
 	[openPanel beginWithCompletionHandler:^(NSInteger result) {
 		if (result == NSFileHandlingPanelOKButton) {
@@ -552,6 +562,24 @@
 	[GLAFileOpenerApplicationCombiner openFileURLs:selectedURLs withApplicationURL:applicationURL];
 }
 
+- (IBAction)openWithChosenApplication:(NSMenuItem *)menuItem
+{
+	id representedObject = (menuItem.representedObject);
+	if ((!representedObject) || ![representedObject isKindOfClass:[NSURL class]]) {
+		return;
+	}
+	
+	NSURL *applicationURL = representedObject;
+	
+	NSMutableArray *selectedURLs = (self.selectedURLs);
+	
+	[selectedURLs makeObjectsPerformSelector:@selector(startAccessingSecurityScopedResource)];
+	
+	[GLAFileOpenerApplicationCombiner openFileURLs:selectedURLs withApplicationURL:applicationURL];
+	
+	[selectedURLs makeObjectsPerformSelector:@selector(stopAccessingSecurityScopedResource)];
+}
+
 - (IBAction)revealSelectedFilesInFinder:(id)sender
 {
 	NSArray *selectedURLs = [self URLsForActionIsContextual:(sender != self)];
@@ -587,12 +615,14 @@
 	NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:clickedIndexes];
 	
 	GLACollection *filesListCollection = (self.filesListCollection);
+	NSUUID *projectUUID = (self.project.UUID);
 	
 	NSMutableArray *highlightedItems = [NSMutableArray array];
 	for (GLACollectedFile *collectedFile in collectedFiles) {
 		GLAHighlightedCollectedFile *highlightedCollectedFile = [[GLAHighlightedCollectedFile alloc] initByEditing:^(id<GLAHighlightedCollectedFileEditing> editor) {
 			(editor.holdingCollectionUUID) = (filesListCollection.UUID);
 			(editor.collectedFileUUID) = (collectedFile.UUID);
+			(editor.projectUUID) = projectUUID;
 		}];
 		[highlightedItems addObject:highlightedCollectedFile];
 	}
@@ -645,9 +675,10 @@
 - (void)keyDown:(NSEvent *)theEvent
 {
 	unichar u = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
-	NSEventModifierFlags modifierFlags = (theEvent.modifierFlags);
+	//NSEventModifierFlags modifierFlags = (theEvent.modifierFlags);
+	NSUInteger modifierFlags = (theEvent.modifierFlags);
 	
-	if (u == NSEnterCharacter || u == NSCarriageReturnCharacter) {
+	if (u == NSCarriageReturnCharacter || u == NSEnterCharacter) {
 		if (modifierFlags & NSCommandKeyMask) {
 			[self revealSelectedFilesInFinder:self];
 		}

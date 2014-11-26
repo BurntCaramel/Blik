@@ -59,10 +59,6 @@
 - (void)loadCollectionsForProjectIfNeeded:(GLAProject *)project;
 - (NSArray *)copyCollectionsForProject:(GLAProject *)project;
 
-//- (NSUUID *)projectUUIDHoldingCollectionWithUUID:(NSUUID *)collectionUUID;
-//- (GLAProject *)projectHoldingCollection:(Collection *)collection;
-- (GLACollection *)collectionWithUUID:(NSUUID *)collectionUUID;
-
 - (BOOL)editCollectionsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionListEditor))block;
 
 - (GLACollection *)createNewCollectionWithName:(NSString *)name type:(NSString *)type color:(GLACollectionColor *)color inProject:(GLAProject *)project;

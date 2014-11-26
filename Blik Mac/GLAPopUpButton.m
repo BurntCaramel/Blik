@@ -312,9 +312,9 @@
 	}
 	
 	NSString *title = (self.titleOfSelectedItem);
-	/*if (!title) {
+	if (!title) {
 		return;
-	 }*/
+	}
 	
 	NSMutableAttributedString *attrString = [NSMutableAttributedString new];
 	[(attrString.mutableString) appendString:title];

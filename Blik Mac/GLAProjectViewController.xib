@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
@@ -34,7 +34,7 @@
                     </connections>
                 </customView>
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" placeholderIntrinsicWidth="312" placeholderIntrinsicHeight="29" translatesAutoresizingMaskIntoConstraints="NO" id="uUN-fG-dyR" customClass="GLATextField">
-                    <rect key="frame" x="18" y="229" width="464" height="32"/>
+                    <rect key="frame" x="18" y="228" width="464" height="32"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="32" id="Yz5-N8-tKB"/>
                     </constraints>
@@ -48,7 +48,7 @@
                     </connections>
                 </textField>
                 <scrollView verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="aK9-xA-IHE">
-                    <rect key="frame" x="0.0" y="38" width="180" height="177"/>
+                    <rect key="frame" x="0.0" y="38" width="200" height="176"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="3UR-hc-b9q">
                         <rect key="frame" x="0.0" y="0.0" width="160" height="177"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -59,7 +59,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
-                                    <tableColumn width="177" minWidth="40" maxWidth="1000" id="oFd-vg-g1H">
+                                    <tableColumn width="197" minWidth="40" maxWidth="1000" id="oFd-vg-g1H">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -73,7 +73,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="34" id="Nwp-Xs-PAf">
-                                                <rect key="frame" x="1" y="1" width="177" height="32"/>
+                                                <rect key="frame" x="1" y="1" width="197" height="32"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aE0-1H-naF">
@@ -110,9 +110,9 @@
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
                     <constraints>
-                        <constraint firstAttribute="height" priority="749" constant="175" id="B9G-tJ-wrx"/>
+                        <constraint firstAttribute="height" priority="250" constant="175" id="B9G-tJ-wrx"/>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="163" id="bAy-Ej-emY"/>
-                        <constraint firstAttribute="width" constant="180" id="yQu-cr-U1i"/>
+                        <constraint firstAttribute="width" constant="200" id="yQu-cr-U1i"/>
                     </constraints>
                     <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="tck-an-PxB">
                         <rect key="frame" x="-100" y="-100" width="223" height="15"/>
@@ -124,7 +124,7 @@
                     </scroller>
                 </scrollView>
                 <scrollView identifier="width" verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="38" horizontalPageScroll="10" verticalLineScroll="38" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="b3Y-jm-1gd">
-                    <rect key="frame" x="200" y="38" width="300" height="175"/>
+                    <rect key="frame" x="210" y="38" width="290" height="174"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="feV-1y-3x9">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="175"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -160,7 +160,7 @@
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="BTJ-R3-LvA" customClass="GLACollectionIndicationButton">
+                                                    <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BTJ-R3-LvA" customClass="GLACollectionIndicationButton">
                                                         <rect key="frame" x="261" y="0.0" width="16" height="36"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="16" id="iAf-ba-H5t"/>
@@ -206,9 +206,9 @@
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
                     <constraints>
-                        <constraint firstAttribute="height" priority="749" constant="175" id="1YL-eX-iqA"/>
+                        <constraint firstAttribute="height" priority="250" constant="175" id="1YL-eX-iqA"/>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="163" id="9Co-2Y-eFL"/>
-                        <constraint firstAttribute="width" constant="300" id="vaW-wj-dTb"/>
+                        <constraint firstAttribute="width" constant="290" id="vaW-wj-dTb"/>
                     </constraints>
                     <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="NMH-6Q-XeS">
                         <rect key="frame" x="-100" y="-100" width="223" height="15"/>
@@ -233,7 +233,7 @@
                 <constraint firstItem="8vi-0s-ZAk" firstAttribute="top" secondItem="aK9-xA-IHE" secondAttribute="bottom" priority="750" constant="8" id="fUN-x8-iVl"/>
                 <constraint firstItem="b3Y-jm-1gd" firstAttribute="top" secondItem="uUN-fG-dyR" secondAttribute="bottom" constant="16" id="kCC-Vv-gHE"/>
                 <constraint firstItem="aK9-xA-IHE" firstAttribute="top" secondItem="uUN-fG-dyR" secondAttribute="bottom" constant="14" id="pkd-ih-1R5"/>
-                <constraint firstItem="uUN-fG-dyR" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="14" id="xJ9-mw-q1z"/>
+                <constraint firstItem="uUN-fG-dyR" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="15" id="xJ9-mw-q1z"/>
             </constraints>
         </customView>
         <viewController title="Collections View Controller" id="raF-W4-b8E" customClass="GLAProjectCollectionsViewController">
@@ -461,7 +461,7 @@
                     </connections>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="419.5" y="72.5"/>
+            <point key="canvasLocation" x="273.5" y="-11.5"/>
         </menu>
         <customView placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="30" id="xFc-GO-dGI" customClass="GLAView">
             <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
@@ -524,7 +524,7 @@
                     </menu>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="567" y="201.5"/>
+            <point key="canvasLocation" x="770" y="44.5"/>
         </menu>
         <customView identifier="collectionsListInstructions" id="Idz-io-wKr">
             <rect key="frame" x="0.0" y="0.0" width="217" height="199"/>

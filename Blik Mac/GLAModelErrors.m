@@ -9,15 +9,14 @@
 #import "GLAModelErrors.h"
 
 
-NSString *GLAModelErrorDomain()
+@implementation GLAModelErrors
+
++ (NSString *)errorDomain
 {
 	NSString *bundleIdentifier = ([NSBundle mainBundle].bundleIdentifier);
 	
 	return [NSString stringWithFormat:@"%@.errorDomain.model", bundleIdentifier];
 }
-
-
-@implementation GLAModelErrors
 
 + (NSError *)errorForMissingRequiredKey:(NSString *)dictionaryKey inJSONFileAtURL:(NSURL *)fileURL
 {
@@ -32,7 +31,20 @@ NSString *GLAModelErrorDomain()
 	  NSLocalizedFailureReasonErrorKey: failureReasonFilledOut
 	  };
 	
-	return [NSError errorWithDomain:GLAModelErrorDomain() code:GLAModelErrorCodeJSONMissingRequiredKey userInfo:errorInfo];
+	return [NSError errorWithDomain:[self errorDomain] code:GLAModelErrorCodeJSONMissingRequiredKey userInfo:errorInfo];
+}
+
++ (NSError *)errorForCannotAccessSecurityScopedURL:(NSURL *)fileURL
+{
+	NSString *descriptionPlaceholder = NSLocalizedString(@"Could not access file URL with path %@.", @"Error description for when security scoped file URL cannot be accessed");
+	NSString *description = [NSString localizedStringWithFormat:descriptionPlaceholder, (fileURL.path)];
+	
+	NSDictionary *errorInfo =
+	@{
+	  NSLocalizedDescriptionKey: description
+	  };
+	
+	return [NSError errorWithDomain:[self errorDomain] code:GLAModelErrorCodeCannotAccessSecurityScopedURL userInfo:errorInfo];
 }
 
 @end

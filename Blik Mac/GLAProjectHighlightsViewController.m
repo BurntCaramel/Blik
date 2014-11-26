@@ -336,7 +336,12 @@
 	
 	
 	NSURL *fileURL = [self fileURLForHighlightedItem:highlightedItem];
-	(openerApplicationCombiner.fileURLs) = [NSSet setWithObject:fileURL];
+	if (fileURL) {
+		(openerApplicationCombiner.fileURLs) = [NSSet setWithObject:fileURL];
+	}
+	else {
+		(openerApplicationCombiner.fileURLs) = nil;
+	}
 	
 	NSURL *preferredApplicationURL = nil;
 	GLACollectedFile *collectedFileForPreferredApplication = (highlightedCollectedFile.applicationToOpenFile);
@@ -541,7 +546,11 @@
 				(cellView.alphaValue) = 0.5;
 			}
 			else {
-				name = (collectedFile.name);
+				NSString *namePossiblyNil = (collectedFile.name);
+				if (namePossiblyNil) {
+					name = namePossiblyNil;
+				}
+				//NSAssert(name != nil, @"Name cannot be nil.");
 			}
 		}
 		
@@ -575,10 +584,10 @@
 	
 	(textField.attributedStringValue) = wholeAttrString;
 	
+	(cellView.needsLayout) = YES;
 	//(textField.preferredMaxLayoutWidth) = (tableColumn.width);
 }
 
-#if 1
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
 	GLAHighlightsTableCellView *cellView = (self.measuringTableCellView);
@@ -592,61 +601,16 @@
 	NSTextField *textField = (cellView.textField);
 	//(textField.preferredMaxLayoutWidth) = (tableColumn.width);
 	(textField.preferredMaxLayoutWidth) = NSWidth(textField.bounds);
-#if 0
-	NSLog(@"textField.intrinsicContentSize %@ %f %f", [textField valueForKey:@"intrinsicContentSize"], (textField.preferredMaxLayoutWidth), (tableColumn.width));
-#endif
 	
 	CGFloat extraPadding = 13.0;
 	
 	return (textField.intrinsicContentSize.height) + extraPadding;
 }
-#endif
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
 	GLAHighlightsTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
-#if 1
 	[self setUpTableCellView:cellView forTableColumn:tableColumn row:row];
-#else
-	(cellView.canDrawSubviewsIntoLayer) = YES;
-	(cellView.alphaValue) = 1.0;
-	
-	GLAHighlightedItem *highlightedItem = (self.highlightedItems)[row];
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-	NSString *name = @"Loading…";
-	
-	if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
-		GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
-		
-		GLACollection *holdingCollection = [pm collectionForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
-		GLACollectedFile *collectedFile = [pm collectedFileForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
-		if (collectedFile) {
-			name = (collectedFile.name);
-			
-			if (collectedFile.isMissing) {
-				(cellView.alphaValue) = 0.5;
-			}
-		}
-		
-		GLACollectionIndicationButton *collectionIndicationButton = (cellView.collectionIndicationButton);
-		(collectionIndicationButton.collection) = holdingCollection;
-	}
-	else {
-		NSAssert(NO, @"highlightedItem not a valid class.");
-	}
-	
-	name = [NSString stringWithFormat:@"%@ %@ %@", name, name, name];
-	
-	(cellView.objectValue) = highlightedItem;
-	
-	if (name) {
-		(cellView.textField.stringValue) = name;
-	}
-	
-	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
-	(cellView.textField.textColor) = (uiStyle.lightTextColor);
-	//(cellView.textField.textColor) = [uiStyle colorForCollectionColor:(collection.color)];
-#endif
 	
 	return cellView;
 }

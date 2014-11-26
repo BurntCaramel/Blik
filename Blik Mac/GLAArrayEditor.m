@@ -61,14 +61,9 @@
 	return self;
 }
 
-- (instancetype)initWithObjects:(NSArray *)objects
-{
-	return [self initWithObjects:objects options:nil];
-}
-
 - (instancetype)init
 {
-	return [self initWithObjects:@[]];
+	return [self initWithObjects:@[] options:nil];
 }
 
 #pragma mark Observers
@@ -186,20 +181,20 @@
 }
 
 
-- (NSIndexSet *)indexesOfChildrenWhoseKeyPath:(NSString *)keyPath hasValue:(id)value
+- (NSIndexSet *)indexesOfChildrenWhoseResultFromVisitor:(id (^)(id child))childVisitor hasValueContainedInSet:(NSSet *)valuesSet
 {
-	return [(self.mutableChildren) indexesOfObjectsPassingTest:^BOOL(id originalObject, NSUInteger idx, BOOL *stop) {
-		id objectValue = [originalObject valueForKeyPath:keyPath];
-		BOOL found = (objectValue != nil) && [objectValue isEqual:value];
+	return [(self.mutableChildren) indexesOfObjectsPassingTest:^BOOL(id child, NSUInteger idx, BOOL *stop) {
+		id objectValue = childVisitor(child);
+		BOOL found = (objectValue != nil) && [valuesSet containsObject:objectValue];
 		return found;
 	}];
 }
 
-- (NSIndexSet *)indexesOfChildrenWhoseKeyPath:(NSString *)keyPath hasValueContainedInSet:(NSSet *)valuesSet
+- (NSIndexSet *)indexesOfChildrenWhoseKey:(NSString *)keyPath hasValue:(id)value
 {
 	return [(self.mutableChildren) indexesOfObjectsPassingTest:^BOOL(id originalObject, NSUInteger idx, BOOL *stop) {
-		id objectValue = [originalObject valueForKeyPath:keyPath];
-		BOOL found = (objectValue != nil) && [valuesSet containsObject:objectValue];
+		id objectValue = [originalObject valueForKey:keyPath];
+		BOOL found = (objectValue != nil) && [objectValue isEqual:value];
 		return found;
 	}];
 }
@@ -221,7 +216,7 @@
 
 - (id)replaceFirstChildWhoseKeyPath:(NSString *)keyPath hasValue:(id)value usingChangeBlock:(id (^)(id originalObject))objectChanger
 {
-	NSIndexSet *indexes = [self indexesOfChildrenWhoseKeyPath:keyPath hasValue:value];
+	NSIndexSet *indexes = [self indexesOfChildrenWhoseKey:keyPath hasValue:value];
 	
 	if (indexes.count == 0) {
 		return nil;
@@ -275,24 +270,32 @@
 	(self.hasChanges) = YES;
 }
 
+// These are only accessed after all changes have been made.
+// So immutable copies are not necessary.
+
 - (NSArray *)addedChildren
 {
-	return [_mutableAddedChildren copy];
+	return _mutableAddedChildren;
 }
 
-- (NSArray *)removeChildren
+- (NSArray *)removedChildren
 {
-	return [_mutableRemovedChildren copy];
+	return _mutableRemovedChildren;
 }
 
 - (NSArray *)replacedChildrenBefore
 {
-	return [_mutableReplacedChildrenBefore copy];
+	return _mutableReplacedChildrenBefore;
 }
 
 - (NSArray *)replacedChildrenAfter
 {
-	return [_mutableReplacedChildrenAfter copy];
+	return _mutableReplacedChildrenAfter;
+}
+
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"[%@ %p; ADDED: %@ REMOVED: %@ REPLACED: %@ WITH: %@]", (self.className), self, (self.addedChildren), (self.removedChildren), (self.replacedChildrenBefore), (self.replacedChildrenAfter)];
 }
 
 @end
@@ -315,6 +318,15 @@
 		_mutableConstrainers = [NSMutableArray new];
 	}
 	return self;
+}
+
+- (instancetype)copyWithZone:(NSZone *)zone
+{
+	GLAArrayEditorOptions *copy = [[[self class] allocWithZone:zone] init];
+	(copy.mutableObservers) = [(self.mutableObservers) mutableCopy];
+	(copy.mutableConstrainers) = [(self.mutableConstrainers) mutableCopy];
+	
+	return copy;
 }
 
 - (void)addObserver:(id<GLAArrayObserving>)observer

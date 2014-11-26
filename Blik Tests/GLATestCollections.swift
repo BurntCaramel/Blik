@@ -67,6 +67,16 @@ class GLATestCollections: XCTestCase {
 	{
 		let collectedFile = GLACollectedFile(fileURL: NSURL(fileURLWithPath: NSHomeDirectory()))
 		XCTAssertNotNil(collectedFile, "Collected file was created")
+		
+		let bookmarkData = collectedFile.bookmarkData
+		XCTAssertNotNil(bookmarkData, "Bookmark data")
+		
+		let JSONDictionary = MTLJSONAdapter.JSONDictionaryFromModel(collectedFile)
+		XCTAssertNotNil(JSONDictionary, "JSON dictionary is not nil")
+		XCTAssertNotNil(JSONDictionary["bookmarkData"], "Has 'bookmarkData' JSON key")
+		
+		let isValidJSON = NSJSONSerialization.isValidJSONObject(JSONDictionary)
+		XCTAssertTrue(isValidJSON, "JSON dictionary is valid")
 	}
 	
 	func testCreateHighlightedCollectedItem()

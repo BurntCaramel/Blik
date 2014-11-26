@@ -26,6 +26,8 @@
 	[super awakeFromNib];
 	
 	(self.wantsLayer) = YES;
+	
+	//(self.needsLayout) = YES; // Required by OS X Yosemite, otherwise height is zero.
 }
 
 - (BOOL)wantsUpdateLayer
@@ -71,14 +73,13 @@
 	
 	CGRect viewBounds = (self.bounds);
 	CGFloat diameter = (self.diameter);
-	//(dotLayer.bounds) = CGRectMake((NSWidth(viewBounds) - diameter) / 2.0, (NSHeight(viewBounds) - diameter) / 2.0, diameter, diameter);
+	
 	(dotLayer.bounds) = CGRectMake(0.0, 0.0, diameter, diameter);
 	
 	(dotLayer.position) = CGPointMake((NSWidth(viewBounds) - diameter) / 2.0, (NSHeight(viewBounds) - diameter) / 2.0 + (self.verticalOffsetDown));
 	(dotLayer.anchorPoint) = CGPointMake(0.0, 0.0);
 	
 	(dotLayer.cornerRadius) = diameter / 2.0;
-	//(layer.anchorPoint) = CGPointMake(0.5, 0.5);
 }
 
 - (void)drawRect:(NSRect)dirtyRect

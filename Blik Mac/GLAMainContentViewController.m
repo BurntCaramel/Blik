@@ -492,11 +492,13 @@
 - (void)addNewCollectionViewControllerDidConfirmCreatingNotification:(NSNotification *)note
 {
 	GLAAddNewCollectionViewController *addNewCollectionViewController = (note.object);
-	GLACollection *collection = (note.userInfo)[@"collection"];
+	NSDictionary *userInfo = (note.userInfo);
+	GLACollection *collection = userInfo[@"collection"];
+	GLACollection *project = userInfo[@"project"];
 	
 	id<GLAMainContentViewControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
-		[delegate mainContentViewController:self addNewCollectionViewController:addNewCollectionViewController didConfirmCreatingCollection:collection];
+		[delegate mainContentViewController:self addNewCollectionViewController:addNewCollectionViewController didConfirmCreatingCollection:collection inProject:project];
 	}
 }
 

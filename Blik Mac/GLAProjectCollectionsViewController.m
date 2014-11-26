@@ -432,7 +432,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Button title to delete collection.")];
 	[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title to cancel deleting collection.")];
 	(alert.messageText) = NSLocalizedString(@"Delete the collection?", @"Message for deleting a collection.");
-	(alert.informativeText) = NSLocalizedString(@"The collection will permanently deleted and not able to be restored.", @"Informative text for deleting a collection.");
+	(alert.informativeText) = NSLocalizedString(@"If you wish to restore the collections and its contents you must do so manually.", @"Informative text for deleting a collection.");
 	(alert.alertStyle) = NSWarningAlertStyle;
 	
 	[alert beginSheetModalForWindow:(self.view.window) completionHandler:^(NSModalResponse returnCode) {

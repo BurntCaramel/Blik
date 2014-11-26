@@ -7,12 +7,10 @@
 //
 
 #import "GLACollectedFile.h"
+#import "GLAModelErrors.h"
 
 
 @interface GLACollectedFile ()
-{
-	NSData *_bookmarkData;
-}
 
 @property(readwrite, nonatomic) NSURL *URL;
 
@@ -23,6 +21,8 @@
 @property(readwrite, nonatomic) BOOL isExecutable;
 @property(readwrite, copy, nonatomic) NSString *name;
 
+@property(readwrite, nonatomic) BOOL wasCreatedFromBookmarkData;
+@property(nonatomic) NSData *sourceBookmarkData;
 @property(readwrite, nonatomic) NSData *bookmarkData;
 
 @end
@@ -31,18 +31,11 @@
 
 - (instancetype)initWithFileURL:(NSURL *)URL
 {
+	NSParameterAssert(URL != nil);
+	
 	self = [super init];
 	if (self) {
-		_URL = URL;
-	}
-	return self;
-}
-
-- (instancetype)initWithDictionary:(NSDictionary *)dictionaryValue error:(NSError *__autoreleasing *)error
-{
-	self = [super initWithDictionary:dictionaryValue error:error];
-	if (self) {
-		
+		_URL = [URL copy];
 	}
 	return self;
 }
@@ -57,7 +50,7 @@
 - (BOOL)isEqual:(id)object
 {
 	if (self == object) return YES;
-	if (![object isKindOfClass:self.class]) return NO;
+	if (![object isKindOfClass:(self.class)]) return NO;
 	
 	GLACollectedFile *other = object;
 	return [(self.URL) isEqual:(other.URL)];
@@ -112,32 +105,76 @@
 
 - (void)updateInformationFromURLResourceValues:(NSDictionary *)resourceValues
 {
-	(self.isDirectory) = [[NSNumber numberWithBool:YES] isEqual:resourceValues[NSURLIsDirectoryKey]];
-	(self.isExecutable) = [[NSNumber numberWithBool:YES] isEqual:resourceValues[NSURLIsExecutableKey]];
+	(self.isDirectory) = [@YES isEqual:resourceValues[NSURLIsDirectoryKey]];
+	(self.isExecutable) = [@YES isEqual:resourceValues[NSURLIsExecutableKey]];
 	(self.name) = resourceValues[NSURLLocalizedNameKey];
 }
 
-- (BOOL)updateInformationWithError:(NSError *__autoreleasing *)error
+- (BOOL)updateInformationApartFromKeys:(NSArray *)keysToExclude error:(NSError *__autoreleasing *)outError
 {
 	NSURL *URL = (self.URL);
+	BOOL wasCreatedFromBookmarkData = (self.wasCreatedFromBookmarkData);
 	NSArray *resourceValueKeys = [[self class] coreResourceValueKeys];
-	NSDictionary *resourceValues = [URL resourceValuesForKeys:resourceValueKeys error:error];
-	if (!resourceValues) {
-		return NO;
+	
+	if (keysToExclude) {
+		NSMutableArray *resourceValueKeysMutable = [resourceValueKeys mutableCopy];
+		[resourceValueKeysMutable removeObjectsInArray:keysToExclude];
+		if ((resourceValueKeysMutable.count) == 0) {
+			return YES;
+		}
+		
+		resourceValueKeys = resourceValueKeysMutable;
 	}
-	[self updateInformationFromURLResourceValues:resourceValues];
 	
-	BOOL isReachable = [URL checkResourceIsReachableAndReturnError:error];
-	(self.isMissing) = !isReachable;
+	if (wasCreatedFromBookmarkData) {
+		BOOL canAccess = [URL startAccessingSecurityScopedResource];
+		if (!canAccess) {
+			*outError = [GLAModelErrors errorForCannotAccessSecurityScopedURL:URL];
+			return NO;
+		}
+	}
 	
-	return NO;
+	NSDictionary *resourceValues = [URL resourceValuesForKeys:resourceValueKeys error:outError];
+	if (resourceValues) {
+		[self updateInformationFromURLResourceValues:resourceValues];
+		
+		NSError *error = nil;
+		BOOL isReachable = [URL checkResourceIsReachableAndReturnError:&error];
+		(self.isMissing) = !isReachable;
+	}
+
+	if (wasCreatedFromBookmarkData) {
+		[URL stopAccessingSecurityScopedResource];
+	}
+	
+	return (resourceValues != nil);
 }
 
-- (NSData *)bookmarkDataWithError:(NSError *__autoreleasing *)error
+- (BOOL)updateInformationWithError:(NSError *__autoreleasing *)outError
+{
+	return [self updateInformationApartFromKeys:nil error:outError];
+}
+
+- (NSData *)bookmarkDataWithError:(NSError *__autoreleasing *)outError
 {
 	NSURL *URL = (self.URL);
+	BOOL wasCreatedFromBookmarkData = (self.wasCreatedFromBookmarkData);
+	
+	if (wasCreatedFromBookmarkData) {
+		BOOL canAccess = [URL startAccessingSecurityScopedResource];
+		if (!canAccess) {
+			*outError = [GLAModelErrors errorForCannotAccessSecurityScopedURL:URL];
+			return nil;
+		}
+	}
 	NSArray *resourceValueKeys = [[self class] coreResourceValueKeys];
-	return [URL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys:resourceValueKeys relativeToURL:nil error:error];
+	NSData *bookmarkData = [URL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys:resourceValueKeys relativeToURL:nil error:outError];
+	
+	if (wasCreatedFromBookmarkData) {
+		[URL stopAccessingSecurityScopedResource];
+	}
+	
+	return bookmarkData;
 }
 
 - (NSData *)bookmarkData
@@ -151,15 +188,23 @@
 	NSError *error = nil;
 	BOOL isValid = [self validateBookmarkData:&bookmarkData updateProperties:YES error:&error];
 	if (!isValid) {
-		_bookmarkData = nil;
+		(self.wasCreatedFromBookmarkData) = NO;
+		//(self.sourceBookmarkData) = nil;
 		return;
 	}
 	
-	_bookmarkData = bookmarkData;
+	//(self.sourceBookmarkData) = bookmarkData;
+	(self.wasCreatedFromBookmarkData) = YES;
+	
+	if (self.isMissing) {
+		return;
+	}
 	
 	NSArray *resourceValueKeys = [[self class] coreResourceValueKeys];
 	NSDictionary *resourceValues = [NSURL resourceValuesForKeys:resourceValueKeys fromBookmarkData:bookmarkData];
 	[self updateInformationFromURLResourceValues:resourceValues];
+	
+	[self updateInformationApartFromKeys:[resourceValues allKeys] error:&error];
 }
 
 #if 1

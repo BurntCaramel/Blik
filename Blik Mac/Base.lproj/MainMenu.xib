@@ -355,7 +355,7 @@ DQ
                             </menuItem>
                             <menuItem title="Add Contacts Collection…" hidden="YES" keyEquivalent="C" id="McO-7U-HxW"/>
                             <menuItem isSeparatorItem="YES" id="igl-0Q-9Ql"/>
-                            <menuItem title="Change Application to Open Files of Type…" id="mBU-GE-fzv">
+                            <menuItem title="Change Preferred Applications…" id="mBU-GE-fzv">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                         </items>

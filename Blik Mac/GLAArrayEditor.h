@@ -18,16 +18,27 @@
 
 // Designated init
 - (instancetype)initWithObjects:(NSArray *)objects options:(GLAArrayEditorOptions *)options;
-- (instancetype)initWithObjects:(NSArray *)objects;
+
 - (instancetype)init;
 
-// Use this method to work with changes easily, and notify observers of changes.
+// Use this method to notify observers and work with changes easily.
 - (GLAArrayEditorChanges *)changesMadeInBlock:(void (^)(id<GLAArrayEditing> arrayEditor))editorBlock;
 
 @property(readonly, copy, nonatomic) NSArray *observers;
 @property(readonly, copy, nonatomic) NSArray *constrainers;
 
 - (NSArray *)useConstrainersToFilterPotentialChildren:(NSArray *)potentialChildren;
+
+@end
+
+
+@interface GLAArrayEditorOptions : NSObject <NSCopying>
+
+- (void)addObserver:(id<GLAArrayObserving>)observer;
+- (void)addConstrainer:(id<GLAArrayConstraining>)constrainer;
+
+@property(readonly, copy, nonatomic) NSArray *observers;
+@property(readonly, copy, nonatomic) NSArray *constrainers;
 
 @end
 
@@ -66,16 +77,5 @@
 @protocol GLAArrayConstraining <GLAArrayObserving>
 
 - (NSArray *)array:(id<GLAArrayInspecting>)array filterPotentialChildren:(NSArray *)potentialChildren;
-
-@end
-
-
-@interface GLAArrayEditorOptions : NSObject
-
-- (void)addObserver:(id<GLAArrayObserving>)observer;
-- (void)addConstrainer:(id<GLAArrayConstraining>)constrainer;
-
-@property(readonly, copy, nonatomic) NSArray *observers;
-@property(readonly, copy, nonatomic) NSArray *constrainers;
 
 @end

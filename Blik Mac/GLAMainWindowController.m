@@ -452,9 +452,12 @@
 	[self editProject:project];
 }
 
-- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewController:(GLAAddNewCollectionViewController *)addNewCollectionViewController didConfirmCreatingCollection:(GLACollection *)collection
+- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewController:(GLAAddNewCollectionViewController *)addNewCollectionViewController didConfirmCreatingCollection:(GLACollection *)collection inProject:(GLAProject *)project
 {
-	[self goToPreviousSection];
+	GLAMainContentEditProjectSection *editProjectSection = [GLAMainContentEditProjectSection editProjectSectionWithProject:project previousSection:nil];
+	GLAMainContentEditCollectionSection *editCollectionSection = [GLAMainContentEditCollectionSection editCollectionSectionWithCollection:collection previousSection:editProjectSection];
+	
+	[self goToSection:editCollectionSection];
 }
 
 #pragma mark Main Navigation

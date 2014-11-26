@@ -131,7 +131,7 @@
 	
 	GLACollection *collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilesList color:color inProject:project];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAAddNewCollectionViewControllerDidConfirmCreatingNotification object:self userInfo:@{@"collection": collection}];
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAAddNewCollectionViewControllerDidConfirmCreatingNotification object:self userInfo:@{@"collection": collection, @"project": project}];
 }
 
 @end

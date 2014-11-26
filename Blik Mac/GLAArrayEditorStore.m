@@ -12,6 +12,7 @@
 @interface GLAArrayEditorStore ()
 
 @property(nonatomic) GLAArrayEditor *arrayEditor;
+@property(nonatomic) GLAArrayEditorOptions *arrayEditorOptions;
 
 @property(nonatomic, readwrite) BOOL loading;
 @property(nonatomic, readwrite) BOOL finishedLoading;
@@ -23,7 +24,7 @@
 
 @implementation GLAArrayEditorStore
 
-- (instancetype)initWithDelegate:(id<GLAArrayEditorStoreDelegate>)delegate modelClass:(Class)modelClass JSONFileURL:(NSURL *)JSONFileURL JSONDictionaryKey:(NSString *)JSONKey userInfo:(NSDictionary *)userInfo
+- (instancetype)initWithDelegate:(id<GLAArrayEditorStoreDelegate>)delegate modelClass:(Class)modelClass JSONFileURL:(NSURL *)JSONFileURL JSONDictionaryKey:(NSString *)JSONKey userInfo:(NSDictionary *)userInfo arrayEditorOptions:(GLAArrayEditorOptions *)arrayEditorOptions
 {
 	self = [super init];
 	if (self) {
@@ -32,6 +33,7 @@
 		_JSONFileURL = [JSONFileURL copy];
 		_JSONDictionaryKeyForArray = [JSONKey copy];
 		_userInfo = [userInfo copy];
+		_arrayEditorOptions = arrayEditorOptions ? [arrayEditorOptions copy] : [GLAArrayEditorOptions new];
 	}
 	return self;
 }
@@ -264,7 +266,7 @@
 		return NO;
 	}
 	
-	GLAArrayEditorOptions *arrayEditorOptions = [GLAArrayEditorOptions new];
+	GLAArrayEditorOptions *arrayEditorOptions = (self.arrayEditorOptions);
 	[self setUpArrayEditorOptions:arrayEditorOptions];
 	
 	(self.loading) = YES;

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		984EA831E1971325C5DB4783 /* libPods-BlikTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 10BFA027B9AC2E4B2BAD65B4 /* libPods-BlikTests.a */; };
-		ACAA15FDD8554126A606F258 /* libPods-Blik.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 659FE625B2454CA095734DA4 /* libPods-Blik.a */; };
 		B20362C11A0779F3007169C2 /* GLACollectedFilesSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = B20362C01A0779F3007169C2 /* GLACollectedFilesSetting.m */; };
 		B20362C41A077C87007169C2 /* GLAFileOpenerApplicationCombiner.m in Sources */ = {isa = PBXBuildFile; fileRef = B20362C31A077C87007169C2 /* GLAFileOpenerApplicationCombiner.m */; };
 		B20362C81A0A3D2E007169C2 /* GLAProjectInstructionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B20362C71A0A3D2E007169C2 /* GLAProjectInstructionsViewController.m */; };
@@ -68,6 +67,8 @@
 		B292453A19E4058A00DD30CB /* GLANoNowProjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B292453819E4058A00DD30CB /* GLANoNowProjectViewController.xib */; };
 		B29F8DDA1980D45400F58F59 /* NSValueTransformer+GLAModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B29F8DD91980D45400F58F59 /* NSValueTransformer+GLAModel.m */; };
 		B29F8DDD1981139300F58F59 /* GLAReminderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B29F8DDC1981139300F58F59 /* GLAReminderManager.m */; };
+		B2A8FCB21A23BFB00002108E /* libPods-Blik-Mantle.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B2A8FCB01A23BFB00002108E /* libPods-Blik-Mantle.a */; };
+		B2A8FCB31A23BFB00002108E /* libPods-Blik-pop.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B2A8FCB11A23BFB00002108E /* libPods-Blik-pop.a */; };
 		B2ADDBD21963DA2E0014EF84 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */; };
 		B2ADDBDC1963DA2E0014EF84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBDA1963DA2E0014EF84 /* InfoPlist.strings */; };
 		B2ADDBDE1963DA2E0014EF84 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ADDBDD1963DA2E0014EF84 /* main.m */; };
@@ -232,6 +233,8 @@
 		B29F8DD91980D45400F58F59 /* NSValueTransformer+GLAModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSValueTransformer+GLAModel.m"; sourceTree = "<group>"; };
 		B29F8DDB1981139300F58F59 /* GLAReminderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAReminderManager.h; sourceTree = "<group>"; };
 		B29F8DDC1981139300F58F59 /* GLAReminderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAReminderManager.m; sourceTree = "<group>"; };
+		B2A8FCB01A23BFB00002108E /* libPods-Blik-Mantle.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Blik-Mantle.a"; path = "../../../Library/Developer/Xcode/DerivedData/Blik-ecafheqcwuiabcajggtdmnblcmme/Build/Products/Debug/libPods-Blik-Mantle.a"; sourceTree = "<group>"; };
+		B2A8FCB11A23BFB00002108E /* libPods-Blik-pop.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Blik-pop.a"; path = "../../../Library/Developer/Xcode/DerivedData/Blik-ecafheqcwuiabcajggtdmnblcmme/Build/Products/Debug/libPods-Blik-pop.a"; sourceTree = "<group>"; };
 		B2ADDBCE1963DA2E0014EF84 /* Blik.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blik.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		B2ADDBD41963DA2E0014EF84 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -306,7 +309,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2ADDBD21963DA2E0014EF84 /* Cocoa.framework in Frameworks */,
-				ACAA15FDD8554126A606F258 /* libPods-Blik.a in Frameworks */,
+				B2A8FCB21A23BFB00002108E /* libPods-Blik-Mantle.a in Frameworks */,
+				B2A8FCB31A23BFB00002108E /* libPods-Blik-pop.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -546,6 +550,8 @@
 		B2ADDBD01963DA2E0014EF84 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B2A8FCB01A23BFB00002108E /* libPods-Blik-Mantle.a */,
+				B2A8FCB11A23BFB00002108E /* libPods-Blik-pop.a */,
 				E240A36F1A0DC6DE0043AE93 /* libPods-BlikTests-Mantle.a */,
 				B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */,
 				B2ADDBF01963DA2E0014EF84 /* XCTest.framework */,
@@ -1105,101 +1111,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		B20763401A123332003C5922 /* Release with Symbols */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				SDKROOT = macosx;
-				STRIP_INSTALLED_PRODUCT = NO;
-			};
-			name = "Release with Symbols";
-		};
-		B20763411A123332003C5922 /* Release with Symbols */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DB9B4E5529B5EA7EDC5EF68E /* Pods-Blik.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
-				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
-				CODE_SIGN_ENTITLEMENTS = Blik.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INFOPLIST_FILE = "Blik Mac/Blik-Info.plist";
-				PRODUCT_NAME = Blik;
-				WRAPPER_EXTENSION = app;
-			};
-			name = "Release with Symbols";
-		};
-		B20763421A123332003C5922 /* Release with Symbols */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1EA2B9BA7A505AD231D594E9 /* Pods-BlikTests.release.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ENABLE_MODULES = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(inherited)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
-				INFOPLIST_FILE = "Blik Tests/BlikTests-Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-framework",
-					"\"Foundation\"",
-				);
-				PRODUCT_NAME = BlikTests;
-				SWIFT_OBJC_BRIDGING_HEADER = "Blik Tests/BlikTests-Bridging-Header.h";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Blik.app/Contents/MacOS/Blik";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = "Release with Symbols";
-		};
-		B20763431A123332003C5922 /* Release with Symbols */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "QuickLook Preview/QuickLook Preview-Prefix.pch";
-				INFOPLIST_FILE = "QuickLook Preview/QuickLook Preview-Info.plist";
-				MACH_O_TYPE = mh_execute;
-				PRODUCT_NAME = "com.burntcaramel.Blik.Mac.$(TARGET_NAME:rfc1034identifier)";
-				WRAPPER_EXTENSION = xpc;
-			};
-			name = "Release with Symbols";
-		};
 		B2ADDBFD1963DA2E0014EF84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1281,10 +1192,16 @@
 				CODE_SIGN_ENTITLEMENTS = Blik.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
 				INFOPLIST_FILE = "Blik Mac/Blik-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Blik-ecafheqcwuiabcajggtdmnblcmme/Build/Products/Debug",
+				);
 				PRODUCT_NAME = Blik;
+				SDKROOT = macosx10.9;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1304,7 +1221,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Blik Mac/Blik-Prefix.pch";
 				INFOPLIST_FILE = "Blik Mac/Blik-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Blik-ecafheqcwuiabcajggtdmnblcmme/Build/Products/Debug",
+				);
 				PRODUCT_NAME = Blik;
+				SDKROOT = macosx10.9;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1408,7 +1330,6 @@
 			buildConfigurations = (
 				B2ADDBFD1963DA2E0014EF84 /* Debug */,
 				B2ADDBFE1963DA2E0014EF84 /* Release */,
-				B20763401A123332003C5922 /* Release with Symbols */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1418,7 +1339,6 @@
 			buildConfigurations = (
 				B2ADDC001963DA2E0014EF84 /* Debug */,
 				B2ADDC011963DA2E0014EF84 /* Release */,
-				B20763411A123332003C5922 /* Release with Symbols */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1428,7 +1348,6 @@
 			buildConfigurations = (
 				B2ADDC031963DA2E0014EF84 /* Debug */,
 				B2ADDC041963DA2E0014EF84 /* Release */,
-				B20763421A123332003C5922 /* Release with Symbols */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1438,7 +1357,6 @@
 			buildConfigurations = (
 				B2F0DBBC19923887001AB5EE /* Debug */,
 				B2F0DBBD19923887001AB5EE /* Release */,
-				B20763431A123332003C5922 /* Release with Symbols */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
