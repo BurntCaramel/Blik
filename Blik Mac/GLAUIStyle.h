@@ -36,7 +36,6 @@
 @property(nonatomic) NSColor *secondaryButtonTextColor;
 
 @property(nonatomic) NSColor *lightTextColor;
-@property(nonatomic) NSColor *lightInstructionalTextColor;
 @property(nonatomic) NSColor *lightTextDisabledColor;
 @property(strong, nonatomic) NSColor *(^lightTextColorAtLevelBlock)(GLAUIStyle *style, NSUInteger level);
 - (NSColor *)lightTextColorAtLevel:(NSUInteger)level;
@@ -46,6 +45,9 @@
 
 @property(nonatomic) NSColor *editedTextColor;
 @property(nonatomic) NSColor *editedTextBackgroundColor;
+
+@property(nonatomic) NSColor *instructionsTextColor;
+@property(nonatomic) NSColor *instructionsHeadingColor;
 
 @property(nonatomic) NSColor *roundedToggleBorderColor;
 @property(nonatomic) NSColor *roundedToggleInsideColor;

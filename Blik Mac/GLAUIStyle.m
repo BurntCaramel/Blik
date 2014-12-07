@@ -60,8 +60,6 @@
 		(style.secondaryButtonTextColor) = whiteAlmost;
 		
 		(style.lightTextColor) =  whiteAlmost;
-		(style.lightInstructionalTextColor) = whiteAlmost;
-		//(style.lightInstructionalTextColor) = [whiteAlmost blendedColorWithFraction:8.0/32.0 ofColor:grayExtraDark];
 		(style.lightTextDisabledColor) = whiteAlmost30;
 		(style.lightTextColorAtLevelBlock) = ^ (GLAUIStyle *style, NSUInteger level) {
 			// Reduce by 1/10 for each level
@@ -77,6 +75,9 @@
 		
 		(style.editedTextColor) = grayDark;
 		(style.editedTextBackgroundColor) = whiteAlmost;
+		
+		(style.instructionsTextColor) = whiteAlmost;
+		(style.instructionsHeadingColor) = activeYellow;
 		
 		(style.roundedToggleBorderColor) = whiteAlmost;
 		(style.roundedToggleInsideColor) = whiteAlmost;
@@ -215,7 +216,7 @@
 
 - (void)prepareInstructionalTextLabel:(NSTextField *)textField
 {
-	(textField.textColor) = (self.lightInstructionalTextColor);
+	(textField.textColor) = (self.instructionsTextColor);
 	
 	NSMutableAttributedString *mutableAttributedString = [(textField.attributedStringValue) mutableCopy];
 	NSParagraphStyle *paragraphStyle = [mutableAttributedString attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:NULL];
@@ -230,7 +231,7 @@
 
 - (void)prepareInstructionalHeadingLabel:(NSTextField *)textField
 {
-	(textField.textColor) = (self.lightInstructionalTextColor);
+	(textField.textColor) = (self.instructionsHeadingColor);
 }
 
 - (void)prepareOutlinedTextField:(NSTextField *)textField
