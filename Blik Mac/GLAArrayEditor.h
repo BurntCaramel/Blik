@@ -22,7 +22,7 @@
 - (instancetype)init;
 
 // Use this method to notify observers and work with changes easily.
-- (GLAArrayEditorChanges *)changesMadeInBlock:(void (^)(id<GLAArrayEditing> arrayEditor))editorBlock;
+- (GLAArrayEditorChanges *)changesMadeInBlock:(GLAArrayEditingBlock)editorBlock;
 
 @property(readonly, copy, nonatomic) NSArray *observers;
 @property(readonly, copy, nonatomic) NSArray *constrainers;
@@ -64,15 +64,6 @@
 
 @end
 
-/*
-@protocol GLAArrayIndexing <GLAArrayObserving>
-
-- (BOOL)supportsKeyPath:(NSString *)keyPath;
-
-- (NSIndexSet *)indexesOfChildrenWhoseKeyPath:(NSString *)keyPath hasValue:(id)value;
-
-@end
- */
 
 @protocol GLAArrayConstraining <GLAArrayObserving>
 

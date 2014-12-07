@@ -28,6 +28,21 @@
 @end
 
 
+
+@protocol GLAHighlightedCollectedItem <NSObject>
+
+@property(readonly, nonatomic) NSUUID *holdingCollectionUUID;
+
+@end
+
+@protocol GLAHighlightedCollectedItemEditing <GLAHighlightedItemEditing>
+
+@property(readwrite, nonatomic) NSUUID *holdingCollectionUUID;
+
+@end
+
+
+
 #if 0
 @protocol GLAHighlightedCollectionEditing <GLAHighlightedItemEditing>
 
@@ -47,18 +62,16 @@
 #endif
 
 
-@protocol GLAHighlightedCollectedFileEditing <GLAHighlightedItemEditing>
+@protocol GLAHighlightedCollectedFileEditing <GLAHighlightedCollectedItemEditing>
 
-@property(readwrite, nonatomic) NSUUID *holdingCollectionUUID;
 @property(readwrite, nonatomic) NSUUID *collectedFileUUID;
 
 @property(readwrite, nonatomic) GLACollectedFile *applicationToOpenFile;
 
 @end
 
-@interface GLAHighlightedCollectedFile : GLAHighlightedItem
+@interface GLAHighlightedCollectedFile : GLAHighlightedItem <GLAHighlightedCollectedItem>
 
-@property(readonly, nonatomic) NSUUID *holdingCollectionUUID;
 @property(readonly, nonatomic) NSUUID *collectedFileUUID;
 
 @property(readonly, nonatomic) GLACollectedFile *applicationToOpenFile;

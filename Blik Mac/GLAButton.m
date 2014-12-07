@@ -76,13 +76,28 @@
 + (void)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView
 {
 	NSColor *backgroundColor = [self backgroundColorForDrawingGLAStyledButton:buttonCell];
+	
 	if (backgroundColor) {
-		[backgroundColor setFill];
-		
 		CGFloat backgroundInsetXAmount = (buttonCell.backgroundInsetXAmount);
 		CGFloat backgroundInsetYAmount = (buttonCell.backgroundInsetYAmount);
 		CGRect backgroundRect = CGRectInset(frame, backgroundInsetXAmount, backgroundInsetYAmount);
-		[[NSBezierPath bezierPathWithRoundedRect:backgroundRect xRadius:4.0 yRadius:4.0] fill];
+#if 0
+		if (buttonCell.hasSecondaryStyle) {
+			backgroundRect = CGRectInset(backgroundRect, 0.5, 0.5);
+			
+			[backgroundColor setStroke];
+			NSBezierPath *bezierPath = [NSBezierPath bezierPathWithRoundedRect:backgroundRect xRadius:4.0 yRadius:4.0];
+			(bezierPath.lineWidth) = 1.0;
+			[bezierPath stroke];
+		}
+		else {
+#endif
+			[backgroundColor setFill];
+			NSBezierPath *bezierPath = [NSBezierPath bezierPathWithRoundedRect:backgroundRect xRadius:4.0 yRadius:4.0];
+			[bezierPath fill];
+#if 0
+		}
+#endif
 	}
 }
 
@@ -511,6 +526,11 @@
 	}
 	
 	if (backgroundColor) {
+		/*NSLog(@"%@ MOUSE DOWN FLAGS", @(self.mouseDownFlags));
+		if ((self.mouseDownFlags) & NSLeftMouseDownMask) {
+			backgroundColor = [backgroundColor colorWithAlphaComponent:0.7];
+		}*/
+		
 		if (!(self.isEnabled)) {
 			return nil;
 			//return [backgroundColor colorWithAlphaComponent:(backgroundColor.alphaComponent) * 0.12];

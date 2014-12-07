@@ -36,13 +36,13 @@
 @property(strong, nonatomic) IBOutlet GLAProjectHighlightsViewController *highlightsViewController;
 //@property(strong, nonatomic) IBOutlet GLAProjectPlanViewController *planViewController;
 
-@property(strong, nonatomic) IBOutlet NSLayoutConstraint *itemsViewLeadingConstraint;
-@property(strong, nonatomic) IBOutlet NSLayoutConstraint *itemsViewHeightConstraint;
-@property(strong, nonatomic) IBOutlet NSLayoutConstraint *itemsViewBottomConstraint;
+@property(strong, nonatomic) IBOutlet NSLayoutConstraint *collectionsViewLeadingConstraint;
+@property(strong, nonatomic) IBOutlet NSLayoutConstraint *collectionsViewHeightConstraint;
+@property(strong, nonatomic) IBOutlet NSLayoutConstraint *collectionsViewBottomConstraint;
 
-@property(strong, nonatomic) IBOutlet NSLayoutConstraint *planViewTrailingConstraint;
-@property(strong, nonatomic) IBOutlet NSLayoutConstraint *planViewHeightConstraint;
-@property(strong, nonatomic) IBOutlet NSLayoutConstraint *planViewBottomConstraint;
+@property(strong, nonatomic) IBOutlet NSLayoutConstraint *highlightsViewTrailingConstraint;
+@property(strong, nonatomic) IBOutlet NSLayoutConstraint *highlightsViewHeightConstraint;
+@property(strong, nonatomic) IBOutlet NSLayoutConstraint *highlightsViewBottomConstraint;
 
 @property(strong, nonatomic) IBOutlet GLAProjectActionsBarController *actionsBarController;
 @property(strong, nonatomic) IBOutlet GLAView *actionsBarHolder;

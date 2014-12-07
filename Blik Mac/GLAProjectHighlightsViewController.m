@@ -77,17 +77,17 @@
 	(holderView.translatesAutoresizingMaskIntoConstraints) = NO;
 	
 	GLAProjectViewController *projectViewController = (self.parentViewController);
-	NSLayoutConstraint *planViewTrailingConstraint = (projectViewController.planViewTrailingConstraint);
-	NSLayoutConstraint *planViewBottomConstraint = (projectViewController.planViewBottomConstraint);
+	NSLayoutConstraint *planViewTrailingConstraint = (projectViewController.highlightsViewTrailingConstraint);
+	NSLayoutConstraint *planViewBottomConstraint = (projectViewController.highlightsViewBottomConstraint);
 	
 	[projectViewController wrapChildViewKeepingOutsideConstraints:scrollView withView:holderView constraintVisitor:^ (NSLayoutConstraint *oldConstraint, NSLayoutConstraint *newConstraint) {
 		if (oldConstraint == planViewTrailingConstraint) {
 			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"trailing" forChildView:holderView];
-			(projectViewController.planViewTrailingConstraint) = newConstraint;
+			(projectViewController.highlightsViewTrailingConstraint) = newConstraint;
 		}
 		else if (oldConstraint == planViewBottomConstraint) {
 			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"bottom" forChildView:holderView];
-			(projectViewController.planViewBottomConstraint) = newConstraint;
+			(projectViewController.highlightsViewBottomConstraint) = newConstraint;
 		}
 	}];
 	
@@ -321,7 +321,7 @@
 		return nil;
 	}
 	
-	return (collectedFile.URL);
+	return (collectedFile.filePathURL);
 }
 
 - (void)updateOpenerApplicationsUIMenu
@@ -346,7 +346,7 @@
 	NSURL *preferredApplicationURL = nil;
 	GLACollectedFile *collectedFileForPreferredApplication = (highlightedCollectedFile.applicationToOpenFile);
 	if (collectedFileForPreferredApplication) {
-		preferredApplicationURL = (collectedFileForPreferredApplication.URL);
+		preferredApplicationURL = (collectedFileForPreferredApplication.filePathURL);
 	}
 
 	NSMenu *openerApplicationMenu = (self.openerApplicationMenu);
@@ -374,6 +374,16 @@
 	}];
 }
 
+- (void)openCollectedFile:(GLACollectedFile *)collectedFile withApplication:(NSURL *)applicationURL
+{
+	NSURL *fileURL = (collectedFile.filePathURL);
+	if (!fileURL) {
+		return;
+	}
+	
+	[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL useSecurityScope:YES];
+}
+
 - (IBAction)openClickedItem:(id)sender
 {
 	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
@@ -383,27 +393,24 @@
 	
 	GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 	
-	NSURL *fileURL = [self fileURLForHighlightedItem:highlightedCollectedFile];
-	if (!fileURL) {
+	GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
+	NSLog(@"openClickedItem %@", collectedFile);
+	if (!collectedFile) {
 		return;
 	}
-		
+	
 	NSURL *applicationURL = nil;
 	GLACollectedFile *applicationToOpenFileCollected = (highlightedCollectedFile.applicationToOpenFile);
 	if (applicationToOpenFileCollected) {
-		applicationURL = (applicationToOpenFileCollected.URL);
+		applicationURL = (applicationToOpenFileCollected.filePathURL);
 	}
 	
 	if (!applicationURL) {
 		NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
-		applicationURL = [workspace URLForApplicationToOpenURL:fileURL];
+		applicationURL = [workspace URLForApplicationToOpenURL:(collectedFile.filePathURL)];
 	}
 	
-	[fileURL startAccessingSecurityScopedResource];
-	
-	[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL];
-	
-	[fileURL stopAccessingSecurityScopedResource];
+	[self openCollectedFile:collectedFile withApplication:applicationURL];
 }
 
 - (IBAction)openWithChosenApplication:(NSMenuItem *)menuItem
@@ -417,16 +424,17 @@
 	
 	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
 	
-	NSURL *fileURL = [self fileURLForHighlightedItem:highlightedItem];
+	GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
+	if (!collectedFile) {
+		return;
+	}
+	
+	NSURL *fileURL = (collectedFile.filePathURL);
 	if (!fileURL) {
 		return;
 	}
 	
-	[fileURL startAccessingSecurityScopedResource];
-	
-	[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL];
-	
-	[fileURL stopAccessingSecurityScopedResource];
+	[self openCollectedFile:collectedFile withApplication:applicationURL];
 }
 
 - (IBAction)changePreferredOpenerApplication:(NSMenuItem *)menuItem

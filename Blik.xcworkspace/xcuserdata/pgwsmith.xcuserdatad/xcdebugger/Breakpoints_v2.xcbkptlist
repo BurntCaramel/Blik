@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blik Mac/GLAArrayEditorStore.m"
-            timestampString = "437824009.745096"
+            timestampString = "438784397.160181"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "139"
-            endingLineNumber = "139"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
             landmarkName = "-background_readModelsOfClass:atDictionaryKey:fromJSONFileURL:"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blik Mac/GLACollectedFile.m"
-            timestampString = "438522356.691747"
+            timestampString = "439628383.540735"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "243"
-            endingLineNumber = "243"
+            startingLineNumber = "271"
+            endingLineNumber = "271"
             landmarkName = "-validateBookmarkData:updateProperties:error:"
             landmarkType = "5">
          </BreakpointContent>
@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blik Mac/GLACollectedFile.m"
-            timestampString = "438522356.691747"
+            timestampString = "439628383.540735"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "269"
-            endingLineNumber = "269"
+            startingLineNumber = "302"
+            endingLineNumber = "302"
             landmarkName = "-validateBookmarkData:updateProperties:error:"
             landmarkType = "5">
          </BreakpointContent>

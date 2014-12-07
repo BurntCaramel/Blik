@@ -55,9 +55,9 @@
 @end
 
 
-/*
+#if 0
 
- Example implementation:
+/* Example implementation: */
  
 - (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row
 {
@@ -84,4 +84,4 @@
 	return [(self.tableDraggingHelper) tableView:tableView acceptDrop:info row:row dropOperation:dropOperation];
 }
 
-*/
+#endif

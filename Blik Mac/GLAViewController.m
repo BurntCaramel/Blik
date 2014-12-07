@@ -126,6 +126,9 @@
 
 - (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier priority:(NSLayoutPriority)priority
 {
+	NSParameterAssert(innerView != nil);
+	NSParameterAssert(identifier != nil);
+	
 	NSView *holderView = (self.view);
 	
 	NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:innerView attribute:attribute relatedBy:NSLayoutRelationEqual toItem:holderView attribute:attribute multiplier:1.0 constant:0.0];

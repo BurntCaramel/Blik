@@ -138,13 +138,13 @@
 {
 	return
 	@[
+	  [self strongBlue],
+	  [self strongGreen],
+	  [self strongPurple],
+	  [self strongPink],
 	  [self strongRed],
 	  [self strongYellow],
-	  [self strongPurple],
-	  [self strongBlue],
-	  [self strongPink],
-	  [self strongOrange],
-	  [self strongGreen]
+	  [self strongOrange]
 	  ];
 }
 

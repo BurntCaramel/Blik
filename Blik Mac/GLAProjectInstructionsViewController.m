@@ -21,7 +21,13 @@
 	[super prepareView];
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
-	[uiStyle prepareInstructionalTextLabel:(self.mainInstructionTextLabel)];
+	
+	[uiStyle prepareInstructionalTextLabel:(self.mainTextLabel)];
+	
+	NSTextField *headingInstructionTextLabel = (self.headingTextLabel);
+	if (headingInstructionTextLabel) {
+		[uiStyle prepareInstructionalHeadingLabel:headingInstructionTextLabel];
+	}
 }
 
 @end

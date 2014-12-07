@@ -13,9 +13,14 @@
 @interface GLAModelUUIDMap : NSObject <GLAArrayObserving>
 
 - (void)addObjectsReplacing:(NSArray *)objects;
+
+- (void)setObjects:(NSArray *)objects additionsAndRemovalsBlock:(void(^)(NSArray *additions, NSArray *removals))block;
+
 - (void)removeObjects:(NSArray *)objects;
+- (void)removeAllObjects;
 
 - (GLAModel *)objectWithUUID:(NSUUID *)UUID;
+- (BOOL)containsObjectWithUUID:(NSUUID *)UUID;
 
 - (GLAModel *)objectForKeyedSubscript:(NSUUID *)UUID;
 

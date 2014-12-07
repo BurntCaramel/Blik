@@ -250,6 +250,32 @@
 
 #pragma mark -
 
++ (void)openFileURLs:(NSArray *)fileURLs withApplicationURL:(NSURL *)applicationURL useSecurityScope:(BOOL)useSecurityScope
+{
+	NSMutableArray *accessedURLs = [NSMutableArray new];
+	if (useSecurityScope) {
+		for (NSURL *fileURL in fileURLs) {
+			if ([fileURL startAccessingSecurityScopedResource]) {
+				[accessedURLs addObject:fileURL];
+			}
+		}
+	}
+	
+	const LSLaunchURLSpec launchURLSpec = {
+		.appURL =  (__bridge CFURLRef)(applicationURL),
+		.itemURLs = (__bridge CFArrayRef)fileURLs,
+		.passThruParams = NULL,
+		.launchFlags = kLSLaunchDefaults,
+		.asyncRefCon = NULL
+	};
+	
+	LSOpenFromURLSpec(&launchURLSpec, NULL);
+	
+	if (useSecurityScope) {
+		[accessedURLs makeObjectsPerformSelector:@selector(stopAccessingSecurityScopedResource)];
+	}
+}
+
 + (void)openFileURLs:(NSArray *)fileURLs withApplicationURL:(NSURL *)applicationURL
 {
 	const LSLaunchURLSpec launchURLSpec = {
@@ -285,6 +311,7 @@ NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileUR
 	NSMenuItem *menuItem = [NSMenuItem new];
 	(menuItem.title) = values[NSURLLocalizedNameKey];
 	(menuItem.image) = iconImage;
+	(menuItem.toolTip) = (applicationURL.path);
 	
 	(menuItem.representedObject) = applicationURL;
 	

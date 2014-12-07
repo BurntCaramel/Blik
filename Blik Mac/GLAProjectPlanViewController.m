@@ -111,17 +111,17 @@
 	(holderView.translatesAutoresizingMaskIntoConstraints) = NO;
 	
 	GLAProjectViewController *projectViewController = (self.parentViewController);
-	NSLayoutConstraint *planViewTrailingConstraint = (projectViewController.planViewTrailingConstraint);
-	NSLayoutConstraint *planViewBottomConstraint = (projectViewController.planViewBottomConstraint);
+	NSLayoutConstraint *planViewTrailingConstraint = (projectViewController.highlightsViewTrailingConstraint);
+	NSLayoutConstraint *planViewBottomConstraint = (projectViewController.highlightsViewBottomConstraint);
 	
 	[projectViewController wrapChildViewKeepingOutsideConstraints:scrollView withView:holderView constraintVisitor:^ (NSLayoutConstraint *oldConstraint, NSLayoutConstraint *newConstraint) {
 		if (oldConstraint == planViewTrailingConstraint) {
 			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"trailing" forChildView:holderView];
-			(projectViewController.planViewTrailingConstraint) = newConstraint;
+			(projectViewController.highlightsViewTrailingConstraint) = newConstraint;
 		}
 		else if (oldConstraint == planViewBottomConstraint) {
 			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"bottom" forChildView:holderView];
-			(projectViewController.planViewBottomConstraint) = newConstraint;
+			(projectViewController.highlightsViewBottomConstraint) = newConstraint;
 		}
 	}];
 	

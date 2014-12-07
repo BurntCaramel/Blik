@@ -16,4 +16,6 @@
 - (void)stopUsingURLForCollectedFile:(GLACollectedFile *)collectedFile;
 - (void)stopUsingURLsForAllCollectedFiles;
 
+- (void)startUsingURLsForCollectedFiles:(NSArray *)collectedFiles removingRemainders:(BOOL)removeRemainders;
+
 @end

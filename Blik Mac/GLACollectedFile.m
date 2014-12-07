@@ -12,7 +12,8 @@
 
 @interface GLACollectedFile ()
 
-@property(readwrite, nonatomic) NSURL *URL;
+@property(readwrite, nonatomic) NSURL *fileReferenceURL;
+@property(nonatomic) NSURL *sourceFilePathURL;
 
 @property(readwrite, nonatomic) NSString *filePath;
 
@@ -27,6 +28,8 @@
 
 @end
 
+#define GLA_USE_REFERENCE_URLS 0
+
 @implementation GLACollectedFile
 
 - (instancetype)initWithFileURL:(NSURL *)URL
@@ -35,16 +38,40 @@
 	
 	self = [super init];
 	if (self) {
-		_URL = [URL copy];
+		_sourceFilePathURL = [URL filePathURL];
+		_fileReferenceURL = [URL fileReferenceURL];
+		
+		NSLog(@"COLLECTED FILE INIT %@ | FP %@ | FR %@", URL, _sourceFilePathURL, _fileReferenceURL);
 	}
 	return self;
 }
 
 #pragma mark -
 
+- (NSURL *)filePathURL
+{
+#if GLA_USE_REFERENCE_URLS
+	NSURL *fileReferenceURL = (self.fileReferenceURL);
+	if (fileReferenceURL) {
+		BOOL accessing = [fileReferenceURL startAccessingSecurityScopedResource];
+		NSURL *resolvedFilePathURL = [fileReferenceURL filePathURL];
+		NSAssert(resolvedFilePathURL != nil, @"resolvedFilePathURL must be something");
+		if (accessing) {
+			[resolvedFilePathURL stopAccessingSecurityScopedResource];
+		}
+		return resolvedFilePathURL;
+	}
+	else {
+		return (self.sourceFilePathURL);
+	}
+#else
+	return (self.sourceFilePathURL);
+#endif
+}
+
 - (NSUInteger)hash
 {
-	return (self.URL.hash);
+	return (self.filePathURL.hash);
 }
 
 - (BOOL)isEqual:(id)object
@@ -53,7 +80,7 @@
 	if (![object isKindOfClass:(self.class)]) return NO;
 	
 	GLACollectedFile *other = object;
-	return [(self.URL) isEqual:(other.URL)];
+	return [(self.filePathURL) isEqual:(other.filePathURL)];
 }
 
 + (NSString *)objectJSONPasteboardType
@@ -67,7 +94,8 @@
 	
 	return
   @{
-	@"URL": null,
+	@"fileReferenceURL": null,
+	@"sourceFilePathURL": null,
 	@"name": null,
 	@"isMissing": null,
 	@"isDirectory": null,
@@ -94,7 +122,7 @@
 
 - (NSString *)filePath
 {
-	NSURL *URL = (self.URL);
+	NSURL *URL = (self.filePathURL);
 	if (URL) {
 		return (URL.path);
 	}
@@ -112,7 +140,7 @@
 
 - (BOOL)updateInformationApartFromKeys:(NSArray *)keysToExclude error:(NSError *__autoreleasing *)outError
 {
-	NSURL *URL = (self.URL);
+	NSURL *URL = (self.filePathURL);
 	BOOL wasCreatedFromBookmarkData = (self.wasCreatedFromBookmarkData);
 	NSArray *resourceValueKeys = [[self class] coreResourceValueKeys];
 	
@@ -157,7 +185,7 @@
 
 - (NSData *)bookmarkDataWithError:(NSError *__autoreleasing *)outError
 {
-	NSURL *URL = (self.URL);
+	NSURL *URL = (self.filePathURL);
 	BOOL wasCreatedFromBookmarkData = (self.wasCreatedFromBookmarkData);
 	
 	if (wasCreatedFromBookmarkData) {
@@ -246,7 +274,12 @@
 	}
 	
 	if (update) {
-		(self.URL) = URL;
+		NSLog(@"LOADED URL %@", URL);
+		NSLog(@"FILE PATH URL %@", [URL filePathURL]);
+		NSLog(@"FILE REF URL %@", [URL fileReferenceURL]);
+		NSLog(@"FILE REF PATH URL %@", [[URL fileReferenceURL] filePathURL]);
+		(self.sourceFilePathURL) = [URL filePathURL];
+		(self.fileReferenceURL) = [URL fileReferenceURL];
 		
 		//BOOL isReachable = [URL checkResourceIsReachableAndReturnError:&error];
 	}

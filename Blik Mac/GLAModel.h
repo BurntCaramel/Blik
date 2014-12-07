@@ -22,7 +22,7 @@
 
 @interface GLAModel (PasteboardSupport) <NSPasteboardReading, NSPasteboardWriting>
 
-+ (NSString *)objectJSONPasteboardType;
++ (NSString *)objectJSONPasteboardType; // Overwrite this.
 
 + (BOOL)canCopyObjectsFromPasteboard:(NSPasteboard *)pboard;
 + (NSArray *)copyObjectsFromPasteboard:(NSPasteboard *)pboard;

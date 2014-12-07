@@ -49,7 +49,8 @@
 		(style.activeBarBackgroundColor) = activeYellow;
 		(style.activeBarTextColor) = grayDark;
 		
-		(style.activeButtonHighlightColor) = [activeYellow colorWithAlphaComponent:0.91];
+		(style.activeButtonHighlightColor) = activeYellow;
+		(style.activeButtonBarColor) = [activeYellow colorWithAlphaComponent:0.91];
 		(style.activeButtonDisabledHighlightColor) = whiteAlmost30;
 		
 		(style.primaryButtonBackgroundColor) = activeYellow;
@@ -113,14 +114,15 @@
 		
 		// FONTS
 		
-		static NSString *fontNameAvenirNextRegular = @"AvenirNext-Regular";
-		static NSString *fontNameAvenirNextMedium = @"AvenirNext-Medium";
-		static NSString *fontNameAvenirNextMediumItalic = @"AvenirNext-MediumItalic";
-		static NSString *fontNameAvenirNextItalic = @"AvenirNext-Italic";
+		NSString *fontNameAvenirNextRegular = @"AvenirNext-Regular";
+		NSString *fontNameAvenirNextMedium = @"AvenirNext-Medium";
+		NSString *fontNameAvenirNextMediumItalic = @"AvenirNext-MediumItalic";
+		NSString *fontNameAvenirNextItalic = @"AvenirNext-Italic";
 		
-		//(style.projectTitleFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:19.0];
+		//(style.projectTitleFont) = [NSFont fontWithName:fontNameAvenirNextItalic size:22.0];
 		//(style.projectTitleFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:16.0];
 		(style.projectTitleFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:17.0];
+		//(style.projectTitleFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:17.0];
 		
 #if 0
 		(style.smallReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
@@ -172,13 +174,14 @@
 	  GLACollectionColorIdentifierPastelPinkyPurple: (self.pastelPinkyPurpleItemColor),
 	  GLACollectionColorIdentifierPastelRed: (self.pastelRedItemColor),
 	  GLACollectionColorIdentifierPastelYellow: (self.pastelYellowItemColor),
+	  
+	  GLACollectionColorIdentifierStrongBlue: (self.strongBlueItemColor),
+	  GLACollectionColorIdentifierStrongGreen: (self.strongGreenItemColor),
+	  GLACollectionColorIdentifierStrongPurple: (self.strongPurpleItemColor),
 	  GLACollectionColorIdentifierStrongRed: (self.strongRedItemColor),
 	  GLACollectionColorIdentifierStrongYellow: (self.strongYellowItemColor),
-	  GLACollectionColorIdentifierStrongPurple: (self.strongPurpleItemColor),
-	  GLACollectionColorIdentifierStrongBlue: (self.strongBlueItemColor),
 	  GLACollectionColorIdentifierStrongPink: (self.strongPinkItemColor),
-	  GLACollectionColorIdentifierStrongOrange: (self.strongOrangeItemColor),
-	  GLACollectionColorIdentifierStrongGreen: (self.strongGreenItemColor)
+	  GLACollectionColorIdentifierStrongOrange: (self.strongOrangeItemColor)
 	  };
 	
 	if (color) {
@@ -205,7 +208,27 @@
 	(textField.textColor) = (self.lightTextColor);
 }
 
+- (void)prepareProjectNameField:(NSTextField *)projectNameField
+{
+	(projectNameField.font) = (self.projectTitleFont);
+}
+
 - (void)prepareInstructionalTextLabel:(NSTextField *)textField
+{
+	(textField.textColor) = (self.lightInstructionalTextColor);
+	
+	NSMutableAttributedString *mutableAttributedString = [(textField.attributedStringValue) mutableCopy];
+	NSParagraphStyle *paragraphStyle = [mutableAttributedString attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:NULL];
+	if (paragraphStyle) {
+		NSMutableParagraphStyle *mutableParagraphStyle = [paragraphStyle mutableCopy];
+		(mutableParagraphStyle.maximumLineHeight) = 19.0;
+		[mutableAttributedString addAttribute:NSParagraphStyleAttributeName value:mutableParagraphStyle range:NSMakeRange(0, (mutableAttributedString.length))];
+	}
+	
+	(textField.attributedStringValue) = mutableAttributedString;
+}
+
+- (void)prepareInstructionalHeadingLabel:(NSTextField *)textField
 {
 	(textField.textColor) = (self.lightInstructionalTextColor);
 }

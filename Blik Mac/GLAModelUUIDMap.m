@@ -34,6 +34,32 @@
 	}
 }
 
+- (void)setObjects:(NSArray *)objects additionsAndRemovalsBlock:(void(^)(NSArray *additions, NSArray *removals))block;
+{
+	NSMutableDictionary *mutableDictionary = (self.mutableDictionary);
+	NSMutableDictionary *objectsBefore = [mutableDictionary mutableCopy];
+	NSMutableArray *additions = [NSMutableArray new];
+	
+	[mutableDictionary removeAllObjects];
+	
+	for (GLAModel *model in objects) {
+		NSUUID *UUID = (model.UUID);
+		
+		mutableDictionary[UUID] = model;
+		
+		if (objectsBefore[UUID]) {
+			[objectsBefore removeObjectForKey:UUID];
+		}
+		else {
+			[additions addObject:model];
+		}
+	}
+	
+	NSArray *removals = [objectsBefore allValues];
+	
+	block(additions, removals);
+}
+
 - (void)removeObjects:(NSArray *)objects
 {
 	NSMutableDictionary *mutableDictionary = (self.mutableDictionary);
@@ -42,10 +68,19 @@
 	}
 }
 
+- (void)removeAllObjects
+{
+	[(self.mutableDictionary) removeAllObjects];
+}
+
 - (GLAModel *)objectWithUUID:(NSUUID *)UUID
 {
-	NSMutableDictionary *mutableDictionary = (self.mutableDictionary);
-	return mutableDictionary[UUID];
+	return (self.mutableDictionary)[UUID];
+}
+
+- (BOOL)containsObjectWithUUID:(NSUUID *)UUID
+{
+	return [self objectWithUUID:UUID] != nil;
 }
 
 - (id)objectForKeyedSubscript:(NSUUID *)UUID

@@ -12,38 +12,28 @@
 
 @protocol GLAArrayEditorStoreDelegate;
 
-/*
-@interface GLAArrayEditorStoreOptions : NSObject
- 
-@property(nonatomic) Class modelClass;
- 
-@property(nonatomic, copy) NSURL *JSONFileURL;
-@property(nonatomic, copy) NSString *JSONKey;
-
-@end
- */
 
 @interface GLAArrayEditorStore : NSObject
 
-- (instancetype)initWithDelegate:(id<GLAArrayEditorStoreDelegate>)delegate modelClass:(Class)modelClass JSONFileURL:(NSURL *)JSONFileURL JSONDictionaryKey:(NSString *)JSONKey userInfo:(NSDictionary *)userInfo arrayEditorOptions:(GLAArrayEditorOptions *)arrayEditorOptions;
+- (instancetype)initWithDelegate:(id<GLAArrayEditorStoreDelegate>)delegate modelClass:(Class)modelClass JSONFileURL:(NSURL *)JSONFileURL JSONDictionaryKey:(NSString *)JSONKey arrayEditorOptions:(GLAArrayEditorOptions *)arrayEditorOptions;
 
-@property(nonatomic, weak, readonly) id<GLAArrayEditorStoreDelegate> delegate;
+@property(weak, readonly, nonatomic) id<GLAArrayEditorStoreDelegate> delegate;
 
 - (void)setUpArrayEditorOptions:(GLAArrayEditorOptions *)options;
 
-@property(nonatomic, readonly) Class modelClass;
-@property(nonatomic, copy, readonly) NSDictionary *userInfo;
+@property(readonly, nonatomic) Class modelClass;
+@property(copy, readonly, nonatomic) NSURL *JSONFileURL;
+@property(copy, readonly, nonatomic) NSString *JSONDictionaryKeyForArray;
 
-@property(nonatomic, copy, readonly) NSURL *JSONFileURL;
-@property(nonatomic, copy, readonly) NSString *JSONDictionaryKeyForArray;
+@property(copy, nonatomic) NSDictionary *userInfo;
 
-@property(nonatomic, readonly) BOOL needsLoading;
+@property(readonly, nonatomic) BOOL needsLoading;
 
-@property(nonatomic, readonly) BOOL loading;
-@property(nonatomic, readonly) BOOL finishedLoading;
-//@property(nonatomic, readonly) BOOL hasMadeChangesSinceLoading;
-@property(nonatomic, readonly) BOOL saving;
-@property(nonatomic, readonly) BOOL finishedSaving;
+@property(readonly, nonatomic) BOOL loading;
+@property(readonly, nonatomic) BOOL finishedLoading;
+
+@property(readonly, nonatomic) BOOL saving;
+@property(readonly, nonatomic) BOOL finishedSaving;
 
 - (NSArray *)copyChildren;
 - (id<GLAArrayInspecting>)inspectArray;
@@ -82,8 +72,6 @@ typedef NS_ENUM(NSInteger, GLAArrayEditorStoreErrorCode)
 - (void)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore handleError:(NSError *)error fromMethodWithSelector:(SEL)storeMethodSelector;
 
 @optional
-
-//- (void)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore setUpArrayEditorOptions:(GLAArrayEditorOptions *)options;
 
 - (NSArray *)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore processLoadedChildrenInBackground:(NSArray *)children;
 

@@ -55,7 +55,7 @@
 {
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	
-	NSColor *barColor = (self.isEnabled) ? (uiStyle.activeButtonHighlightColor) : (uiStyle.activeButtonDisabledHighlightColor);
+	NSColor *barColor = (self.isEnabled) ? (uiStyle.activeButtonBarColor) : (uiStyle.activeButtonDisabledHighlightColor);
 	[uiStyle drawActiveHighlightForBounds:frame withColor:barColor time:(self.highlightAmount)];
 }
 

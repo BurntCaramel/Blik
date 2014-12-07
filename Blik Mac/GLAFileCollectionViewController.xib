@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAFileCollectionViewController">
             <connections>
+                <outlet property="addToHighlightsButton" destination="wLr-wc-OZX" id="QCZ-1K-xSh"/>
                 <outlet property="openerApplicationsPopUpButton" destination="CSY-mw-Wdy" id="ZHO-lL-OdE"/>
                 <outlet property="openerApplicationsTextLabel" destination="GLr-My-p1c" id="nxL-mi-92C"/>
                 <outlet property="previewHolderView" destination="qn1-n0-gYl" id="lx5-hz-3W2"/>
@@ -25,7 +26,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
                     <subviews>
                         <customView id="5CS-nQ-aL8">
-                            <rect key="frame" x="0.0" y="0.0" width="179.5" height="272"/>
+                            <rect key="frame" x="0.0" y="0.0" width="180" height="272"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <subviews>
                                 <scrollView verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="G7e-U8-1HC">
@@ -106,9 +107,10 @@
                                     </scroller>
                                 </scrollView>
                                 <button identifier="template" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="hPc-Yl-sIY" customClass="GLAButton">
-                                    <rect key="frame" x="0.0" y="0.0" width="179.5" height="40"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="180" height="40"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="ORV-sK-urh"/>
+                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="180" id="Swz-bH-KE4"/>
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="st1-uY-7GX"/>
                                     </constraints>
                                     <buttonCell key="cell" type="square" title="Choose File Or Folder" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Sit-FH-MdQ" customClass="GLAButtonCell">
@@ -133,9 +135,7 @@
                                 </button>
                             </subviews>
                             <constraints>
-                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="180" id="9j7-4H-9gR"/>
                                 <constraint firstAttribute="trailing" secondItem="G7e-U8-1HC" secondAttribute="trailing" id="Eu7-DZ-KP0"/>
-                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="F8l-3U-CNz"/>
                                 <constraint firstItem="hPc-Yl-sIY" firstAttribute="leading" secondItem="5CS-nQ-aL8" secondAttribute="leading" id="Hz8-7H-GSW"/>
                                 <constraint firstItem="G7e-U8-1HC" firstAttribute="top" secondItem="5CS-nQ-aL8" secondAttribute="top" id="TaM-5H-bS1"/>
                                 <constraint firstAttribute="bottom" secondItem="hPc-Yl-sIY" secondAttribute="bottom" id="TjQ-KO-fnZ"/>
@@ -145,20 +145,20 @@
                             </constraints>
                         </customView>
                         <customView id="Tix-1S-YGD">
-                            <rect key="frame" x="180.5" y="0.0" width="299.5" height="272"/>
+                            <rect key="frame" x="181" y="0.0" width="299" height="272"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <subviews>
                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="qn1-n0-gYl">
-                                    <rect key="frame" x="0.0" y="27" width="300" height="245"/>
+                                    <rect key="frame" x="0.0" y="40" width="299" height="232"/>
                                 </customView>
                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="ktp-Qj-ozg">
-                                    <rect key="frame" x="0.0" y="0.0" width="300" height="27"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="299" height="40"/>
                                     <subviews>
                                         <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="CSY-mw-Wdy" customClass="GLAPopUpButton">
-                                            <rect key="frame" x="240" y="4" width="40" height="20"/>
+                                            <rect key="frame" x="8" y="8" width="40" height="24"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="40" id="hgH-HO-KdO"/>
-                                                <constraint firstAttribute="height" constant="20" id="qzd-kq-jNk"/>
+                                                <constraint firstAttribute="height" constant="24" id="qzd-kq-jNk"/>
                                             </constraints>
                                             <popUpButtonCell key="cell" type="roundTextured" title="Item 1" bezelStyle="texturedRounded" imagePosition="only" alignment="left" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="mMi-lC-XZe" id="iWS-dO-YeJ" customClass="GLAPopUpButtonCell">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -178,8 +178,39 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </popUpButton>
+                                        <button identifier="template" misplaced="YES" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="wLr-wc-OZX" customClass="GLAButton">
+                                            <rect key="frame" x="168" y="0.0" width="131" height="40"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="40" id="Nv2-mc-EKR"/>
+                                            </constraints>
+                                            <buttonCell key="cell" type="square" title="Add to Highlights" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="WiP-aO-fx0" customClass="GLAButtonCell">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" size="13" name="AvenirNext-Medium"/>
+                                            </buttonCell>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                                                    <integer key="value" value="-1"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                                                    <integer key="value" value="8"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetYAmount">
+                                                    <integer key="value" value="8"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                                                    <integer key="value" value="16"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                                                    <integer key="value" value="16"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="addSelectedFilesToHighlights:" target="-2" id="nSc-4o-ejN"/>
+                                            </connections>
+                                        </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GLr-My-p1c">
-                                            <rect key="frame" x="185" y="4" width="53" height="23"/>
+                                            <rect key="frame" x="50" y="9" width="53" height="23"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="DWe-bH-DmC"/>
                                             </constraints>
@@ -191,11 +222,13 @@
                                         </textField>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="CSY-mw-Wdy" secondAttribute="trailing" constant="20" id="F3k-bd-2xF"/>
+                                        <constraint firstAttribute="bottom" secondItem="GLr-My-p1c" secondAttribute="bottom" constant="9" id="ERu-cq-FgC"/>
+                                        <constraint firstItem="CSY-mw-Wdy" firstAttribute="leading" secondItem="ktp-Qj-ozg" secondAttribute="leading" constant="8" id="POI-N5-HB5"/>
                                         <constraint firstAttribute="centerY" secondItem="CSY-mw-Wdy" secondAttribute="centerY" id="VUK-7V-ToX"/>
-                                        <constraint firstItem="GLr-My-p1c" firstAttribute="centerY" secondItem="CSY-mw-Wdy" secondAttribute="centerY" constant="-2" id="bBp-dh-lwi"/>
-                                        <constraint firstAttribute="height" constant="27" id="mA4-7f-c2c"/>
-                                        <constraint firstItem="CSY-mw-Wdy" firstAttribute="leading" secondItem="GLr-My-p1c" secondAttribute="trailing" constant="4" id="zqG-dI-UsQ"/>
+                                        <constraint firstItem="wLr-wc-OZX" firstAttribute="top" secondItem="ktp-Qj-ozg" secondAttribute="top" id="qLW-QF-kjB"/>
+                                        <constraint firstItem="GLr-My-p1c" firstAttribute="leading" secondItem="CSY-mw-Wdy" secondAttribute="trailing" constant="4" id="qNj-9s-bYR"/>
+                                        <constraint firstAttribute="height" constant="40" id="qjt-XT-qlL"/>
+                                        <constraint firstAttribute="trailing" secondItem="wLr-wc-OZX" secondAttribute="trailing" id="rL4-l8-Mhw"/>
                                     </constraints>
                                 </customView>
                             </subviews>
@@ -225,20 +258,20 @@
                 <constraint firstItem="2Hs-az-1x2" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="y9r-Q5-vpj"/>
                 <constraint firstItem="2Hs-az-1x2" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="ybU-nv-nVc"/>
             </constraints>
-            <point key="canvasLocation" x="448.5" y="376"/>
+            <point key="canvasLocation" x="448" y="376"/>
         </customView>
         <menu id="JOI-as-pHF">
             <items>
-                <menuItem title="Add to Highlights…" id="beX-h3-nbY">
+                <menuItem title="Add to Highlights" id="beX-h3-nbY">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="addSelectedFilesToHighlights:" target="-2" id="HFQ-9f-KcI"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="dP8-PR-piE"/>
-                <menuItem title="Change Default App for «kind» " hidden="YES" id="uNM-gh-GyS">
+                <menuItem title="Change Preferred App for «kind» " hidden="YES" id="uNM-gh-GyS">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Change Default App for «kind» " id="gDd-rk-7S7">
+                    <menu key="submenu" title="Change Preferred App for «kind» " id="gDd-rk-7S7">
                         <items>
                             <menuItem title="Item" id="KCy-Sh-vla">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -253,7 +286,7 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="oY4-Iw-yUF"/>
-                <menuItem title="Remove from List…" id="kk6-zt-3gY">
+                <menuItem title="Remove from Collection" id="kk6-zt-3gY">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="removeSelectedFilesFromList:" target="-2" id="7ke-Nv-t90"/>

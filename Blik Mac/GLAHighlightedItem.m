@@ -98,12 +98,16 @@
 
 #pragma mark -
 
-@interface GLAHighlightedCollectedFile () <GLAHighlightedCollectedFileEditing>
+@interface GLAHighlightedCollectedFile ()
 
 @property(readwrite, nonatomic) NSUUID *holdingCollectionUUID;
 @property(readwrite, nonatomic) NSUUID *collectedFileUUID;
 
 @property(readwrite, nonatomic) GLACollectedFile *applicationToOpenFile;
+
+@end
+
+@interface GLAHighlightedCollectedFile (GLAHighlightedCollectedFileEditing) <GLAHighlightedCollectedFileEditing>
 
 @end
 

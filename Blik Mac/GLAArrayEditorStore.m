@@ -24,7 +24,7 @@
 
 @implementation GLAArrayEditorStore
 
-- (instancetype)initWithDelegate:(id<GLAArrayEditorStoreDelegate>)delegate modelClass:(Class)modelClass JSONFileURL:(NSURL *)JSONFileURL JSONDictionaryKey:(NSString *)JSONKey userInfo:(NSDictionary *)userInfo arrayEditorOptions:(GLAArrayEditorOptions *)arrayEditorOptions
+- (instancetype)initWithDelegate:(id<GLAArrayEditorStoreDelegate>)delegate modelClass:(Class)modelClass JSONFileURL:(NSURL *)JSONFileURL JSONDictionaryKey:(NSString *)JSONKey arrayEditorOptions:(GLAArrayEditorOptions *)arrayEditorOptions
 {
 	self = [super init];
 	if (self) {
@@ -32,7 +32,6 @@
 		_modelClass = modelClass;
 		_JSONFileURL = [JSONFileURL copy];
 		_JSONDictionaryKeyForArray = [JSONKey copy];
-		_userInfo = [userInfo copy];
 		_arrayEditorOptions = arrayEditorOptions ? [arrayEditorOptions copy] : [GLAArrayEditorOptions new];
 	}
 	return self;
@@ -180,8 +179,7 @@
 
 - (id<GLAArrayInspecting>)inspectArray
 {
-	GLAArrayEditor *arrayEditor = (self.arrayEditor);
-	return arrayEditor;
+	return (self.arrayEditor);
 }
 
 #pragma mark -

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-@import Foundation;
+@import Cocoa;
 
 
 @interface GLAFileOpenerApplicationCombiner : NSObject
@@ -24,6 +24,7 @@
 #pragma mark -
 
 + (void)openFileURLs:(NSArray *)fileURLs withApplicationURL:(NSURL *)applicationURL;
++ (void)openFileURLs:(NSArray *)fileURLs withApplicationURL:(NSURL *)applicationURL useSecurityScope:(BOOL)useSecurityScope;
 
 @end
 

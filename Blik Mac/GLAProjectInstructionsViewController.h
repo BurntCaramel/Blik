@@ -11,6 +11,7 @@
 
 @interface GLAProjectInstructionsViewController : GLAViewController
 
-@property(nonatomic) IBOutlet NSTextField *mainInstructionTextLabel;
+@property(nonatomic) IBOutlet NSTextField *mainTextLabel;
+@property(nonatomic) IBOutlet NSTextField *headingTextLabel;
 
 @end

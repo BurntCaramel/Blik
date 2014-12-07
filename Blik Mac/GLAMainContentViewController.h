@@ -11,6 +11,7 @@
 #import "GLAProjectsListViewController.h"
 #import "GLAProjectViewController.h"
 #import "GLANoNowProjectViewController.h"
+#import "GLAEmptyAllProjectsViewController.h"
 #import "GLAAddNewProjectViewController.h"
 #import "GLAAddNewCollectionViewController.h"
 @class GLAProject;
@@ -39,6 +40,8 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 
 @property(nonatomic) GLAProjectsListViewController *allProjectsViewController;
 @property(nonatomic) GLAProjectsListViewController *plannedProjectsViewController;
+
+@property(nonatomic) GLAEmptyAllProjectsViewController *emptyAllProjectsViewController;
 
 // Single Project
 

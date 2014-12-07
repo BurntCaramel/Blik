@@ -21,12 +21,13 @@
 
 - (instancetype)initWithFileURL:(NSURL *)URL;
 
-@property(readonly, nonatomic) NSURL *URL;
-@property(readonly, nonatomic) BOOL wasCreatedFromBookmarkData; // Needs -startAccessingSecurityScopedResource
+@property(readonly, nonatomic) NSURL *filePathURL;
+@property(readonly, nonatomic) NSURL *fileReferenceURL;
+@property(readonly, nonatomic) BOOL wasCreatedFromBookmarkData; // If true, needs -startAccessingSecurityScopedResource
 
 //- (NSOperation *)newOperationToUpdateInformation;
 //- (void)updateInformation:(dispatch_block_t)completionBlock;
-- (BOOL)updateInformationWithError:(NSError *__autoreleasing *)error; // Blocks: recommended to call this on a background queue.
+- (BOOL)updateInformationWithError:(NSError *__autoreleasing *)error; // Synchronous: recommended to call this on a background queue.
 
 @property(readonly, nonatomic) BOOL isMissing;
 @property(readonly, nonatomic) BOOL isDirectory;

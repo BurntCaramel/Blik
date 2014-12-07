@@ -21,20 +21,13 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 
 @interface GLAProjectsListViewController () <GLAArrayEditorTableDraggingHelperDelegate>
 
+@property(copy, nonatomic) NSArray *projects;
+
 @property(nonatomic) GLAArrayEditorTableDraggingHelper *tableDraggingHelper;
 
 @end
 
 @implementation GLAProjectsListViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Initialization code here.
-    }
-    return self;
-}
 
 - (void)dealloc
 {
@@ -127,7 +120,29 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	}
 	(self.projects) = projects;
 	
+	[self setUpChildViewControllersForProjectCount:(projects.count)];
+	
 	[(self.tableView) reloadData];
+}
+
+- (void)setUpChildViewControllersForProjectCount:(NSUInteger)count
+{
+	NSView *hasContentView = (self.hasContentView);
+	NSView *emptyContentView = (self.emptyContentViewController.view);
+	
+	BOOL hasProjects = (count > 0);
+	if (hasProjects) {
+		if (!(hasContentView.superview)) {
+			[emptyContentView removeFromSuperview];
+			[self fillViewWithChildView:hasContentView];
+		}
+	}
+	else {
+		if (!(emptyContentView.superview)) {
+			[hasContentView removeFromSuperview];
+			[self fillViewWithChildView:emptyContentView];
+		}
+	}
 }
 
 - (GLAProject *)clickedProject

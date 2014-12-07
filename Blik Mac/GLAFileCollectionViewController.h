@@ -25,6 +25,8 @@
 @property(strong, nonatomic) IBOutlet GLAPopUpButton *openerApplicationsPopUpButton;
 @property(strong, nonatomic) IBOutlet NSTextField *openerApplicationsTextLabel;
 
+@property(strong, nonatomic) IBOutlet GLAButton *addToHighlightsButton;
+
 @property(nonatomic) IBOutlet GLAViewController *previewHolderViewController;
 @property(nonatomic) IBOutlet NSView *previewHolderView;
 @property(nonatomic) QLPreviewView *quickLookPreviewView;

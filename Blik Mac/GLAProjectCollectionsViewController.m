@@ -51,7 +51,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	(tableView.enclosingScrollView.wantsLayer) = YES;
 	
 	[self wrapScrollView];
-	[self setUpEditingActionsView];
+	//[self setUpEditingActionsView];
 	
 	(self.tableDraggingHelper) = [[GLAArrayEditorTableDraggingHelper alloc] initWithDelegate:self];
 	
@@ -97,17 +97,17 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	(holderView.translatesAutoresizingMaskIntoConstraints) = NO;
 	
 	GLAProjectViewController *projectViewController = (self.parentViewController);
-	NSLayoutConstraint *itemsViewLeadingConstraint = (projectViewController.itemsViewLeadingConstraint);
-	NSLayoutConstraint *itemsViewBottomConstraint = (projectViewController.itemsViewBottomConstraint);
+	NSLayoutConstraint *itemsViewLeadingConstraint = (projectViewController.collectionsViewLeadingConstraint);
+	NSLayoutConstraint *itemsViewBottomConstraint = (projectViewController.collectionsViewBottomConstraint);
 	
 	[projectViewController wrapChildViewKeepingOutsideConstraints:scrollView withView:holderView constraintVisitor:^ (NSLayoutConstraint *oldConstraint, NSLayoutConstraint *newConstraint) {
 		if (oldConstraint == itemsViewLeadingConstraint) {
 			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"leading" forChildView:holderView];
-			(projectViewController.itemsViewLeadingConstraint) = newConstraint;
+			(projectViewController.collectionsViewLeadingConstraint) = newConstraint;
 		}
 		else if (oldConstraint == itemsViewBottomConstraint) {
 			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"bottom" forChildView:holderView];
-			(projectViewController.itemsViewBottomConstraint) = newConstraint;
+			(projectViewController.collectionsViewBottomConstraint) = newConstraint;
 		}
 	}];
 	
@@ -151,6 +151,15 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	NSView *instructionsView = (self.instructionsViewController.view);
 	if (!(instructionsView.superview)) {
 		[self fillViewWithChildView:instructionsView];
+#if 0
+		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+			(context.duration) = 3.0 / 120.0;
+			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+			
+			(instructionsView.alphaValue) = 0.0;
+			(instructionsView.animator.alphaValue) = 1.0;
+		} completionHandler:nil];
+#endif
 	}
 	else {
 		(instructionsView.hidden) = NO;

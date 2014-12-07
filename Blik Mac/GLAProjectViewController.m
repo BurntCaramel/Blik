@@ -44,11 +44,11 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 @property(strong, nonatomic) NSLayoutConstraint *itemsViewXConstraint;
 @property(strong, nonatomic) NSLayoutConstraint *planViewXConstraint;
 
-@property(nonatomic) CGFloat itemsViewLeadingConstraintDefaultConstant;
-@property(nonatomic) CGFloat itemsViewHeightConstraintDefaultConstant;
+@property(nonatomic) CGFloat collectionsViewLeadingConstraintDefaultConstant;
+@property(nonatomic) CGFloat collectionsViewHeightConstraintDefaultConstant;
 
-@property(nonatomic) CGFloat planViewTrailingConstraintDefaultConstant;
-@property(nonatomic) CGFloat planViewHeightConstraintDefaultConstant;
+@property(nonatomic) CGFloat highlightsViewTrailingConstraintDefaultConstant;
+@property(nonatomic) CGFloat highlightsViewHeightConstraintDefaultConstant;
 
 @end
 
@@ -83,7 +83,8 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	
 	NSTextField *nameTextField = (self.nameTextField);
 	(nameTextField.delegate) = self;
-	(nameTextField.font) = (activeStyle.projectTitleFont);
+	
+	[activeStyle prepareProjectNameField:nameTextField];
 	/*
 	[nc addObserver:self selector:@selector(nameTextDidBeginEditing:) name:NSControlTextDidBeginEditingNotification object:nameTextField];
 	[nc addObserver:self selector:@selector(nameTextDidEndEditing:) name:NSControlTextDidEndEditingNotification object:nameTextField];
@@ -98,15 +99,15 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	//[nameTextField setNeedsDisplay:YES];
 	
 	CGFloat defaultListsHeight = 174.0;
-	(self.itemsViewHeightConstraint.constant) = defaultListsHeight;
-	(self.planViewHeightConstraint.constant) = defaultListsHeight;
+	(self.collectionsViewHeightConstraint.constant) = defaultListsHeight;
+	(self.highlightsViewHeightConstraint.constant) = defaultListsHeight;
 	
 	
-	(self.itemsViewLeadingConstraintDefaultConstant) = (self.itemsViewLeadingConstraint.constant);
-	(self.itemsViewHeightConstraintDefaultConstant) = (self.itemsViewHeightConstraint.constant);
+	(self.collectionsViewLeadingConstraintDefaultConstant) = (self.collectionsViewLeadingConstraint.constant);
+	(self.collectionsViewHeightConstraintDefaultConstant) = (self.collectionsViewHeightConstraint.constant);
 	
-	(self.planViewTrailingConstraintDefaultConstant) = (self.planViewTrailingConstraint.constant);
-	(self.planViewHeightConstraintDefaultConstant) = (self.planViewHeightConstraint.constant);
+	(self.highlightsViewTrailingConstraintDefaultConstant) = (self.highlightsViewTrailingConstraint.constant);
+	(self.highlightsViewHeightConstraintDefaultConstant) = (self.highlightsViewHeightConstraint.constant);
 	
 	
 	NSView *actionsBarView = (self.actionsBarController.view);
@@ -351,15 +352,15 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 		}];
 		
 		// Resize item view to be taller, and animate plan view off.
-		(self.itemsViewHeightConstraintDefaultConstant) = NSHeight(collectionsScrollView.frame);
-		[projectView removeConstraint:(self.planViewBottomConstraint)];
+		(self.collectionsViewHeightConstraintDefaultConstant) = NSHeight(collectionsScrollView.frame);
+		[projectView removeConstraint:(self.highlightsViewBottomConstraint)];
 		
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 			(context.duration) = 4.0 / 12.0;
 			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
 			
-			(self.itemsViewHeightConstraint.animator.constant) = 300;
-			(self.planViewTrailingConstraint.animator.constant) = -600;
+			(self.collectionsViewHeightConstraint.animator.constant) = 300;
+			(self.highlightsViewTrailingConstraint.animator.constant) = -600;
 		} completionHandler:nil];
 		
 		// Fade out plan view
@@ -388,9 +389,9 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 			(context.duration) = 3.0 / 12.0;
 			
-			(self.itemsViewHeightConstraint.animator.constant) = (self.itemsViewHeightConstraintDefaultConstant);
+			(self.collectionsViewHeightConstraint.animator.constant) = (self.collectionsViewHeightConstraintDefaultConstant);
 		} completionHandler:^ {
-			[projectView addConstraint:(self.planViewBottomConstraint)];
+			[projectView addConstraint:(self.highlightsViewBottomConstraint)];
 		}];
 		
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -399,7 +400,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 			
 			(self.highlightsViewController.view.animator.alphaValue) = 1.0;
 			//(highlightsScrollView.animator.alphaValue) = 1.0;
-			(self.planViewTrailingConstraint.animator.constant) = (self.planViewTrailingConstraintDefaultConstant);
+			(self.highlightsViewTrailingConstraint.animator.constant) = (self.highlightsViewTrailingConstraintDefaultConstant);
 		} completionHandler:nil];
 	}
 }
@@ -450,16 +451,16 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 		}];
 		
 		// Store the current height so it can be animated back to later.
-		(self.planViewHeightConstraintDefaultConstant) = NSHeight(highlightsScrollView.frame);
+		(self.highlightsViewHeightConstraintDefaultConstant) = NSHeight(highlightsScrollView.frame);
 		// Stop allowing the items view to affect the window height.
-		[projectView removeConstraint:(self.itemsViewBottomConstraint)];
+		[projectView removeConstraint:(self.collectionsViewBottomConstraint)];
 		// Resize item view to be taller, and animate plan view off.
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 			(context.duration) = 4.0 / 12.0;
 			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
 			
-			(self.planViewHeightConstraint.animator.constant) = 300;
-			(self.itemsViewLeadingConstraint.animator.constant) = -600;
+			(self.highlightsViewHeightConstraint.animator.constant) = 300;
+			(self.collectionsViewLeadingConstraint.animator.constant) = -600;
 		} completionHandler:nil];
 		
 		// Fade out plan view
@@ -487,9 +488,9 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 			(context.duration) = 4.0 / 12.0;
 			
-			(self.planViewHeightConstraint.animator.constant) = (self.planViewHeightConstraintDefaultConstant);
+			(self.highlightsViewHeightConstraint.animator.constant) = (self.highlightsViewHeightConstraintDefaultConstant);
 		} completionHandler:^ {
-			[projectView addConstraint:(self.itemsViewBottomConstraint)];
+			[projectView addConstraint:(self.collectionsViewBottomConstraint)];
 		}];
 		
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -497,7 +498,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
 			
 			(collectionsScrollView.animator.alphaValue) = 1.0;
-			(self.itemsViewLeadingConstraint.animator.constant) = (self.itemsViewLeadingConstraintDefaultConstant);
+			(self.collectionsViewLeadingConstraint.animator.constant) = (self.collectionsViewLeadingConstraintDefaultConstant);
 		} completionHandler:nil];
 	}
 }
@@ -567,7 +568,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 		
 		[projectView removeConstraint:(self.planViewXConstraint)];
 		//(self.planViewXConstraint.priority) = 250;
-		(self.planViewTrailingConstraint.constant) = 500;
+		(self.highlightsViewTrailingConstraint.constant) = 500;
 		(self.nameTextField.alphaValue) = 0.0;
 		
 		[projectView layoutSubtreeIfNeeded];

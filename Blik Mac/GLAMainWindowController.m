@@ -192,7 +192,15 @@
 
 - (void)goToPreviousSection
 {
-	[self goToSection:(self.currentSection.previousSection)];
+	GLAMainContentSection *previousSection = (self.currentSection.previousSection);
+	
+	if (!previousSection) {
+		previousSection = [GLAMainContentSection allProjectsSection];
+	}
+	
+	//NSAssert(previousSection != nil, @"Previous section must be something.");
+	
+	[self goToSection:previousSection];
 }
 
 - (void)workOnProjectNow:(GLAProject *)project
@@ -454,7 +462,23 @@
 
 - (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewController:(GLAAddNewCollectionViewController *)addNewCollectionViewController didConfirmCreatingCollection:(GLACollection *)collection inProject:(GLAProject *)project
 {
-	GLAMainContentEditProjectSection *editProjectSection = [GLAMainContentEditProjectSection editProjectSectionWithProject:project previousSection:nil];
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProject *nowProject = (pm.nowProject);
+	
+	GLAMainContentEditProjectSection *editProjectSection;
+	GLAMainContentSection *currentSection = (self.currentSection);
+	if ((currentSection.isEditProject) || (currentSection.isNow)) {
+		editProjectSection = (GLAMainContentEditProjectSection *)currentSection;
+	}
+	else {
+		if ([(nowProject.UUID) isEqual:(project.UUID)]) {
+			editProjectSection = [GLAMainContentEditProjectSection nowProjectSectionWithProject:project];
+		}
+		else {
+			editProjectSection = [GLAMainContentEditProjectSection editProjectSectionWithProject:project previousSection:nil];
+		}
+	}
+	
 	GLAMainContentEditCollectionSection *editCollectionSection = [GLAMainContentEditCollectionSection editCollectionSectionWithCollection:collection previousSection:editProjectSection];
 	
 	[self goToSection:editCollectionSection];

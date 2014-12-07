@@ -88,6 +88,9 @@
 	GLAProjectsListViewController *controller = [[GLAProjectsListViewController alloc] initWithNibName:@"GLAProjectsListViewController" bundle:nil];
 	(controller.view.identifier) = @"allProjects";
 	
+	[self setUpEmptyAllProjectsViewControllerIfNeeded];
+	(controller.emptyContentViewController) = (self.emptyAllProjectsViewController);
+	
 	(self.allProjectsViewController) = controller;
 	
 	// Add it to the content view
@@ -96,6 +99,18 @@
 	
 	[nc addObserver:self selector:@selector(projectsListViewControllerDidClickOnProjectNotification:) name:GLAProjectsListViewControllerDidChooseProjectNotification object:controller];
 	[nc addObserver:self selector:@selector(projectsListViewControllerDidPerformWorkOnProjectNowNotification:) name:GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification object:controller];
+}
+
+- (void)setUpEmptyAllProjectsViewControllerIfNeeded
+{
+	if (self.emptyAllProjectsViewController) {
+		return;
+	}
+	
+	GLAEmptyAllProjectsViewController *controller = [[GLAEmptyAllProjectsViewController alloc] initWithNibName:NSStringFromClass([GLAEmptyAllProjectsViewController class]) bundle:nil];
+	(controller.view.identifier) = @"emptyAllProjects";
+	
+	(self.emptyAllProjectsViewController) = controller;
 }
 
 #pragma mark Planned Projects
@@ -108,14 +123,6 @@
 	
 	GLAProjectsListViewController *controller = [[GLAProjectsListViewController alloc] initWithNibName:@"GLAProjectsListViewController" bundle:nil];
 	(controller.view.identifier) = @"plannedProjects";
-	
-	/*
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	
-	[projectManager usePlannedProjects:^(NSArray *plannedProjects) {
-		(controller.projects) = plannedProjects;
-	}];
-	 */
 	
 	(self.plannedProjectsViewController) = controller;
 	
@@ -369,17 +376,7 @@
 	
 	[self goToSection:[GLAMainContentEditProjectSection editProjectSectionWithProject:project previousSection:(self.currentSection)]];
 }
-/*
-- (void)enterAddedProject:(GLAProject *)project
-{
-	[self setUpAddedProjectViewControllerIfNeeded];
-	GLAAddNewProjectViewController *viewController = (self.addedProjectViewController);
-	
-	[self goToSection:[GLAMainContentSection addNewProjectSectionWithPreviousSection:(self.currentSection)]];
-	
-	[viewController resetAndFocus];
-}
-*/
+
 #pragma mark Collections
 
 - (GLAViewController *)createViewControllerForCollection:(GLACollection *)collection
@@ -590,7 +587,7 @@
 		}
 	}
 	else if (newSection.isEditProject) {
-		if (outSection.isEditCollection) {
+		if ((outSection.isEditCollection) || (outSection.isAddNewCollection)) {
 			outLeading = 500.0;
 			inLeading = -500.0;
 		}
@@ -715,6 +712,8 @@
 
 - (void)showChildView:(NSView *)view adjustingConstraint:(NSLayoutConstraint *)constraint toValue:(CGFloat)constraintValue animate:(BOOL)animate
 {
+	NSParameterAssert(view != nil);
+	
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 		(view.hidden) = NO;
 		
@@ -743,9 +742,12 @@
 
 - (void)showChildView:(NSView *)view movingLeadingFrom:(CGFloat)leadingInitialValue animate:(BOOL)animate
 {
+	NSParameterAssert(view != nil);
+	
 	[self addViewIfNeeded:view layout:YES];
 	
 	NSLayoutConstraint *leadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:view];
+	NSAssert(leadingConstraint != nil, @"View must have a 'leading' constraint.");
 	
 	if (animate) {
 		// Move view to initial position.

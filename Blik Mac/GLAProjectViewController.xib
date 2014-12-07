@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAProjectViewController">
@@ -10,15 +10,12 @@
                 <outlet property="actionsBarController" destination="fD5-0A-qdK" id="rnf-hs-F7f"/>
                 <outlet property="actionsBarHolder" destination="8vi-0s-ZAk" id="fER-0J-YJc"/>
                 <outlet property="actionsBarHolderBottomConstraint" destination="f6P-NC-GhS" id="r8R-1f-m7l"/>
+                <outlet property="collectionsViewBottomConstraint" destination="fUN-x8-iVl" id="4RJ-wk-WFM"/>
                 <outlet property="collectionsViewController" destination="raF-W4-b8E" id="PF0-mt-Ryz"/>
+                <outlet property="collectionsViewLeadingConstraint" destination="4N2-fG-NN0" id="Ypd-9N-aLW"/>
                 <outlet property="highlightsViewController" destination="aDf-pc-aeE" id="PGv-IR-9yh"/>
-                <outlet property="itemsViewBottomConstraint" destination="fUN-x8-iVl" id="JkA-s5-C7p"/>
-                <outlet property="itemsViewHeightConstraint" destination="B9G-tJ-wrx" id="xs3-h6-aLf"/>
-                <outlet property="itemsViewLeadingConstraint" destination="4N2-fG-NN0" id="6kd-44-jLf"/>
+                <outlet property="highlightsViewTrailingConstraint" destination="GXN-5G-oay" id="llj-Q5-FQY"/>
                 <outlet property="nameTextField" destination="uUN-fG-dyR" id="1Ll-53-eki"/>
-                <outlet property="planViewBottomConstraint" destination="9SR-1S-pao" id="2PH-C1-Bn8"/>
-                <outlet property="planViewHeightConstraint" destination="1YL-eX-iqA" id="Bhy-kS-221"/>
-                <outlet property="planViewTrailingConstraint" destination="GXN-5G-oay" id="7Re-uD-o7p"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
@@ -76,8 +73,8 @@
                                                 <rect key="frame" x="1" y="1" width="197" height="32"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aE0-1H-naF">
-                                                        <rect key="frame" x="18" y="0.0" width="141" height="32"/>
+                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="aE0-1H-naF">
+                                                        <rect key="frame" x="18" y="0.0" width="181" height="32"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="32" id="i8C-5E-2yP"/>
                                                         </constraints>
@@ -110,7 +107,6 @@
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
                     <constraints>
-                        <constraint firstAttribute="height" priority="250" constant="175" id="B9G-tJ-wrx"/>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="163" id="bAy-Ej-emY"/>
                         <constraint firstAttribute="width" constant="200" id="yQu-cr-U1i"/>
                     </constraints>
@@ -206,7 +202,6 @@
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
                     <constraints>
-                        <constraint firstAttribute="height" priority="250" constant="175" id="1YL-eX-iqA"/>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="163" id="9Co-2Y-eFL"/>
                         <constraint firstAttribute="width" constant="290" id="vaW-wj-dTb"/>
                     </constraints>
@@ -223,11 +218,11 @@
             <constraints>
                 <constraint firstItem="aK9-xA-IHE" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" priority="750" id="4N2-fG-NN0"/>
                 <constraint firstAttribute="bottom" secondItem="8vi-0s-ZAk" secondAttribute="bottom" id="52E-z7-sjo"/>
-                <constraint firstItem="8vi-0s-ZAk" firstAttribute="top" secondItem="b3Y-jm-1gd" secondAttribute="bottom" priority="750" constant="8" id="9SR-1S-pao"/>
                 <constraint firstAttribute="trailing" secondItem="b3Y-jm-1gd" secondAttribute="trailing" priority="750" id="GXN-5G-oay"/>
                 <constraint firstAttribute="trailing" secondItem="8vi-0s-ZAk" secondAttribute="trailing" id="Idp-m0-oEx"/>
                 <constraint firstItem="uUN-fG-dyR" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" id="Jtf-4x-qzc"/>
                 <constraint firstAttribute="trailing" secondItem="uUN-fG-dyR" secondAttribute="trailing" constant="20" id="KXo-l8-01e"/>
+                <constraint firstItem="8vi-0s-ZAk" firstAttribute="top" secondItem="b3Y-jm-1gd" secondAttribute="bottom" constant="8" id="VJp-ON-kwd"/>
                 <constraint firstItem="8vi-0s-ZAk" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="XrK-id-Ay0"/>
                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="500" id="f6P-NC-GhS"/>
                 <constraint firstItem="8vi-0s-ZAk" firstAttribute="top" secondItem="aK9-xA-IHE" secondAttribute="bottom" priority="750" constant="8" id="fUN-x8-iVl"/>
@@ -268,45 +263,41 @@
             </connections>
         </viewController>
         <customView placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="30" id="8EB-qb-bNQ" customClass="GLANavigationBar">
-            <rect key="frame" x="0.0" y="0.0" width="500" height="30"/>
+            <rect key="frame" x="0.0" y="0.0" width="500" height="35"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <button placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="m3I-Co-wZM" customClass="GLAButton">
-                    <rect key="frame" x="0.0" y="0.0" width="37" height="30"/>
+                    <rect key="frame" x="0.0" y="8" width="120" height="27"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="37" id="67j-vf-Ocz"/>
-                        <constraint firstAttribute="height" constant="30" id="t1S-Ar-dx9"/>
+                        <constraint firstAttribute="height" constant="27" id="t1S-Ar-dx9"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" title="+" bezelStyle="shadowlessSquare" alignment="right" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jeG-IQ-I3W" customClass="GLAButtonCell">
+                    <buttonCell key="cell" type="square" title="New Collection" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jeG-IQ-I3W" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" size="22" name="AvenirNext-Regular"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
                     </buttonCell>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                            <integer key="value" value="0"/>
+                            <integer key="value" value="-1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                            <integer key="value" value="16"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="addNewCollection:" target="-2" id="8Vo-eW-Kmc"/>
                     </connections>
                 </button>
-                <popUpButton hidden="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SUp-2J-5hc" customClass="GLAPopUpButton">
-                    <rect key="frame" x="210" y="4" width="80" height="22"/>
-                    <popUpButtonCell key="cell" type="square" title="Actions" bezelStyle="shadowlessSquare" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" arrowPosition="noArrow" altersStateOfSelectedItem="NO" id="QvB-cY-VJL" customClass="GLAPopUpButtonCell">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" size="13" name="AvenirNext-Medium"/>
-                        <menu key="menu" title="OtherViews" id="PiQ-la-8zz">
-                            <items>
-                                <menuItem title="Actions" state="on" hidden="YES" id="J57-RP-Rwc"/>
-                                <menuItem title="Delete Project…" id="2PY-mS-4DH"/>
-                            </items>
-                        </menu>
-                    </popUpButtonCell>
-                </popUpButton>
                 <button hidden="YES" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="UAD-cb-caO" customClass="GLAButton">
-                    <rect key="frame" x="37" y="0.0" width="120" height="30"/>
+                    <rect key="frame" x="120" y="8" width="120" height="27"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="30" id="RyI-AQ-d6Q"/>
+                        <constraint firstAttribute="height" constant="27" id="RyI-AQ-d6Q"/>
                     </constraints>
                     <buttonCell key="cell" type="square" title="Edit Collections" bezelStyle="shadowlessSquare" alignment="left" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="XD0-q2-jL3" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -327,13 +318,10 @@
             </subviews>
             <constraints>
                 <constraint firstItem="UAD-cb-caO" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" id="3G8-0V-NRb"/>
-                <constraint firstItem="SUp-2J-5hc" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" constant="4" id="8FN-sr-VHl"/>
-                <constraint firstItem="SUp-2J-5hc" firstAttribute="centerY" secondItem="UAD-cb-caO" secondAttribute="centerY" id="Abh-M8-Rw4"/>
-                <constraint firstAttribute="bottom" secondItem="m3I-Co-wZM" secondAttribute="bottom" id="Ari-Y1-C7k"/>
+                <constraint firstAttribute="bottom" secondItem="m3I-Co-wZM" secondAttribute="bottom" constant="8" id="Ari-Y1-C7k"/>
                 <constraint firstItem="m3I-Co-wZM" firstAttribute="leading" secondItem="8EB-qb-bNQ" secondAttribute="leading" id="FN7-jj-iJW"/>
                 <constraint firstItem="UAD-cb-caO" firstAttribute="leading" secondItem="m3I-Co-wZM" secondAttribute="trailing" id="PaM-vf-s9d"/>
-                <constraint firstItem="SUp-2J-5hc" firstAttribute="centerX" secondItem="8EB-qb-bNQ" secondAttribute="centerX" id="Tvc-qy-n0p"/>
-                <constraint firstAttribute="bottom" secondItem="UAD-cb-caO" secondAttribute="bottom" id="XmI-Jc-umb"/>
+                <constraint firstAttribute="bottom" secondItem="UAD-cb-caO" secondAttribute="bottom" constant="8" id="XmI-Jc-umb"/>
                 <constraint firstItem="m3I-Co-wZM" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" id="zkI-9z-aem"/>
             </constraints>
         </customView>
@@ -435,13 +423,15 @@
         </customView>
         <viewController title="Collections List Instructions" id="5dd-3O-WRK" customClass="GLAProjectInstructionsViewController">
             <connections>
-                <outlet property="mainInstructionTextLabel" destination="chl-Vp-HVE" id="kBj-cE-IQ9"/>
+                <outlet property="headingTextLabel" destination="OSI-F3-63a" id="ghG-87-0vV"/>
+                <outlet property="mainTextLabel" destination="chl-Vp-HVE" id="tfU-7z-DS0"/>
                 <outlet property="view" destination="Idz-io-wKr" id="EYu-4j-kHe"/>
             </connections>
         </viewController>
         <viewController title="Highlights List Instructions" id="bNf-jR-Sti" customClass="GLAProjectInstructionsViewController">
             <connections>
-                <outlet property="mainInstructionTextLabel" destination="kal-bU-mMW" id="1sf-Hq-v4K"/>
+                <outlet property="headingTextLabel" destination="M4I-tR-hcL" id="9kM-GL-e6S"/>
+                <outlet property="mainTextLabel" destination="kal-bU-mMW" id="x48-3M-7hC"/>
                 <outlet property="view" destination="OZm-di-0Uz" id="jOR-Lo-xCd"/>
             </connections>
         </viewController>
@@ -496,7 +486,7 @@
         </customView>
         <menu title="Highlighted Item Menu" id="Vkd-RN-V0D">
             <items>
-                <menuItem title="Remove from List…" id="CCv-nW-cRP">
+                <menuItem title="Remove from Highlights" id="CCv-nW-cRP">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="removedClickedItem:" target="aDf-pc-aeE" id="KGO-Tx-rSu"/>
@@ -526,51 +516,66 @@
             </items>
             <point key="canvasLocation" x="770" y="44.5"/>
         </menu>
-        <customView identifier="collectionsListInstructions" id="Idz-io-wKr">
+        <customView identifier="collectionsListInstructions" id="Idz-io-wKr" userLabel="Collections Instructions">
             <rect key="frame" x="0.0" y="0.0" width="217" height="199"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="chl-Vp-HVE">
-                    <rect key="frame" x="18" y="20" width="201" height="179"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Collections are groups to collect similar files and folders together, even from separate locations or synced cloud folders." id="Pd7-v0-Fcz">
+                    <rect key="frame" x="18" y="64" width="201" height="69"/>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Collect similar files &amp; folders together, even from separate locations or cloud folders." id="Pd7-v0-Fcz">
                         <font key="font" size="13" name="AvenirNext-MediumItalic"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OSI-F3-63a">
+                    <rect key="frame" x="18" y="141" width="81" height="25"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Collections" id="47t-aB-xfq">
+                        <font key="font" size="15" name="AvenirNext-MediumItalic"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="chl-Vp-HVE" secondAttribute="bottom" constant="20" id="84D-vp-xl3"/>
+                <constraint firstAttribute="centerY" secondItem="chl-Vp-HVE" secondAttribute="centerY" constant="-1" id="AHr-e5-vOl"/>
                 <constraint firstAttribute="trailing" secondItem="chl-Vp-HVE" secondAttribute="trailing" id="N3E-7p-ov8"/>
                 <constraint firstItem="chl-Vp-HVE" firstAttribute="leading" secondItem="Idz-io-wKr" secondAttribute="leading" constant="20" id="NEm-DX-azq"/>
-                <constraint firstItem="chl-Vp-HVE" firstAttribute="top" secondItem="Idz-io-wKr" secondAttribute="top" id="lXo-zu-pbl"/>
+                <constraint firstItem="chl-Vp-HVE" firstAttribute="top" secondItem="OSI-F3-63a" secondAttribute="bottom" constant="8" id="OEg-P6-iTz"/>
+                <constraint firstItem="OSI-F3-63a" firstAttribute="leading" secondItem="Idz-io-wKr" secondAttribute="leading" constant="20" id="qo4-qf-cl1"/>
             </constraints>
-            <point key="canvasLocation" x="-346" y="-155.5"/>
+            <point key="canvasLocation" x="-346.5" y="-155.5"/>
         </customView>
-        <customView identifier="highlightsListInstructions" id="OZm-di-0Uz">
+        <customView identifier="highlightsListInstructions" id="OZm-di-0Uz" userLabel="Highlights Instructions">
             <rect key="frame" x="0.0" y="0.0" width="250" height="199"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kal-bU-mMW">
-                    <rect key="frame" x="18" y="20" width="214" height="179"/>
+                    <rect key="frame" x="18" y="65" width="214" height="69"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="210" id="OhI-J3-OPk"/>
                     </constraints>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" id="kVx-69-vmP">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Highlights are the most important items from collections that you need quick access to." id="kVx-69-vmP">
                         <font key="font" size="13" name="AvenirNext-MediumItalic"/>
-                        <string key="title">Highlights are the most important items from your collections that you need quick regular access to.
- 
-Add items here using the right-click menu when inside a collection.</string>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="M4I-tR-hcL">
+                    <rect key="frame" x="157" y="142" width="75" height="25"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Highlights" id="qb6-Ko-72d">
+                        <font key="font" size="15" name="AvenirNext-MediumItalic"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
             </subviews>
             <constraints>
-                <constraint firstItem="kal-bU-mMW" firstAttribute="top" secondItem="OZm-di-0Uz" secondAttribute="top" id="UU3-wR-2mV"/>
+                <constraint firstItem="M4I-tR-hcL" firstAttribute="trailing" secondItem="kal-bU-mMW" secondAttribute="trailing" id="2Bu-V5-OeW"/>
+                <constraint firstItem="kal-bU-mMW" firstAttribute="top" secondItem="M4I-tR-hcL" secondAttribute="bottom" constant="8" id="BEq-UC-XU5"/>
+                <constraint firstAttribute="centerY" secondItem="kal-bU-mMW" secondAttribute="centerY" id="NyD-na-nvt"/>
                 <constraint firstItem="kal-bU-mMW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="OZm-di-0Uz" secondAttribute="leading" constant="20" id="bMe-hd-luO"/>
                 <constraint firstAttribute="trailing" secondItem="kal-bU-mMW" secondAttribute="trailing" constant="20" symbolic="YES" id="e3h-pu-8iC"/>
-                <constraint firstAttribute="bottom" secondItem="kal-bU-mMW" secondAttribute="bottom" constant="20" id="roh-Bk-Ros"/>
             </constraints>
             <point key="canvasLocation" x="573" y="-131.5"/>
         </customView>

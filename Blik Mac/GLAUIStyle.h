@@ -26,6 +26,7 @@
 @property(nonatomic) NSColor *activeBarTextColor;
 
 @property(nonatomic) NSColor *activeButtonHighlightColor;
+@property(nonatomic) NSColor *activeButtonBarColor;
 @property(nonatomic) NSColor *activeButtonDisabledHighlightColor;
 
 @property(nonatomic) NSColor *primaryButtonBackgroundColor;
@@ -101,7 +102,12 @@
 
 - (void)prepareContentTextField:(NSTextField *)textField;
 - (void)prepareTextLabel:(NSTextField *)textField;
+
+- (void)prepareProjectNameField:(NSTextField *)projectNameField;
+
 - (void)prepareInstructionalTextLabel:(NSTextField *)textField;
+- (void)prepareInstructionalHeadingLabel:(NSTextField *)textField;
+
 - (void)prepareOutlinedTextField:(NSTextField *)textField;
 - (void)prepareContentTableView:(NSTableView *)tableView;
 

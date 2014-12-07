@@ -12,12 +12,12 @@
 
 @interface GLAProjectsListViewController : GLAViewController
 
+@property(nonatomic) IBOutlet NSView *hasContentView;
+@property(nonatomic) IBOutlet NSViewController *emptyContentViewController;
+
 @property(nonatomic) IBOutlet NSTableView *tableView;
 
 @property(nonatomic) IBOutlet NSMenu *contextualMenu;
-
-// You set the projects.
-@property(copy, nonatomic) NSArray *projects;
 
 
 - (IBAction)tableViewClicked:(id)sender;

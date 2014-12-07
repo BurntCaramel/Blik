@@ -14,7 +14,6 @@
 #import "GLACollectedFile.h"
 #import "GLAArrayEditor.h"
 #import "GLAModelArrayEditorStore.h"
-#import "GLAArrayUniqueKeyPathConstrainer.h"
 #import "GLAArrayEditorStore.h"
 #import "GLAObjectNotificationRepresenter.h"
 #import "GLAModelUUIDMap.h"
@@ -248,7 +247,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	};
 	
 	[self editAllProjectsUsingBlock:^(id<GLAArrayEditing> allProjectsEditor) {
-		changedProject = [allProjectsEditor replaceFirstChildWhoseKeyPath:@"UUID" hasValue:(project.UUID) usingChangeBlock:projectReplacer];
+		changedProject = [allProjectsEditor replaceFirstChildWhoseKey:@"UUID" hasValue:(project.UUID) usingChangeBlock:projectReplacer];
 	}];
 	
 	return changedProject;
@@ -257,8 +256,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 - (void)permanentlyDeleteProject:(GLAProject *)project
 {
 	[self editAllProjectsUsingBlock:^(id<GLAArrayEditing> allProjectsEditor) {
-		NSIndexSet *indexes = [allProjectsEditor indexesOfChildrenWhoseKey:@"UUID" hasValue:(project.UUID)];
-		[allProjectsEditor removeChildrenAtIndexes:indexes];
+		[allProjectsEditor removeFirstChildWhoseKey:@"UUID" hasValue:(project.UUID)];
 	}];
 }
 
@@ -303,13 +301,21 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	GLAProjectManagerStore *store = (self.store);
 	GLAModelArrayEditorStore *collectionsEditorStore = [store collectionsEditorStoreForProject:project];
 	
-	[collectionsEditorStore editUsingBlock:block handleAddedChildren:^(NSArray *addedChildren) {
-		[self collectionsDidChange:addedChildren];
-	} handleRemovedChildren:^(NSArray *removedChildren) {
-		[store permanentlyDeleteAssociatedFilesForCollections:removedChildren];
-	} handleReplacedChildren:^(NSArray *originalChildren, NSArray *replacementChildren) {
-		[self collectionsDidChange:replacementChildren];
-	}];
+	[collectionsEditorStore
+	 editUsingBlock:block
+	 handleAddedChildren:^(NSArray *addedChildren)
+	 {
+		 [self collectionsDidChange:addedChildren];
+	 }
+	 handleRemovedChildren:^(NSArray *removedChildren)
+	 {
+		 [self removeHighlightedItemsWithCollections:removedChildren fromProject:project];
+		 [store permanentlyDeleteAssociatedFilesForCollections:removedChildren];
+	 }
+	 handleReplacedChildren:^(NSArray *originalChildren, NSArray *replacementChildren)
+	 {
+		 [self collectionsDidChange:replacementChildren];
+	 }];
 	
 	[self collectionListForProjectDidChange:project];
 	
@@ -338,7 +344,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	__block GLACollection *changedCollection = nil;
 	
 	[self editCollectionsOfProject:project usingBlock:^(id<GLAArrayEditing> collectionListEditor) {
-		changedCollection = [collectionListEditor replaceFirstChildWhoseKeyPath:@"UUID" hasValue:(collection.UUID) usingChangeBlock:^GLACollection *(GLACollection *originalCollection) {
+		changedCollection = [collectionListEditor replaceFirstChildWhoseKey:@"UUID" hasValue:(collection.UUID) usingChangeBlock:^GLACollection *(GLACollection *originalCollection) {
 			return [originalCollection copyWithChangesFromEditing:editBlock];
 		}];
 	}];
@@ -363,8 +369,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 - (void)permanentlyDeleteCollection:(GLACollection *)collection fromProject:(GLAProject *)project
 {
 	[self editCollectionsOfProject:project usingBlock:^(id<GLAArrayEditing> collectionListEditor) {
-		NSIndexSet *indexes = [collectionListEditor indexesOfChildrenWhoseKey:@"UUID" hasValue:(collection.UUID)];
-		[collectionListEditor removeChildrenAtIndexes:indexes];
+		[collectionListEditor removeFirstChildWhoseKey:@"UUID" hasValue:(collection.UUID)];
 	}];
 }
 
@@ -410,7 +415,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	NSParameterAssert(project != nil);
 	
 	[self editHighlightsOfProject:project usingBlock:^(id<GLAArrayEditing> highlightsListEditor) {
-		changedHighlightedCollectedFile = [highlightsListEditor replaceFirstChildWhoseKeyPath:@"UUID" hasValue:(highlightedCollectedFile.UUID) usingChangeBlock:^GLAHighlightedCollectedFile *(GLAHighlightedCollectedFile *originalHighlightedCollectedFile) {
+		changedHighlightedCollectedFile = [highlightsListEditor replaceFirstChildWhoseKey:@"UUID" hasValue:(highlightedCollectedFile.UUID) usingChangeBlock:^GLAHighlightedCollectedFile *(GLAHighlightedCollectedFile *originalHighlightedCollectedFile) {
 			return [originalHighlightedCollectedFile copyWithChangesFromEditing:editBlock];
 		}];
 	}];
@@ -418,7 +423,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	return changedHighlightedCollectedFile;
 }
 
-- (void)removeHighlightsWithCollectedFiles:(NSArray *)collectedFiles fromProject:(GLAProject *)project
+- (void)removeHighlightedItemsWithCollectedFiles:(NSArray *)collectedFiles fromProject:(GLAProject *)project
 {
 	NSSet *removedCollectionFileUUIDs = [NSSet setWithArray:[collectedFiles valueForKey:@"UUID"]];
 	[self editHighlightsOfProject:project usingBlock:^(id<GLAArrayEditing> highlightsEditor) {
@@ -430,6 +435,22 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 			
 			return nil;
 		} hasValueContainedInSet:removedCollectionFileUUIDs];
+		[highlightsEditor removeChildrenAtIndexes:indexesOfRemovedFiles];
+	}];
+}
+
+- (void)removeHighlightedItemsWithCollections:(NSArray *)collections fromProject:(GLAProject *)project
+{
+	NSSet *collectionUUIDs = [NSSet setWithArray:[collections valueForKey:@"UUID"]];
+	[self editHighlightsOfProject:project usingBlock:^(id<GLAArrayEditing> highlightsEditor) {
+		NSIndexSet *indexesOfRemovedFiles = [highlightsEditor indexesOfChildrenWhoseResultFromVisitor:^ NSUUID *(GLAHighlightedItem *highlightedItem) {
+			if ([highlightedItem conformsToProtocol:@protocol(GLAHighlightedCollectedItem)]) {
+				id<GLAHighlightedCollectedItem> highlightedCollectedItem = (id<GLAHighlightedCollectedItem>)highlightedItem;
+				return (highlightedCollectedItem.holdingCollectionUUID);
+			}
+			
+			return nil;
+		} hasValueContainedInSet:collectionUUIDs];
 		[highlightsEditor removeChildrenAtIndexes:indexesOfRemovedFiles];
 	}];
 }
@@ -471,7 +492,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	 handleAddedChildren:nil
 	 handleRemovedChildren:^(NSArray *removedChildren) {
 		GLAProject *project = [self projectWithUUID:(filesListCollection.projectUUID)];
-		[self removeHighlightsWithCollectedFiles:removedChildren fromProject:project];
+		[self removeHighlightedItemsWithCollectedFiles:removedChildren fromProject:project];
 	}
 	 handleReplacedChildren:nil
 	 ];
@@ -1062,12 +1083,11 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	
 	NSURL *JSONFileURL = (self.allProjectsJSONFileURL);
 	
-	NSDictionary *userInfo =
+	allProjectsEditorStore = [[GLAModelArrayEditorStore alloc] initWithDelegate:self modelClass:[GLAProject class] JSONFileURL:JSONFileURL JSONDictionaryKey:GLAProjectManagerJSONAllProjectsKey arrayEditorOptions:nil];
+	(allProjectsEditorStore.userInfo) =
 	@{
 	  @"allProjects": @(YES)
 	  };
-	
-	allProjectsEditorStore = [[GLAModelArrayEditorStore alloc] initWithDelegate:self modelClass:[GLAProject class] JSONFileURL:JSONFileURL JSONDictionaryKey:GLAProjectManagerJSONAllProjectsKey userInfo:userInfo arrayEditorOptions:nil];
 	
 	_allProjectsEditorStore = allProjectsEditorStore;
 	
@@ -1308,12 +1328,12 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	}
 	
 	NSURL *JSONFileURL = [self collectionsListJSONFileURLForProjectID:projectUUID];
-	NSDictionary *userInfo =
-  @{
-	@"projectUUID": projectUUID
-	};
 	
-	collectionsEditorStore = [[GLAModelArrayEditorStore alloc] initWithDelegate:self modelClass:[GLACollection class] JSONFileURL:JSONFileURL JSONDictionaryKey:GLAProjectManagerJSONCollectionsListKey userInfo:userInfo arrayEditorOptions:nil];
+	collectionsEditorStore = [[GLAModelArrayEditorStore alloc] initWithDelegate:self modelClass:[GLACollection class] JSONFileURL:JSONFileURL JSONDictionaryKey:GLAProjectManagerJSONCollectionsListKey arrayEditorOptions:nil];
+	(collectionsEditorStore.userInfo) =
+	@{
+	  @"projectUUID": projectUUID
+	  };
 	
 	projectIDsToCollectionEditorStores[projectUUID] = collectionsEditorStore;
 	
@@ -1410,12 +1430,12 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	}
 	
 	NSURL *JSONFileURL = [self highlightsListJSONFileURLForProjectID:projectUUID];
-	NSDictionary *userInfo =
+	
+	highlightsEditorStore = [[GLAArrayEditorStore alloc] initWithDelegate:self modelClass:[GLAHighlightedItem class] JSONFileURL:JSONFileURL JSONDictionaryKey:GLAProjectManagerJSONHighlightsListKey arrayEditorOptions:nil];
+	(highlightsEditorStore.userInfo) =
 	@{
 	  @"projectUUID": projectUUID
 	  };
-	
-	highlightsEditorStore = [[GLAArrayEditorStore alloc] initWithDelegate:self modelClass:[GLAHighlightedItem class] JSONFileURL:JSONFileURL JSONDictionaryKey:GLAProjectManagerJSONHighlightsListKey userInfo:userInfo arrayEditorOptions:nil];
 	
 	projectIDsToHighlightsEditorStores[projectUUID] = highlightsEditorStore;
 	
@@ -1486,12 +1506,12 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	}
 	
 	NSURL *JSONFileURL = [self filesListJSONFileURLForCollectionID:collectionUUID];
-	NSDictionary *userInfo =
+	
+	filesListEditorStore = [[GLAArrayEditorStore alloc] initWithDelegate:self modelClass:[GLACollectedFile class] JSONFileURL:JSONFileURL JSONDictionaryKey:GLAProjectManagerJSONFilesListKey arrayEditorOptions:nil];
+	(filesListEditorStore.userInfo) =
 	@{
 	  @"collectionUUID": collectionUUID
 	  };
-	
-	filesListEditorStore = [[GLAArrayEditorStore alloc] initWithDelegate:self modelClass:[GLACollectedFile class] JSONFileURL:JSONFileURL JSONDictionaryKey:GLAProjectManagerJSONFilesListKey userInfo:userInfo arrayEditorOptions:nil];
 	
 	collectionIDsToFilesListEditorStores[collectionUUID] = filesListEditorStore;
 	
@@ -1543,16 +1563,13 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	GLAArrayEditorStore *filesListEditorStore = [self filesListEditorStoreForCollection:filesListCollection];
 	id<GLAArrayInspecting> arrayInspector = (filesListEditorStore.inspectArray);
 	
-	NSIndexSet *indexes = [arrayInspector indexesOfChildrenWhoseKey:@"UUID" hasValue:collectedFileUUID];
-	if ((indexes.count) == 1) {
-		NSArray *childInArray = [arrayInspector childrenAtIndexes:indexes];
-		GLACollectedFile *collectedFile = childInArray[0];
-		return collectedFile;
-	}
-	// No index or multiple indexes in invalid.
-	else {
+	NSUInteger index = [arrayInspector indexOfFirstChildWhoseKey:@"UUID" hasValue:collectedFileUUID];
+	if (index == NSNotFound) {
 		return nil;
 	}
+	
+	GLACollectedFile *collectedFile = [arrayInspector childAtIndex:index];
+	return collectedFile;
 }
 
 #pragma mark - Saving

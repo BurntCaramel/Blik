@@ -43,6 +43,8 @@
 
 - (instancetype)initWithObjects:(NSArray *)objects options:(GLAArrayEditorOptions *)options
 {
+	NSParameterAssert(objects != nil);
+	
 	self = [super init];
 	if (self) {
 		_mutableChildren = [NSMutableArray arrayWithArray:objects];
@@ -84,18 +86,26 @@
 
 #pragma mark -
 
+- (NSArray *)copyChildren
+{
+	return [(self.mutableChildren) copy];
+}
+
+- (id)childAtIndex:(NSUInteger)index
+{
+	NSParameterAssert(index != NSNotFound);
+	
+	NSMutableArray *mutableChildren = (self.mutableChildren);
+	return mutableChildren[index];
+}
+
 - (NSArray *)childrenAtIndexes:(NSIndexSet *)indexes
 {
 	NSMutableArray *mutableChildren = (self.mutableChildren);
 	return [mutableChildren objectsAtIndexes:indexes];
 }
 
-- (NSArray *)copyChildren
-{
-	return [(self.mutableChildren) copy];
-}
-
-- (GLAArrayEditorChanges *)changesMadeInBlock:(void (^)(id<GLAArrayEditing> arrayEditor))editorBlock
+- (GLAArrayEditorChanges *)changesMadeInBlock:(GLAArrayEditingBlock)editorBlock
 {
 	GLAArrayEditorChanges *changes = [GLAArrayEditorChanges new];
 	(self.currentChanges) = changes;
@@ -124,6 +134,8 @@
 
 - (void)addChildren:(NSArray *)objects
 {
+	NSParameterAssert(objects != nil);
+	
 	NSMutableArray *mutableChildren = (self.mutableChildren);
 	[mutableChildren addObjectsFromArray:objects];
 	
@@ -135,6 +147,9 @@
 
 - (void)insertChildren:(NSArray *)objects atIndexes:(NSIndexSet *)indexes
 {
+	NSParameterAssert(objects != nil);
+	NSParameterAssert(indexes != nil);
+	
 	NSMutableArray *mutableChildren = (self.mutableChildren);
 	[mutableChildren insertObjects:objects atIndexes:indexes];
 	
@@ -146,6 +161,8 @@
 
 - (void)removeChildrenAtIndexes:(NSIndexSet *)indexes
 {
+	NSParameterAssert(indexes != nil);
+	
 	NSMutableArray *mutableChildren = (self.mutableChildren);
 	
 	GLAArrayEditorChanges *changes = (self.currentChanges);
@@ -159,6 +176,9 @@
 
 - (void)replaceChildrenAtIndexes:(NSIndexSet *)indexes withObjects:(NSArray *)objects
 {
+	NSParameterAssert(indexes != nil);
+	NSParameterAssert(objects != nil);
+	
 	NSMutableArray *mutableChildren = (self.mutableChildren);
 	
 	GLAArrayEditorChanges *changes = (self.currentChanges);
@@ -172,6 +192,9 @@
 
 - (void)moveChildrenAtIndexes:(NSIndexSet *)indexes toIndex:(NSUInteger)toIndex
 {
+	NSParameterAssert(indexes != nil);
+	NSParameterAssert(toIndex != NSNotFound);
+	
 	NSMutableArray *mutableChildren = (self.mutableChildren);
 	NSArray *objectsToMove = [mutableChildren objectsAtIndexes:indexes];
 	[mutableChildren removeObjectsAtIndexes:indexes];
@@ -180,9 +203,31 @@
 	// No changes tracked, as objects are moved not actually added or removed.
 }
 
+- (NSUInteger)indexOfFirstChildWhoseKey:(NSString *)key hasValue:(id)value
+{
+	NSParameterAssert(key != nil);
+	NSParameterAssert(value != nil);
+	
+	NSMutableArray *mutableChildren = (self.mutableChildren);
+	
+	NSUInteger i = 0;
+	for (id child in mutableChildren) {
+		id objectValue = [child valueForKey:key];
+		BOOL found = (objectValue != nil) && [objectValue isEqual:value];
+		if (found) {
+			return i;
+		}
+		i++;
+	}
+	
+	return NSNotFound;
+}
 
 - (NSIndexSet *)indexesOfChildrenWhoseResultFromVisitor:(id (^)(id child))childVisitor hasValueContainedInSet:(NSSet *)valuesSet
 {
+	NSParameterAssert(childVisitor != nil);
+	NSParameterAssert(valuesSet != nil);
+	
 	return [(self.mutableChildren) indexesOfObjectsPassingTest:^BOOL(id child, NSUInteger idx, BOOL *stop) {
 		id objectValue = childVisitor(child);
 		BOOL found = (objectValue != nil) && [valuesSet containsObject:objectValue];
@@ -190,40 +235,61 @@
 	}];
 }
 
-- (NSIndexSet *)indexesOfChildrenWhoseKey:(NSString *)keyPath hasValue:(id)value
+- (NSArray *)filterArray:(NSArray *)objects whoseResultFromVisitorIsNotAlreadyPresent:(GLAArrayChildVisitorBlock)childVisitor
 {
-	return [(self.mutableChildren) indexesOfObjectsPassingTest:^BOOL(id originalObject, NSUInteger idx, BOOL *stop) {
-		id objectValue = [originalObject valueForKey:keyPath];
-		BOOL found = (objectValue != nil) && [objectValue isEqual:value];
-		return found;
-	}];
-}
-
-- (NSArray *)filterArray:(NSArray *)objects whoseValuesIsNotPresentForKeyPath:(NSString *)keyPath
-{
-	NSMutableArray *mutableChildren = (self.mutableChildren);
-	// Make a set of the childrens' property.
-	NSSet *objectPropertyValues = [NSSet setWithArray:[mutableChildren valueForKeyPath:keyPath]];
-	//
-	NSIndexSet *indexes = [objects indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-		id objectValue = [obj valueForKeyPath:keyPath];
-		// We want the objects that aren't present.
-		BOOL found = [objectPropertyValues containsObject:objectValue];
-		return !found;
-	}];
-	return [objects objectsAtIndexes:indexes];
-}
-
-- (id)replaceFirstChildWhoseKeyPath:(NSString *)keyPath hasValue:(id)value usingChangeBlock:(id (^)(id originalObject))objectChanger
-{
-	NSIndexSet *indexes = [self indexesOfChildrenWhoseKey:keyPath hasValue:value];
+	NSParameterAssert(objects != nil);
+	NSParameterAssert(childVisitor != nil);
 	
-	if (indexes.count == 0) {
-		return nil;
+	NSMutableArray *mutableChildren = (self.mutableChildren);
+	
+	NSMutableSet *childResults = [NSMutableSet new];
+	for (id child in mutableChildren) {
+		id childResult = childVisitor(child);
+		if (childResult) {
+			[childResults addObject:childResult];
+		}
 	}
 	
-	indexes = [NSIndexSet indexSetWithIndex:(indexes.firstIndex)];
-	NSArray *originalObject = [self childrenAtIndexes:indexes][0];
+	NSMutableArray *filteredObjects = [NSMutableArray new];
+	for (id object in objects) {
+		id objectResult = childVisitor(object);
+		if (!objectResult) {
+			continue;
+		}
+		
+		if (![childResults containsObject:objectResult]) {
+			[filteredObjects addObject:object];
+		}
+	}
+	
+	return filteredObjects;
+}
+
+- (BOOL)removeFirstChildWhoseKey:(NSString *)key hasValue:(id)value
+{
+	NSUInteger index = [self indexOfFirstChildWhoseKey:key hasValue:value];
+	if (index == NSNotFound) {
+		return NO;
+	}
+	
+	[self removeChildrenAtIndexes:[NSIndexSet indexSetWithIndex:index]];
+	
+	return YES;
+}
+
+- (id)replaceFirstChildWhoseKey:(NSString *)key hasValue:(id)value usingChangeBlock:(id (^)(id originalObject))objectChanger
+{
+	NSParameterAssert(key != nil);
+	NSParameterAssert(value != nil);
+	NSParameterAssert(objectChanger != nil);
+	
+	NSUInteger index = [self indexOfFirstChildWhoseKey:key hasValue:value];
+	if (index == NSNotFound) {
+		return NO;
+	}
+	
+	id originalObject = [self childAtIndex:index];
+	NSIndexSet *indexes = [NSIndexSet indexSetWithIndex:index];
 	
 	id replacementObject = objectChanger(originalObject);
 	[self replaceChildrenAtIndexes:indexes withObjects:@[replacementObject]];
@@ -331,12 +397,16 @@
 
 - (void)addObserver:(id<GLAArrayObserving>)observer
 {
+	NSParameterAssert(observer != nil);
+	
 	NSMutableArray *mutableObservers = (self.mutableObservers);
 	[mutableObservers addObject:observer];
 }
 
 - (void)addConstrainer:(id<GLAArrayConstraining>)constrainer
 {
+	NSParameterAssert(constrainer != nil);
+	
 	NSMutableArray *mutableConstrainers = (self.mutableConstrainers);
 	[mutableConstrainers addObject:constrainer];
 	

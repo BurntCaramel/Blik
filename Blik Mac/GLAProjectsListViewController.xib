@@ -8,13 +8,14 @@
         <customObject id="-2" userLabel="File's Owner" customClass="GLAProjectsListViewController">
             <connections>
                 <outlet property="contextualMenu" destination="twI-F8-TmJ" id="ptn-ea-Olj"/>
+                <outlet property="hasContentView" destination="Hz6-mo-xeY" id="4e7-B5-dh5"/>
                 <outlet property="tableView" destination="GZN-Pm-4Iy" id="BGr-Fc-fHq"/>
-                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+                <outlet property="view" destination="agp-xA-26G" id="Db5-mf-cQ0"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY" customClass="GLAProjectView">
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY">
             <rect key="frame" x="0.0" y="0.0" width="500" height="272"/>
             <subviews>
                 <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="43" horizontalPageScroll="10" verticalLineScroll="43" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="W9B-ly-3lZ">
@@ -145,5 +146,10 @@
             </items>
             <point key="canvasLocation" x="81.5" y="401.5"/>
         </menu>
+        <customView id="agp-xA-26G" customClass="GLAProjectView">
+            <rect key="frame" x="0.0" y="0.0" width="163" height="96"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <point key="canvasLocation" x="447.5" y="100"/>
+        </customView>
     </objects>
 </document>

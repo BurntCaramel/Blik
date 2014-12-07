@@ -28,7 +28,7 @@
 @property(nonatomic) NSMutableSet *accessedSecurityScopedURLs;
 @property(nonatomic) NSMutableDictionary *usedURLsToCollectedFiles;
 
-@property(nonatomic) NSMutableArray *selectedURLs;
+@property(nonatomic) NSArray *selectedURLs;
 @property(nonatomic) NSMutableDictionary *URLsToOpenerApplicationURLs;
 @property(nonatomic) NSMutableDictionary *URLsToDefaultOpenerApplicationURLs;
 
@@ -88,6 +88,9 @@
 	(self.tableDraggingHelper) = [[GLAArrayEditorTableDraggingHelper alloc] initWithDelegate:self];
 	
 	[self setUpFileHelpers];
+	
+	[self updateSelectedFilesUIVisibilityAnimating:NO];
+	[self updateQuickLookPreviewAnimating:NO];
 	
 	[self reloadSourceFiles];
 }
@@ -192,9 +195,11 @@
 		(self.collectedFiles) = @[];
 	}
 	
-	[(self.sourceFilesListTableView) reloadData];
-	
-	[self updateOpenerApplicationsUIVisibility];
+	if (self.hasPreparedViews) {
+		[(self.sourceFilesListTableView) reloadData];
+		
+		[self updateSelectedFilesUIVisibilityAnimating:YES];
+	}
 }
 
 - (void)filesListDidChangeNotification:(NSNotification *)note
@@ -205,45 +210,6 @@
 - (void)highlightedItemsDidChangeNotification:(NSNotification *)note
 {
 	[self addAnyPendingHighlightedItems];
-}
-
-- (void)updateQuickLookPreview
-{
-	if (self.activeQuickLookPreviewPanel) {
-		[(self.activeQuickLookPreviewPanel) reloadData];
-	}
-	
-	if (!(self.quickLookPreviewView)) {
-		GLAViewController *previewHolderViewController = [[GLAViewController alloc] init];
-		(previewHolderViewController.view) = (self.previewHolderView);
-		
-		(self.previewHolderViewController) = previewHolderViewController;
-		
-		QLPreviewView *quickLookPreviewView = [[QLPreviewView alloc] initWithFrame:NSZeroRect style:QLPreviewViewStyleNormal];
-		[previewHolderViewController fillViewWithChildView:quickLookPreviewView];
-		(self.quickLookPreviewView) = quickLookPreviewView;
-	}
-	
-	QLPreviewView *quickLookPreviewView = (self.quickLookPreviewView);
-	NSIndexSet *selectedRowIndexes = [(self.sourceFilesListTableView) selectedRowIndexes];
-	GLACollectedFile *selectedFile = nil;
-	NSURL *URL = nil;
-	
-	if ((selectedRowIndexes.count) == 1) {
-		selectedFile = (self.collectedFiles)[selectedRowIndexes.firstIndex];
-		URL = (selectedFile.URL);
-		[self startObservingPreviewFrameChanges];
-	}
-	
-	@try {
-		(quickLookPreviewView.previewItem) = URL;
-	}
-	@catch (NSException *exception) {
-		NSLog(@"Quick Look exception %@", exception);
-	}
-	@finally {
-		 
-	}
 }
 
 - (void)stopObservingPreviewFrameChanges
@@ -331,105 +297,152 @@
 
 #pragma mark -
 
-- (NSArray *)URLsForActionIsContextual:(BOOL)isContextual
+- (NSIndexSet *)rowIndexesForActionFrom:(id)sender
 {
 	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
+	NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
 	
-	NSInteger clickedRow = (sourceFilesListTableView.clickedRow);
-	if (isContextual && (clickedRow == -1)) {
-		return nil;
-	}
+	BOOL isContextual = ((sender != nil) && [sender isKindOfClass:[NSMenuItem class]]);
 	
-	NSIndexSet *selectedRows = (sourceFilesListTableView.selectedRowIndexes);
-	if (isContextual ? [selectedRows containsIndex:clickedRow] : YES) {
-		return (self.selectedURLs);
+	if (isContextual) {
+		NSInteger clickedRow = (sourceFilesListTableView.clickedRow);
+		if (clickedRow == -1) {
+			return [NSIndexSet indexSet];
+		}
+		
+		if ([selectedIndexes containsIndex:clickedRow]) {
+			return selectedIndexes;
+		}
+		else {
+			return [NSIndexSet indexSetWithIndex:clickedRow];
+		}
 	}
 	else {
-		GLACollectedFile *collectedFile = (self.collectedFiles)[clickedRow];
-		NSURL *clickedURL = (collectedFile.URL);
-		return @[clickedURL];
-	}
-}
-
-- (NSIndexSet *)rowIndexesForContextualAction
-{
-	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
-	
-	NSInteger clickedRow = (sourceFilesListTableView.clickedRow);
-	if (clickedRow == -1) {
-		return nil;
-	}
-	
-	NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
-	if ([selectedIndexes containsIndex:clickedRow]) {
 		return selectedIndexes;
 	}
-	else {
-		return [NSIndexSet indexSetWithIndex:clickedRow];
-	}
 }
 
-- (void)updateSelectedURLs
+- (NSArray *)URLsForRowIndexes:(NSIndexSet *)indexes
 {
-	NSMutableArray *selectedURLs = (self.selectedURLs);
-	if (!selectedURLs) {
-		selectedURLs = (self.selectedURLs) = [NSMutableArray new];
+	NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:indexes];
+	
+	NSMutableArray *URLs = [NSMutableArray new];
+	for (GLACollectedFile *collectedFile in collectedFiles) {
+		NSURL *fileURL = (collectedFile.filePathURL);
+		if (fileURL) {
+			[URLs addObject:fileURL];
+		}
 	}
 	
-	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
-	NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
-	if ((selectedIndexes.count) == 0) {
-		[selectedURLs removeAllObjects];
+	return URLs;
+}
+
+- (NSArray *)selectedURLs
+{
+	return [self URLsForRowIndexes:[self rowIndexesForActionFrom:nil]];
+}
+
+#pragma mark -
+
+- (void)updateQuickLookPreviewAnimating:(BOOL)animate
+{
+	if (self.activeQuickLookPreviewPanel) {
+		[(self.activeQuickLookPreviewPanel) reloadData];
 	}
-	else {
-		NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:selectedIndexes];
+	
+	if (!(self.quickLookPreviewView)) {
+		GLAViewController *previewHolderViewController = [[GLAViewController alloc] init];
+		(previewHolderViewController.view) = (self.previewHolderView);
 		
-		[selectedURLs removeAllObjects];
-		for (GLACollectedFile *collectedFile in collectedFiles) {
-			NSURL *fileURL = (collectedFile.URL);
-			if (fileURL) {
-				[selectedURLs addObject:fileURL];
-			}
-		}
+		(self.previewHolderViewController) = previewHolderViewController;
+		
+		QLPreviewView *quickLookPreviewView = [[QLPreviewView alloc] initWithFrame:NSZeroRect style:QLPreviewViewStyleNormal];
+		[previewHolderViewController fillViewWithChildView:quickLookPreviewView];
+		(self.quickLookPreviewView) = quickLookPreviewView;
 	}
 	
-	[self retrieveApplicationsToOpenSelection];
-	[self setNeedsToUpdateOpenerApplicationsUI];
-	[self updateQuickLookPreview];
-}
-
-- (NSInteger)rowIndexForSelectedURL:(NSURL *)URL
-{
-	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
-	NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
+	QLPreviewView *quickLookPreviewView = (self.quickLookPreviewView);
+	NSIndexSet *selectedRowIndexes = [(self.sourceFilesListTableView) selectedRowIndexes];
+	GLACollectedFile *selectedFile = nil;
+	NSURL *URL = nil;
 	
-	__block NSInteger rowIndex = -1;
-	[(self.collectedFiles) enumerateObjectsAtIndexes:selectedIndexes options:NSEnumerationConcurrent usingBlock:^(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
-		if ([URL isEqual:(collectedFile.URL)]) {
-			rowIndex = idx;
-			*stop = YES;
+	if ((selectedRowIndexes.count) == 1) {
+		selectedFile = (self.collectedFiles)[selectedRowIndexes.firstIndex];
+		URL = (selectedFile.filePathURL);
+		[self startObservingPreviewFrameChanges];
+	}
+	
+	CGFloat alphaValue = (URL != nil) ? 1.0 : 0.0;
+	@try {
+		if (animate) {
+			[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+				(context.duration) = 2.0 / 16.0;
+				(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+				
+				if (URL) {
+					(quickLookPreviewView.previewItem) = URL;
+				}
+				
+				quickLookPreviewView.animator.alphaValue = alphaValue;
+			} completionHandler:^{
+				if (!URL) {
+					(quickLookPreviewView.previewItem) = nil;
+				}
+			}];
 		}
-	}];
-	
-	return rowIndex;
+		else {
+			(quickLookPreviewView.alphaValue) = alphaValue;
+			(quickLookPreviewView.previewItem) = URL;
+		}
+	}
+	@catch (NSException *exception) {
+		NSLog(@"Quick Look exception %@", exception);
+	}
+	@finally {
+		
+	}
 }
 
-- (void)retrieveApplicationsToOpenSelection
-{
-	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
-	(openerApplicationCombiner.fileURLs) = [NSSet setWithArray:(self.selectedURLs)];
-}
-
-- (void)updateOpenerApplicationsUIVisibility
+- (void)updateSelectedFilesUIVisibilityAnimating:(BOOL)animate
 {
 	GLAPopUpButton *popUpButton = (self.openerApplicationsPopUpButton);
 	NSTextField *label = (self.openerApplicationsTextLabel);
+	GLAButton *addToHighlightsButton = (self.addToHighlightsButton);
+	
+	NSArray *views =
+	@[
+	  popUpButton,
+	  label,
+	  addToHighlightsButton
+	  ];
 	
 	NSArray *selectedURLs = (self.selectedURLs);
 	BOOL hasNoURLs = (selectedURLs.count) == 0;
+	CGFloat alphaValue = hasNoURLs ? 0.0 : 1.0;
 	
-	(popUpButton.hidden) = hasNoURLs;
-	(label.hidden) = hasNoURLs;
+	if (animate) {
+		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+			(context.duration) = 3.0 / 16.0;
+			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+			
+			[[views valueForKey:@"animator"] setValue:@(alphaValue) forKey:@"alphaValue"];
+			/*
+			 (popUpButton.animator.alphaValue) = alphaValue;
+			 (label.animator.alphaValue) = alphaValue;
+			 (addToHighlightsButton.animator.alphaValue) = alphaValue;
+			 */
+		} completionHandler:^{
+			
+		}];
+	}
+	else {
+		[views setValue:@(alphaValue) forKey:@"alphaValue"];
+		
+		/*
+		 (popUpButton.hidden) = hasNoURLs;
+		 (label.hidden) = hasNoURLs;
+		 (addToHighlightsButton.hidden) = hasNoURLs;*/
+	}
 }
 
 - (void)updateOpenerApplicationsUIMenu
@@ -443,8 +456,6 @@
 	if (firstItem) {
 		[menu insertItem:[firstItem copy] atIndex:0];
 	}
-	
-	[self updateOpenerApplicationsUIVisibility];
 }
 
 - (void)setNeedsToUpdateOpenerApplicationsUI
@@ -461,6 +472,47 @@
 		
 		(self.openerApplicationsPopUpButtonNeedsUpdate) = NO;
 	}];
+}
+
+#pragma mark -
+
+- (void)updateSelectedURLs
+{
+	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
+	NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
+	
+	(self.selectedURLs) = [self URLsForRowIndexes:selectedIndexes];
+	
+	NSArray *selectedCollectedFiles = [(self.collectedFiles) objectsAtIndexes:selectedIndexes];
+	[(self.collectedFilesSetting) startUsingURLsForCollectedFiles:selectedCollectedFiles removingRemainders:YES];
+	
+	[self retrieveApplicationsToOpenSelection];
+	[self setNeedsToUpdateOpenerApplicationsUI];
+	
+	[self updateQuickLookPreviewAnimating:YES];
+	[self updateSelectedFilesUIVisibilityAnimating:YES];
+}
+
+- (NSInteger)rowIndexForSelectedURL:(NSURL *)URL
+{
+	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
+	NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
+	
+	__block NSInteger rowIndex = -1;
+	[(self.collectedFiles) enumerateObjectsAtIndexes:selectedIndexes options:NSEnumerationConcurrent usingBlock:^(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
+		if ([URL isEqual:(collectedFile.filePathURL)]) {
+			rowIndex = idx;
+			*stop = YES;
+		}
+	}];
+	
+	return rowIndex;
+}
+
+- (void)retrieveApplicationsToOpenSelection
+{
+	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
+	(openerApplicationCombiner.fileURLs) = [NSSet setWithArray:(self.selectedURLs)];
 }
 
 - (NSURL *)chosenOpenerApplicationForSelection
@@ -481,7 +533,9 @@
 	}
 }
 
-#pragma mark Actions
+#pragma mark - Actions
+
+#pragma mark Adding Files
 
 - (IBAction)chooseFilesToAdd:(id)sender
 {
@@ -502,7 +556,7 @@
 	}];
 }
 
-- (NSArray *)createCollectedFileForFileURLs:(NSArray *)fileURLs
+- (NSArray *)createCollectedFilesForFileURLs:(NSArray *)fileURLs
 {
 	NSMutableArray *collectedFiles = [NSMutableArray array];
 	NSError *error = nil;
@@ -516,20 +570,23 @@
 }
 
 - (void)insertFilesURLs:(NSArray *)fileURLs atIndex:(NSUInteger)index
-{
-	NSArray *collectedFiles = [self createCollectedFileForFileURLs:fileURLs];
+{NSLog(@"INSERT FILE URLS %@", fileURLs);
+	NSArray *collectedFiles = [self createCollectedFilesForFileURLs:fileURLs];
 	
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 	GLACollection *filesListCollection = (self.filesListCollection);
 	
 	[pm editFilesListOfCollection:filesListCollection usingBlock:^(id<GLAArrayEditing> filesListEditor) {
-		NSArray *filteredItems = [filesListEditor filterArray:collectedFiles whoseValuesIsNotPresentForKeyPath:@"URL.path"];
+		NSArray *filteredItems = [filesListEditor filterArray:collectedFiles whoseResultFromVisitorIsNotAlreadyPresent:^id(GLACollectedFile *child) {
+			return (child.filePathURL.path);
+		}];
 		
 		if (index == NSNotFound) {
 			[filesListEditor addChildren:filteredItems];
 		}
 		else {
-			[filesListEditor insertChildren:filteredItems atIndexes:[NSIndexSet indexSetWithIndex:index]];
+			NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, (filteredItems.count))];
+			[filesListEditor insertChildren:filteredItems atIndexes:indexes];
 		}
 	}];
 }
@@ -539,27 +596,22 @@
 	[self insertFilesURLs:fileURLs atIndex:NSNotFound];
 }
 
+#pragma mark Opening
+
 - (IBAction)openSelectedFiles:(id)sender
 {
-	NSMutableArray *selectedURLs = (self.selectedURLs);
+	NSArray *selectedURLs = (self.selectedURLs);
 	if ((selectedURLs.count) == 0) {
 		return;
 	}
 	
-	/*if ((selectedURLs.count) == 1) {
-		NSURL *fileURL = selectedURLs[0];
-		NSNumber *isDirectoryValue;
-		if ([fileURL getResourceValue:&isDirectoryValue forKey:NSURLIsDirectoryKey error:nil]) {
-			if ([@(YES) isEqualToNumber:isDirectoryValue]) {
-				[[NSWorkspace sharedWorkspace] openFile:(fileURL.path) withApplication:@"Finder"];
-				return;
-			}
-		}
-	}*/
+	NSLog(@"FCV OPEN %@", selectedURLs);
+	NSLog(@"REF %@", [[selectedURLs valueForKey:@"fileReferenceURL"] valueForKey:@"filePathURL"]);
+	//selectedURLs = [[selectedURLs valueForKey:@"fileReferenceURL"] valueForKey:@"filePathURL"];
 	
 	NSURL *applicationURL = (self.chosenOpenerApplicationForSelection);
 	
-	[GLAFileOpenerApplicationCombiner openFileURLs:selectedURLs withApplicationURL:applicationURL];
+	[GLAFileOpenerApplicationCombiner openFileURLs:selectedURLs withApplicationURL:applicationURL useSecurityScope:YES];
 }
 
 - (IBAction)openWithChosenApplication:(NSMenuItem *)menuItem
@@ -571,26 +623,22 @@
 	
 	NSURL *applicationURL = representedObject;
 	
-	NSMutableArray *selectedURLs = (self.selectedURLs);
+	NSArray *selectedURLs = (self.selectedURLs);
 	
-	[selectedURLs makeObjectsPerformSelector:@selector(startAccessingSecurityScopedResource)];
-	
-	[GLAFileOpenerApplicationCombiner openFileURLs:selectedURLs withApplicationURL:applicationURL];
-	
-	[selectedURLs makeObjectsPerformSelector:@selector(stopAccessingSecurityScopedResource)];
+	[GLAFileOpenerApplicationCombiner openFileURLs:selectedURLs withApplicationURL:applicationURL useSecurityScope:YES];
 }
 
 - (IBAction)revealSelectedFilesInFinder:(id)sender
 {
-	NSArray *selectedURLs = [self URLsForActionIsContextual:(sender != self)];
+	NSArray *URLs = [self URLsForRowIndexes:[self rowIndexesForActionFrom:sender]];
 	
-	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:selectedURLs];
+	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:URLs];
 }
 
 - (IBAction)removeSelectedFilesFromList:(id)sender
 {
-	NSIndexSet *clickedIndexes = (self.rowIndexesForContextualAction);
-	if (!clickedIndexes) {
+	NSIndexSet *indexes = [self rowIndexesForActionFrom:sender];
+	if ((indexes.count) == 0) {
 		return;
 	}
 	
@@ -598,7 +646,7 @@
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 	
 	[pm editFilesListOfCollection:filesListCollection usingBlock:^(id<GLAArrayEditing> filesListEditor) {
-		[filesListEditor removeChildrenAtIndexes:clickedIndexes];
+		[filesListEditor removeChildrenAtIndexes:indexes];
 	}];
 	
 	[self reloadSourceFiles];
@@ -607,12 +655,12 @@
 
 - (IBAction)addSelectedFilesToHighlights:(id)sender
 {
-	NSIndexSet *clickedIndexes = (self.rowIndexesForContextualAction);
-	if (!clickedIndexes) {
+	NSIndexSet *indexes = [self rowIndexesForActionFrom:sender];
+	if ((indexes.count) == 0) {
 		return;
 	}
 	
-	NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:clickedIndexes];
+	NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:indexes];
 	
 	GLACollection *filesListCollection = (self.filesListCollection);
 	NSUUID *projectUUID = (self.project.UUID);
@@ -632,8 +680,17 @@
 
 - (void)addHighlightedItemsToHighlights:(NSArray *)highlightedItems loadIfNeeded:(BOOL)load
 {
-	void (^editingBlock)(id<GLAArrayEditing> highlightsEditor) = ^(id<GLAArrayEditing> highlightsEditor) {
-		NSArray *filteredItems = [highlightsEditor filterArray:highlightedItems whoseValuesIsNotPresentForKeyPath:@"collectedFileUUID"];
+	void (^editingBlock)(id<GLAArrayEditing> highlightsEditor) = ^(id<GLAArrayEditing> highlightsEditor)
+	{
+		NSArray *filteredItems = [highlightsEditor filterArray:highlightedItems whoseResultFromVisitorIsNotAlreadyPresent:^id(GLAHighlightedItem *child) {
+			if ([child isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+				GLAHighlightedCollectedFile *highlightedCollectedFile = (id)child;
+				return (highlightedCollectedFile.collectedFileUUID);
+			}
+			else {
+				return nil;
+			}
+		}];
 		[highlightsEditor addChildren:filteredItems];
 	};
 	
@@ -730,13 +787,13 @@
 
 - (NSInteger)numberOfPreviewItemsInPreviewPanel:(QLPreviewPanel *)panel
 {
-	NSMutableArray *selectedURLs = (self.selectedURLs);
+	NSArray *selectedURLs = (self.selectedURLs);
 	return (selectedURLs.count);
 }
 
 - (id<QLPreviewItem>)previewPanel:(QLPreviewPanel *)panel previewItemAtIndex:(NSInteger)index
 {
-	NSMutableArray *selectedURLs = (self.selectedURLs);
+	NSArray *selectedURLs = (self.selectedURLs);
 	NSURL *URL = selectedURLs[index];
 	return URL;
 }
@@ -887,7 +944,7 @@
 	}
 	else {
 		GLAFileInfoRetriever *fileInfoRetriever = (self.fileInfoRetriever);
-		NSURL *fileURL = (collectedFile.URL);
+		NSURL *fileURL = (collectedFile.filePathURL);
 		
 		NSArray *resourceValueKeys =
 		@[
@@ -926,7 +983,7 @@
 	}
 	
 	NSIndexSet *indexesToUpdate = [(self.collectedFiles) indexesOfObjectsPassingTest:^BOOL(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
-		return [fileURL isEqual:(collectedFile.URL)];
+		return [fileURL isEqual:(collectedFile.filePathURL)];
 	}];
 	
 	[(self.sourceFilesListTableView) reloadDataForRowIndexes:indexesToUpdate columnIndexes:[NSIndexSet indexSetWithIndex:0]];
