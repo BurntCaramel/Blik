@@ -13,7 +13,8 @@
 #import "GLANavigationButton.h"
 #import "GLAProject.h"
 #import "GLACollection.h"
-#import "GLAMainContentSection.h"
+#import "GLAMainSection.h"
+#import "GLAMainSectionNavigator.h"
 @class GLAMainNavigationButtonGroup;
 
 
@@ -27,6 +28,16 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 
 @interface GLAMainNavigationBarController : GLAViewController <GLAViewDelegate>
+
+@property(nonatomic) GLAMainSectionNavigator *sectionNavigator;
+
+@property(readonly, nonatomic) GLAMainSection *currentSection;
+
+@property(weak, nonatomic) id<GLAMainNavigationBarControllerDelegate> delegate;
+
+@property(nonatomic, getter = isEnabled) BOOL enabled;
+
+#pragma mark -
 
 @property(readonly, nonatomic) GLANavigationBar *navigationBar;
 
@@ -57,18 +68,10 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 @property(nonatomic) IBOutlet NSLayoutConstraint *plannedButtonTopConstraint;
 @property(nonatomic) IBOutlet NSLayoutConstraint *addProjectButtonTopConstraint;
 
-@property(readonly, nonatomic) GLAMainContentSection *currentSection;
+- (void)didChangeCurrentSectionFrom:(GLAMainSection *)previousSection to:(GLAMainSection *)newSection;
 
-@property(weak, nonatomic) id<GLAMainNavigationBarControllerDelegate> delegate;
-
-@property(nonatomic, getter = isEnabled) BOOL enabled;
-
-- (void)changeCurrentSectionTo:(GLAMainContentSection *)newSection;
-
-- (void)performChangeCurrentSectionTo:(GLAMainContentSection *)newSection;
 - (IBAction)goToAll:(id)sender;
-- (IBAction)goToToday:(id)sender;
-- (IBAction)goToPlanned:(id)sender;
+- (IBAction)goToNowProject:(id)sender;
 
 #pragma mark Projects
 
@@ -85,18 +88,8 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 @protocol GLAMainNavigationBarControllerDelegate <NSObject>
 
-//- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller wantsToChangeSection:(GLAMainContentSection *)newSection;
-
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller handleChangeCurrentSectionTo:(GLAMainContentSection *)newSection;
-
-- (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller handleAddNewProject:(id)sender;
-
-- (void)mainNavigationBarControllerHandleExitEditedProject:(GLAMainNavigationBarController *)controller;
-
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller handleWorkNowOnProject:(GLAProject *)project;
 
 - (void)mainNavigationBarController:(GLAMainNavigationBarController *)controller handleEditDetailsForCollection:(GLACollection *)collection fromButton:(GLAButton *)button;
-
-- (void)mainNavigationBarControllerHandleExitEditedCollection:(GLAMainNavigationBarController *)controller;
 
 @end

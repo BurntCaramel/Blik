@@ -67,6 +67,16 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAEditCollectionDetailsViewControllerChosenColorDidChangeNotification object:self userInfo:(note.userInfo)];
 }
 
+- (void)addObserver:(id)observer forChosenNameDidChangeNotificationWithSelector:(SEL)aSelector
+{
+	[self addObserver:observer forNotificationWithName:GLAEditCollectionDetailsViewControllerChosenNameDidChangeNotification selector:aSelector];
+}
+
+- (void)addObserver:(id)observer forChosenColorDidChangeNotificationWithSelector:(SEL)aSelector
+{
+	[self addObserver:observer forNotificationWithName:GLAEditCollectionDetailsViewControllerChosenColorDidChangeNotification selector:aSelector];
+}
+
 @end
 
 NSString *GLAEditCollectionDetailsViewControllerChosenNameDidChangeNotification = @"GLAEditCollectionDetailsViewControllerChosenNameDidChangeNotification";

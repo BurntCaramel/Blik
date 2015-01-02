@@ -16,6 +16,7 @@
 #import "GLACollectionColorPickerViewController.h"
 #import "GLATextField.h"
 #import "GLAProjectInstructionsViewController.h"
+#import "GLAAddCollectedFilesChoiceActions.h"
 // MODEL
 #import "GLAProject.h"
 #import "GLACollection.h"
@@ -25,6 +26,8 @@
 
 
 @interface GLAProjectCollectionsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
+
+@property(weak, nonatomic) id<GLAAddCollectedFilesChoiceActionsDelegate> addCollectedFilesChoiceActionsDelegate;
 
 @property(nonatomic) IBOutlet NSTableView *tableView;
 @property(strong, nonatomic) IBOutlet NSMenu *contextualMenu;

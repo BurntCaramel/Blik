@@ -14,17 +14,17 @@
 @property(nonatomic) GLAArrayEditor *arrayEditor;
 @property(nonatomic) GLAArrayEditorOptions *arrayEditorOptions;
 
-@property(nonatomic, readwrite) BOOL loading;
-@property(nonatomic, readwrite) BOOL finishedLoading;
+@property(readwrite, nonatomic) BOOL loading;
+@property(readwrite, nonatomic) BOOL finishedLoading;
 
-@property(nonatomic, readwrite) BOOL saving;
-@property(nonatomic, readwrite) BOOL finishedSaving;
+@property(readwrite, nonatomic) BOOL saving;
+@property(readwrite, nonatomic) BOOL finishedSaving;
 
 @end
 
 @implementation GLAArrayEditorStore
 
-- (instancetype)initWithDelegate:(id<GLAArrayEditorStoreDelegate>)delegate modelClass:(Class)modelClass JSONFileURL:(NSURL *)JSONFileURL JSONDictionaryKey:(NSString *)JSONKey arrayEditorOptions:(GLAArrayEditorOptions *)arrayEditorOptions
+- (instancetype)initWithDelegate:(id<GLAArrayEditorStoreDelegate>)delegate modelClass:(Class)modelClass JSONFileURL:(NSURL *)JSONFileURL JSONDictionaryKey:(NSString *)JSONKey arrayEditorOptions:(GLAArrayEditorOptions *)arrayEditorOptions freshlyMade:(BOOL)freshlyMade
 {
 	self = [super init];
 	if (self) {
@@ -32,7 +32,16 @@
 		_modelClass = modelClass;
 		_JSONFileURL = [JSONFileURL copy];
 		_JSONDictionaryKeyForArray = [JSONKey copy];
-		_arrayEditorOptions = arrayEditorOptions ? [arrayEditorOptions copy] : [GLAArrayEditorOptions new];
+		_freshlyMade = freshlyMade;
+		
+		arrayEditorOptions = arrayEditorOptions ? [arrayEditorOptions copy] : [GLAArrayEditorOptions new];
+		_arrayEditorOptions = arrayEditorOptions;
+		[self setUpArrayEditorOptions:arrayEditorOptions];
+		
+		if (freshlyMade) {
+			(self.arrayEditor) = [[GLAArrayEditor alloc] initWithObjects:@[] options:arrayEditorOptions];
+			(self.finishedLoading) = YES;
+		}
 	}
 	return self;
 }
@@ -81,16 +90,6 @@
 		
 		block(store);
 	}];
-}
-
-- (void)handleError:(NSError *)error fromMethodWithSelector:(SEL)methodSelector
-{
-	id<GLAArrayEditorStoreDelegate> delegate = (self.delegate);
-	if (!delegate) {
-		return;
-	}
-	
-	[delegate arrayEditorStore:self handleError:error fromMethodWithSelector:methodSelector];
 }
 
 - (NSDictionary *)background_readJSONDictionaryFromFileURL:(NSURL *)fileURL
@@ -195,7 +194,7 @@
 	return children;
 }
 
-- (void)editUsingBlock:(void (^)(id<GLAArrayEditing> arrayEditor))block handleAddedChildren:(void (^)(NSArray *addedChildren))addedBlock handleRemovedChildren:(void (^)(NSArray *removedChildren))removedBlock handleReplacedChildren:(void (^)(NSArray *originalChildren, NSArray *replacementChildren))replacedBlock
+- (BOOL)editUsingBlock:(void (^)(id<GLAArrayEditing> arrayEditor))block handleAddedChildren:(void (^)(NSArray *addedChildren))addedBlock handleRemovedChildren:(void (^)(NSArray *removedChildren))removedBlock handleReplacedChildren:(void (^)(NSArray *originalChildren, NSArray *replacementChildren))replacedBlock
 {
 	GLAArrayEditor *arrayEditor = (self.arrayEditor);
 	NSAssert(arrayEditor != nil, @"Can't edit without having loaded.");
@@ -209,30 +208,18 @@
 	NSArray *replacedChildrenAfter = (changes.replacedChildrenAfter);
 	
 	if ((addedChildren.count) > 0) {
-		if ((delegate != nil) && [delegate respondsToSelector:@selector(arrayEditorStore:didAddChildren:)]) {
-			[delegate arrayEditorStore:self didAddChildren:addedChildren];
-		}
-		
 		if (addedBlock) {
 			addedBlock(addedChildren);
 		}
 	}
 	
 	if ((removedChildren.count) > 0) {
-		if ((delegate != nil) && [delegate respondsToSelector:@selector(arrayEditorStore:didRemoveChildren:)]) {
-			[delegate arrayEditorStore:self didRemoveChildren:removedChildren];
-		}
-		
 		if (removedBlock) {
 			removedBlock(removedChildren);
 		}
 	}
 	
 	if ((replacedChildrenBefore.count) > 0) {
-		if ((delegate != nil) && [delegate respondsToSelector:@selector(arrayEditorStore:didReplaceChildren:with:)]) {
-			[delegate arrayEditorStore:self didReplaceChildren:replacedChildrenBefore with:replacedChildrenAfter];
-		}
-		
 		if (replacedBlock) {
 			replacedBlock(replacedChildrenBefore, replacedChildrenAfter);
 		}
@@ -240,6 +227,7 @@
 	
 	[self saveWithCompletionBlock:nil];
 	
+	return (changes.hasChanges);
 	//
 	//[delegate arrayEditorStore:self didAddChildren:(changes.addedChildren)];
 	//[delegate arrayEditorStore:self didRemoveChildren:(changes.removedChildren)];
@@ -260,12 +248,11 @@
 
 - (BOOL)loadWithCompletionBlock:(dispatch_block_t)completionBlock
 {
-	if ((self.loading) || (self.saving)) {
+	if (!(self.needsLoading) || (self.saving)) {
 		return NO;
 	}
 	
 	GLAArrayEditorOptions *arrayEditorOptions = (self.arrayEditorOptions);
-	[self setUpArrayEditorOptions:arrayEditorOptions];
 	
 	(self.loading) = YES;
 	(self.finishedLoading) = NO;
@@ -337,6 +324,16 @@
 
 
 @implementation GLAArrayEditorStore (Errors)
+
+- (void)handleError:(NSError *)error fromMethodWithSelector:(SEL)methodSelector
+{
+	id<GLAArrayEditorStoreDelegate> delegate = (self.delegate);
+	if (!delegate) {
+		return;
+	}
+	
+	[delegate arrayEditorStore:self handleError:error fromMethodWithSelector:methodSelector];
+}
 
 + (NSString *)errorDomain
 {

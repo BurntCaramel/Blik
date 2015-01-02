@@ -12,19 +12,19 @@
 #import "GLAUIStyle.h"
 #import "GLAView.h"
 #import "GLAHighlightsTableCellView.h"
-#import "GLAArrayEditorTableDraggingHelper.h"
+#import "GLAArrayTableDraggingHelper.h"
 // MODEL
 #import "GLAProjectManager.h"
 #import "GLAFileOpenerApplicationCombiner.h"
 
 
-@interface GLAProjectHighlightsViewController () <GLAArrayEditorTableDraggingHelperDelegate>
+@interface GLAProjectHighlightsViewController () <GLAArrayTableDraggingHelperDelegate>
 
 @property(nonatomic) BOOL doNotUpdateViews;
 
 @property(nonatomic) GLAHighlightsTableCellView *measuringTableCellView;
 
-@property(nonatomic) GLAArrayEditorTableDraggingHelper *tableDraggingHelper;
+@property(nonatomic) GLAArrayTableDraggingHelper *tableDraggingHelper;
 
 @end
 
@@ -49,7 +49,7 @@
 	NSTableColumn *mainColumn = (tableView.tableColumns)[0];
 	(self.measuringTableCellView) = [tableView makeViewWithIdentifier:(mainColumn.identifier) owner:nil];
 	
-	[self wrapScrollView];
+	[self prepareScrollView];
 	
 	NSMenu *openerApplicationMenu = (self.openerApplicationMenu);
 	(openerApplicationMenu.delegate) = self;
@@ -57,12 +57,12 @@
 	NSMenu *preferredOpenerApplicationMenu = (self.preferredOpenerApplicationMenu);
 	(preferredOpenerApplicationMenu.delegate) = self;
 	
-	(self.tableDraggingHelper) = [[GLAArrayEditorTableDraggingHelper alloc] initWithDelegate:self];
+	(self.tableDraggingHelper) = [[GLAArrayTableDraggingHelper alloc] initWithDelegate:self];
 	
 	[self setUpFileHelpers];
 }
 
-- (void)wrapScrollView
+- (void)prepareScrollView
 {
 	// Wrap the plan scroll view with a holder view
 	// to allow constraints to be more easily worked with
@@ -70,37 +70,13 @@
 	
 	NSScrollView *scrollView = (self.tableView.enclosingScrollView);
 	(scrollView.identifier) = @"tableScrollView";
-	(scrollView.translatesAutoresizingMaskIntoConstraints) = NO;
 	
-	GLAView *holderView = [[GLAView alloc] init];
-	(holderView.identifier) = @"highlightsListHolderView";
-	(holderView.translatesAutoresizingMaskIntoConstraints) = NO;
-	
-	GLAProjectViewController *projectViewController = (self.parentViewController);
-	NSLayoutConstraint *planViewTrailingConstraint = (projectViewController.highlightsViewTrailingConstraint);
-	NSLayoutConstraint *planViewBottomConstraint = (projectViewController.highlightsViewBottomConstraint);
-	
-	[projectViewController wrapChildViewKeepingOutsideConstraints:scrollView withView:holderView constraintVisitor:^ (NSLayoutConstraint *oldConstraint, NSLayoutConstraint *newConstraint) {
-		if (oldConstraint == planViewTrailingConstraint) {
-			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"trailing" forChildView:holderView];
-			(projectViewController.highlightsViewTrailingConstraint) = newConstraint;
-		}
-		else if (oldConstraint == planViewBottomConstraint) {
-			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"bottom" forChildView:holderView];
-			(projectViewController.highlightsViewBottomConstraint) = newConstraint;
-		}
-	}];
-	
-	(self.view) = holderView;
-	
-	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeWidth withChildView:scrollView identifier:@"width"];
-	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:scrollView identifier:@"top"];
-	(self.scrollLeadingConstraint) = [self addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:scrollView identifier:@"leading"];
+	[self fillViewWithChildView:scrollView];
 }
 
 - (void)setUpFileHelpers
 {
-	GLAFileOpenerApplicationCombiner * openerApplicationCombiner = [GLAFileOpenerApplicationCombiner new];
+	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = [GLAFileOpenerApplicationCombiner new];
 	(self.openerApplicationCombiner) = openerApplicationCombiner;
 	
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -191,6 +167,7 @@
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc removeObserver:self name:GLACollectionDidChangeNotification object:nil];
+	[nc removeObserver:self name:GLACollectionFilesListDidChangeNotification object:nil];
 }
 
 - (void)showInstructions
@@ -471,12 +448,12 @@
 
 #pragma mark - Table Dragging Helper Delegate
 
-- (BOOL)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard
+- (BOOL)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard
 {
 	return [GLAHighlightedCollectedFile canCopyObjectsFromPasteboard:draggingPasteboard];
 }
 
-- (void)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
+- (void)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
 {
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	[projectManager editHighlightsOfProject:(self.project) usingBlock:editBlock];
@@ -598,21 +575,26 @@
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
-	GLAHighlightsTableCellView *cellView = (self.measuringTableCellView);
-	[self setUpTableCellView:cellView forTableColumn:nil row:row];
-	
-	NSTableColumn *tableColumn = (tableView.tableColumns)[0];
-	CGFloat cellWidth = (tableColumn.width);
-	(cellView.frameSize) = NSMakeSize(cellWidth, 100.0);
-	[cellView layoutSubtreeIfNeeded];
-	
-	NSTextField *textField = (cellView.textField);
-	//(textField.preferredMaxLayoutWidth) = (tableColumn.width);
-	(textField.preferredMaxLayoutWidth) = NSWidth(textField.bounds);
-	
-	CGFloat extraPadding = 13.0;
-	
-	return (textField.intrinsicContentSize.height) + extraPadding;
+	CGFloat height;
+	@autoreleasepool {
+		GLAHighlightsTableCellView *cellView = (self.measuringTableCellView);
+		[cellView removeFromSuperview];
+		[self setUpTableCellView:cellView forTableColumn:nil row:row];
+		
+		NSTableColumn *tableColumn = (tableView.tableColumns)[0];
+		CGFloat cellWidth = (tableColumn.width);
+		(cellView.frameSize) = NSMakeSize(cellWidth, 100.0);
+		[cellView layoutSubtreeIfNeeded];
+		
+		NSTextField *textField = (cellView.textField);
+		//(textField.preferredMaxLayoutWidth) = (tableColumn.width);
+		(textField.preferredMaxLayoutWidth) = NSWidth(textField.bounds);
+		
+		CGFloat extraPadding = 13.0;
+		
+		height = (textField.intrinsicContentSize.height) + extraPadding;
+	}
+	return height;
 }
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row

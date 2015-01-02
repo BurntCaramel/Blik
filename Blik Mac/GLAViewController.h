@@ -42,7 +42,7 @@ typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint
 - (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier priority:(NSLayoutPriority)priority;
 - (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier;
 
-- (NSArray *)allLayoutConstraintsWithChildView:(NSView *)innerView;
+- (NSArray *)allLayoutConstraintsUsingChildView:(NSView *)innerView;
 
 + (NSArray *)copyLayoutConstraints:(NSArray *)oldConstraints replacingUsesOf:(id)originalItem with:(id)replacementItem constraintVisitor:(GLAViewControllerConstraintReplacementVisitor)constraintVisitor;
 
@@ -51,6 +51,10 @@ typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint
 #pragma mark Colors
 
 - (void)animateBackgroundColorTo:(NSColor *)color;
+
+#pragma mark Notification
+
+- (void)addObserver:(id)observer forNotificationWithName:(NSString *)name selector:(SEL)aSelector;
 
 @end
 

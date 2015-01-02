@@ -10,6 +10,7 @@
 #import "GLAProject.h"
 #import "GLACollection.h"
 #import "GLACollectionColor.h"
+#import "GLAPendingAddedCollectedFilesInfo.h"
 #import "GLATextField.h"
 #import "GLAButton.h"
 #import "GLAColorChoiceView.h"
@@ -18,6 +19,8 @@
 @interface GLAAddNewCollectionViewController : GLAViewController
 
 @property(strong, nonatomic) GLAProject *project;
+
+@property(copy, nonatomic) GLAPendingAddedCollectedFilesInfo *pendingAddedCollectedFilesInfo;
 
 @property(strong, nonatomic) IBOutlet NSTextField *nameLabel;
 @property(strong, nonatomic) IBOutlet GLATextField *nameTextField;

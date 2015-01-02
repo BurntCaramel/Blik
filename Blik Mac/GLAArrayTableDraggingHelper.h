@@ -3,20 +3,20 @@
 //  Blik
 //
 //  Created by Patrick Smith on 11/11/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 @import Cocoa;
 #import "GLAArrayEditing.h"
 
-@protocol GLAArrayEditorTableDraggingHelperDelegate;
+@protocol GLAArrayTableDraggingHelperDelegate;
 
 
-@interface GLAArrayEditorTableDraggingHelper : NSObject
+@interface GLAArrayTableDraggingHelper : NSObject
 
-- (instancetype)initWithDelegate:(id<GLAArrayEditorTableDraggingHelperDelegate>)delegate;
+- (instancetype)initWithDelegate:(id<GLAArrayTableDraggingHelperDelegate>)delegate;
 
-@property(readonly, weak, nonatomic) id<GLAArrayEditorTableDraggingHelperDelegate> delegate;
+@property(readonly, weak, nonatomic) id<GLAArrayTableDraggingHelperDelegate> delegate;
 
 @property(readonly, copy, nonatomic) NSIndexSet *draggedRowIndexes;
 
@@ -41,16 +41,16 @@
 @end
 
 
-@protocol GLAArrayEditorTableDraggingHelperDelegate <NSObject>
+@protocol GLAArrayTableDraggingHelperDelegate <NSObject>
 
-- (BOOL)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard;
+- (BOOL)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard;
 
-- (void)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock;
+- (void)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock;
 
 @optional
 
 // Do not implement if you do not support copying.
-- (NSArray *)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper makeCopiesOfObjects:(NSArray *)objectsToCopy;
+- (NSArray *)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper makeCopiesOfObjects:(NSArray *)objectsToCopy;
 
 @end
 

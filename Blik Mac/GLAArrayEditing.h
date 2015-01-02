@@ -16,11 +16,16 @@ typedef id (^ GLAArrayChildVisitorBlock)(id child);
 
 @protocol GLAArrayInspecting <NSObject>
 
+@property(readonly, nonatomic) NSUInteger childrenCount;
+
 - (NSArray *)copyChildren;
 - (id)childAtIndex:(NSUInteger)index;
 - (NSArray *)childrenAtIndexes:(NSIndexSet *)indexes;
 
+- (NSArray *)resultsFromChildVisitor:(GLAArrayChildVisitorBlock)childVisitor;
+
 // Working with unique children
+- (id)firstChildWhoseKey:(NSString *)key hasValue:(id)value;
 - (NSUInteger)indexOfFirstChildWhoseKey:(NSString *)key hasValue:(id)value;
 - (NSIndexSet *)indexesOfChildrenWhoseResultFromVisitor:(GLAArrayChildVisitorBlock)childVisitor hasValueContainedInSet:(NSSet *)valuesSet;
 
@@ -36,6 +41,8 @@ typedef id (^ GLAArrayChildVisitorBlock)(id child);
 - (void)removeChildrenAtIndexes:(NSIndexSet *)indexes;
 - (void)replaceChildrenAtIndexes:(NSIndexSet *)indexes withObjects:(NSArray *)objects;
 - (void)moveChildrenAtIndexes:(NSIndexSet *)indexes toIndex:(NSUInteger)toIndex;
+
+- (void)replaceAllChildrenWithObjects:(NSArray *)objects;
 
 - (BOOL)removeFirstChildWhoseKey:(NSString *)key hasValue:(id)value;
 

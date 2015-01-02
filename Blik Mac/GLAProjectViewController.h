@@ -16,11 +16,13 @@
 #import "GLACollectionColorPickerViewController.h"
 #import "GLAProjectView.h"
 #import "GLATextField.h"
+#import "GLAPendingAddedCollectedFilesInfo.h"
 // MODEL
 #import "GLAProject.h"
 #import "GLACollection.h"
 #import "GLAReminder.h"
 
+@class GLAProjectViewController;
 @class GLAProjectCollectionsViewController;
 @class GLAProjectPlanViewController;
 @class GLAProjectHighlightsViewController;
@@ -28,7 +30,20 @@
 @class GLAChooseRemindersViewController;
 
 
+@protocol GLAProjectViewControllerDelegate <NSObject>
+
+- (void)projectViewController:(GLAProjectViewController *)projectViewController performAddCollectedFilesToNewCollection:(GLAPendingAddedCollectedFilesInfo *)info;
+
+@end
+
+
 @interface GLAProjectViewController : GLAViewController <GLAViewDelegate, NSTextFieldDelegate>
+
+@property(nonatomic) GLAProject *project;
+
+@property(weak, nonatomic) id<GLAProjectViewControllerDelegate> delegate;
+
+#pragma mark -
 
 @property(readonly, nonatomic) GLAProjectView *projectView;
 
@@ -50,7 +65,7 @@
 
 @property(strong, nonatomic) IBOutlet GLATextField *nameTextField;
 
-@property(nonatomic) GLAProject *project;
+#pragma mark -
 
 - (IBAction)editCollections:(id)sender;
 @property(readonly, nonatomic) BOOL editingCollections;
@@ -77,8 +92,8 @@
 
 // Notifications
 
-extern NSString *GLAProjectViewControllerDidBeginEditingItemsNotification;
-extern NSString *GLAProjectViewControllerDidEndEditingItemsNotification;
+extern NSString *GLAProjectViewControllerDidBeginEditingCollectionsNotification;
+extern NSString *GLAProjectViewControllerDidEndEditingCollectionsNotification;
 
 extern NSString *GLAProjectViewControllerDidBeginEditingPlanNotification;
 extern NSString *GLAProjectViewControllerDidEndEditingPlanNotification;

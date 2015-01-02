@@ -23,7 +23,6 @@
 @property(strong, nonatomic) IBOutlet NSMenu *sourceFilesListContextualMenu;
 
 @property(strong, nonatomic) IBOutlet GLAPopUpButton *openerApplicationsPopUpButton;
-@property(strong, nonatomic) IBOutlet NSTextField *openerApplicationsTextLabel;
 
 @property(strong, nonatomic) IBOutlet GLAButton *addToHighlightsButton;
 

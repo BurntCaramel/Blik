@@ -7,6 +7,7 @@
 //
 
 #import "GLAEditCollectionDetailsPopover.h"
+#import "NSObject+PGWSNotificationObserving.h"
 
 
 @implementation GLAEditCollectionDetailsPopover
@@ -18,6 +19,7 @@
 	dispatch_once(&onceToken, ^{
 		popover = [GLAEditCollectionDetailsPopover new];
 		GLAEditCollectionDetailsViewController *editCollectionDetailsViewController = [[GLAEditCollectionDetailsViewController alloc] initWithNibName:NSStringFromClass([GLAEditCollectionDetailsViewController class]) bundle:nil];
+		
 		(popover.editCollectionDetailsViewController) = editCollectionDetailsViewController;
 		(popover.contentViewController) = editCollectionDetailsViewController;
 		(popover.appearance) = NSPopoverAppearanceHUD;
@@ -45,21 +47,20 @@
 
 - (void)viewControllerChosenNameDidChangeNotification:(NSNotification *)note
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAEditCollectionDetailsPopoverChosenNameDidChangeNotification object:self userInfo:(note.userInfo)];
+	[self pgws_postNotificationName:GLAEditCollectionDetailsPopoverChosenNameDidChangeNotification userInfo:(note.userInfo)];
 }
 
 - (void)viewControllerChosenColorDidChangeNotification:(NSNotification *)note
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAEditCollectionDetailsPopoverChosenColorDidChangeNotification object:self userInfo:(note.userInfo)];
+	[self pgws_postNotificationName:GLAEditCollectionDetailsPopoverChosenColorDidChangeNotification userInfo:(note.userInfo)];
 }
 
 - (void)beginObservingContentViewController
 {
 	GLAEditCollectionDetailsViewController *editCollectionDetailsViewController = (self.editCollectionDetailsViewController);
 	if (editCollectionDetailsViewController) {
-		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-		[nc addObserver:self selector:@selector(viewControllerChosenNameDidChangeNotification:) name:GLAEditCollectionDetailsViewControllerChosenNameDidChangeNotification object:editCollectionDetailsViewController];
-		[nc addObserver:self selector:@selector(viewControllerChosenColorDidChangeNotification:) name:GLAEditCollectionDetailsViewControllerChosenColorDidChangeNotification object:editCollectionDetailsViewController];
+		[editCollectionDetailsViewController addObserver:self forChosenNameDidChangeNotificationWithSelector:@selector(viewControllerChosenNameDidChangeNotification:)];
+		[editCollectionDetailsViewController addObserver:self forChosenColorDidChangeNotificationWithSelector:@selector(viewControllerChosenColorDidChangeNotification:)];
 	}
 }
 
@@ -67,7 +68,7 @@
 {
 	GLAEditCollectionDetailsViewController *editCollectionDetailsViewController = (self.editCollectionDetailsViewController);
 	if (editCollectionDetailsViewController) {
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:editCollectionDetailsViewController];
+		[editCollectionDetailsViewController pgws_removeObserver:self];
 	}
 }
 

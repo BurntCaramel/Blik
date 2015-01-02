@@ -14,10 +14,10 @@
 #import "GLAFileInfoRetriever.h"
 #import "GLACollectedFilesSetting.h"
 #import "GLAFileOpenerApplicationCombiner.h"
-#import "GLAArrayEditorTableDraggingHelper.h"
+#import "GLAArrayTableDraggingHelper.h"
 
 
-@interface GLAFileCollectionViewController () <GLAArrayEditorTableDraggingHelperDelegate>
+@interface GLAFileCollectionViewController () <GLAArrayTableDraggingHelperDelegate>
 
 @property(copy, nonatomic) NSArray *collectedFiles;
 
@@ -36,7 +36,7 @@
 
 @property(nonatomic) QLPreviewPanel *activeQuickLookPreviewPanel;
 
-@property(nonatomic) GLAArrayEditorTableDraggingHelper *tableDraggingHelper;
+@property(nonatomic) GLAArrayTableDraggingHelper *tableDraggingHelper;
 @property(nonatomic) NSIndexSet *draggedRowIndexes;
 
 @property(nonatomic) NSMutableArray *highlightedItemsToAddOnceLoaded;
@@ -77,15 +77,13 @@
 	
 	[tableView registerForDraggedTypes:@[[GLACollectedFile objectJSONPasteboardType], (__bridge NSString *)kUTTypeFileURL]];
 	
-	[uiStyle prepareTextLabel:(self.openerApplicationsTextLabel)];
-	
 	// Allow self to handle keyDown: events.
 	(self.nextResponder) = (tableView.nextResponder);
 	(tableView.nextResponder) = self;
 	
 	(self.openerApplicationsPopUpButton.menu.delegate) = self;
 	
-	(self.tableDraggingHelper) = [[GLAArrayEditorTableDraggingHelper alloc] initWithDelegate:self];
+	(self.tableDraggingHelper) = [[GLAArrayTableDraggingHelper alloc] initWithDelegate:self];
 	
 	[self setUpFileHelpers];
 	
@@ -406,13 +404,11 @@
 - (void)updateSelectedFilesUIVisibilityAnimating:(BOOL)animate
 {
 	GLAPopUpButton *popUpButton = (self.openerApplicationsPopUpButton);
-	NSTextField *label = (self.openerApplicationsTextLabel);
 	GLAButton *addToHighlightsButton = (self.addToHighlightsButton);
 	
 	NSArray *views =
 	@[
 	  popUpButton,
-	  label,
 	  addToHighlightsButton
 	  ];
 	
@@ -421,6 +417,10 @@
 	CGFloat alphaValue = hasNoURLs ? 0.0 : 1.0;
 	
 	if (animate) {
+		if (!hasNoURLs) {
+			[self updateAddToHighlightsUI];
+		}
+		
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 			(context.duration) = 3.0 / 16.0;
 			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
@@ -432,16 +432,42 @@
 			 (addToHighlightsButton.animator.alphaValue) = alphaValue;
 			 */
 		} completionHandler:^{
-			
+			if (hasNoURLs) {
+				[self updateAddToHighlightsUI];
+			}
 		}];
 	}
 	else {
-		[views setValue:@(alphaValue) forKey:@"alphaValue"];
+		[self updateAddToHighlightsUI];
 		
-		/*
-		 (popUpButton.hidden) = hasNoURLs;
-		 (label.hidden) = hasNoURLs;
-		 (addToHighlightsButton.hidden) = hasNoURLs;*/
+		[views setValue:@(alphaValue) forKey:@"alphaValue"];
+	}
+}
+
+- (void)updateAddToHighlightsUI
+{
+	GLAButton *addToHighlightsButton = (self.addToHighlightsButton);
+	
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	NSArray *selectedCollectedFiles = [(self.collectedFiles) objectsAtIndexes:[self rowIndexesForActionFrom:nil]];
+	BOOL selectionIsAllHighlighted = NO;
+	
+	if ((selectedCollectedFiles.count) > 0) {
+		NSArray *collectedFilesNotHighlighted = [pm filterCollectedFiles:selectedCollectedFiles notInHighlightsOfProject:(self.project)];
+		selectionIsAllHighlighted = (collectedFilesNotHighlighted.count) == 0;
+	}
+	
+	// If all are already highlighted.
+	if (selectionIsAllHighlighted) {
+		(addToHighlightsButton.title) = NSLocalizedString(@"Highlighted", @"Title for 'Add to Highlights' button when the all of selected collected files are already in the highlights list.");
+		(addToHighlightsButton.hasSecondaryStyle) = NO;
+		(addToHighlightsButton.enabled) = NO;
+	}
+	// If some or all are not highlighted.
+	else {
+		(addToHighlightsButton.title) = NSLocalizedString(@"Add to Highlights", @"Title for 'Add to Highlights' button when the some of selected collected files are not yet in the highlights list.");
+		(addToHighlightsButton.hasSecondaryStyle) = YES;
+		(addToHighlightsButton.enabled) = YES;
 	}
 }
 
@@ -452,9 +478,12 @@
 	NSMenu *menu = (self.openerApplicationsPopUpButton.menu);
 	[openerApplicationCombiner updateOpenerApplicationsMenu:menu target:self action:@selector(openWithChosenApplication:) preferredApplicationURL:nil];
 	
+	// Duplicate the first item, so it appears as the button's content.
 	NSMenuItem *firstItem = (menu.itemArray)[0];
 	if (firstItem) {
-		[menu insertItem:[firstItem copy] atIndex:0];
+		NSMenuItem *titleMenuItem = [firstItem copy];
+		(titleMenuItem.title) = NSLocalizedString(@"Open in", @"Title for 'Open in' application menu");
+		[menu insertItem:titleMenuItem atIndex:0];
 	}
 }
 
@@ -484,7 +513,7 @@
 	(self.selectedURLs) = [self URLsForRowIndexes:selectedIndexes];
 	
 	NSArray *selectedCollectedFiles = [(self.collectedFiles) objectsAtIndexes:selectedIndexes];
-	[(self.collectedFilesSetting) startUsingURLsForCollectedFiles:selectedCollectedFiles removingRemainders:YES];
+	[(self.collectedFilesSetting) startUsingURLsForCollectedFilesRemovingRemainders:selectedCollectedFiles];
 	
 	[self retrieveApplicationsToOpenSelection];
 	[self setNeedsToUpdateOpenerApplicationsUI];
@@ -556,39 +585,14 @@
 	}];
 }
 
-- (NSArray *)createCollectedFilesForFileURLs:(NSArray *)fileURLs
-{
-	NSMutableArray *collectedFiles = [NSMutableArray array];
-	NSError *error = nil;
-	for (NSURL *fileURL in fileURLs) {
-		GLACollectedFile *collectedFile = [[GLACollectedFile alloc] initWithFileURL:fileURL];
-		[collectedFile updateInformationWithError:&error];
-		[collectedFiles addObject:collectedFile];
-	}
-	
-	return collectedFiles;
-}
-
 - (void)insertFilesURLs:(NSArray *)fileURLs atIndex:(NSUInteger)index
-{NSLog(@"INSERT FILE URLS %@", fileURLs);
-	NSArray *collectedFiles = [self createCollectedFilesForFileURLs:fileURLs];
+{
+	NSArray *collectedFiles = [GLACollectedFile collectedFilesWithFileURLs:fileURLs];
 	
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 	GLACollection *filesListCollection = (self.filesListCollection);
 	
-	[pm editFilesListOfCollection:filesListCollection usingBlock:^(id<GLAArrayEditing> filesListEditor) {
-		NSArray *filteredItems = [filesListEditor filterArray:collectedFiles whoseResultFromVisitorIsNotAlreadyPresent:^id(GLACollectedFile *child) {
-			return (child.filePathURL.path);
-		}];
-		
-		if (index == NSNotFound) {
-			[filesListEditor addChildren:filteredItems];
-		}
-		else {
-			NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, (filteredItems.count))];
-			[filesListEditor insertChildren:filteredItems atIndexes:indexes];
-		}
-	}];
+	[pm editFilesListOfCollection:filesListCollection insertingCollectedFiles:collectedFiles atIndex:index];
 }
 
 - (void)addFileURLs:(NSArray *)fileURLs
@@ -704,6 +708,8 @@
 		[pm editHighlightsOfProject:project usingBlock:editingBlock];
 		
 		[tableView endUpdates];
+		
+		[self updateAddToHighlightsUI];
 	}
 	else if (load) {
 		[pm loadHighlightsForProjectIfNeeded:project];
@@ -847,12 +853,12 @@
 
 #pragma mark - Table Dragging Helper Delegate
 
-- (BOOL)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard
+- (BOOL)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard
 {
 	return [GLACollectedFile canCopyObjectsFromPasteboard:draggingPasteboard];
 }
 
-- (void)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
+- (void)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
 {
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	[projectManager editFilesListOfCollection:(self.filesListCollection) usingBlock:editBlock];

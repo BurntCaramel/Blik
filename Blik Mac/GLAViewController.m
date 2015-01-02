@@ -166,7 +166,7 @@
 	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:innerView identifier:@"top"];
 }
 
-- (NSArray *)allLayoutConstraintsWithChildView:(NSView *)innerView
+- (NSArray *)allLayoutConstraintsUsingChildView:(NSView *)innerView
 {
 	return [(self.view.constraints) filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"firstItem = %@ OR secondItem = %@", innerView, innerView]];
 }
@@ -208,7 +208,7 @@
 	NSAssert(childView != nil, @"childView must not be nil.");
 	NSAssert(replacementView != nil, @"replacementView must not be nil.");
 	
-	NSArray *oldConstraints = [self allLayoutConstraintsWithChildView:childView];
+	NSArray *oldConstraints = [self allLayoutConstraintsUsingChildView:childView];
 	NSArray *newConstraints = [[self class] copyLayoutConstraints:oldConstraints replacingUsesOf:childView with:replacementView constraintVisitor:constraintVisitor];
 	
 	NSView *view = (self.view);
@@ -234,6 +234,13 @@
 	} completionHandler:^{
 		
 	}];
+}
+
+#pragma mark Notification
+
+- (void)addObserver:(id)observer forNotificationWithName:(NSString *)name selector:(SEL)aSelector
+{
+	[[NSNotificationCenter defaultCenter] addObserver:observer selector:aSelector name:name object:self];
 }
 
 @end

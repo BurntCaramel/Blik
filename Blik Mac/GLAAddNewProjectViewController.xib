@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAAddNewProjectViewController">
@@ -20,8 +20,9 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" placeholderIntrinsicWidth="312" placeholderIntrinsicHeight="29" translatesAutoresizingMaskIntoConstraints="NO" id="RhU-Xs-2SL" customClass="GLATextField">
-                    <rect key="frame" x="18" y="128" width="464" height="32"/>
+                    <rect key="frame" x="108" y="128" width="284" height="32"/>
                     <constraints>
+                        <constraint firstAttribute="width" constant="280" id="VhM-h9-jyI"/>
                         <constraint firstAttribute="height" constant="32" id="duq-aM-kZM"/>
                     </constraints>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Project name text field" placeholderString="" id="nZb-Gp-5Yx">
@@ -68,12 +69,12 @@
                 </button>
             </subviews>
             <constraints>
-                <constraint firstItem="RhU-Xs-2SL" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" id="7aU-Qn-VKg"/>
+                <constraint firstItem="RhU-Xs-2SL" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" id="7aU-Qn-VKg"/>
                 <constraint firstAttribute="bottom" secondItem="8Mo-vT-DhC" secondAttribute="bottom" constant="32" id="7yg-ym-Dzl"/>
                 <constraint firstAttribute="centerY" secondItem="RhU-Xs-2SL" secondAttribute="centerY" constant="8" id="CAY-jb-7cT"/>
                 <constraint firstAttribute="centerX" secondItem="8Mo-vT-DhC" secondAttribute="centerX" id="DPI-hK-gBa"/>
                 <constraint firstItem="RhU-Xs-2SL" firstAttribute="top" secondItem="Leg-WZ-4hm" secondAttribute="bottom" constant="8" id="nnK-st-MAq"/>
-                <constraint firstAttribute="trailing" secondItem="RhU-Xs-2SL" secondAttribute="trailing" constant="20" id="pV7-dq-o0I"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="RhU-Xs-2SL" secondAttribute="trailing" constant="20" id="pV7-dq-o0I"/>
                 <constraint firstAttribute="centerX" secondItem="Leg-WZ-4hm" secondAttribute="centerX" id="vMj-eT-Xhi"/>
                 <constraint firstAttribute="centerX" secondItem="RhU-Xs-2SL" secondAttribute="centerX" id="xkl-wY-giP"/>
             </constraints>

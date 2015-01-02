@@ -9,7 +9,6 @@
             <connections>
                 <outlet property="addToHighlightsButton" destination="wLr-wc-OZX" id="QCZ-1K-xSh"/>
                 <outlet property="openerApplicationsPopUpButton" destination="CSY-mw-Wdy" id="ZHO-lL-OdE"/>
-                <outlet property="openerApplicationsTextLabel" destination="GLr-My-p1c" id="nxL-mi-92C"/>
                 <outlet property="previewHolderView" destination="qn1-n0-gYl" id="lx5-hz-3W2"/>
                 <outlet property="sourceFilesListContextualMenu" destination="JOI-as-pHF" id="q63-4h-AMF"/>
                 <outlet property="sourceFilesListTableView" destination="vUu-g3-xAK" id="IgR-dz-cWU"/>
@@ -155,17 +154,17 @@
                                     <rect key="frame" x="0.0" y="0.0" width="299" height="40"/>
                                     <subviews>
                                         <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="CSY-mw-Wdy" customClass="GLAPopUpButton">
-                                            <rect key="frame" x="8" y="8" width="40" height="24"/>
+                                            <rect key="frame" x="8" y="8" width="100" height="24"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="40" id="hgH-HO-KdO"/>
+                                                <constraint firstAttribute="width" constant="100" id="hgH-HO-KdO"/>
                                                 <constraint firstAttribute="height" constant="24" id="qzd-kq-jNk"/>
                                             </constraints>
-                                            <popUpButtonCell key="cell" type="roundTextured" title="Item 1" bezelStyle="texturedRounded" imagePosition="only" alignment="left" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="mMi-lC-XZe" id="iWS-dO-YeJ" customClass="GLAPopUpButtonCell">
+                                            <popUpButtonCell key="cell" type="roundTextured" title="Open in" bezelStyle="texturedRounded" alignment="left" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="mMi-lC-XZe" id="iWS-dO-YeJ" customClass="GLAPopUpButtonCell">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" size="13" name="AvenirNext-Medium"/>
                                                 <menu key="menu" id="KMr-zm-7Q9">
                                                     <items>
-                                                        <menuItem title="Item 1" state="on" hidden="YES" id="mMi-lC-XZe"/>
+                                                        <menuItem title="Open in" state="on" hidden="YES" id="mMi-lC-XZe"/>
                                                         <menuItem title="Item 2" id="OLT-XR-3zt"/>
                                                         <menuItem title="Item 3" id="xAn-a1-EBJ"/>
                                                     </items>
@@ -174,6 +173,12 @@
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                                                    <integer key="value" value="4"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                                                    <integer key="value" value="-1"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
                                                     <integer key="value" value="4"/>
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
@@ -209,24 +214,11 @@
                                                 <action selector="addSelectedFilesToHighlights:" target="-2" id="nSc-4o-ejN"/>
                                             </connections>
                                         </button>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GLr-My-p1c">
-                                            <rect key="frame" x="50" y="9" width="53" height="23"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="DWe-bH-DmC"/>
-                                            </constraints>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Open in" id="ZrA-4g-4UY">
-                                                <font key="font" size="13" name="AvenirNext-MediumItalic"/>
-                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                        </textField>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="bottom" secondItem="GLr-My-p1c" secondAttribute="bottom" constant="9" id="ERu-cq-FgC"/>
                                         <constraint firstItem="CSY-mw-Wdy" firstAttribute="leading" secondItem="ktp-Qj-ozg" secondAttribute="leading" constant="8" id="POI-N5-HB5"/>
                                         <constraint firstAttribute="centerY" secondItem="CSY-mw-Wdy" secondAttribute="centerY" id="VUK-7V-ToX"/>
                                         <constraint firstItem="wLr-wc-OZX" firstAttribute="top" secondItem="ktp-Qj-ozg" secondAttribute="top" id="qLW-QF-kjB"/>
-                                        <constraint firstItem="GLr-My-p1c" firstAttribute="leading" secondItem="CSY-mw-Wdy" secondAttribute="trailing" constant="4" id="qNj-9s-bYR"/>
                                         <constraint firstAttribute="height" constant="40" id="qjt-XT-qlL"/>
                                         <constraint firstAttribute="trailing" secondItem="wLr-wc-OZX" secondAttribute="trailing" id="rL4-l8-Mhw"/>
                                     </constraints>

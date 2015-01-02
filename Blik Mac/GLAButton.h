@@ -35,12 +35,13 @@
 
 @interface NSButton (GLAButtonStyling)
 
-+ (NSColor *)backgroundColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button;
++ (NSColor *)backgroundColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button highlighted:(BOOL)highlighted;
 + (NSColor *)textColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button;
 
 + (void)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView;
 
 + (NSRect)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell adjustTitleRect:(NSRect)titleRect;
++ (NSAttributedString *)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell adjustAttributedTitle:(NSAttributedString *)title;
 + (NSRect)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawTitle:(NSAttributedString *)title withFrame:(NSRect)frame inView:(NSView *)controlView;
 
 @end

@@ -79,7 +79,7 @@
 	
 	if (![collectedFileUUIDsUsingURLs containsObject:collectedFileUUID]) {
 		[collectedFileUUIDsUsingURLs addObject:collectedFileUUID];
-		[(self.collectedFileUUIDMap) addObjectsReplacing:@[collectedFile]];
+		[(self.collectedFileUUIDMap) addObjects:@[collectedFile]];
 		
 		NSURL *fileReferenceURL = (collectedFile.filePathURL);
 		NSAssert(fileReferenceURL != nil, @"Collected file must have a URL.");
@@ -118,7 +118,7 @@
 	[(self.collectedFileUUIDMap) removeAllObjects];
 }
 
-- (void)startUsingURLsForCollectedFiles:(NSArray *)collectedFiles removingRemainders:(BOOL)removeRemainders
+- (void)startUsingURLsForCollectedFilesRemovingRemainders:(NSArray *)collectedFiles
 {
 	GLACollectedFilesSetting *selfForBlock = self;
 	

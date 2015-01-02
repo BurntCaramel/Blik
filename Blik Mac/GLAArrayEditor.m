@@ -11,11 +11,29 @@
 // API partially inspired by PHCollectionListChangeRequest
 
 
+@interface GLAArrayEditorOptions ()
+
+@property(readonly, nonatomic) id<GLAArrayStoring> store;
+
+@property(readonly, nonatomic) id<GLAArrayEditorIndexing> primaryIndexer;
+
+@property(readonly, copy, nonatomic) NSArray *observers;
+@property(readonly, copy, nonatomic) NSArray *indexers;
+@property(readonly, copy, nonatomic) NSArray *constrainers;
+
+@property(nonatomic) NSMutableArray *mutableObservers;
+@property(nonatomic) NSMutableArray *mutableIndexers;
+@property(nonatomic) NSMutableArray *mutableConstrainers;
+
+@end
+
+
 @interface GLAArrayEditorChanges ()
 
 - (void)includeAddedChildren:(NSArray *)addedChildren;
 - (void)includeRemovedChildren:(NSArray *)removedChildren;
 - (void)includeReplacedChildrenFrom:(NSArray *)originalChildren to:(NSArray *)replacementChildren;
+- (void)includeMovedChildrenFromIndexes:(NSIndexSet *)indexes toIndex:(NSUInteger)toIndex;
 
 @property(readwrite, nonatomic) BOOL hasChanges;
 @property(nonatomic) NSMutableArray *mutableAddedChildren;
@@ -26,16 +44,28 @@
 @end
 
 
+@interface GLAArrayEditor (GLAArrayEditing) <GLAArrayEditing>
+
+@end
+
+
 @interface GLAArrayEditor ()
 
 @property(nonatomic) NSMutableArray *mutableChildren;
 
+//TODO: change observers to weak relationship?
+@property(readonly, copy, nonatomic) NSArray *observers;
+
+@property(readonly, copy, nonatomic) NSArray *indexers;
+@property(readonly, nonatomic) id<GLAArrayEditorIndexing> primaryIndexer;
+
+@property(readonly, copy, nonatomic) NSArray *constrainers;
+
 @property(nonatomic) GLAArrayEditorChanges *currentChanges;
 
 - (void)notifyObserversArrayWasCreated;
+- (void)notifyObserversDidLoad;
 - (void)notifyObserversDidMakeChanges:(GLAArrayEditorChanges *)changes;
-
-- (NSArray *)useConstrainersToFilterPotentialChildren:(NSArray *)potentialChildren;
 
 @end
 
@@ -51,7 +81,14 @@
 		
 		if (options) {
 			_observers = [(options.observers) copy];
+			_indexers = [(options.indexers) copy];
+			_primaryIndexer = (options.primaryIndexer);
 			_constrainers = [(options.constrainers) copy];
+			
+			id<GLAArrayStoring> store = _store = (options.store);
+			if (store) {
+				[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(storeDidLoadNotification:) name:GLAArrayStoringDidLoadNotification object:store];
+			}
 		}
 		else {
 			_observers = @[];
@@ -72,19 +109,42 @@
 
 - (void)notifyObserversArrayWasCreated
 {
-	for (id<GLAArrayObserving> observer in (self.observers)) {
-		[observer arrayWasCreated:self];
+	for (id<GLAArrayEditorObserving> observer in (self.observers)) {
+		if ([observer respondsToSelector:@selector(arrayEditorWasCreated:)]) {
+			[observer arrayEditorWasCreated:self];
+		}
+	}
+}
+
+- (void)notifyObserversDidLoad
+{
+	for (id<GLAArrayEditorObserving> observer in (self.observers)) {
+		if ([observer respondsToSelector:@selector(arrayEditorDidLoad:)]) {
+			[observer arrayEditorDidLoad:self];
+		}
 	}
 }
 
 - (void)notifyObserversDidMakeChanges:(GLAArrayEditorChanges *)changes
 {
-	for (id<GLAArrayObserving> observer in (self.observers)) {
-		[observer array:self didMakeChanges:changes];
+	for (id<GLAArrayEditorObserving> observer in (self.observers)) {
+		if ([observer respondsToSelector:@selector(arrayEditor:didMakeChanges:)]) {
+			[observer arrayEditor:self didMakeChanges:changes];
+		}
 	}
 }
 
-#pragma mark -
+- (void)storeDidLoadNotification:(NSNotification *)note
+{
+	NSDictionary *info = (note.userInfo);
+	NSArray *loadedChildren = info[GLAArrayStoringDidLoadNotificationUserInfoLoadedChildren];
+	//TODO: decide whether this should be in a change block.
+	[self addChildren:loadedChildren];
+	
+	[self notifyObserversDidLoad];
+}
+
+#pragma mark - <GLAArrayInspecting>
 
 - (NSArray *)copyChildren
 {
@@ -105,6 +165,127 @@
 	return [mutableChildren objectsAtIndexes:indexes];
 }
 
+- (NSUInteger)childrenCount
+{
+	return (self.mutableChildren.count);
+}
+
+- (NSArray *)resultsFromChildVisitor:(GLAArrayChildVisitorBlock)childVisitor
+{
+	NSParameterAssert(childVisitor != nil);
+	
+	NSMutableArray *results = [NSMutableArray new];
+	NSMutableArray *mutableChildren = (self.mutableChildren);
+	
+	for (id child in mutableChildren) {
+		id result = childVisitor(child);
+		if (result) {
+			[results addObject:result];
+		}
+	}
+	
+	return results;
+}
+
+- (id)firstChildWhoseKey:(NSString *)key hasValue:(id)value
+{
+#if 1
+	NSArray *indexers = (self.indexers);
+	if (indexers) {
+		for (id<GLAArrayEditorIndexing> indexer in indexers) {
+			id child = [indexer arrayEditor:self firstIndexedChildWhoseKey:key hasValue:value];
+			if (child) {
+				return child;
+			}
+		}
+	}
+#endif
+	
+	NSUInteger childIndex = [self indexOfFirstChildWhoseKey:key hasValue:value];
+	if (childIndex != NSNotFound) {
+		return [self childAtIndex:childIndex];
+	}
+	
+	return nil;
+}
+
+- (NSUInteger)indexOfFirstChildWhoseKey:(NSString *)key hasValue:(id)value
+{
+	NSParameterAssert(key != nil);
+	NSParameterAssert(value != nil);
+	
+	NSMutableArray *mutableChildren = (self.mutableChildren);
+	
+	NSUInteger i = 0;
+	for (id child in mutableChildren) {
+		id objectValue = [child valueForKey:key];
+		BOOL found = (objectValue != nil) && [objectValue isEqual:value];
+		if (found) {
+			return i;
+		}
+		i++;
+	}
+	
+	return NSNotFound;
+}
+
+- (NSIndexSet *)indexesOfChildrenWhoseResultFromVisitor:(id (^)(id child))childVisitor hasValueContainedInSet:(NSSet *)valuesSet
+{
+	NSParameterAssert(childVisitor != nil);
+	NSParameterAssert(valuesSet != nil);
+	
+	return [(self.mutableChildren) indexesOfObjectsPassingTest:^BOOL(id child, NSUInteger idx, BOOL *stop) {
+		id objectValue = childVisitor(child);
+		BOOL found = (objectValue != nil) && [valuesSet containsObject:objectValue];
+		return found;
+	}];
+}
+
+- (NSArray *)filterArray:(NSArray *)objects whoseResultFromVisitorIsNotAlreadyPresent:(GLAArrayChildVisitorBlock)childVisitor
+{
+	NSParameterAssert(objects != nil);
+	NSParameterAssert(childVisitor != nil);
+	
+	NSMutableArray *mutableChildren = (self.mutableChildren);
+	
+	NSMutableSet *childResults = [NSMutableSet new];
+	for (id child in mutableChildren) {
+		id childResult = childVisitor(child);
+		if (childResult) {
+			[childResults addObject:childResult];
+		}
+	}
+	
+	NSMutableArray *filteredObjects = [NSMutableArray new];
+	for (id object in objects) {
+		id objectResult = childVisitor(object);
+		if (!objectResult) {
+			continue;
+		}
+		
+		if (![childResults containsObject:objectResult]) {
+			[filteredObjects addObject:object];
+		}
+	}
+	
+	return filteredObjects;
+}
+
+#pragma mark -
+
+- (id)objectForKeyedSubscript:(id <NSCopying>)key
+{
+	id<GLAArrayEditorIndexing> primaryIndexer = (self.primaryIndexer);
+	if (primaryIndexer) {
+		return primaryIndexer[key];
+	}
+	else {
+		return nil;
+	}
+}
+
+#pragma mark -
+
 - (GLAArrayEditorChanges *)changesMadeInBlock:(GLAArrayEditingBlock)editorBlock
 {
 	GLAArrayEditorChanges *changes = [GLAArrayEditorChanges new];
@@ -119,18 +300,30 @@
 	return changes;
 }
 
-#pragma mark Constrainers
-
-- (NSArray *)useConstrainersToFilterPotentialChildren:(NSArray *)potentialChildren
+- (BOOL)needsLoadingFromStore
 {
-	for (id<GLAArrayConstraining> constrainer in (self.constrainers)) {
-		potentialChildren = [constrainer array:self filterPotentialChildren:potentialChildren];
+	id<GLAArrayStoring> store = (self.store);
+	if (store) {
+		return (store.loadState) == GLAArrayStoringLoadStateNeedsLoading;
+	}
+	else {
+		return NO;
+	}
+}
+
+- (NSArray *)constrainPotentialChildren:(NSArray *)potentialChildren
+{
+	for (id<GLAArrayEditorConstraining> constrainer in (self.constrainers)) {
+		potentialChildren = [constrainer arrayEditor:self filterPotentialChildren:potentialChildren];
 	}
 	
 	return potentialChildren;
 }
 
-#pragma mark - <GLAArrayEditing>
+@end
+
+
+@implementation GLAArrayEditor (GLAArrayEditing)
 
 - (void)addChildren:(NSArray *)objects
 {
@@ -196,73 +389,22 @@
 	NSParameterAssert(toIndex != NSNotFound);
 	
 	NSMutableArray *mutableChildren = (self.mutableChildren);
+	
+	GLAArrayEditorChanges *changes = (self.currentChanges);
+	if (changes) {
+		[changes includeMovedChildrenFromIndexes:indexes toIndex:toIndex];
+	}
+	
 	NSArray *objectsToMove = [mutableChildren objectsAtIndexes:indexes];
 	[mutableChildren removeObjectsAtIndexes:indexes];
 	[mutableChildren insertObjects:objectsToMove atIndexes:[NSIndexSet indexSetWithIndex:toIndex]];
-	
-	// No changes tracked, as objects are moved not actually added or removed.
 }
 
-- (NSUInteger)indexOfFirstChildWhoseKey:(NSString *)key hasValue:(id)value
+- (void)replaceAllChildrenWithObjects:(NSArray *)objects
 {
-	NSParameterAssert(key != nil);
-	NSParameterAssert(value != nil);
-	
-	NSMutableArray *mutableChildren = (self.mutableChildren);
-	
-	NSUInteger i = 0;
-	for (id child in mutableChildren) {
-		id objectValue = [child valueForKey:key];
-		BOOL found = (objectValue != nil) && [objectValue isEqual:value];
-		if (found) {
-			return i;
-		}
-		i++;
-	}
-	
-	return NSNotFound;
-}
-
-- (NSIndexSet *)indexesOfChildrenWhoseResultFromVisitor:(id (^)(id child))childVisitor hasValueContainedInSet:(NSSet *)valuesSet
-{
-	NSParameterAssert(childVisitor != nil);
-	NSParameterAssert(valuesSet != nil);
-	
-	return [(self.mutableChildren) indexesOfObjectsPassingTest:^BOOL(id child, NSUInteger idx, BOOL *stop) {
-		id objectValue = childVisitor(child);
-		BOOL found = (objectValue != nil) && [valuesSet containsObject:objectValue];
-		return found;
-	}];
-}
-
-- (NSArray *)filterArray:(NSArray *)objects whoseResultFromVisitorIsNotAlreadyPresent:(GLAArrayChildVisitorBlock)childVisitor
-{
-	NSParameterAssert(objects != nil);
-	NSParameterAssert(childVisitor != nil);
-	
-	NSMutableArray *mutableChildren = (self.mutableChildren);
-	
-	NSMutableSet *childResults = [NSMutableSet new];
-	for (id child in mutableChildren) {
-		id childResult = childVisitor(child);
-		if (childResult) {
-			[childResults addObject:childResult];
-		}
-	}
-	
-	NSMutableArray *filteredObjects = [NSMutableArray new];
-	for (id object in objects) {
-		id objectResult = childVisitor(object);
-		if (!objectResult) {
-			continue;
-		}
-		
-		if (![childResults containsObject:objectResult]) {
-			[filteredObjects addObject:object];
-		}
-	}
-	
-	return filteredObjects;
+	NSRange entireRange = NSMakeRange(0, (self.childrenCount));
+	NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:entireRange];
+	[self replaceChildrenAtIndexes:indexes withObjects:objects];
 }
 
 - (BOOL)removeFirstChildWhoseKey:(NSString *)key hasValue:(id)value
@@ -300,6 +442,9 @@
 @end
 
 
+#pragma mark -
+
+
 @implementation GLAArrayEditorChanges
 
 - (instancetype)init
@@ -318,14 +463,14 @@
 {
 	[_mutableAddedChildren addObjectsFromArray:addedChildren];
 	
-	(self.hasChanges) = YES;
+	_hasChanges = YES;
 }
 
 - (void)includeRemovedChildren:(NSArray *)removedChildren
 {
 	[_mutableRemovedChildren addObjectsFromArray:removedChildren];
 	
-	(self.hasChanges) = YES;
+	_hasChanges = YES;
 }
 
 - (void)includeReplacedChildrenFrom:(NSArray *)originalChildren to:(NSArray *)replacementChildren
@@ -333,8 +478,17 @@
 	[_mutableReplacedChildrenBefore addObjectsFromArray:originalChildren];
 	[_mutableReplacedChildrenAfter addObjectsFromArray:replacementChildren];
 	
-	(self.hasChanges) = YES;
+	_hasChanges = YES;
 }
+
+- (void)includeMovedChildrenFromIndexes:(NSIndexSet *)indexes toIndex:(NSUInteger)toIndex
+{
+	_didMoveChildren = YES;
+	
+	_hasChanges = YES;
+}
+
+#pragma mark -
 
 // These are only accessed after all changes have been made.
 // So immutable copies are not necessary.
@@ -361,18 +515,16 @@
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"[%@ %p; ADDED: %@ REMOVED: %@ REPLACED: %@ WITH: %@]", (self.className), self, (self.addedChildren), (self.removedChildren), (self.replacedChildrenBefore), (self.replacedChildrenAfter)];
+	if (self.hasChanges) {
+		return [NSString stringWithFormat:@"[%@ %p; ADDED: %@ REMOVED: %@ REPLACED: %@ WITH: %@]", (self.className), self, (self.addedChildren), (self.removedChildren), (self.replacedChildrenBefore), (self.replacedChildrenAfter)];
+	}
+	else {
+		return [super description];
+	}
 }
 
 @end
 
-
-@interface GLAArrayEditorOptions ()
-
-@property(nonatomic) NSMutableArray *mutableObservers;
-@property(nonatomic) NSMutableArray *mutableConstrainers;
-
-@end
 
 @implementation GLAArrayEditorOptions
 
@@ -381,6 +533,7 @@
 	self = [super init];
 	if (self) {
 		_mutableObservers = [NSMutableArray new];
+		_mutableIndexers = [NSMutableArray new];
 		_mutableConstrainers = [NSMutableArray new];
 	}
 	return self;
@@ -390,29 +543,61 @@
 {
 	GLAArrayEditorOptions *copy = [[[self class] allocWithZone:zone] init];
 	(copy.mutableObservers) = [(self.mutableObservers) mutableCopy];
+	(copy.mutableIndexers) = [(self.mutableIndexers) mutableCopy];
 	(copy.mutableConstrainers) = [(self.mutableConstrainers) mutableCopy];
+	(copy.store) = (self.store);
 	
 	return copy;
 }
 
-- (void)addObserver:(id<GLAArrayObserving>)observer
+- (void)addObserver:(id<GLAArrayEditorObserving>)observer
 {
 	NSParameterAssert(observer != nil);
 	
 	NSMutableArray *mutableObservers = (self.mutableObservers);
-	[mutableObservers addObject:observer];
+	if ([mutableObservers indexOfObjectIdenticalTo:observer] == NSNotFound) {
+		[mutableObservers addObject:observer];
+	}
 }
 
-- (void)addConstrainer:(id<GLAArrayConstraining>)constrainer
+- (void)addIndexer:(id<GLAArrayEditorIndexing>)indexer
+{
+	NSParameterAssert(indexer != nil);
+	
+	NSMutableArray *mutableIndexers = (self.mutableIndexers);
+	[mutableIndexers addObject:indexer];
+	
+	[self addObserver:indexer];
+}
+
+- (void)setPrimaryIndexer:(id<GLAArrayEditorIndexing>)indexer
+{
+	NSAssert(_primaryIndexer == nil, @"Store can only be set once.");
+	
+	_primaryIndexer = indexer;
+	
+	[self addIndexer:indexer];
+}
+
+- (void)addConstrainer:(id<GLAArrayEditorConstraining>)constrainer
 {
 	NSParameterAssert(constrainer != nil);
 	
 	NSMutableArray *mutableConstrainers = (self.mutableConstrainers);
 	[mutableConstrainers addObject:constrainer];
 	
-	NSMutableArray *mutableObservers = (self.mutableObservers);
-	if ([mutableObservers indexOfObjectIdenticalTo:constrainer] == NSNotFound) {
-		[mutableObservers addObject:constrainer];
+	[self addObserver:constrainer];
+}
+
+@synthesize store = _store;
+
+- (void)setStore:(id<GLAArrayStoring>)store
+{
+	NSAssert(_store == nil, @"Store can only be set once.");
+	
+	_store = store;
+	if (store) {
+		[self addObserver:store];
 	}
 }
 
@@ -421,9 +606,17 @@
 	return [(self.mutableObservers) copy];
 }
 
+- (NSArray *)indexers
+{
+	return [(self.mutableIndexers) copy];
+}
+
 - (NSArray *)constrainers
 {
 	return [(self.mutableConstrainers) copy];
 }
 
 @end
+
+NSString *GLAArrayStoringDidLoadNotification = @"GLAArrayStoringDidLoadNotification";
+NSString *GLAArrayStoringDidLoadNotificationUserInfoLoadedChildren = @"GLAArrayStoringDidLoadNotificationUserInfoLoadedChildren";

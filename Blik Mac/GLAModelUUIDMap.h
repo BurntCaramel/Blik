@@ -10,18 +10,19 @@
 #import "GLAArrayEditor.h"
 
 
-@interface GLAModelUUIDMap : NSObject <GLAArrayObserving>
+@interface GLAModelUUIDMap : NSObject <GLAArrayEditorIndexing>
 
-- (void)addObjectsReplacing:(NSArray *)objects;
+- (GLAModel *)objectWithUUID:(NSUUID *)UUID;
 
-- (void)setObjects:(NSArray *)objects additionsAndRemovalsBlock:(void(^)(NSArray *additions, NSArray *removals))block;
+- (GLAModel *)objectForKeyedSubscript:(NSUUID *)UUID;
+
+#pragma mark -
+
+- (void)addObjects:(NSArray *)objects;
 
 - (void)removeObjects:(NSArray *)objects;
 - (void)removeAllObjects;
 
-- (GLAModel *)objectWithUUID:(NSUUID *)UUID;
-- (BOOL)containsObjectWithUUID:(NSUUID *)UUID;
-
-- (GLAModel *)objectForKeyedSubscript:(NSUUID *)UUID;
+- (void)setObjects:(NSArray *)objects additionsAndRemovalsBlock:(void(^)(NSArray *additions, NSArray *removals))block;
 
 @end

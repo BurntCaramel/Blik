@@ -26,7 +26,7 @@
 	return self;
 }
 
-- (void)addObjectsReplacing:(NSArray *)objects
+- (void)addObjects:(NSArray *)objects
 {
 	NSMutableDictionary *mutableDictionary = (self.mutableDictionary);
 	for (GLAModel *model in objects) {
@@ -78,32 +78,44 @@
 	return (self.mutableDictionary)[UUID];
 }
 
-- (BOOL)containsObjectWithUUID:(NSUUID *)UUID
-{
-	return [self objectWithUUID:UUID] != nil;
-}
-
-- (id)objectForKeyedSubscript:(NSUUID *)UUID
+- (GLAModel *)objectForKeyedSubscript:(NSUUID *)UUID
 {
 	return [self objectWithUUID:UUID];
 }
 
 #pragma mark <GLAArrayObserving>
 
-- (void)arrayWasCreated:(id<GLAArrayInspecting>)array
+- (void)arrayEditorWasCreated:(GLAArrayEditor *)arrayEditor
 {
-	NSArray *children = [array copyChildren];
-	[self addObjectsReplacing:children];
+	NSArray *children = [arrayEditor copyChildren];
+	[self addObjects:children];
 }
 
-- (void)array:(id<GLAArrayInspecting>)array didMakeChanges:(GLAArrayEditorChanges *)changes
+- (void)arrayEditorDidLoad:(GLAArrayEditor *)arrayEditor
+{
+	NSArray *children = [arrayEditor copyChildren];
+	[self addObjects:children];
+}
+
+- (void)arrayEditor:(GLAArrayEditor *)arrayEditor didMakeChanges:(GLAArrayEditorChanges *)changes
 {
 	[self removeObjects:(changes.removedChildren)];
 	[self removeObjects:(changes.replacedChildrenBefore)];
 	
-	[self addObjectsReplacing:(changes.addedChildren)];
-	[self addObjectsReplacing:(changes.replacedChildrenAfter)];
+	[self addObjects:(changes.addedChildren)];
+	[self addObjects:(changes.replacedChildrenAfter)];
+}
 
+#pragma mark <GLAArrayIndexing>
+
+- (id)arrayEditor:(GLAArrayEditor *)arrayEditor firstIndexedChildWhoseKey:(NSString *)key hasValue:(id)value
+{
+	if ([key isEqualToString:@"UUID"] && [value isKindOfClass:[NSUUID class]]) {
+		NSUUID *UUID = (id)value;
+		return [self objectWithUUID:UUID];
+	}
+	
+	return nil;
 }
 
 @end

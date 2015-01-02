@@ -56,7 +56,8 @@
 		(style.primaryButtonBackgroundColor) = activeYellow;
 		(style.primaryButtonTextColor) = grayExtraDark;
 		
-		(style.secondaryButtonBackgroundColor) = [whiteAlmost colorWithAlphaComponent:0.12];
+		//(style.secondaryButtonBackgroundColor) = [whiteAlmost colorWithAlphaComponent:0.075];
+		(style.secondaryButtonBackgroundColor) = [whiteAlmost colorWithAlphaComponent:0.0695];
 		(style.secondaryButtonTextColor) = whiteAlmost;
 		
 		(style.lightTextColor) =  whiteAlmost;
@@ -242,6 +243,7 @@
 	(layer.borderWidth) = 0.5;
 	(layer.borderColor) = [NSColor colorWithCalibratedWhite:0.32 alpha:1.0].CGColor;
 	(layer.cornerRadius) = 4.0;
+	//[textField noteFocusRingMaskChanged];
 }
 
 - (void)prepareContentTableView:(NSTableView *)tableView

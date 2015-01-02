@@ -19,7 +19,9 @@
 
 @interface GLACollectedFile : GLAModel <GLACollectedItem>
 
-- (instancetype)initWithFileURL:(NSURL *)URL;
+- (instancetype)initWithFileURL:(NSURL *)fileURL;
+
++ (NSArray *)collectedFilesWithFileURLs:(NSArray *)fileURLs;
 
 @property(readonly, nonatomic) NSURL *filePathURL;
 @property(readonly, nonatomic) NSURL *fileReferenceURL;

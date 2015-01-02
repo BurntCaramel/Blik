@@ -29,6 +29,9 @@
 @property(nonatomic) NSString *chosenName;
 @property(nonatomic) GLACollectionColor *chosenCollectionColor;
 
+- (void)addObserver:(id)observer forChosenNameDidChangeNotificationWithSelector:(SEL)aSelector;
+- (void)addObserver:(id)observer forChosenColorDidChangeNotificationWithSelector:(SEL)aSelector;
+
 @end
 
 extern NSString *GLAEditCollectionDetailsViewControllerChosenNameDidChangeNotification;

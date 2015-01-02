@@ -45,7 +45,7 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <action selector="goToToday:" target="-2" id="d4V-Ag-cYM"/>
+                        <action selector="goToNowProject:" target="-2" id="omF-vz-jqn"/>
                     </connections>
                 </button>
                 <button identifier="allProjects" placeholderIntrinsicWidth="82" placeholderIntrinsicHeight="43" translatesAutoresizingMaskIntoConstraints="NO" id="qAd-jv-zj2" customClass="GLANavigationButton">

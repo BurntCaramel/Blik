@@ -45,8 +45,6 @@
 
 @interface GLAMainNavigationBarController ()
 
-@property(readwrite, nonatomic) GLAMainContentSection *currentSection;
-
 @property(nonatomic) BOOL private_enabled;
 
 @property(readonly, getter = isAnimating, nonatomic) BOOL animating;
@@ -85,6 +83,63 @@
 	[(self.templateButton) removeFromSuperview];
 }
 
+- (void)dealloc
+{
+	[self stopSectionNavigatorObserving];
+}
+
+#pragma mark - Section Navigator
+
+@synthesize sectionNavigator = _sectionNavigator;
+
+- (void)setSectionNavigator:(GLAMainSectionNavigator *)sectionNavigator
+{
+	_sectionNavigator = sectionNavigator;
+	
+	[self setUpSectionNavigatorObserving];
+}
+
+- (GLAMainSection *)currentSection
+{
+	return (self.sectionNavigator.currentSection);
+}
+
+- (void)setUpSectionNavigatorObserving
+{
+	GLAMainSectionNavigator *sectionNavigator = (self.sectionNavigator);
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	// Now Project
+	[nc addObserver:self selector:@selector(sectionNavigatorDidChangeCurrentSection:) name:GLAMainSectionNavigatorDidChangeCurrentSectionNotification object:sectionNavigator];
+}
+
+- (void)stopSectionNavigatorObserving
+{
+	GLAMainSectionNavigator *sectionNavigator = (self.sectionNavigator);
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	// Stop observing any notifications on the project manager.
+	[nc removeObserver:self name:nil object:sectionNavigator];
+}
+
+#pragma mark Section Navigator Notifications
+
+- (void)sectionNavigatorDidChangeCurrentSection:(NSNotification *)note
+{
+	GLAMainSectionNavigator *sectionNavigator = (self.sectionNavigator);
+	GLAMainSection *newSection = (sectionNavigator.currentSection);
+	GLAMainSection *previousSection = nil;
+	
+	NSDictionary *userInfo = (note.userInfo);
+	if (userInfo) {
+		previousSection = userInfo[GLAMainSectionNavigatorNotificationUserInfoPreviousSection];
+	}
+	
+	[self didChangeCurrentSectionFrom:previousSection to:newSection];
+}
+
+#pragma mark -
+
 - (BOOL)isAnimating
 {
 	return (self.animatingCounter) > 0;
@@ -92,28 +147,30 @@
 
 - (void)updateSelectedSectionUI
 {
-	GLAMainContentSection *currentSection = (self.currentSection);
+	GLAMainSection *currentSection = (self.currentSection);
 	(self.allButton.state) = (currentSection.isAllProjects) ? NSOnState : NSOffState;
 	(self.todayButton.state) = (currentSection.isNow) ? NSOnState : NSOffState;
 	(self.plannedButton.state) = (currentSection.isPlannedProjects) ? NSOnState : NSOffState;
 }
 
-- (void)didChangeCurrentSectionFrom:(GLAMainContentSection *)previousSection to:(GLAMainContentSection *)newSection
+- (void)didChangeCurrentSectionFrom:(GLAMainSection *)previousSection to:(GLAMainSection *)newSection
 {
-	if ((previousSection.isAllProjects) || (previousSection.isPlannedProjects) || (previousSection.isNow)) {
-		[self hideMainButtons];
-	}
-	else if (previousSection.isEditProject) {
-		[self hideButtonsForEditingExistingProject];
-	}
-	else if (previousSection.isEditCollection) {
-		[self hideButtonsForCurrentCollection];
-	}
-	else if (previousSection.isAddNewProject) {
-		[self hideButtonsForAddingNewProject];
-	}
-	else if (previousSection.isAddNewCollection) {
-		[self hideButtonsForAddingNewCollection];
+	if (previousSection) {
+		if ((previousSection.isAllProjects) || (previousSection.isPlannedProjects) || (previousSection.isNow)) {
+			[self hideMainButtons];
+		}
+		else if (previousSection.isEditProject) {
+			[self hideButtonsForEditingExistingProject];
+		}
+		else if (previousSection.isEditCollection) {
+			[self hideButtonsForCurrentCollection];
+		}
+		else if (previousSection.isAddNewProject) {
+			[self hideButtonsForAddingNewProject];
+		}
+		else if (previousSection.isAddNewCollection) {
+			[self hideButtonsForAddingNewCollection];
+		}
 	}
 	
 	if ((newSection.isAllProjects) || (newSection.isPlannedProjects) || (newSection.isNow)) {
@@ -135,52 +192,14 @@
 	[self updateSelectedSectionUI];
 }
 
-- (void)changeCurrentSectionTo:(GLAMainContentSection *)newSection
-{
-	GLAMainContentSection *previousSection = (self.currentSection);
-	if ([previousSection isEqual:newSection]) {
-		return;
-	}
-	
-	(self.currentSection) = newSection;
-	
-	[self didChangeCurrentSectionFrom:previousSection to:newSection];
-}
-
-- (void)performChangeCurrentSectionTo:(GLAMainContentSection *)newSection
-{
-	/*if (self.isAnimating) {
-		return;
-	}*/
-	
-	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
-	if (delegate) {
-		[delegate mainNavigationBarController:self handleChangeCurrentSectionTo:newSection];
-	}
-	
-	[self updateSelectedSectionUI];
-	
-	//[self changeCurrentSectionTo:newSection];
-}
-
 - (IBAction)goToAll:(id)sender
 {
-	[self performChangeCurrentSectionTo:[GLAMainContentSection allProjectsSection]];
+	[(self.sectionNavigator) goToAllProjects];
 }
 
-- (IBAction)goToToday:(id)sender
+- (IBAction)goToNowProject:(id)sender
 {
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	
-	[projectManager loadNowProjectIfNeeded];
-	GLAProject *nowProject = (projectManager.nowProject);
-	
-	[self performChangeCurrentSectionTo:[GLAMainContentEditProjectSection nowProjectSectionWithProject:nowProject]];
-}
-
-- (IBAction)goToPlanned:(id)sender
-{
-	[self performChangeCurrentSectionTo:[GLAMainContentSection plannedProjectsSection]];
+	[(self.sectionNavigator) goToNowProject];
 }
 
 - (NSArray *)allVisibleButtons
@@ -210,19 +229,19 @@
 
 - (GLAProject *)currentProject
 {
-	GLAMainContentSection *currentSection = (self.currentSection);
-	NSAssert([currentSection isKindOfClass:[GLAMainContentEditProjectSection class]], @"Current section (%@) must be a GLAMainContentEditProjectSection when calling -currentProject", currentSection);
+	GLAMainSection *currentSection = (self.currentSection);
+	NSAssert([currentSection isKindOfClass:[GLAEditProjectSection class]], @"Current section (%@) must be a GLAMainContentEditProjectSection when calling -currentProject", currentSection);
 	
-	GLAMainContentEditProjectSection *editProjectSection = (GLAMainContentEditProjectSection *)currentSection;
+	GLAEditProjectSection *editProjectSection = (GLAEditProjectSection *)currentSection;
 	return (editProjectSection.project);
 }
 
 - (GLACollection *)currentCollection
 {
-	GLAMainContentSection *currentSection = (self.currentSection);
-	NSAssert([currentSection isKindOfClass:[GLAMainContentEditCollectionSection class]], @"Current section (%@) must be a GLAMainContentEditCollectedSection when calling -currentCollection", currentSection);
+	GLAMainSection *currentSection = (self.currentSection);
+	NSAssert([currentSection isKindOfClass:[GLAEditCollectionSection class]], @"Current section (%@) must be a GLAMainContentEditCollectedSection when calling -currentCollection", currentSection);
 	
-	GLAMainContentEditCollectionSection *editCollectionSection = (GLAMainContentEditCollectionSection *)currentSection;
+	GLAEditCollectionSection *editCollectionSection = (GLAEditCollectionSection *)currentSection;
 	return (editCollectionSection.collection);
 }
 
@@ -458,15 +477,12 @@
 
 - (IBAction)addNewProject:(id)sender
 {
-	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
-	if (delegate) {
-		[delegate mainNavigationBarController:self handleAddNewProject:sender];
-	}
+	[(self.sectionNavigator) addNewProject];
 }
 
 - (NSString *)titleForEditingProjectBackButton
 {
-	GLAMainContentSection *currentSection = (self.currentSection);
+	GLAMainSection *currentSection = (self.currentSection);
 	
 	if (currentSection.isAllProjects) {
 		return NSLocalizedString(@"Back to All Projects", @"Title for editing project back button to all projects");
@@ -485,20 +501,18 @@
 		return;
 	}
 	
-	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
-	if (delegate) {
-		[delegate mainNavigationBarControllerHandleExitEditedProject:self];
-	}
+	[(self.sectionNavigator) goToPreviousSection];
 }
 
 - (IBAction)workOnCurrentProjectNow:(id)sender
 {
 	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
-		GLAMainContentSection *currentSection = (self.currentSection);
-		NSAssert([currentSection isKindOfClass:[GLAMainContentEditProjectSection class]], @"Current section (%@) must be a GLAMainContentEditProjectSection when calling -workOnCurrentProjectNow: action", currentSection);
+		GLAMainSection *currentSection = (self.currentSection);
+		NSAssert([currentSection isKindOfClass:[GLAEditProjectSection class]], @"Current section (%@) must be a GLAMainContentEditProjectSection when calling -workOnCurrentProjectNow: action", currentSection);
 		
-		GLAMainContentEditProjectSection *editProjectSection = (GLAMainContentEditProjectSection *)currentSection;
+		GLAEditProjectSection *editProjectSection = (GLAEditProjectSection *)currentSection;
+		
 		[delegate mainNavigationBarController:self handleWorkNowOnProject:(editProjectSection.project)];
 	}
 }
@@ -533,10 +547,7 @@
 		return;
 	}
 	
-	id<GLAMainNavigationBarControllerDelegate> delegate = (self.delegate);
-	if (delegate) {
-		[delegate mainNavigationBarControllerHandleExitEditedCollection:self];
-	}
+	[(self.sectionNavigator) goToPreviousSection];
 }
 
 #pragma mark Creating Buttons

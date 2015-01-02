@@ -13,6 +13,9 @@
 
 @interface GLAColorChoiceView ()
 
+@property(nonatomic) NSTrackingArea *mainTrackingArea;
+@property(nonatomic) BOOL mouseInside;
+
 @end
 
 @implementation GLAColorChoiceView
@@ -32,6 +35,15 @@
 	return YES;
 }
 
+- (void)updateTrackingAreas
+{
+	NSTrackingArea *mainTrackingArea = (self.mainTrackingArea);
+	if ( ! mainTrackingArea ) {
+		mainTrackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:( NSTrackingActiveInActiveApp | NSTrackingMouseEnteredAndExited | NSTrackingInVisibleRect ) owner:self userInfo:nil];
+		[self addTrackingArea:mainTrackingArea];
+	}
+}
+
 - (NSSize)dotSize
 {
 	return NSMakeSize(32.0, 32.0);
@@ -40,6 +52,11 @@
 - (CGFloat)scaleWhenOn
 {
 	return 1.35;
+}
+
+- (CGFloat)scaleWhenHovering
+{
+	return 1.122;
 }
 
 - (void)updateLayer
@@ -54,6 +71,7 @@
 	
 	NSColor *color = (self.color);
 	BOOL on = (self.on);
+	BOOL mouseInside = (self.mouseInside);
 	
 	if (color) {
 		[CATransaction begin];
@@ -90,7 +108,7 @@
 		[CATransaction setAnimationDuration:0.136];
 		[CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName: (on ? kCAMediaTimingFunctionEaseIn : kCAMediaTimingFunctionEaseOut) ]];
 		
-		CGFloat scale = on ? (self.scaleWhenOn) : 1.0;
+		CGFloat scale = on ? (self.scaleWhenOn) : ( mouseInside ? (self.scaleWhenHovering) : 1.0 );
 		(dotLayer.transform) = CATransform3DMakeScale(scale, scale, 1.0);
 	}
 	[CATransaction commit];
@@ -171,6 +189,20 @@
 	else {
 		[[NSNotificationCenter defaultCenter] postNotificationName:GLAColorChoiceViewDidClickNotification object:self];
 	}
+}
+
+- (void)mouseEntered:(NSEvent *)theEvent
+{
+	(self.mouseInside) = YES;
+	
+	(self.needsDisplay) = YES;
+}
+
+- (void)mouseExited:(NSEvent *)theEvent
+{
+	(self.mouseInside) = NO;
+	
+	(self.needsDisplay) = YES;
 }
 
 @end

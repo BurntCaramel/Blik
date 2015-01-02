@@ -43,7 +43,6 @@ extern NSString *GLACollectionTypeFilesList;
 @property(readonly, nonatomic) GLACollectionColor *color;
 
 - (instancetype)initWithType:(NSString *)collectionType creatingFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock;
-+ (instancetype)newWithType:(NSString *)collectionType creatingFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock;
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock;
 

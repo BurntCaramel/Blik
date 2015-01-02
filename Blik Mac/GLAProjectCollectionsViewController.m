@@ -12,17 +12,26 @@
 #import "GLAUIStyle.h"
 #import "GLAProjectManager.h"
 #import "GLAEditCollectionDetailsPopover.h"
-#import "GLAArrayEditorTableDraggingHelper.h"
+#import "GLAAddCollectedFilesChoicePopover.h"
+#import "GLAArrayTableDraggingHelper.h"
+#import "GLAPendingAddedCollectedFilesInfo.h"
 #import <objc/runtime.h>
 
 
 NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"GLA.projectCollectionsViewController.didClickCollection";
 
-@interface GLAProjectCollectionsViewController () <GLAArrayEditorTableDraggingHelperDelegate>
+@interface GLAProjectCollectionsViewController () <GLAArrayTableDraggingHelperDelegate>
 
-@property(nonatomic) GLAArrayEditorTableDraggingHelper *tableDraggingHelper;
+@property(nonatomic) GLAArrayTableDraggingHelper *tableDraggingHelper;
 
 - (IBAction)tableViewWasClicked:(id)sender;
+
+@end
+
+@interface GLAProjectCollectionsViewController (GLAAddCollectedFilesChoice)
+
+- (GLAAddCollectedFilesChoicePopover *)addCollectedFilesChoicePopup;
+- (void)showAddCollectedFilesChoiceForFileURLs:(NSArray *)fileURLs;
 
 @end
 
@@ -45,7 +54,11 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	
 	(tableView.menu) = (self.contextualMenu);
 	
-	[tableView registerForDraggedTypes:@[[GLACollection objectJSONPasteboardType]]];
+	[tableView registerForDraggedTypes:
+  @[
+	[GLACollection objectJSONPasteboardType],
+	(__bridge NSString *)kUTTypeFileURL
+	]];
 	
 	// I think Apple (from a WWDC video) says this is better for scrolling performance.
 	(tableView.enclosingScrollView.wantsLayer) = YES;
@@ -53,7 +66,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	[self wrapScrollView];
 	//[self setUpEditingActionsView];
 	
-	(self.tableDraggingHelper) = [[GLAArrayEditorTableDraggingHelper alloc] initWithDelegate:self];
+	(self.tableDraggingHelper) = [[GLAArrayTableDraggingHelper alloc] initWithDelegate:self];
 	
 	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
 }
@@ -90,32 +103,8 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	
 	NSScrollView *scrollView = (self.tableView.enclosingScrollView);
 	(scrollView.identifier) = @"tableScrollView";
-	(scrollView.translatesAutoresizingMaskIntoConstraints) = NO;
 	
-	GLAView *holderView = [GLAView new];
-	(holderView.identifier) = @"collectionListHolderView";
-	(holderView.translatesAutoresizingMaskIntoConstraints) = NO;
-	
-	GLAProjectViewController *projectViewController = (self.parentViewController);
-	NSLayoutConstraint *itemsViewLeadingConstraint = (projectViewController.collectionsViewLeadingConstraint);
-	NSLayoutConstraint *itemsViewBottomConstraint = (projectViewController.collectionsViewBottomConstraint);
-	
-	[projectViewController wrapChildViewKeepingOutsideConstraints:scrollView withView:holderView constraintVisitor:^ (NSLayoutConstraint *oldConstraint, NSLayoutConstraint *newConstraint) {
-		if (oldConstraint == itemsViewLeadingConstraint) {
-			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"leading" forChildView:holderView];
-			(projectViewController.collectionsViewLeadingConstraint) = newConstraint;
-		}
-		else if (oldConstraint == itemsViewBottomConstraint) {
-			(newConstraint.identifier) = [GLAViewController layoutConstraintIdentifierWithBaseIdentifier:@"bottom" forChildView:holderView];
-			(projectViewController.collectionsViewBottomConstraint) = newConstraint;
-		}
-	}];
-	
-	(self.view) = holderView;
-	
-	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeWidth withChildView:scrollView identifier:@"width"];
-	[self addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:scrollView identifier:@"top"];
-	//(self.scrollLeadingConstraint) = [self addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:scrollView identifier:@"leading"];
+	[self fillViewWithChildView:scrollView];
 }
 
 - (void)startProjectObserving
@@ -441,7 +430,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Button title to delete collection.")];
 	[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title to cancel deleting collection.")];
 	(alert.messageText) = NSLocalizedString(@"Delete the collection?", @"Message for deleting a collection.");
-	(alert.informativeText) = NSLocalizedString(@"If you wish to restore the collections and its contents you must do so manually.", @"Informative text for deleting a collection.");
+	(alert.informativeText) = NSLocalizedString(@"If you wish to restore the collection and its contents you must do so manually.", @"Informative text for deleting a collection.");
 	(alert.alertStyle) = NSWarningAlertStyle;
 	
 	[alert beginSheetModalForWindow:(self.view.window) completionHandler:^(NSModalResponse returnCode) {
@@ -465,12 +454,12 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 #pragma mark - Table Dragging Helper Delegate
 
-- (BOOL)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard
+- (BOOL)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard
 {
 	return [GLACollection canCopyObjectsFromPasteboard:draggingPasteboard];
 }
 
-- (void)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
+- (void)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
 {
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	[projectManager editCollectionsOfProject:(self.project) usingBlock:editBlock];
@@ -507,11 +496,39 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 - (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
 {
+	NSPasteboard *pboard = (info.draggingPasteboard);
+	if ([pboard availableTypeFromArray:@[(__bridge NSString *)kUTTypeFileURL]] != nil) {
+		//[tableView setDropRow:(tableView.numberOfRows) dropOperation:NSTableViewDropAbove];
+		
+		return NSDragOperationLink;
+	}
+	
 	return [(self.tableDraggingHelper) tableView:tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
 }
 
 - (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation
 {
+	NSPasteboard *pboard = (info.draggingPasteboard);
+	if ([pboard availableTypeFromArray:@[(__bridge NSString *)kUTTypeFileURL]] != nil) {
+		NSArray *fileURLs = [pboard readObjectsForClasses:@[ [NSURL class] ] options:@{ NSPasteboardURLReadingFileURLsOnlyKey: @(YES) }];
+		if (fileURLs) {
+			if (dropOperation == NSTableViewDropAbove) {
+				[self showAddCollectedFilesChoiceForFileURLs:fileURLs];
+			}
+			else if (dropOperation == NSTableViewDropOn) {
+				GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+				GLACollection *collection = (self.collections)[row];
+				NSArray *collectedFiles = [GLACollectedFile collectedFilesWithFileURLs:fileURLs];
+				[pm editFilesListOfCollection:collection addingCollectedFiles:collectedFiles queueIfNeedsLoading:YES];
+			}
+			
+			return YES;
+		}
+		else {
+			return NO;
+		}
+	}
+	
 	return [(self.tableDraggingHelper) tableView:tableView acceptDrop:info row:row dropOperation:dropOperation];
 }
 
@@ -536,6 +553,32 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	(cellView.textField.textColor) = [uiStyle colorForCollectionColor:(collection.color)];
 	
 	return cellView;
+}
+
+@end
+
+
+@implementation GLAProjectCollectionsViewController (GLAAddCollectedFilesChoice)
+
+- (GLAAddCollectedFilesChoicePopover *)addCollectedFilesChoicePopup
+{
+	return [GLAAddCollectedFilesChoicePopover sharedAddCollectedFilesChoicePopover];
+}
+
+- (void)showAddCollectedFilesChoiceForFileURLs:(NSArray *)fileURLs
+{
+	GLAAddCollectedFilesChoicePopover *popover = (self.addCollectedFilesChoicePopup);
+	
+	if (popover.isShown) {
+		[popover close];
+	}
+	
+	GLAPendingAddedCollectedFilesInfo *info = [[GLAPendingAddedCollectedFilesInfo alloc] initWithFileURLs:fileURLs];
+	(popover.info) = info;
+	(popover.actionsDelegate) = (self.addCollectedFilesChoiceActionsDelegate);
+	
+	NSScrollView *scrollView = (self.tableView.enclosingScrollView);
+	[popover showRelativeToRect:NSZeroRect ofView:scrollView preferredEdge:NSMaxXEdge];
 }
 
 @end

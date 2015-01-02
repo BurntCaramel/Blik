@@ -13,9 +13,15 @@
 @import QuartzCore;
 
 #import "GLAFileCollectionViewController.h"
+#import "GLAAddCollectedFilesChoiceActions.h"
+#import "GLAPendingAddedCollectedFilesInfo.h"
 
 
 @interface GLAMainContentViewController ()
+
+@end
+
+@interface GLAMainContentViewController (GLAProjectViewControllerDelegate) <GLAProjectViewControllerDelegate>
 
 @end
 
@@ -33,8 +39,7 @@
 - (void)dealloc
 {
 	[self stopProjectManagerObserving];
-	
-	
+	[self stopSectionNavigatorObserving];
 }
 
 - (void)setUpProjectManagerObserving
@@ -44,7 +49,6 @@
 	
 	// Now Project
 	[nc addObserver:self selector:@selector(projectManagerNowProjectDidChangeNotification:) name:GLAProjectManagerNowProjectDidChangeNotification object:projectManager];
-	
 }
 
 - (void)stopProjectManagerObserving
@@ -54,6 +58,24 @@
 	
 	// Stop observing any notifications on the project manager.
 	[nc removeObserver:self name:nil object:projectManager];
+}
+
+- (void)setUpSectionNavigatorObserving
+{
+	GLAMainSectionNavigator *sectionNavigator = (self.sectionNavigator);
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	// Now Project
+	[nc addObserver:self selector:@selector(sectionNavigatorDidChangeCurrentSection:) name:GLAMainSectionNavigatorDidChangeCurrentSectionNotification object:sectionNavigator];
+}
+
+- (void)stopSectionNavigatorObserving
+{
+	GLAMainSectionNavigator *sectionNavigator = (self.sectionNavigator);
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	// Stop observing any notifications on the project manager.
+	[nc removeObserver:self name:nil object:sectionNavigator];
 }
 
 #pragma mark - Setting Up View Controllers -
@@ -232,6 +254,39 @@
 	[self fillViewWithChildView:(controller.view)];
 }
 
+#pragma mark - Section Navigator
+
+@synthesize sectionNavigator = _sectionNavigator;
+
+- (void)setSectionNavigator:(GLAMainSectionNavigator *)sectionNavigator
+{
+	_sectionNavigator = sectionNavigator;
+	
+	[self setUpSectionNavigatorObserving];
+}
+
+- (GLAMainSection *)currentSection
+{
+	return (self.sectionNavigator.currentSection);
+}
+
+#pragma mark Section Navigator Notifications
+
+- (void)sectionNavigatorDidChangeCurrentSection:(NSNotification *)note
+{
+	GLAMainSectionNavigator *sectionNavigator = (self.sectionNavigator);
+	GLAMainSection *newSection = (sectionNavigator.currentSection);
+	GLAMainSection *previousSection = nil;
+	
+	NSDictionary *userInfo = (note.userInfo);
+	if (userInfo) {
+		previousSection = userInfo[GLAMainSectionNavigatorNotificationUserInfoPreviousSection];
+	}
+	
+	[self setUpViewControllerForSection:newSection];
+	[self transitionToSection:newSection fromSection:previousSection animate:YES];
+}
+
 #pragma mark - Project Manager Notifications
 
 - (void)projectManagerNowProjectDidChangeNotification:(NSNotification *)note
@@ -246,18 +301,22 @@
 
 #pragma mark - Accessing View Controllers
 
-- (void)setUpViewControllerForSection:(GLAMainContentSection *)section
+- (void)setUpViewControllerForSection:(GLAMainSection *)section
 {
 	if (section.isAllProjects) {
 		[self setUpAllProjectsViewControllerIfNeeded];
 	}
 	else if (section.isNow) {
-		GLAMainContentEditProjectSection *nowProjectSection = (GLAMainContentEditProjectSection *)(section);
+		GLAEditProjectSection *nowProjectSection = (GLAEditProjectSection *)(section);
 		
 		GLAProject *nowProject = (nowProjectSection.project);
 		if (nowProject) {
 			[self setUpNowProjectViewControllerIfNeeded];
-			(self.nowProjectViewController.project) = nowProject;
+			
+			GLAProjectViewController *nowProjectViewController = (self.nowProjectViewController);
+			(nowProjectViewController.project) = nowProject;
+			[self setUpProjectViewController:nowProjectViewController];
+			
 			(self.isShowingBlankNowProject) = NO;
 		}
 		else {
@@ -271,11 +330,14 @@
 	else if (section.isEditProject) {
 		[self setUpEditedProjectViewControllerIfNeeded];
 		
-		GLAMainContentEditProjectSection *editProjectSection = (GLAMainContentEditProjectSection *)(section);
-		(self.editedProjectViewController.project) = (editProjectSection.project);
+		GLAEditProjectSection *editProjectSection = (GLAEditProjectSection *)(section);
+		
+		GLAProjectViewController *editedProjectViewController = (self.editedProjectViewController);
+		(editedProjectViewController.project) = (editProjectSection.project);
+		[self setUpProjectViewController:editedProjectViewController];
 	}
 	else if (section.isEditCollection) {
-		GLAMainContentEditCollectionSection *editCollectionSection = (GLAMainContentEditCollectionSection *)section;
+		GLAEditCollectionSection *editCollectionSection = (GLAEditCollectionSection *)section;
 		[self setUpEditedCollectionViewControllerForSection:editCollectionSection];
 	}
 	else if (section.isAddNewProject) {
@@ -284,18 +346,25 @@
 	else if (section.isAddNewCollection) {
 		[self setUpAddedCollectionViewControllerIfNeeded];
 		
-		GLAMainContentAddNewCollectionSection *addCollectionSection = (GLAMainContentAddNewCollectionSection *)(section);
-		(self.addedCollectionViewController.project) = (addCollectionSection.project);
+		GLAAddNewCollectionSection *addCollectionSection = (GLAAddNewCollectionSection *)(section);
+		GLAAddNewCollectionViewController *addNewCollectionViewController = (self.addedCollectionViewController);
+		(addNewCollectionViewController.project) = (addCollectionSection.project);
+		(addNewCollectionViewController.pendingAddedCollectedFilesInfo) = (addCollectionSection.pendingAddedCollectedFilesInfo);
 	}
 }
 
-- (GLAViewController *)viewControllerForSection:(GLAMainContentSection *)section
+- (void)setUpProjectViewController:(GLAProjectViewController *)projectViewController
+{
+	
+}
+
+- (GLAViewController *)viewControllerForSection:(GLAMainSection *)section
 {
 	if (section.isAllProjects) {
 		return (self.allProjectsViewController);
 	}
 	else if (section.isNow) {
-		GLAMainContentEditProjectSection *nowProjectSection = (GLAMainContentEditProjectSection *)(section);
+		GLAEditProjectSection *nowProjectSection = (GLAEditProjectSection *)(section);
 		
 		if (nowProjectSection.project) {
 			return (self.nowProjectViewController);
@@ -326,10 +395,10 @@
 
 - (GLAProjectViewController *)activeProjectViewController
 {
-	GLAMainContentSection *currentSection = (self.currentSection);
+	GLAMainSection *currentSection = (self.currentSection);
 	
 	if (currentSection.isNow) {
-		GLAMainContentEditProjectSection *nowProjectSection = (GLAMainContentEditProjectSection *)(currentSection);
+		GLAEditProjectSection *nowProjectSection = (GLAEditProjectSection *)(currentSection);
 		
 		if (nowProjectSection.project) {
 			return (self.nowProjectViewController);
@@ -352,29 +421,33 @@
 }
 
 #pragma mark - Editing Projects
-
+/*
 - (void)changeNowProject:(GLAProject *)project
 {
 	[self setUpNowProjectViewControllerIfNeeded];
 	
 	(self.nowProjectViewController.project) = project;
 }
-
+ */
+/*
 - (void)workOnProjectNow:(GLAProject *)project
 {
 	[self setUpNowProjectViewControllerIfNeeded];
 	
 	(self.nowProjectViewController.project) = project;
 	
-	[self goToSection:[GLAMainContentEditProjectSection nowProjectSectionWithProject:project]];
+	[(self.sectionNavigator) goToNowProject];
 }
-
+*/
 - (void)editProject:(GLAProject *)project;
 {
+	[(self.sectionNavigator) goToProject:project];
+	/*
 	[self setUpEditedProjectViewControllerIfNeeded];
 	(self.editedProjectViewController.project) = project;
 	
 	[self goToSection:[GLAMainContentEditProjectSection editProjectSectionWithProject:project previousSection:(self.currentSection)]];
+	 */
 }
 
 #pragma mark Collections
@@ -393,7 +466,7 @@
 	return controller;
 }
 
-- (void)setUpEditedCollectionViewControllerForSection:(GLAMainContentEditCollectionSection *)section
+- (void)setUpEditedCollectionViewControllerForSection:(GLAEditCollectionSection *)section
 {
 	// Remove old view
 	GLAViewController *oldCollectionViewController = (self.activeCollectionViewController);
@@ -412,11 +485,15 @@
 
 - (void)enterCollection:(GLACollection *)collection
 {
+	[(self.sectionNavigator) goToCollection:collection];
+	
+	/*
 	GLAMainContentEditCollectionSection *section = [GLAMainContentEditCollectionSection editCollectionSectionWithCollection:collection previousSection:(self.currentSection)];
 	
 	[self setUpEditedCollectionViewControllerForSection:section];
 	
 	[self goToSection:section];
+	 */
 }
 
 - (IBAction)addNewFilesListCollection:(id)sender
@@ -433,6 +510,8 @@
 
 - (void)projectViewControllerDidBecomeActive:(GLAProjectViewController *)projectViewController
 {
+	(projectViewController.delegate) = self;
+	
 	id<GLAMainContentViewControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
 		[delegate mainContentViewController:self projectViewControllerDidBecomeActive:projectViewController];
@@ -441,6 +520,8 @@
 
 - (void)projectViewControllerDidBecomeInactive:(GLAProjectViewController *)projectViewController
 {
+	(projectViewController.delegate) = nil;
+	
 	id<GLAMainContentViewControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
 		[delegate mainContentViewController:self projectViewControllerDidBecomeInactive:projectViewController];
@@ -486,12 +567,20 @@
 
 #pragma mark Add New Collection View Controller
 
+- (void)addNewCollectionViewControllerDidBecomeActive:(GLAAddNewCollectionViewController *)addNewCollectionViewController
+{
+	id<GLAMainContentViewControllerDelegate> delegate = (self.delegate);
+	if (delegate) {
+		[delegate mainContentViewController:self addNewCollectionViewControllerDidBecomeActive:addNewCollectionViewController];
+	}
+}
+
 - (void)addNewCollectionViewControllerDidConfirmCreatingNotification:(NSNotification *)note
 {
 	GLAAddNewCollectionViewController *addNewCollectionViewController = (note.object);
 	NSDictionary *userInfo = (note.userInfo);
 	GLACollection *collection = userInfo[@"collection"];
-	GLACollection *project = userInfo[@"project"];
+	GLAProject *project = userInfo[@"project"];
 	
 	id<GLAMainContentViewControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
@@ -501,9 +590,8 @@
 
 #pragma mark - Transition
 
-- (void)transitionToSection:(GLAMainContentSection *)newSection animate:(BOOL)animate
+- (void)transitionToSection:(GLAMainSection *)newSection fromSection:(GLAMainSection *)outSection animate:(BOOL)animate
 {
-	GLAMainContentSection *outSection = (self.currentSection);
 	if ([outSection isEqual:newSection]) {
 		return;
 	}
@@ -511,11 +599,10 @@
 	GLAViewController *outViewController = [self viewControllerForSection:outSection];
 	GLAViewController *inViewController = [self viewControllerForSection:newSection];
 	
-	NSAssert(outSection ? (outViewController != nil) : (outViewController == nil), @"There must be an appropriate view controller for an out section, or no view controller for no section");
-	NSAssert(newSection ? (inViewController != nil) : (inViewController == nil), @"There must be an appropriate view controller for an in section, or no view controller for no section");
+	NSAssert((outSection) ? (outViewController != nil) : (outViewController == nil), @"There must be an appropriate view controller for an out section, or no view controller for no section");
+	NSAssert((newSection) ? (inViewController != nil) : (inViewController == nil), @"There must be an appropriate view controller for an in section, or no view controller for no section");
 	
 	if (outViewController == inViewController) {
-		(self.currentSection) = newSection;
 		return;
 	}
 	
@@ -603,8 +690,6 @@
 	}
 	
 	
-	(self.currentSection) = newSection;
-	
 	[self didBeginTransitioningInViewController:inViewController];
 }
 
@@ -612,26 +697,30 @@
 {
 	[viewController viewWillTransitionIn];
 	
-	if (viewController == (self.nowProjectViewController) || viewController == (self.addedProjectViewController) || viewController == (self.editedProjectViewController)) {
+	if (viewController == (self.nowProjectViewController) || viewController == (self.editedProjectViewController)) {
 		GLAProjectViewController *projectVC = (GLAProjectViewController *)viewController;
 		[self projectViewControllerDidBecomeActive:projectVC];
+	}
+	else if (viewController == (self.addedCollectionViewController)) {
+		GLAAddNewCollectionViewController *addNewCollectionViewController = (GLAAddNewCollectionViewController *)viewController;
+		[self addNewCollectionViewControllerDidBecomeActive:addNewCollectionViewController];
 	}
 }
 
 - (void)didBeginTransitioningOutViewController:(GLAViewController *)viewController
 {
-	if (viewController == (self.nowProjectViewController) || viewController == (self.addedProjectViewController) || viewController == (self.editedProjectViewController)) {
+	if (viewController == (self.nowProjectViewController) || viewController == (self.editedProjectViewController)) {
 		GLAProjectViewController *projectVC = (GLAProjectViewController *)viewController;
 		[self projectViewControllerDidBecomeInactive:projectVC];
 	}
 }
-
+/*
 - (void)goToSection:(GLAMainContentSection *)newSection
 {
 	[self setUpViewControllerForSection:newSection];
 	[self transitionToSection:newSection animate:YES];
 }
-
+*/
 #pragma mark Adjusting Individual Content Views
 
 - (NSTimeInterval)transitionDurationGoingInForChildView:(NSView *)view
@@ -655,7 +744,7 @@
 {
 	//[self addViewIfNeeded:view layout:YES];
 	
-	GLAMainContentSection *currentSection = (self.currentSection);
+	GLAMainSection *currentSection = (self.currentSection);
 	GLAViewController *vc = [self viewControllerForSection:currentSection];
 	
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -765,5 +854,15 @@
 	[self showChildView:view adjustingConstraint:leadingConstraint toValue:0.0 animate:animate];
 }
 
+@end
+
+
+@implementation GLAMainContentViewController (GLAProjectViewControllerDelegate)
+
+- (void)projectViewController:(GLAProjectViewController *)projectViewController performAddCollectedFilesToNewCollection:(GLAPendingAddedCollectedFilesInfo *)info
+{
+	GLAProject *project = (projectViewController.project);
+	[(self.sectionNavigator) addNewCollectionToProject:project pendingCollectedFilesInfo:info];
+}
 
 @end

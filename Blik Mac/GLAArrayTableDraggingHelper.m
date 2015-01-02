@@ -3,23 +3,23 @@
 //  Blik
 //
 //  Created by Patrick Smith on 11/11/2014.
-//  Copyright (c) 2014 Burnt Caramel. All rights reserved.
+//  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
-#import "GLAArrayEditorTableDraggingHelper.h"
+#import "GLAArrayTableDraggingHelper.h"
 
 
-@interface GLAArrayEditorTableDraggingHelper ()
+@interface GLAArrayTableDraggingHelper ()
 
-@property(readwrite, weak, nonatomic) id<GLAArrayEditorTableDraggingHelperDelegate> delegate;
+@property(readwrite, weak, nonatomic) id<GLAArrayTableDraggingHelperDelegate> delegate;
 
 @property(readwrite, copy, nonatomic) NSIndexSet *draggedRowIndexes;
 
 @end
 
-@implementation GLAArrayEditorTableDraggingHelper
+@implementation GLAArrayTableDraggingHelper
 
-- (instancetype)initWithDelegate:(id<GLAArrayEditorTableDraggingHelperDelegate>)delegate
+- (instancetype)initWithDelegate:(id<GLAArrayTableDraggingHelperDelegate>)delegate
 {
 	self = [super init];
 	if (self) {
@@ -37,19 +37,19 @@
 
 - (BOOL)canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard
 {
-	id<GLAArrayEditorTableDraggingHelperDelegate> delegate = (self.delegate);
+	id<GLAArrayTableDraggingHelperDelegate> delegate = (self.delegate);
 	return [delegate arrayEditorTableDraggingHelper:self canUseDraggingPasteboard:draggingPasteboard];
 }
 
 - (void)makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
 {
-	id<GLAArrayEditorTableDraggingHelperDelegate> delegate = (self.delegate);
+	id<GLAArrayTableDraggingHelperDelegate> delegate = (self.delegate);
 	[delegate arrayEditorTableDraggingHelper:self makeChangesUsingEditingBlock:editBlock];
 }
 
 - (BOOL)canCopyObjects
 {
-	id<GLAArrayEditorTableDraggingHelperDelegate> delegate = (self.delegate);
+	id<GLAArrayTableDraggingHelperDelegate> delegate = (self.delegate);
 	if (![delegate respondsToSelector:@selector(arrayEditorTableDraggingHelper:makeCopiesOfObjects:)]) {
 		return NO;
 	}
@@ -59,7 +59,7 @@
 
 - (NSArray *)makeCopiesOfObjects:(NSArray *)objectsToCopy
 {
-	id<GLAArrayEditorTableDraggingHelperDelegate> delegate = (self.delegate);
+	id<GLAArrayTableDraggingHelperDelegate> delegate = (self.delegate);
 	if (![delegate respondsToSelector:@selector(arrayEditorTableDraggingHelper:makeCopiesOfObjects:)]) {
 		return nil;
 	}

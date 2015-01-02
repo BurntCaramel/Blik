@@ -304,23 +304,39 @@
 	return titleRect;
 }
 
+#if 1
+
 - (void)drawTitleWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
 	NSCellImagePosition imagePosition = (self.imagePosition);
 	if (imagePosition == NSImageOnly) {
 		return;
 	}
-	
+#if 0
 	NSString *title = (self.titleOfSelectedItem);
+	if (!title) {
+		title = (self.title);
+	}
 	if (!title) {
 		return;
 	}
+#endif
 	
-	NSMutableAttributedString *attrString = [NSMutableAttributedString new];
-	[(attrString.mutableString) appendString:title];
+	NSAttributedString *attrTitle = (self.attributedTitle);
+	attrTitle = [NSButton GLAStyledCell:self adjustAttributedTitle:attrTitle];
 	
 #if 1
-	[NSButton GLAStyledCell:self drawTitle:attrString withFrame:cellFrame inView:controlView];
+	NSRect adjustedFrame = cellFrame;
+	//if (imagePosition == NSImageLeft) {
+		adjustedFrame = [self titleRectForBounds:adjustedFrame];
+	//}
+	
+	adjustedFrame.origin.y += (self.verticalOffsetDown);
+	
+	adjustedFrame.origin.x += (self.leftSpacing);
+	
+	[super drawTitle:attrTitle withFrame:adjustedFrame inView:controlView];
+	//[NSButton GLAStyledCell:self drawTitle:attrTitle withFrame:cellFrame inView:controlView];
 #else
 	
 	NSRange fullRange = NSMakeRange(0, (attrString.length));
@@ -367,15 +383,21 @@
 		 (NSHeight(cellFrame) - destSize.height) / 2.0,
 		 destSize.width,
 		 destSize.height
-		);
+		 );
 		
 		destRect = [controlView backingAlignedRect:destRect options:NSAlignAllEdgesNearest];
 		
 		[image drawInRect:destRect];
 	}
 	else {
+		//if (imagePosition == NSImageLeft) {
+			(cellFrame.origin.x) += (self.leftSpacing);
+		//}
+		
 		[super drawImageWithFrame:cellFrame inView:controlView];
 	}
 }
+
+#endif
 
 @end

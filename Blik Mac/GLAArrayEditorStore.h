@@ -15,7 +15,7 @@
 
 @interface GLAArrayEditorStore : NSObject
 
-- (instancetype)initWithDelegate:(id<GLAArrayEditorStoreDelegate>)delegate modelClass:(Class)modelClass JSONFileURL:(NSURL *)JSONFileURL JSONDictionaryKey:(NSString *)JSONKey arrayEditorOptions:(GLAArrayEditorOptions *)arrayEditorOptions;
+- (instancetype)initWithDelegate:(id<GLAArrayEditorStoreDelegate>)delegate modelClass:(Class)modelClass JSONFileURL:(NSURL *)JSONFileURL JSONDictionaryKey:(NSString *)JSONKey arrayEditorOptions:(GLAArrayEditorOptions *)arrayEditorOptions freshlyMade:(BOOL)freshlyMade;
 
 @property(weak, readonly, nonatomic) id<GLAArrayEditorStoreDelegate> delegate;
 
@@ -27,8 +27,9 @@
 
 @property(copy, nonatomic) NSDictionary *userInfo;
 
-@property(readonly, nonatomic) BOOL needsLoading;
+@property(readonly, nonatomic) BOOL freshlyMade;
 
+@property(readonly, nonatomic) BOOL needsLoading;
 @property(readonly, nonatomic) BOOL loading;
 @property(readonly, nonatomic) BOOL finishedLoading;
 
@@ -38,7 +39,7 @@
 - (NSArray *)copyChildren;
 - (id<GLAArrayInspecting>)inspectArray;
 
-- (void)editUsingBlock:(void (^)(id<GLAArrayEditing> arrayEditor))block handleAddedChildren:(void (^)(NSArray *addedChildren))addedBlock handleRemovedChildren:(void (^)(NSArray *removedChildren))removedBlock handleReplacedChildren:(void (^)(NSArray *originalChildren, NSArray *replacementChildren))replacedBlock;
+- (BOOL)editUsingBlock:(void (^)(id<GLAArrayEditing> arrayEditor))block handleAddedChildren:(void (^)(NSArray *addedChildren))addedBlock handleRemovedChildren:(void (^)(NSArray *removedChildren))removedBlock handleReplacedChildren:(void (^)(NSArray *originalChildren, NSArray *replacementChildren))replacedBlock;
 
 - (BOOL)loadWithCompletionBlock:(dispatch_block_t)completionBlock;
 - (BOOL)saveWithCompletionBlock:(dispatch_block_t)completionBlock;
@@ -61,6 +62,8 @@ typedef NS_ENUM(NSInteger, GLAArrayEditorStoreErrorCode)
 + (NSError *)errorForMissingRequiredKey:(NSString *)dictionaryKey inJSONFileAtURL:(NSURL *)fileURL;
 + (NSError *)errorForCannotMakeModelsOfClass:(Class)modelClass fromJSONArray:(NSArray *)JSONArray loadedFromFileAtURL:(NSURL *)fileURL mantleError:(NSError *)error;
 
+- (void)handleError:(NSError *)error fromMethodWithSelector:(SEL)methodSelector;
+
 @end
 
 
@@ -76,9 +79,5 @@ typedef NS_ENUM(NSInteger, GLAArrayEditorStoreErrorCode)
 - (NSArray *)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore processLoadedChildrenInBackground:(NSArray *)children;
 
 - (void)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore didLoadChildren:(NSArray *)children;
-
-- (void)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore didAddChildren:(NSArray *)addedChildren;
-- (void)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore didRemoveChildren:(NSArray *)removedChildren;
-- (void)arrayEditorStore:(GLAArrayEditorStore *)arrayEditorStore didReplaceChildren:(NSArray *)replacedChildrenBefore with:(NSArray *)replacedChildrenAfter;
 
 @end

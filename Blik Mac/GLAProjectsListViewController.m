@@ -11,19 +11,20 @@
 #import "GLAProjectManager.h"
 // VIEW
 #import "GLAUIStyle.h"
+#import "GLAMainContentManners.h"
 #import "GLAProjectOverviewTableCellView.h"
-#import "GLAArrayEditorTableDraggingHelper.h"
+#import "GLAArrayTableDraggingHelper.h"
 
 
 NSString *GLAProjectsListViewControllerDidChooseProjectNotification = @"GLA.projectListViewController.didChooseProject";
 NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = @"GLA.projectListViewController.didPerformWorkOnProjectNow";
 
 
-@interface GLAProjectsListViewController () <GLAArrayEditorTableDraggingHelperDelegate>
+@interface GLAProjectsListViewController () <GLAArrayTableDraggingHelperDelegate>
 
 @property(copy, nonatomic) NSArray *projects;
 
-@property(nonatomic) GLAArrayEditorTableDraggingHelper *tableDraggingHelper;
+@property(nonatomic) GLAArrayTableDraggingHelper *tableDraggingHelper;
 
 @end
 
@@ -50,7 +51,7 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	NSScrollView *scrollView = [tableView enclosingScrollView];
 	(scrollView.wantsLayer) = YES;
 	
-	(self.tableDraggingHelper) = [[GLAArrayEditorTableDraggingHelper alloc] initWithDelegate:self];
+	(self.tableDraggingHelper) = [[GLAArrayTableDraggingHelper alloc] initWithDelegate:self];
 	
 	[self startProjectManagingObserving];
 }
@@ -174,20 +175,8 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 		return;
 	}
 	
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	
-	NSAlert *alert = [NSAlert new];
-	[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Button title to delete project.")];
-	[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title to cancel deleting project.")];
-	(alert.messageText) = NSLocalizedString(@"Delete the project?", @"Message for deleting a project.");
-	(alert.informativeText) = NSLocalizedString(@"If you wish to restore the project and its collections you must do so manually.", @"Informative text for deleting a project and its collections.");
-	(alert.alertStyle) = NSWarningAlertStyle;
-	
-	[alert beginSheetModalForWindow:(self.view.window) completionHandler:^(NSModalResponse returnCode) {
-		if (returnCode == NSAlertFirstButtonReturn) {
-			[projectManager permanentlyDeleteProject:project];
-		}
-	}];
+	GLAMainContentManners *manners = [GLAMainContentManners sharedManners];
+	[manners askToPermanentlyDeleteProject:project fromView:(self.view) sectionNavigator:nil];
 }
 
 - (IBAction)workOnProjectNowClicked:(NSButton *)senderButton
@@ -203,13 +192,13 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 
 #pragma mark Table Dragging Helper Delegate
 
-- (void)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
+- (void)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
 {
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 	[pm editAllProjectsUsingBlock:editBlock];
 }
 
-- (BOOL)arrayEditorTableDraggingHelper:(GLAArrayEditorTableDraggingHelper *)tableDraggingHelper canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard
+- (BOOL)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper canUseDraggingPasteboard:(NSPasteboard *)draggingPasteboard
 {
 	return [GLAProject canCopyObjectsFromPasteboard:draggingPasteboard];
 }

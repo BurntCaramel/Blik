@@ -19,8 +19,8 @@
 #import <objc/runtime.h>
 
 
-NSString *GLAProjectViewControllerDidBeginEditingItemsNotification = @"GLA.projectViewController.didBeginEditingItems";
-NSString *GLAProjectViewControllerDidEndEditingItemsNotification = @"GLA.projectViewController.didEndEditingItems";
+NSString *GLAProjectViewControllerDidBeginEditingCollectionsNotification = @"GLA.projectViewController.didBeginEditingCollections";
+NSString *GLAProjectViewControllerDidEndEditingCollectionsNotification = @"GLA.projectViewController.didEndEditingCollections";
 
 NSString *GLAProjectViewControllerDidBeginEditingPlanNotification = @"GLA.projectViewController.didBeginEditingPlan";
 NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectViewController.didEndEditingPlan";
@@ -52,6 +52,10 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 
 @end
 
+@interface GLAProjectViewController (addCollectedFilesChoiceActionsDelegate) <GLAAddCollectedFilesChoiceActionsDelegate>
+
+@end
+
 @implementation GLAProjectViewController
 
 - (GLAProjectView *)projectView
@@ -79,6 +83,9 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	(self.projectView.delegate) = self;
 	
 	[nc addObserver:self selector:@selector(collectionsViewControllerDidClickCollection:) name:GLAProjectCollectionsViewControllerDidClickCollectionNotification object:(self.collectionsViewController)];
+	
+	
+	(self.collectionsViewController.addCollectedFilesChoiceActionsDelegate) = self;
 	
 	
 	NSTextField *nameTextField = (self.nameTextField);
@@ -186,19 +193,29 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 		[self beginEditingCollections];
 		[(self.actionsBarController) showBarForEditingItems];
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidBeginEditingItemsNotification object:self];
+		[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidBeginEditingCollectionsNotification object:self];
 	}
 	else {
 		[self endEditingCollections];
 		[(self.actionsBarController) hideBarForEditingItems];
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidEndEditingItemsNotification object:self];
+		[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidEndEditingCollectionsNotification object:self];
 	}
+}
+
+- (void)requestAddNewCollectionWithPendingCollectedFilesInfo:(GLAPendingAddedCollectedFilesInfo *)pendingCollectedFilesInfo
+{
+	NSMutableDictionary *userInfo = [NSMutableDictionary new];
+	if (pendingCollectedFilesInfo) {
+		userInfo[@"pendingAddedCollectedFilesInfo"] = pendingCollectedFilesInfo;
+	}
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerRequestAddNewCollectionNotification object:self userInfo:userInfo];
 }
 
 - (IBAction)addNewCollection:(id)sender
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerRequestAddNewCollectionNotification object:self];
+	[self requestAddNewCollectionWithPendingCollectedFilesInfo:nil];
 }
 
 - (IBAction)addNewFilesListCollection:(id)sender
@@ -762,6 +779,28 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	}
 	
 	return NO;
+}
+
+@end
+
+
+@implementation GLAProjectViewController (GLAAddCollectedFilesChoiceActions)
+
+- (void)performAddCollectedFilesToExistingCollection:(NSResponder *)responder info:(GLAPendingAddedCollectedFilesInfo *)info
+{
+	
+}
+
+- (void)performAddCollectedFilesToNewCollection:(NSResponder *)responder info:(GLAPendingAddedCollectedFilesInfo *)info
+{
+	id<GLAProjectViewControllerDelegate> delegate = (self.delegate);
+	if (!delegate) {
+		return;
+	}
+	
+	if ([delegate respondsToSelector:@selector(projectViewController:performAddCollectedFilesToNewCollection:)]) {
+		[delegate projectViewController:self performAddCollectedFilesToNewCollection:info];
+	}
 }
 
 @end

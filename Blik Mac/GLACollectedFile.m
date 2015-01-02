@@ -32,18 +32,31 @@
 
 @implementation GLACollectedFile
 
-- (instancetype)initWithFileURL:(NSURL *)URL
+- (instancetype)initWithFileURL:(NSURL *)fileURL
 {
-	NSParameterAssert(URL != nil);
+	NSParameterAssert(fileURL != nil);
 	
 	self = [super init];
 	if (self) {
-		_sourceFilePathURL = [URL filePathURL];
-		_fileReferenceURL = [URL fileReferenceURL];
+		_sourceFilePathURL = [fileURL filePathURL];
+		_fileReferenceURL = [fileURL fileReferenceURL];
 		
-		NSLog(@"COLLECTED FILE INIT %@ | FP %@ | FR %@", URL, _sourceFilePathURL, _fileReferenceURL);
+		//NSLog(@"COLLECTED FILE INIT %@ | FP %@ | FR %@", fileURL, _sourceFilePathURL, _fileReferenceURL);
 	}
 	return self;
+}
+
++ (NSArray *)collectedFilesWithFileURLs:(NSArray *)fileURLs
+{
+	NSMutableArray *collectedFiles = [NSMutableArray array];
+	NSError *error = nil;
+	for (NSURL *fileURL in fileURLs) {
+		GLACollectedFile *collectedFile = [[GLACollectedFile alloc] initWithFileURL:fileURL];
+		[collectedFile updateInformationWithError:&error];
+		[collectedFiles addObject:collectedFile];
+	}
+	
+	return collectedFiles;
 }
 
 #pragma mark -
@@ -274,10 +287,12 @@
 	}
 	
 	if (update) {
+#if 0
 		NSLog(@"LOADED URL %@", URL);
 		NSLog(@"FILE PATH URL %@", [URL filePathURL]);
 		NSLog(@"FILE REF URL %@", [URL fileReferenceURL]);
 		NSLog(@"FILE REF PATH URL %@", [[URL fileReferenceURL] filePathURL]);
+#endif
 		(self.sourceFilePathURL) = [URL filePathURL];
 		(self.fileReferenceURL) = [URL fileReferenceURL];
 		

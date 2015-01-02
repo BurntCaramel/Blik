@@ -57,6 +57,8 @@
 
 - (void)resetAndFocus
 {
+	//(self.pendingAddedCollectedFilesInfo) = nil;
+	
 	(self.nameTextField.stringValue) = @"";
 	[self checkNameTextFieldIsValid];
 	
@@ -130,6 +132,15 @@
 	GLACollectionColor *color = (self.chosenCollectionColor);
 	
 	GLACollection *collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilesList color:color inProject:project];
+	
+	GLAPendingAddedCollectedFilesInfo *pendingAddedCollectedFilesInfo = (self.pendingAddedCollectedFilesInfo);
+	if (pendingAddedCollectedFilesInfo) {
+		NSArray *fileURLs = (pendingAddedCollectedFilesInfo.fileURLs);
+		NSArray *collectedFiles = [GLACollectedFile collectedFilesWithFileURLs:fileURLs];
+		
+		[projectManager editFilesListOfCollection:collection insertingCollectedFiles:collectedFiles atIndex:NSNotFound];
+	}
+	(self.pendingAddedCollectedFilesInfo) = nil;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAAddNewCollectionViewControllerDidConfirmCreatingNotification object:self userInfo:@{@"collection": collection, @"project": project}];
 }

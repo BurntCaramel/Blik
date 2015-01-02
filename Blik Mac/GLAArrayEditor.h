@@ -9,36 +9,42 @@
 @import Foundation;
 #import "GLAArrayEditing.h"
 
-@protocol GLAArrayObserving, GLAArrayConstraining;
+@protocol GLAArrayEditorObserving, GLAArrayEditorIndexing, GLAArrayEditorConstraining, GLAArrayStoring;
 @class GLAArrayEditorOptions;
 @class GLAArrayEditorChanges;
 
 
-@interface GLAArrayEditor : NSObject <GLAArrayEditing>
+@interface GLAArrayEditor : NSObject <GLAArrayInspecting>
 
 // Designated init
-- (instancetype)initWithObjects:(NSArray *)objects options:(GLAArrayEditorOptions *)options;
+- (instancetype)initWithObjects:(NSArray *)objects options:(GLAArrayEditorOptions *)options NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init;
 
 // Use this method to notify observers and work with changes easily.
 - (GLAArrayEditorChanges *)changesMadeInBlock:(GLAArrayEditingBlock)editorBlock;
 
-@property(readonly, copy, nonatomic) NSArray *observers;
-@property(readonly, copy, nonatomic) NSArray *constrainers;
+// Use this if a primary indexer was passed at initialization.
+- (id)objectForKeyedSubscript:(id <NSCopying>)key;
 
-- (NSArray *)useConstrainersToFilterPotentialChildren:(NSArray *)potentialChildren;
+@property(readonly, nonatomic) id<GLAArrayStoring> store;
+@property(readonly, nonatomic) BOOL needsLoadingFromStore;
+
+- (NSArray *)constrainPotentialChildren:(NSArray *)potentialChildren;
 
 @end
 
 
 @interface GLAArrayEditorOptions : NSObject <NSCopying>
 
-- (void)addObserver:(id<GLAArrayObserving>)observer;
-- (void)addConstrainer:(id<GLAArrayConstraining>)constrainer;
+- (void)addObserver:(id<GLAArrayEditorObserving>)observer;
 
-@property(readonly, copy, nonatomic) NSArray *observers;
-@property(readonly, copy, nonatomic) NSArray *constrainers;
+- (void)addIndexer:(id<GLAArrayEditorIndexing>)indexer;
+- (void)setPrimaryIndexer:(id<GLAArrayEditorIndexing>)indexer;
+
+- (void)addConstrainer:(id<GLAArrayEditorConstraining>)constrainer;
+
+- (void)setStore:(id<GLAArrayStoring>)store;
 
 @end
 
@@ -53,20 +59,64 @@
 @property(readonly, copy, nonatomic) NSArray *replacedChildrenBefore;
 @property(readonly, copy, nonatomic) NSArray *replacedChildrenAfter;
 
-@end
-
-
-@protocol GLAArrayObserving <NSObject>
-
-- (void)arrayWasCreated:(id<GLAArrayInspecting>)array;
-
-- (void)array:(id<GLAArrayInspecting>)array didMakeChanges:(GLAArrayEditorChanges *)changes;
+@property(readonly, nonatomic) BOOL didMoveChildren;
 
 @end
 
 
-@protocol GLAArrayConstraining <GLAArrayObserving>
+@protocol GLAArrayEditorObserving <NSObject>
 
-- (NSArray *)array:(id<GLAArrayInspecting>)array filterPotentialChildren:(NSArray *)potentialChildren;
+@optional
+
+- (void)arrayEditorWasCreated:(GLAArrayEditor *)arrayEditor;
+- (void)arrayEditorDidLoad:(GLAArrayEditor *)arrayEditor;
+
+- (void)arrayEditor:(GLAArrayEditor *)arrayEditor didMakeChanges:(GLAArrayEditorChanges *)changes;
 
 @end
+
+
+@protocol GLAArrayEditorIndexing <GLAArrayEditorObserving>
+
+// Return nil if key is not indexed by the receiver.
+- (id)arrayEditor:(GLAArrayEditor *)array firstIndexedChildWhoseKey:(NSString *)key hasValue:(id)value;
+
+@end
+
+
+@protocol GLAArrayEditorConstraining <GLAArrayEditorObserving>
+
+- (NSArray *)arrayEditor:(GLAArrayEditor *)array filterPotentialChildren:(NSArray *)potentialChildren;
+
+@end
+
+
+
+typedef NS_ENUM(NSUInteger, GLAArrayStoringLoadState) {
+	GLAArrayStoringLoadStateNeedsLoading,
+	GLAArrayStoringLoadStateCurrentlyLoading,
+	GLAArrayStoringLoadStateFinishedLoading
+};
+
+typedef NS_ENUM(NSUInteger, GLAArrayStoringSaveState) {
+	GLAArrayStoringSaveStateNeedsSaving,
+	GLAArrayStoringSaveStateCurrentlySaving,
+	GLAArrayStoringSaveStateFinishedSaving
+};
+
+
+@protocol GLAArrayStoring <GLAArrayEditorObserving>
+
+@property(readonly, nonatomic) BOOL freshlyMade;
+
+@property(readonly, nonatomic) GLAArrayStoringLoadState loadState;
+- (BOOL)loadIfNeededWithChildProcessor:(GLAArrayChildVisitorBlock)childProcessor completionBlock:(void (^)(NSArray *loadedItems))completionBlock;
+
+@property(readonly, nonatomic) GLAArrayStoringSaveState saveState;
+// Changes have been sent via GLAArrayObserving methods.
+- (BOOL)saveIfNeededWithCompletionBlock:(dispatch_block_t)completionBlock;
+
+@end
+
+extern NSString *GLAArrayStoringDidLoadNotification;
+extern NSString *GLAArrayStoringDidLoadNotificationUserInfoLoadedChildren;

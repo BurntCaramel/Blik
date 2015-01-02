@@ -6,18 +6,18 @@
 //  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
-#import "GLAMainContentSection.h"
+#import "GLAMainSection.h"
 #import "GLAProject.h"
 
 
-@implementation GLAMainContentSection
+@implementation GLAMainSection
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey
 {
 	return @{};
 }
 
-- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainContentSection *)previousSection;
+- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainSection *)previousSection;
 {
 	self = [super init];
 	if (self) {
@@ -49,12 +49,12 @@
 	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierPlannedProjects];
 }
 
-+ (instancetype)addNewProjectSectionWithPreviousSection:(GLAMainContentSection *)previousSection
++ (instancetype)addNewProjectSectionWithPreviousSection:(GLAMainSection *)previousSection
 {
 	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierAddNewProject previousSection:previousSection];
 }
 
-+ (instancetype)addNewCollectionSectionWithPreviousSection:(GLAMainContentSection *)previousSection
++ (instancetype)addNewCollectionSectionWithPreviousSection:(GLAMainSection *)previousSection
 {
 	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierAddNewCollection previousSection:previousSection];
 }
@@ -63,15 +63,15 @@
 
 + (NSValueTransformer *)previousSectionJSONTransformer
 {
-	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLAMainContentSection class]];
+	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLAMainSection class]];
 }
 
 @end
 
 
-@implementation GLAMainContentEditProjectSection
+@implementation GLAEditProjectSection
 
-- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainContentSection *)previousSection project:(GLAProject *)project isNow:(BOOL)isNow
+- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainSection *)previousSection project:(GLAProject *)project isNow:(BOOL)isNow
 {
 	self = [super initWithBaseIdentifier:baseIdentifier previousSection:previousSection];
 	if (self) {
@@ -81,7 +81,7 @@
 	return self;
 }
 
-+ (instancetype)editProjectSectionWithProject:(GLAProject *)project previousSection:(GLAMainContentSection *)previousSection
++ (instancetype)editProjectSectionWithProject:(GLAProject *)project previousSection:(GLAMainSection *)previousSection
 {
 	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierEditProject previousSection:previousSection project:project isNow:NO];
 }
@@ -101,9 +101,9 @@
 @end
 
 
-@implementation GLAMainContentEditCollectionSection
+@implementation GLAEditCollectionSection
 
-- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainContentSection *)previousSection collection:(GLACollection *)collection
+- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainSection *)previousSection collection:(GLACollection *)collection
 {
 	self = [super initWithBaseIdentifier:baseIdentifier previousSection:previousSection];
 	if (self) {
@@ -112,7 +112,7 @@
 	return self;
 }
 
-+ (instancetype)editCollectionSectionWithCollection:(GLACollection *)collection previousSection:(GLAMainContentSection *)previousSection
++ (instancetype)editCollectionSectionWithCollection:(GLACollection *)collection previousSection:(GLAMainSection *)previousSection
 {
 	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierEditCollection previousSection:previousSection collection:collection];
 }
@@ -121,7 +121,7 @@
 
 + (NSValueTransformer *)previousSectionJSONTransformer
 {
-	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLAMainContentEditProjectSection class]];
+	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLAEditProjectSection class]];
 }
 
 + (NSValueTransformer *)collectionJSONTransformer
@@ -132,20 +132,26 @@
 @end
 
 
-@implementation GLAMainContentAddNewCollectionSection
+@implementation GLAAddNewCollectionSection
 
-- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainContentSection *)previousSection project:(GLAProject *)project
+- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier pendingAddedCollectedFilesInfo:(GLAPendingAddedCollectedFilesInfo *)pendingAddedCollectedFilesInfo previousSection:(GLAMainSection *)previousSection project:(GLAProject *)project
 {
 	self = [super initWithBaseIdentifier:baseIdentifier previousSection:previousSection];
 	if (self) {
 		_project = project;
+		_pendingAddedCollectedFilesInfo = [pendingAddedCollectedFilesInfo copy];
 	}
 	return self;
 }
 
-+ (instancetype)addNewCollectionSectionToProject:(GLAProject *)project previousSection:(GLAMainContentSection *)previousSection
++ (instancetype)addNewCollectionSectionToProject:(GLAProject *)project previousSection:(GLAMainSection *)previousSection
 {
-	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierAddNewCollection previousSection:previousSection project:project];
+	return [self addNewCollectionSectionToProject:project pendingAddedCollectedFilesInfo:nil previousSection:previousSection];
+}
+
++ (instancetype)addNewCollectionSectionToProject:(GLAProject *)project pendingAddedCollectedFilesInfo:(GLAPendingAddedCollectedFilesInfo *)pendingAddedCollectedFilesInfo previousSection:(GLAMainSection *)previousSection
+{
+	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierAddNewCollection pendingAddedCollectedFilesInfo:pendingAddedCollectedFilesInfo previousSection:previousSection project:project];
 }
 
 #pragma mark JSON
@@ -158,7 +164,7 @@
 @end
 
 
-@implementation GLAMainContentSection (ConvenienceCheckingIdentifier)
+@implementation GLAMainSection (ConvenienceCheckingIdentifier)
 
 - (BOOL)hasBaseIdentifier:(NSString *)baseIdentifier
 {

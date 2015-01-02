@@ -8,7 +8,8 @@
 
 @import Cocoa;
 #import "GLAViewController.h"
-#import "GLAMainContentSection.h"
+#import "GLAMainSection.h"
+#import "GLAMainSectionNavigator.h"
 #import "GLAMainNavigationBarController.h"
 #import "GLAProjectsListViewController.h"
 #import "GLAProjectViewController.h"
@@ -18,6 +19,8 @@
 
 
 @interface GLAMainWindowController : NSWindowController <GLAMainNavigationBarControllerDelegate, GLAMainContentViewControllerDelegate, NSWindowDelegate, NSUserInterfaceValidations>
+
+@property(readonly, nonatomic) GLAMainSectionNavigator *mainSectionNavigator;
 
 @property(nonatomic) IBOutlet NSView *barHolderView;
 @property(nonatomic) GLAViewController *mainNavigationHolderViewController;
@@ -34,7 +37,7 @@
 @property(nonatomic) GLAProjectViewController *addedProjectViewController;
 @property(readonly, nonatomic) GLAProjectViewController *activeProjectViewController;
 
-@property(nonatomic) GLAMainContentSection *currentSection;
+@property(readonly, nonatomic) GLAMainSection *currentSection;
 
 @property(nonatomic) NSTextView *fieldEditor;
 
@@ -47,21 +50,19 @@
 //- (void)goToSection:(GLAMainWindowControllerSection)newSection animate:(BOOL)animate;
 //- (void)didTransitionContentToViewController:(NSViewController *)viewController;
 
-- (void)goToSection:(GLAMainContentSection *)newSection;
+- (void)goToSection:(GLAMainSection *)newSection;
 - (void)goToPreviousSection;
 
 - (void)workOnProjectNow:(GLAProject *)project;
 
 - (void)editProject:(GLAProject *)project;
 
-- (void)showAddNewProject;
 - (void)showAddNewCollectionToProject:(GLAProject *)project;
 
 #pragma mark Actions
 
 - (IBAction)goToAll:(id)sender;
-- (IBAction)goToToday:(id)sender;
-- (IBAction)goToPlanned:(id)sender;
+- (IBAction)goToNowProject:(id)sender;
 - (IBAction)workOnEditedProjectNow:(id)sender;
 
 - (IBAction)addNewProject:(id)sender;

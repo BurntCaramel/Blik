@@ -7,13 +7,15 @@
 //
 
 #import "GLAViewController.h"
-#import "GLAMainContentSection.h"
+#import "GLAMainSection.h"
+#import "GLAMainSectionNavigator.h"
 #import "GLAProjectsListViewController.h"
 #import "GLAProjectViewController.h"
 #import "GLANoNowProjectViewController.h"
 #import "GLAEmptyAllProjectsViewController.h"
 #import "GLAAddNewProjectViewController.h"
 #import "GLAAddNewCollectionViewController.h"
+#import "GLAAddCollectedFilesChoiceActions.h"
 @class GLAProject;
 @protocol GLAMainContentViewControllerDelegate;
 
@@ -34,7 +36,8 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 
 @property(nonatomic) id<GLAMainContentViewControllerDelegate> delegate;
 
-@property(nonatomic) GLAMainContentSection *currentSection;
+@property(nonatomic) GLAMainSectionNavigator *sectionNavigator;
+@property(readonly, nonatomic) GLAMainSection *currentSection;
 
 // Project List
 
@@ -68,7 +71,7 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 - (void)setUpAddedProjectViewControllerIfNeeded;
 - (void)setUpAddedCollectionViewControllerIfNeeded;
 
-- (GLAViewController *)viewControllerForSection:(GLAMainContentSection *)section;
+- (GLAViewController *)viewControllerForSection:(GLAMainSection *)section;
 
 #pragma mark -
 
@@ -82,9 +85,9 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 
 //- (void)enterAddedCollection:(GLAProject *)project;
 
-- (void)transitionToSection:(GLAMainContentSection *)newSection animate:(BOOL)animate;
+- (void)transitionToSection:(GLAMainSection *)newSection fromSection:(GLAMainSection *)outSection animate:(BOOL)animate;
 
-- (void)goToSection:(GLAMainContentSection *)newSection;
+- (void)goToSection:(GLAMainSection *)newSection;
 
 #pragma mark -
 
@@ -119,6 +122,8 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 - (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewProjectViewController:(GLAAddNewProjectViewController *)addNewProjectViewController didConfirmCreatingProject:(GLAProject *)project;
 
 #pragma mark Adding New Collection
+
+- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewControllerDidBecomeActive:(GLAAddNewCollectionViewController *)addNewCollectionViewController;
 
 - (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewController:(GLAAddNewCollectionViewController *)addNewCollectionViewController didConfirmCreatingCollection:(GLACollection *)collection inProject:(GLAProject *)project;
 
