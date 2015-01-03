@@ -73,6 +73,10 @@
 
 - (void)startUsingURLForCollectedFile:(GLACollectedFile *)collectedFile
 {
+	if (collectedFile.isMissing) {
+		return;
+	}
+	
 	NSMutableSet *collectedFileUUIDsUsingURLs = (self.collectedFileUUIDsUsingURLs);
 	
 	NSUUID *collectedFileUUID = (collectedFile.UUID);
@@ -81,7 +85,7 @@
 		[collectedFileUUIDsUsingURLs addObject:collectedFileUUID];
 		[(self.collectedFileUUIDMap) addObjects:@[collectedFile]];
 		
-		NSURL *fileReferenceURL = (collectedFile.filePathURL);
+		NSURL *fileReferenceURL = (collectedFile.fileReferenceURL);
 		NSAssert(fileReferenceURL != nil, @"Collected file must have a URL.");
 		[self startAccessingSecurityScopedFileURL:fileReferenceURL];
 		
@@ -93,6 +97,10 @@
 
 - (void)stopUsingURLForCollectedFile:(GLACollectedFile *)collectedFile
 {
+	if (collectedFile.isMissing) {
+		return;
+	}
+	
 	NSMutableSet *collectedFileUUIDsUsingURLs = (self.collectedFileUUIDsUsingURLs);
 	
 	if ([collectedFileUUIDsUsingURLs containsObject:collectedFile]) {

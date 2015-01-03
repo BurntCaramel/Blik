@@ -420,36 +420,6 @@
 	}
 }
 
-#pragma mark - Editing Projects
-/*
-- (void)changeNowProject:(GLAProject *)project
-{
-	[self setUpNowProjectViewControllerIfNeeded];
-	
-	(self.nowProjectViewController.project) = project;
-}
- */
-/*
-- (void)workOnProjectNow:(GLAProject *)project
-{
-	[self setUpNowProjectViewControllerIfNeeded];
-	
-	(self.nowProjectViewController.project) = project;
-	
-	[(self.sectionNavigator) goToNowProject];
-}
-*/
-- (void)editProject:(GLAProject *)project;
-{
-	[(self.sectionNavigator) goToProject:project];
-	/*
-	[self setUpEditedProjectViewControllerIfNeeded];
-	(self.editedProjectViewController.project) = project;
-	
-	[self goToSection:[GLAMainContentEditProjectSection editProjectSectionWithProject:project previousSection:(self.currentSection)]];
-	 */
-}
-
 #pragma mark Collections
 
 - (GLAViewController *)createViewControllerForCollection:(GLACollection *)collection
@@ -486,14 +456,6 @@
 - (void)enterCollection:(GLACollection *)collection
 {
 	[(self.sectionNavigator) goToCollection:collection];
-	
-	/*
-	GLAMainContentEditCollectionSection *section = [GLAMainContentEditCollectionSection editCollectionSectionWithCollection:collection previousSection:(self.currentSection)];
-	
-	[self setUpEditedCollectionViewControllerForSection:section];
-	
-	[self goToSection:section];
-	 */
 }
 
 - (IBAction)addNewFilesListCollection:(id)sender
@@ -714,13 +676,7 @@
 		[self projectViewControllerDidBecomeInactive:projectVC];
 	}
 }
-/*
-- (void)goToSection:(GLAMainContentSection *)newSection
-{
-	[self setUpViewControllerForSection:newSection];
-	[self transitionToSection:newSection animate:YES];
-}
-*/
+
 #pragma mark Adjusting Individual Content Views
 
 - (NSTimeInterval)transitionDurationGoingInForChildView:(NSView *)view

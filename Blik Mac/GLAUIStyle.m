@@ -274,7 +274,8 @@
 {
 	CGRect topBarRect = [self rectOfActiveHighlightForBounds:bounds time:t];
 	
-    CGFloat alphaFraction = 0.8 + t * 0.2;
+	CGFloat timeWeight = 3.0/16.0;
+    CGFloat alphaFraction = (1.0 - timeWeight) + (t * timeWeight);
 	color = [color colorWithAlphaComponent:alphaFraction * (color.alphaComponent)];
     
 	[color setFill];

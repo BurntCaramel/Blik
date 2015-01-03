@@ -33,7 +33,6 @@
 - (IBAction)addToNewCollection:(id)sender
 {
 	id<GLAAddCollectedFilesChoiceActionsDelegate> actionsDelegate = (self.actionsDelegate);
-	NSLog(@"addToNewCollection %@", actionsDelegate);
 	if ((actionsDelegate) && [actionsDelegate respondsToSelector:@selector(performAddCollectedFilesToNewCollection:info:)]) {
 		[actionsDelegate performAddCollectedFilesToNewCollection:self info:(self.info)];
 	}

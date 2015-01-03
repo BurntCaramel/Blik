@@ -305,8 +305,10 @@
 		NSCache *cacheOfURLsToApplicationURLs = (retriever.cacheOfURLsToApplicationURLs);
 		[cacheOfURLsToApplicationURLs setObject:applicationURLs forKey:URL];
 		
-		NSCache *cacheOfURLsToDefaultApplicationURLs = (retriever.cacheOfURLsToDefaultApplicationURLs);
-		[cacheOfURLsToDefaultApplicationURLs setObject:defaultApplicationURL forKey:URL];
+		if (defaultApplicationURL) {
+			NSCache *cacheOfURLsToDefaultApplicationURLs = (retriever.cacheOfURLsToDefaultApplicationURLs);
+			[cacheOfURLsToDefaultApplicationURLs setObject:defaultApplicationURL forKey:URL];
+		}
 		
 		[retriever inputQueue_useDelegateOnMainQueue:^(GLAFileInfoRetriever *retriever, id<GLAFileInfoRetrieverDelegate> delegate) {
 			[delegate fileInfoRetriever:self didRetrieveApplicationURLsToOpenURL:URL];

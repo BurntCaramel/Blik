@@ -323,7 +323,7 @@
 			NSAssert(project != nil, @"Must have a project to be able to delete it.");
 			
 			GLAMainContentManners *manners = [GLAMainContentManners sharedManners];
-			[manners askToPermanentlyDeleteProject:project fromView:(self.window.contentView) sectionNavigator:(self.mainSectionNavigator)];
+			[manners askToPermanentlyDeleteProject:project fromView:(self.window.contentView)];
 		}
 	}
 }

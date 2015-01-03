@@ -75,19 +75,7 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 
 #pragma mark -
 
-- (void)changeNowProject:(GLAProject *)project;
-
-- (void)workOnProjectNow:(GLAProject *)project;
-
-- (void)editProject:(GLAProject *)project;
-//- (void)enterAddedProject:(GLAProject *)project;
-//- (void)endEditingProject:(GLAProject *)project;
-
-//- (void)enterAddedCollection:(GLAProject *)project;
-
 - (void)transitionToSection:(GLAMainSection *)newSection fromSection:(GLAMainSection *)outSection animate:(BOOL)animate;
-
-- (void)goToSection:(GLAMainSection *)newSection;
 
 #pragma mark -
 

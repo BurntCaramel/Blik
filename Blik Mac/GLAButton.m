@@ -154,6 +154,33 @@
 	return adjustedFrame;
 }
 
+- (void)gla_animateHighlightTo:(CGFloat)highlightAmount
+{
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 4.0 / 36.0;
+		id<GLAButtonStyling> animator = (id)(self.animator);
+		(animator.highlightAmount) = highlightAmount;
+	} completionHandler:nil];
+}
+
+- (void)gla_animateHighlightForHovered:(BOOL)hovered
+{
+	CGFloat highlightAmount = hovered ? (3.0 / 6.0) : 0.0;
+	[self gla_animateHighlightTo:highlightAmount];
+}
+
+- (void)gla_animateHighlightForPressed:(BOOL)pressed
+{
+	CGFloat highlightAmount = pressed ? (3.0 / 6.0) : 0.0;
+	[self gla_animateHighlightTo:highlightAmount];
+}
+
+- (void)gla_animateHighlightForOn:(BOOL)on
+{
+	CGFloat highlightAmount = on ? (6.0 / 6.0) : 0.0;
+	[self gla_animateHighlightTo:highlightAmount];
+}
+
 @end
 
 
@@ -343,6 +370,8 @@
 	(self.needsDisplay) = YES;
 }
 
+#pragma mark -
+
 + (id)defaultAnimationForKey:(NSString *)key
 {
 	if ([key isEqualToString:@"highlightAmount"]) {
@@ -355,32 +384,6 @@
 	}
 }
 
-- (void)setState:(NSInteger)newState
-{
-	if (newState == NSOnState) {
-		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-			(context.duration) = 5.0 / 36.0;
-			(self.animator.highlightAmount) = 1.0;
-		} completionHandler:nil];
-	}
-	else if (newState == NSOffState) {
-		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-			(context.duration) = 3.0 / 36.0;
-			(self.animator.highlightAmount) = 0.0;
-		} completionHandler:nil];
-		
-	}
-	
-	[super setState:newState];
-}
-
-- (BOOL)isOnAndShowsOnState
-{
-	return (self.cell.isOnAndShowsOnState);
-}
-
-#pragma mark -
-
 - (void)updateTrackingAreas
 {
 	if (self.mainTrackingArea) {
@@ -392,23 +395,34 @@
 	(self.mainTrackingArea) = mainTrackingArea;
 }
 
+- (void)setState:(NSInteger)newState
+{
+	if (newState == NSOnState) {
+		[self gla_animateHighlightForOn:YES];
+	}
+	else if (newState == NSOffState) {
+		[self gla_animateHighlightForOn:NO];
+	}
+	
+	[super setState:newState];
+}
+
+- (BOOL)isOnAndShowsOnState
+{
+	return (self.cell.isOnAndShowsOnState);
+}
+
 - (void)mouseEntered:(NSEvent *)theEvent
 {
 	if ((self.isEnabled) && (self.state) == NSOffState) {
-		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-			(context.duration) = 4.0 / 36.0;
-			(self.animator.highlightAmount) = 3.0 / 6.0;
-		} completionHandler:nil];
+		[self gla_animateHighlightForHovered:YES];
 	}
 }
 
 - (void)mouseExited:(NSEvent *)theEvent
 {
 	if ((self.isEnabled) && (self.state) == NSOffState) {
-		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-			(context.duration) = 4.0 / 36.0;
-			(self.animator.highlightAmount) = 0.0;
-		} completionHandler:nil];
+		[self gla_animateHighlightForHovered:NO];
 	}
 }
 
@@ -643,6 +657,14 @@
 	return [super drawTitle:title withFrame:adjustedFrame inView:controlView];
 #endif
 #endif
+}
+
+- (void)stopTracking:(NSPoint)lastPoint at:(NSPoint)stopPoint inView:(NSView *)controlView mouseIsUp:(BOOL)flag
+{
+	NSLog(@"STOP TRACKKING");
+	[((GLAButton *)controlView) gla_animateHighlightForPressed:NO];
+	
+	[super stopTracking:lastPoint at:stopPoint inView:controlView mouseIsUp:flag];
 }
 
 @end

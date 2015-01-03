@@ -29,6 +29,7 @@
 
 @property(readonly, nonatomic) id<GLAArrayStoring> store;
 @property(readonly, nonatomic) BOOL needsLoadingFromStore;
+@property(readonly, nonatomic) BOOL finishedLoadingFromStore;
 
 - (NSArray *)constrainPotentialChildren:(NSArray *)potentialChildren;
 

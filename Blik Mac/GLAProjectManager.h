@@ -68,7 +68,7 @@
 - (GLACollection *)renameCollection:(GLACollection *)collection inProject:(GLAProject *)project toString:(NSString *)name;
 - (GLACollection *)changeColorOfCollection:(GLACollection *)collection inProject:(GLAProject *)project toColor:(GLACollectionColor *)color;
 
-- (void)permanentlyDeleteCollection:(GLACollection *)collection fromProject:(GLAProject *)project;
+- (void)permanentlyDeleteCollection:(GLACollection *)collection;
 
 #pragma mark Highlights
 
@@ -106,12 +106,6 @@
 
 - (BOOL)nameIsValid:(NSString *)name;
 - (NSString *)normalizeName:(NSString *)name;
-
-#pragma mark Saving
-
-- (void)requestSaveAllProjects;
-- (void)requestSaveCollectionsForProject:(GLAProject *)project;
-- (void)requestSaveFilesListForCollections:(GLACollection *)filesListCollection;
 
 #pragma mark Notifications
 

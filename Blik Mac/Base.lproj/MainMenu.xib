@@ -89,17 +89,17 @@ DQ
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="YWM-TE-tpN"/>
-                            <menuItem title="Create Copy of…" keyEquivalent="b" id="8ks-1n-RD1">
+                            <menuItem title="Create Copy of Files…" hidden="YES" keyEquivalent="b" id="8ks-1n-RD1">
                                 <connections>
                                     <action selector="workOnActiveProjectNow:" target="-1" id="eCb-DV-M8d"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Create Zip Archive of…" keyEquivalent="B" id="1xt-yh-0dZ">
+                            <menuItem title="Create Zip Archive of Files…" hidden="YES" keyEquivalent="B" id="1xt-yh-0dZ">
                                 <connections>
                                     <action selector="workOnActiveProjectNow:" target="-1" id="aoY-7q-1RK"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="7gd-3B-k1s"/>
+                            <menuItem isSeparatorItem="YES" hidden="YES" id="7gd-3B-k1s"/>
                             <menuItem title="Delete Project Permanently…" id="K4Z-7H-ScL">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -348,14 +348,14 @@ DQ
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Collections" id="y5R-d6-Gfj">
                         <items>
-                            <menuItem title="Add Files Collection…" keyEquivalent="N" id="jfO-Ol-vRE">
+                            <menuItem title="New Files Collection…" keyEquivalent="N" id="jfO-Ol-vRE">
                                 <connections>
                                     <action selector="addNewFilesListCollection:" target="-1" id="dQd-Ke-bDS"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Add Contacts Collection…" hidden="YES" keyEquivalent="C" id="McO-7U-HxW"/>
-                            <menuItem isSeparatorItem="YES" id="igl-0Q-9Ql"/>
-                            <menuItem title="Change Preferred Applications…" id="mBU-GE-fzv">
+                            <menuItem title="New Contacts Collection…" hidden="YES" keyEquivalent="C" id="McO-7U-HxW"/>
+                            <menuItem isSeparatorItem="YES" hidden="YES" id="igl-0Q-9Ql"/>
+                            <menuItem title="Change Preferred Applications…" hidden="YES" id="mBU-GE-fzv">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                         </items>

@@ -11,6 +11,7 @@
 #import "GLAProjectViewController.h"
 #import "GLAUIStyle.h"
 #import "GLAProjectManager.h"
+#import "GLAMainContentManners.h"
 #import "GLAEditCollectionDetailsPopover.h"
 #import "GLAAddCollectedFilesChoicePopover.h"
 #import "GLAArrayTableDraggingHelper.h"
@@ -424,20 +425,8 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 		return;
 	}
 	
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	
-	NSAlert *alert = [NSAlert new];
-	[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Button title to delete collection.")];
-	[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Button title to cancel deleting collection.")];
-	(alert.messageText) = NSLocalizedString(@"Delete the collection?", @"Message for deleting a collection.");
-	(alert.informativeText) = NSLocalizedString(@"If you wish to restore the collection and its contents you must do so manually.", @"Informative text for deleting a collection.");
-	(alert.alertStyle) = NSWarningAlertStyle;
-	
-	[alert beginSheetModalForWindow:(self.view.window) completionHandler:^(NSModalResponse returnCode) {
-		if (returnCode == NSAlertFirstButtonReturn) {
-			[projectManager permanentlyDeleteCollection:collection fromProject:(self.project)];
-		}
-	}];
+	GLAMainContentManners *manners = [GLAMainContentManners sharedManners];
+	[manners askToPermanentlyDeleteCollection:collection fromView:(self.view)];
 }
 
 - (IBAction)renameClickedCollection:(id)sender

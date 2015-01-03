@@ -55,11 +55,26 @@
 	(self.confirmCreateButton.enabled) = [projectManager nameIsValid:stringValue];
 }
 
+- (NSString *)defaultName
+{
+	GLAPendingAddedCollectedFilesInfo *pendingAddedCollectedFilesInfo = (self.pendingAddedCollectedFilesInfo);
+	if (pendingAddedCollectedFilesInfo) {
+		NSArray *fileURLs = (pendingAddedCollectedFilesInfo.fileURLs);
+		if ((fileURLs.count) == 1) {
+			GLACollectedFile *collectedFile = [[GLACollectedFile alloc] initWithFileURL:fileURLs[0]];
+			NSError *fileError = nil;
+			if ([collectedFile updateInformationWithError:&fileError]) {
+				return (collectedFile.name);
+			}
+		}
+	}
+	
+	return @"";
+}
+
 - (void)resetAndFocus
 {
-	//(self.pendingAddedCollectedFilesInfo) = nil;
-	
-	(self.nameTextField.stringValue) = @"";
+	(self.nameTextField.stringValue) = (self.defaultName);
 	[self checkNameTextFieldIsValid];
 	
 	[(self.view.window) makeFirstResponder:(self.nameTextField)];

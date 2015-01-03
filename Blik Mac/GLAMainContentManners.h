@@ -22,6 +22,7 @@
 
 @property(readonly, nonatomic) GLAProjectManager *projectManager;
 
-- (void)askToPermanentlyDeleteProject:(GLAProject *)project fromView:(NSView *)view sectionNavigator:(GLAMainSectionNavigator *)navigator;
+- (void)askToPermanentlyDeleteProject:(GLAProject *)project fromView:(NSView *)view;
+- (void)askToPermanentlyDeleteCollection:(GLACollection *)collection fromView:(NSView *)view;
 
 @end

@@ -311,6 +311,17 @@
 	}
 }
 
+- (BOOL)finishedLoadingFromStore
+{
+	id<GLAArrayStoring> store = (self.store);
+	if (store) {
+		return (store.loadState) == GLAArrayStoringLoadStateFinishedLoading;
+	}
+	else {
+		return YES;
+	}
+}
+
 - (NSArray *)constrainPotentialChildren:(NSArray *)potentialChildren
 {
 	for (id<GLAArrayEditorConstraining> constrainer in (self.constrainers)) {

@@ -265,6 +265,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	newName = [pm normalizeName:newName];
 	if ([pm nameIsValid:newName]) {
 		(self.project) = [pm renameProject:(self.project) toName:newName];
+		[(self.view.window) makeFirstResponder:nil];
 	}
 	else {
 		NSBeep();

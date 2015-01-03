@@ -33,7 +33,7 @@
                         <constraint firstAttribute="height" constant="32" id="ddO-Nc-B5M"/>
                     </constraints>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Collection name text field" placeholderString="" id="1uK-p7-zZg">
-                        <font key="font" size="16" name="AvenirNext-DemiBold"/>
+                        <font key="font" size="16" name="AvenirNext-Medium"/>
                         <color key="textColor" red="0.98812824489999995" green="0.98829692599999996" blue="0.98811751599999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>

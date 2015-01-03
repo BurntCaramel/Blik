@@ -176,7 +176,7 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	}
 	
 	GLAMainContentManners *manners = [GLAMainContentManners sharedManners];
-	[manners askToPermanentlyDeleteProject:project fromView:(self.view) sectionNavigator:nil];
+	[manners askToPermanentlyDeleteProject:project fromView:(self.view)];
 }
 
 - (IBAction)workOnProjectNowClicked:(NSButton *)senderButton

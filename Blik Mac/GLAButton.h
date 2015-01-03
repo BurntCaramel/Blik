@@ -44,6 +44,10 @@
 + (NSAttributedString *)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell adjustAttributedTitle:(NSAttributedString *)title;
 + (NSRect)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawTitle:(NSAttributedString *)title withFrame:(NSRect)frame inView:(NSView *)controlView;
 
+- (void)gla_animateHighlightForHovered:(BOOL)hovered;
+- (void)gla_animateHighlightForPressed:(BOOL)pressed;
+- (void)gla_animateHighlightForOn:(BOOL)on;
+
 @end
 
 /*

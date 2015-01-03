@@ -66,14 +66,9 @@
 
 #pragma mark GLAArrayObserving
 
-- (void)arrayEditorWasCreated:(id<GLAArrayInspecting>)array
+- (void)arrayEditor:(GLAArrayEditor *)arrayEditor didMakeChanges:(GLAArrayEditorChanges *)changes
 {
-	//[self saveChildren:[array copyChildren]];
-}
-
-- (void)arrayEditor:(id<GLAArrayInspecting>)array didMakeChanges:(GLAArrayEditorChanges *)changes
-{
-	[self saveChildren:[array copyChildren]];
+	[self saveChildren:[arrayEditor copyChildren]];
 }
 
 #pragma mark -
@@ -236,7 +231,7 @@
 			(internalProperties.internal_loadState) = GLAArrayStoringLoadStateCurrentlyLoading;
 		}
 	}];
-	
+	// Don't allow loading to be queued multiple times.
 	if ( ! needsLoading ) {
 		return NO;
 	}
@@ -261,14 +256,17 @@
 			(internalProperties.internal_loadState) = GLAArrayStoringLoadStateFinishedLoading;
 		}];
 		
-		completionBlock(loadedChildren);
-		
 		[[NSOperationQueue mainQueue] addOperationWithBlock:^{
 			NSDictionary *notificationInfo =
 			@{
 			  GLAArrayStoringDidLoadNotificationUserInfoLoadedChildren: loadedChildren
 			  };
 			[[NSNotificationCenter defaultCenter] postNotificationName:GLAArrayStoringDidLoadNotification object:store userInfo:notificationInfo];
+			
+			// Completion block is not guaranteed to run on main queue,
+			// it's just that it needs to be called after the notification
+			// has been sent.
+			completionBlock(loadedChildren);
 		}];
 	}];
 	

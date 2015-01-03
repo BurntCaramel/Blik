@@ -10,6 +10,12 @@
 #import "GLAUIStyle.h"
 
 
+@interface GLAPopUpButton ()
+
+@property(nonatomic) NSTrackingArea *mainTrackingArea;
+
+@end
+
 @implementation GLAPopUpButton
 
 - (id)initWithFrame:(NSRect)frame
@@ -193,17 +199,10 @@
 - (void)setState:(NSInteger)newState
 {
 	if (newState == NSOnState) {
-		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-			(context.duration) = 5.0 / 36.0;
-			(self.animator.highlightAmount) = 1.0;
-		} completionHandler:nil];
+		[self gla_animateHighlightForOn:YES];
 	}
 	else if (newState == NSOffState) {
-		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-			(context.duration) = 3.0 / 36.0;
-			(self.animator.highlightAmount) = 0.0;
-		} completionHandler:nil];
-		
+		[self gla_animateHighlightForOn:NO];
 	}
 	
 	[super setState:newState];
@@ -219,6 +218,33 @@
 - (CGFloat)baselineOffsetFromBottom
 {
 	return 5.0;
+}
+
+#pragma mark -
+
+- (void)updateTrackingAreas
+{
+	if (self.mainTrackingArea) {
+		[self removeTrackingArea:(self.mainTrackingArea)];
+	}
+	
+	NSTrackingArea *mainTrackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:NSTrackingInVisibleRect | NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited owner:self userInfo:nil];
+	[self addTrackingArea:mainTrackingArea];
+	(self.mainTrackingArea) = mainTrackingArea;
+}
+
+- (void)mouseEntered:(NSEvent *)theEvent
+{
+	if ((self.isEnabled) && (self.state) == NSOffState) {
+		[self gla_animateHighlightForHovered:YES];
+	}
+}
+
+- (void)mouseExited:(NSEvent *)theEvent
+{
+	if ((self.isEnabled) && (self.state) == NSOffState) {
+		[self gla_animateHighlightForHovered:NO];
+	}
 }
 
 @end
