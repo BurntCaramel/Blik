@@ -35,7 +35,20 @@
 	}
 	return self;
 }
-
+/*
+ // Not sure what behaviour is right here.
+- (BOOL)isEqual:(id)object
+{
+	if (object == self) {
+		return YES;
+	}
+	if (!object || [object isKindOfClass:[GLAModel class]]) {
+		return NO;
+	}
+	
+	GLAModel *model
+}
+*/
 - (instancetype)duplicate
 {
 	GLAModel *copy = [self copy];

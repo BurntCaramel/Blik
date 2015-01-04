@@ -32,7 +32,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 @interface GLAProjectCollectionsViewController (GLAAddCollectedFilesChoice)
 
 - (GLAAddCollectedFilesChoicePopover *)addCollectedFilesChoicePopup;
-- (void)showAddCollectedFilesChoiceForFileURLs:(NSArray *)fileURLs;
+- (void)showAddCollectedFilesChoiceForFileURLs:(NSArray *)fileURLs withIndexOfNewCollectionInList:(NSUInteger)indexOfNewCollectionInList;
 
 @end
 
@@ -141,15 +141,6 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	NSView *instructionsView = (self.instructionsViewController.view);
 	if (!(instructionsView.superview)) {
 		[self fillViewWithChildView:instructionsView];
-#if 0
-		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-			(context.duration) = 3.0 / 120.0;
-			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-			
-			(instructionsView.alphaValue) = 0.0;
-			(instructionsView.animator.alphaValue) = 1.0;
-		} completionHandler:nil];
-#endif
 	}
 	else {
 		(instructionsView.hidden) = NO;
@@ -166,12 +157,14 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 - (void)showTable
 {
-	(self.tableView.enclosingScrollView.hidden) = NO;
+	//(self.tableView.enclosingScrollView.hidden) = NO;
+	(self.tableView.enclosingScrollView.alphaValue) = 1.0;
 }
 
 - (void)hideTable
 {
-	(self.tableView.enclosingScrollView.hidden) = YES;
+	//(self.tableView.enclosingScrollView.hidden) = YES;
+	(self.tableView.enclosingScrollView.alphaValue) = 0.0;
 }
 
 - (void)reloadCollections
@@ -502,7 +495,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 		NSArray *fileURLs = [pboard readObjectsForClasses:@[ [NSURL class] ] options:@{ NSPasteboardURLReadingFileURLsOnlyKey: @(YES) }];
 		if (fileURLs) {
 			if (dropOperation == NSTableViewDropAbove) {
-				[self showAddCollectedFilesChoiceForFileURLs:fileURLs];
+				[self showAddCollectedFilesChoiceForFileURLs:fileURLs withIndexOfNewCollectionInList:row];
 			}
 			else if (dropOperation == NSTableViewDropOn) {
 				GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
@@ -554,7 +547,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	return [GLAAddCollectedFilesChoicePopover sharedAddCollectedFilesChoicePopover];
 }
 
-- (void)showAddCollectedFilesChoiceForFileURLs:(NSArray *)fileURLs
+- (void)showAddCollectedFilesChoiceForFileURLs:(NSArray *)fileURLs withIndexOfNewCollectionInList:(NSUInteger)indexOfNewCollectionInList
 {
 	GLAAddCollectedFilesChoicePopover *popover = (self.addCollectedFilesChoicePopup);
 	
@@ -562,7 +555,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 		[popover close];
 	}
 	
-	GLAPendingAddedCollectedFilesInfo *info = [[GLAPendingAddedCollectedFilesInfo alloc] initWithFileURLs:fileURLs];
+	GLAPendingAddedCollectedFilesInfo *info = [[GLAPendingAddedCollectedFilesInfo alloc] initWithFileURLs:fileURLs indexOfNewCollectionInList:indexOfNewCollectionInList];
 	(popover.info) = info;
 	(popover.actionsDelegate) = (self.addCollectedFilesChoiceActionsDelegate);
 	

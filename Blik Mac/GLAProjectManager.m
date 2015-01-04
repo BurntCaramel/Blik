@@ -184,8 +184,12 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	
 	GLAArrayEditorChanges *changes = [allProjectsEditor changesMadeInBlock:block];
 	if (changes.hasChanges) {
+		// Added
 		[self projectsDidChange:(changes.addedChildren)];
+		// Replaced
 		[self projectsDidChange:(changes.replacedChildrenAfter)];
+		// Removed
+		[self projectsWereDeleted:(changes.removedChildren)];
 		[store permanentlyDeleteAssociatedFilesForProjects:(changes.removedChildren)];
 		
 		[self allProjectsDidChange];
@@ -235,8 +239,6 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	[self editAllProjectsUsingBlock:^(id<GLAArrayEditing> allProjectsEditor) {
 		[allProjectsEditor removeFirstChildWhoseKey:@"UUID" hasValue:(project.UUID)];
 	}];
-	
-	[self projectWasDeleted:project];
 }
 
 #pragma mark Now Project
@@ -299,7 +301,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	}
 }
 
-- (GLACollection *)createNewCollectionWithName:(NSString *)name type:(NSString *)type color:(GLACollectionColor *)color inProject:(GLAProject *)project
+- (GLACollection *)createNewCollectionWithName:(NSString *)name type:(NSString *)type color:(GLACollectionColor *)color inProject:(GLAProject *)project indexInCollectionsList:(NSUInteger)indexInList
 {
 	NSAssert(project != nil, @"Passed project must not be nil.");
 	
@@ -312,7 +314,12 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	[(self.store) addFreshlyCreatedCollectionWithUUID:(collection.UUID)];
 	
 	[self editCollectionsOfProject:project usingBlock:^(id<GLAArrayEditing> collectionListEditor) {
-		[collectionListEditor addChildren:@[collection]];
+		if (indexInList == NSNotFound) {
+			[collectionListEditor addChildren:@[collection]];
+		}
+		else {
+			[collectionListEditor insertChildren:@[collection] atIndexes:[NSIndexSet indexSetWithIndex:indexInList]];
+		}
 	}];
 	
 	return collection;
@@ -697,21 +704,32 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectManagerNowProjectDidChangeNotification object:self];
 }
 
-- (void)projectDidChange:(GLAProject *)project
-{
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectDidChangeNotification object:[self notificationObjectForProject:project]];
-}
-
 - (void)projectsDidChange:(NSArray *)projects
 {
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
 	for (GLAProject *project in projects) {
-		[self projectDidChange:project];
+		[nc postNotificationName:GLAProjectDidChangeNotification object:[self notificationObjectForProject:project]];
 	}
 }
 
-- (void)projectWasDeleted:(GLAProject *)project
+- (void)projectsWereDeleted:(NSArray *)projects
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectWasDeletedNotification object:[self notificationObjectForProject:project]];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	GLAProject *nowProject = (self.nowProject);
+	BOOL nowProjectWasDeleted = NO;
+	
+	for (GLAProject *project in projects) {
+		[nc postNotificationName:GLAProjectWasDeletedNotification object:[self notificationObjectForProject:project]];
+		
+		if ([(project.UUID) isEqual:(nowProject.UUID)]) {
+			nowProjectWasDeleted = YES;
+		}
+	}
+	
+	if (nowProjectWasDeleted) {
+		[self changeNowProject:nil];
+	}
 }
 
 - (void)collectionListForProjectDidChange:(GLAProject *)project
@@ -1208,6 +1226,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (GLAProject *)projectWithUUID:(NSUUID *)projectUUID
 {
+	NSParameterAssert(projectUUID != nil);
 	return (self.allProjectsEditor)[projectUUID];
 }
 
@@ -1349,7 +1368,12 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (void)changeNowProject:(GLAProject *)project
 {
-	(self.nowProjectUUID) = (project.UUID);
+	if (project) {
+		(self.nowProjectUUID) = (project.UUID);
+	}
+	else {
+		(self.nowProjectUUID) = nil;
+	}
 }
 
 #pragma mark Collections
@@ -1671,20 +1695,20 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 		return;
 	}
 	
+	GLAProject *project = nil;
 	NSUUID *projectUUID = (self.nowProjectUUID);
-	GLAProject *project = [self projectWithUUID:projectUUID];
-	
-	if (!project) {
-		return;
+	if (projectUUID) {
+		project = [self projectWithUUID:projectUUID];
 	}
 	
 	[self runInBackground:^(GLAProjectManagerStore *store) {
-		// TODO: support saving no now project.
-		NSAssert(project != nil, @"Can't save no now project.");
-		NSDictionary *JSONProject = [MTLJSONAdapter JSONDictionaryFromModel:project];
+		id nowProjectObject = [NSNull null];
+		if (project) {
+			nowProjectObject = [MTLJSONAdapter JSONDictionaryFromModel:project];
+		}
 		
 		NSDictionary *JSONDictionary =
-		@{GLAProjectManagerJSONNowProjectKey: JSONProject};
+		@{GLAProjectManagerJSONNowProjectKey: nowProjectObject};
 		
 		[store writeJSONDictionary:JSONDictionary toFileURL:fileURL];
 		

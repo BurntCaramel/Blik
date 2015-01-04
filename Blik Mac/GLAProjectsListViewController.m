@@ -80,11 +80,16 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	[self stopProjectManagingObserving];
 }
 
+- (GLAProjectManager *)projectManager
+{
+	return [GLAProjectManager sharedProjectManager];
+}
+
 - (void)startProjectManagingObserving
 {
 	[self stopProjectManagingObserving];
 	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
 	// Project Collection List
@@ -93,7 +98,7 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 
 - (void)stopProjectManagingObserving
 {
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
 	// Stop observing any notifications on the project manager.
@@ -111,7 +116,7 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 
 - (void)reloadAllProjects
 {
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *projectManager = (self.projectManager);
 	
 	[projectManager loadAllProjectsIfNeeded];
 	NSArray *projects = [projectManager copyAllProjects];
@@ -194,7 +199,7 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 
 - (void)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
 {
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	[pm editAllProjectsUsingBlock:editBlock];
 }
 
@@ -258,12 +263,23 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	NSTextField *plannedDateTextField = (cellView.plannedDateTextField);
 	(plannedDateTextField.textColor) = (activeStyle.lightTextDisabledColor);
 	
+	GLAProjectManager *pm = (self.projectManager);
+	GLAProject *nowProject = (pm.nowProject);
+	
 	GLANavigationButton *workOnNowButton = (cellView.workOnNowButton);
-	//(workOnNowButton.alwaysHighlighted) = YES;
-	(workOnNowButton.target) = self;
-	(workOnNowButton.action) = @selector(workOnProjectNowClicked:);
-	(workOnNowButton.tag) = row;
-	//(workOnNowButton.textHighlightColor) = ([GLAUIStyle activeStyle].deleteProjectButtonColor);
+	if ([(project.UUID) isEqual:(nowProject.UUID)]) {
+		//(workOnNowButton.hidden) = YES;
+		(workOnNowButton.enabled) = NO;
+		(workOnNowButton.title) = NSLocalizedString(@"Working on Now", @"Title for Work on Now button in projects list that is already the now project");
+	}
+	else {
+		(workOnNowButton.enabled) = YES;
+		(workOnNowButton.title) = NSLocalizedString(@"Work on Now", @"Title for Work on Now button in an projects list");
+		(workOnNowButton.target) = self;
+		(workOnNowButton.action) = @selector(workOnProjectNowClicked:);
+		(workOnNowButton.tag) = row;
+		//(workOnNowButton.textHighlightColor) = ([GLAUIStyle activeStyle].deleteProjectButtonColor);
+	}
 	
 	return cellView;
 }

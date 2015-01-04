@@ -11,13 +11,19 @@
 
 @implementation GLAPendingAddedCollectedFilesInfo
 
-- (instancetype)initWithFileURLs:(NSArray *)fileURLs
+- (instancetype)initWithFileURLs:(NSArray *)fileURLs indexOfNewCollectionInList:(NSUInteger)indexOfNewCollection
 {
 	self = [super init];
 	if (self) {
 		_fileURLs = [fileURLs copy];
+		_indexOfNewCollectionInList = indexOfNewCollection;
 	}
 	return self;
+}
+
+- (instancetype)initWithFileURLs:(NSArray *)fileURLs
+{
+	return [self initWithFileURLs:fileURLs indexOfNewCollectionInList:NSNotFound];
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone

@@ -345,7 +345,7 @@
 	
 	GLAArrayEditorChanges *changes = (self.currentChanges);
 	if (changes) {
-		[(changes.mutableAddedChildren) addObjectsFromArray:objects];
+		[changes includeAddedChildren:objects];
 	}
 }
 
@@ -535,6 +535,9 @@
 }
 
 @end
+
+
+#pragma mark -
 
 
 @implementation GLAArrayEditorOptions

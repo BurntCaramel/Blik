@@ -145,15 +145,19 @@
 	}
 	
 	GLACollectionColor *color = (self.chosenCollectionColor);
-	
-	GLACollection *collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilesList color:color inProject:project];
+	GLACollection *collection = nil;
 	
 	GLAPendingAddedCollectedFilesInfo *pendingAddedCollectedFilesInfo = (self.pendingAddedCollectedFilesInfo);
 	if (pendingAddedCollectedFilesInfo) {
+		collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilesList color:color inProject:project indexInCollectionsList:(pendingAddedCollectedFilesInfo.indexOfNewCollectionInList)];
+		
 		NSArray *fileURLs = (pendingAddedCollectedFilesInfo.fileURLs);
 		NSArray *collectedFiles = [GLACollectedFile collectedFilesWithFileURLs:fileURLs];
 		
 		[projectManager editFilesListOfCollection:collection insertingCollectedFiles:collectedFiles atIndex:NSNotFound];
+	}
+	else {
+		collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilesList color:color inProject:project indexInCollectionsList:NSNotFound];
 	}
 	(self.pendingAddedCollectedFilesInfo) = nil;
 	

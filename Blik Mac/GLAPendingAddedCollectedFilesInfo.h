@@ -12,8 +12,10 @@
 
 @interface GLAPendingAddedCollectedFilesInfo : NSObject <NSCopying>
 
+- (instancetype)initWithFileURLs:(NSArray *)fileURLs indexOfNewCollectionInList:(NSUInteger)indexOfNewCollection NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithFileURLs:(NSArray *)fileURLs;
 
 @property(readonly, copy, nonatomic) NSArray *fileURLs;
+@property(readonly, nonatomic) NSUInteger indexOfNewCollectionInList;
 
 @end
