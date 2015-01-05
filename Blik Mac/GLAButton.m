@@ -589,7 +589,7 @@
 
 - (void)drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView
 {
-	BOOL isHighlighted = [self cellAttribute:NSCellHighlighted];
+	//BOOL isHighlighted = [self cellAttribute:NSCellHighlighted];
 	//NSLog(@"b STATE %@ %@ %@", @(self.state), @(isHighlighted), @(self.mouseDownFlags));
 #if 1
 	[NSButton GLAStyledCell:self drawBezelWithFrame:frame inView:controlView];
@@ -607,7 +607,7 @@
 
 - (void)highlight:(BOOL)flag withFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-	BOOL isHighlighted = [self cellAttribute:NSCellHighlighted];
+	//BOOL isHighlighted = [self cellAttribute:NSCellHighlighted];
 	//NSLog(@"h STATE %@ %@ %@", @(self.state), @(isHighlighted), @(flag));
 	
 	//[controlView setNeedsDisplayInRect:cellFrame];

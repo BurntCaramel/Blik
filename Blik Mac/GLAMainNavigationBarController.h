@@ -73,7 +73,10 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 - (IBAction)goToAll:(id)sender;
 - (IBAction)goToNowProject:(id)sender;
 
-#pragma mark Projects
+#pragma mark -
+
+- (GLAProject *)currentProject;
+- (GLACollection *)currentCollection;
 
 - (IBAction)workOnCurrentProjectNow:(id)sender;
 - (IBAction)exitEditedProject:(id)sender;

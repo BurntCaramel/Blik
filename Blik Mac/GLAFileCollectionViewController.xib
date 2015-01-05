@@ -105,7 +105,7 @@
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                 </scrollView>
-                                <button identifier="template" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="hPc-Yl-sIY" customClass="GLAButton">
+                                <button placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="hPc-Yl-sIY" customClass="GLAButton">
                                     <rect key="frame" x="0.0" y="0.0" width="180" height="40"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="ORV-sK-urh"/>
@@ -183,7 +183,7 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </popUpButton>
-                                        <button identifier="template" misplaced="YES" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="wLr-wc-OZX" customClass="GLAButton">
+                                        <button misplaced="YES" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="wLr-wc-OZX" customClass="GLAButton">
                                             <rect key="frame" x="168" y="0.0" width="131" height="40"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="40" id="Nv2-mc-EKR"/>

@@ -38,8 +38,6 @@
 - (void)animateButtonsIn;
 - (void)animateButtonsOutWithCompletionHandler:(dispatch_block_t)completionHandler;
 
-- (GLACollection *)currentCollection;
-
 @end
 
 
@@ -670,6 +668,9 @@
 #endif
 
 @end
+
+
+#pragma mark -
 
 
 @implementation GLAMainNavigationButtonGroup

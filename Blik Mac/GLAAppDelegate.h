@@ -22,7 +22,6 @@
 @property (assign, nonatomic) IBOutlet NSMenu *mainHelpMenu;
 @property (assign, nonatomic) IBOutlet NSMenuItem *activityStatusMenuItem;
 
-- (IBAction)toggleShowingPrototypeA:(id)sender;
 - (IBAction)toggleShowingMainWindow:(id)sender;
 
 - (IBAction)toggleShowingStatusItem:(id)sender;

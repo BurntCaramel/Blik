@@ -77,6 +77,11 @@
 	return (self.eventKitReminder.calendar.title);
 }
 
+- (NSArray *)copyAssociatedCollectedItems
+{
+	return nil;
+}
+
 @end
 
 
