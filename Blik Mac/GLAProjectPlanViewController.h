@@ -49,6 +49,5 @@
 - (void)reloadReminders;
 
 - (IBAction)chooseExistingReminders:(id)sender;
-- (IBAction)makeNewReminder:(id)sender;
 
 @end
