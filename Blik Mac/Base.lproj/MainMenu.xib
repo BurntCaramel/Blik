@@ -365,10 +365,6 @@ DQ
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Highlights" id="5cF-uk-BG1">
                         <items>
-                            <menuItem title="How to Highlight Item from Collection…" id="cHO-vO-C6E">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="TJJ-Gc-NSV"/>
                             <menuItem title="New Reminder…" id="5c0-Ui-wzK">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>

@@ -37,8 +37,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-	//[self toggleShowingPrototypeA:self];
-	[self toggleShowingMainWindow:self];
+	[self showMainWindow];
 	
 #if 0
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
@@ -72,19 +71,6 @@
 	}
 }
 
-- (void)createPrototypeA
-{
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		(self.prototypeAWindowController) = [[GLAPrototypeAWindowController alloc] initWithWindowNibName:@"GLAPrototypeAWindowController"];
-	});
-}
-
-- (BOOL)isShowingPrototypeA
-{
-	return [self isShowingWindowController:(self.prototypeAWindowController)];
-}
-
 - (void)createMainWindowController
 {
 	static dispatch_once_t onceToken;
@@ -93,33 +79,24 @@
 	});
 }
 
+- (void)showMainWindow
+{
+	[self createMainWindowController];
+	
+	[(self.mainWindowController.window) makeKeyAndOrderFront:self];
+}
+
+- (void)hideMainWindow
+{
+	[(self.mainWindowController.window) close];
+}
+
 - (BOOL)isShowingMainWindowController
 {
 	return [self isShowingWindowController:(self.mainWindowController)];
 }
 
-- (void)updatePrototypeMenuItems
-{
-	(self.prototypeAMenuItem.state) = (self.isShowingPrototypeA) ? NSOnState : NSOffState;
-	(self.prototypeBMenuItem.state) = (self.isShowingMainWindowController) ? NSOnState : NSOffState;
-}
-
 #pragma mark Actions
-
-- (IBAction)toggleShowingPrototypeA:(id)sender
-{
-	if (!(self.isShowingPrototypeA)) {
-		[self createPrototypeA];
-		
-		//[(self.prototypeAWindowController) showWindow:self];
-		[(self.prototypeAWindowController.window) makeKeyAndOrderFront:self];
-	}
-	else {
-		[(self.prototypeAWindowController.window) close];
-	}
-	
-	[self updatePrototypeMenuItems];
-}
 
 - (IBAction)toggleShowingMainWindow:(id)sender
 {
@@ -145,21 +122,16 @@
 			[app activateIgnoringOtherApps:YES];
 		}
 		
-		[self createMainWindowController];
-		
-		//[(self.prototypeAWindowController) showWindow:self];
-		[(self.mainWindowController.window) makeKeyAndOrderFront:self];
+		[self showMainWindow];
 	}
 	else {
 		if (toggleApplicationHidden) {
 			[app hide:nil];
 		}
 		else {
-			[(self.mainWindowController.window) close];
+			[self hideMainWindow];
 		}
 	}
-	
-	[self updatePrototypeMenuItems];
 }
 
 - (void)toggleShowingStatusItem:(id)sender

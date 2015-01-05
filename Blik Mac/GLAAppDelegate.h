@@ -7,7 +7,6 @@
 //
 
 @import Cocoa;
-#import "GLAPrototypeAWindowController.h"
 #import "GLAMainWindowController.h"
 #import "GLAStatusItemController.h"
 
@@ -16,10 +15,6 @@
 
 //@property (assign) IBOutlet NSWindow *window;
 
-@property (assign, nonatomic) IBOutlet NSMenuItem *prototypeAMenuItem;
-@property (nonatomic) GLAPrototypeAWindowController *prototypeAWindowController;
-
-@property (assign, nonatomic) IBOutlet NSMenuItem *prototypeBMenuItem;
 @property (nonatomic) GLAMainWindowController *mainWindowController;
 
 @property (nonatomic) GLAStatusItemController *statusItemController;

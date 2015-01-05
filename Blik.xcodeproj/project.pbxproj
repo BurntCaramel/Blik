@@ -80,10 +80,6 @@
 		B2ADDBF11963DA2E0014EF84 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBF01963DA2E0014EF84 /* XCTest.framework */; };
 		B2ADDBF21963DA2E0014EF84 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */; };
 		B2ADDBFA1963DA2E0014EF84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBF81963DA2E0014EF84 /* InfoPlist.strings */; };
-		B2ADDC081963DA970014EF84 /* GLAPrototypeAWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ADDC061963DA970014EF84 /* GLAPrototypeAWindowController.m */; };
-		B2ADDC091963DA970014EF84 /* GLAPrototypeAWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDC071963DA970014EF84 /* GLAPrototypeAWindowController.xib */; };
-		B2ADDC0D1964E3E10014EF84 /* GLAPrototypeAFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ADDC0B1964E3E10014EF84 /* GLAPrototypeAFilesViewController.m */; };
-		B2ADDC0E1964E3E10014EF84 /* GLAPrototypeAFilesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDC0C1964E3E10014EF84 /* GLAPrototypeAFilesViewController.xib */; };
 		B2BB85121A3BD86D00BF186C /* NSOperationQueue+PGWSBlockConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85111A3BD86D00BF186C /* NSOperationQueue+PGWSBlockConvenience.m */; };
 		B2BB85151A3BE97A00BF186C /* NSObject+PGWSDispatchBlockConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85141A3BE97A00BF186C /* NSObject+PGWSDispatchBlockConvenience.m */; };
 		B2BB85181A3F095B00BF186C /* GLAMainContentManners.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85171A3F095B00BF186C /* GLAMainContentManners.m */; };
@@ -261,12 +257,6 @@
 		B2ADDBF01963DA2E0014EF84 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		B2ADDBF71963DA2E0014EF84 /* BlikTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BlikTests-Info.plist"; sourceTree = "<group>"; };
 		B2ADDBF91963DA2E0014EF84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		B2ADDC051963DA970014EF84 /* GLAPrototypeAWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLAPrototypeAWindowController.h; path = ../GLAPrototypeAWindowController.h; sourceTree = "<group>"; };
-		B2ADDC061963DA970014EF84 /* GLAPrototypeAWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GLAPrototypeAWindowController.m; path = ../GLAPrototypeAWindowController.m; sourceTree = "<group>"; };
-		B2ADDC071963DA970014EF84 /* GLAPrototypeAWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GLAPrototypeAWindowController.xib; path = ../GLAPrototypeAWindowController.xib; sourceTree = "<group>"; };
-		B2ADDC0A1964E3E10014EF84 /* GLAPrototypeAFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPrototypeAFilesViewController.h; sourceTree = "<group>"; };
-		B2ADDC0B1964E3E10014EF84 /* GLAPrototypeAFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPrototypeAFilesViewController.m; sourceTree = "<group>"; };
-		B2ADDC0C1964E3E10014EF84 /* GLAPrototypeAFilesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAPrototypeAFilesViewController.xib; sourceTree = "<group>"; };
 		B2BB850D1A39C4AB00BF186C /* GLAArrayMantleJSONStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAArrayMantleJSONStore.h; sourceTree = "<group>"; };
 		B2BB850E1A39C4AB00BF186C /* GLAArrayMantleJSONStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAArrayMantleJSONStore.m; sourceTree = "<group>"; };
 		B2BB85101A3BD86D00BF186C /* NSOperationQueue+PGWSBlockConvenience.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSOperationQueue+PGWSBlockConvenience.h"; sourceTree = "<group>"; };
@@ -416,19 +406,6 @@
 				B260F85619ADC92D002E3753 /* Status Item */,
 			);
 			name = "View Controller";
-			sourceTree = "<group>";
-		};
-		B219DAA5196AB66A007900DF /* A */ = {
-			isa = PBXGroup;
-			children = (
-				B2ADDC051963DA970014EF84 /* GLAPrototypeAWindowController.h */,
-				B2ADDC061963DA970014EF84 /* GLAPrototypeAWindowController.m */,
-				B2ADDC071963DA970014EF84 /* GLAPrototypeAWindowController.xib */,
-				B2ADDC0A1964E3E10014EF84 /* GLAPrototypeAFilesViewController.h */,
-				B2ADDC0B1964E3E10014EF84 /* GLAPrototypeAFilesViewController.m */,
-				B2ADDC0C1964E3E10014EF84 /* GLAPrototypeAFilesViewController.xib */,
-			);
-			name = A;
 			sourceTree = "<group>";
 		};
 		B219DAB7196AD69D007900DF /* Style (Colours) */ = {
@@ -591,7 +568,6 @@
 				B2CCF8EA1A370C8700EC7703 /* Categories */,
 				B2ADDBE61963DA2E0014EF84 /* MainMenu.xib */,
 				B2ADDBE91963DA2E0014EF84 /* Images.xcassets */,
-				B219DAA5196AB66A007900DF /* A */,
 				B219DAB7196AD69D007900DF /* Style (Colours) */,
 				B219DAA4196AB665007900DF /* View Controller */,
 				B2C7F284196FFFC1005780B4 /* View */,
@@ -894,6 +870,7 @@
 				ORGANIZATIONNAME = "Burnt Caramel";
 				TargetAttributes = {
 					B2ADDBCD1963DA2E0014EF84 = {
+						DevelopmentTeam = 5278SPSAPR;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 1;
@@ -930,13 +907,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B2ADDC091963DA970014EF84 /* GLAPrototypeAWindowController.xib in Resources */,
 				B219DAB3196AD462007900DF /* GLAProjectViewController.xib in Resources */,
 				B2F0DBC719936321001AB5EE /* GLAChooseRemindersViewController.xib in Resources */,
 				B2A8FCB81A2672E50002108E /* GLAEmptyAllProjectsViewController.xib in Resources */,
 				B24B360C196E336E0094FA1F /* GLAMainNavigationBarController.xib in Resources */,
 				B2ADDBDC1963DA2E0014EF84 /* InfoPlist.strings in Resources */,
-				B2ADDC0E1964E3E10014EF84 /* GLAPrototypeAFilesViewController.xib in Resources */,
 				B226E95A1988D00C00D607CC /* GLAFileCollectionViewController.xib in Resources */,
 				B292453A19E4058A00DD30CB /* GLANoNowProjectViewController.xib in Resources */,
 				B2CCF8E31A36D24D00EC7703 /* GLAAddCollectedFilesChoiceViewController.xib in Resources */,
@@ -1041,7 +1016,6 @@
 				B255920419C8508C0039D2AC /* GLACollectionViewColorChoiceItem.m in Sources */,
 				B2C7F287196FFFDF005780B4 /* GLAView.m in Sources */,
 				B25591F219C284040039D2AC /* GLATableContentRowView.m in Sources */,
-				B2ADDC081963DA970014EF84 /* GLAPrototypeAWindowController.m in Sources */,
 				B22E80CF198F98B2005C4108 /* GLAMainContentViewController.m in Sources */,
 				B26B6F4919EBDB0100D17ECD /* GLAProjectPlanViewController.m in Sources */,
 				B208E40019F914A7000EF97B /* GLAObjectNotificationRepresenter.m in Sources */,
@@ -1084,7 +1058,6 @@
 				B292453519DB5BE100DD30CB /* GLACollectionColorPickerPopover.m in Sources */,
 				B2F0DBCD1994C854001AB5EE /* GLATextField.m in Sources */,
 				B26659EB199C60D7003C4EA4 /* GLAAddNewProjectViewController.m in Sources */,
-				B2ADDC0D1964E3E10014EF84 /* GLAPrototypeAFilesViewController.m in Sources */,
 				B29F8DDA1980D45400F58F59 /* NSValueTransformer+GLAModel.m in Sources */,
 				B2D0331C19FFA69000C396FB /* GLAHighlightsTableCellView.m in Sources */,
 				B24B3607196D1F720094FA1F /* GLAReminder.m in Sources */,
