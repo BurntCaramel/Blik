@@ -763,8 +763,8 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 			NSArray *pendingAddedCollectedFiles = collectionUUIDsToPendingAddedCollectedFiles[collectionUUID];
 			
 			if (pendingAddedCollectedFiles) {
-				[self editFilesListOfCollection:collection insertingCollectedFiles:pendingAddedCollectedFiles atIndex:NSNotFound];
 				[collectionUUIDsToPendingAddedCollectedFiles removeObjectForKey:collectionUUID];
+				[self editFilesListOfCollection:collection insertingCollectedFiles:pendingAddedCollectedFiles atIndex:NSNotFound];
 			}
 		}
 	}

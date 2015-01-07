@@ -702,12 +702,7 @@
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 	
 	if ([pm hasLoadedHighlightsForProject:project]) {
-		NSTableView *tableView = (self.sourceFilesListTableView);
-		[tableView beginUpdates];
-		
 		[pm editHighlightsOfProject:project usingBlock:editingBlock];
-		
-		[tableView endUpdates];
 		
 		[self updateAddToHighlightsUI];
 	}

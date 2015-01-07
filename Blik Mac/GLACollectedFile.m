@@ -301,9 +301,15 @@
 	
 	// Is stale: needs updating to new bookmark data.
 	if (isStale) {
+#if DEBUG
+		NSLog(@"IS STALE %@", URL);
+#endif
 		NSArray *resourceValues = [[self class] coreResourceValueKeys];
 		bookmarkData = [URL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys:resourceValues relativeToURL:nil error:&error];
 		if (!bookmarkData) {
+#if DEBUG
+			NSLog(@"CANNOT CREATE BOOKMARK DATA FOR STALE URL");
+#endif
 			switch (error.code) {
 				case NSFileNoSuchFileError:
 				case NSFileReadUnknownError:

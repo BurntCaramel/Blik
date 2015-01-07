@@ -351,14 +351,31 @@
 	}];
 }
 
+- (void)fileAppearsToBeMissing
+{
+	NSBeep();
+}
+
 - (void)openCollectedFile:(GLACollectedFile *)collectedFile withApplication:(NSURL *)applicationURL
 {
 	NSURL *fileURL = (collectedFile.filePathURL);
 	if (!fileURL) {
+		[self fileAppearsToBeMissing];
 		return;
 	}
 	
 	[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL useSecurityScope:YES];
+}
+
+- (void)showCollectedFileInFinder:(GLACollectedFile *)collectedFile
+{
+	NSURL *fileURL = (collectedFile.filePathURL);
+	if (!fileURL) {
+		[self fileAppearsToBeMissing];
+		return;
+	}
+	
+	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[fileURL]];
 }
 
 - (IBAction)openClickedItem:(id)sender
@@ -371,23 +388,33 @@
 	GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 	
 	GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
-	NSLog(@"openClickedItem %@", collectedFile);
 	if (!collectedFile) {
 		return;
 	}
 	
-	NSURL *applicationURL = nil;
-	GLACollectedFile *applicationToOpenFileCollected = (highlightedCollectedFile.applicationToOpenFile);
-	if (applicationToOpenFileCollected) {
-		applicationURL = (applicationToOpenFileCollected.filePathURL);
+	BOOL showInFinder = NO;
+	NSEventModifierFlags modifierFlags = [NSEvent modifierFlags];
+	if ((modifierFlags & NSCommandKeyMask) == NSCommandKeyMask) {
+		showInFinder = YES;
 	}
 	
-	if (!applicationURL) {
-		NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
-		applicationURL = [workspace URLForApplicationToOpenURL:(collectedFile.filePathURL)];
+	if (showInFinder) {
+		[self showCollectedFileInFinder:collectedFile];
 	}
-	
-	[self openCollectedFile:collectedFile withApplication:applicationURL];
+	else {
+		NSURL *applicationURL = nil;
+		GLACollectedFile *applicationToOpenFileCollected = (highlightedCollectedFile.applicationToOpenFile);
+		if (applicationToOpenFileCollected) {
+			applicationURL = (applicationToOpenFileCollected.filePathURL);
+		}
+		
+		if (!applicationURL) {
+			NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+			applicationURL = [workspace URLForApplicationToOpenURL:(collectedFile.filePathURL)];
+		}
+		
+		[self openCollectedFile:collectedFile withApplication:applicationURL];
+	}
 }
 
 - (IBAction)openWithChosenApplication:(NSMenuItem *)menuItem
