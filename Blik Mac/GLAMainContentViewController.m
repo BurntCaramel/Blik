@@ -644,11 +644,11 @@
 	
 	// HIDE OUT
 	if (outViewController && !isnan(outLeading)) {
-		[self hideChildView:(outViewController.view) movingLeadingTo:outLeading animate:animate];
+		[self hideChildViewController:outViewController movingLeadingTo:outLeading animate:animate associatedSection:outSection];
 	}
 	// SHOW IN
 	if (!isnan(inLeading)) {
-		[self showChildView:(inViewController.view) movingLeadingFrom:inLeading animate:animate];
+		[self showChildViewController:inViewController movingLeadingFrom:inLeading animate:animate associatedSection:newSection];
 	}
 	
 	
@@ -696,12 +696,9 @@
 
 #pragma mark Hiding Child Views
 
-- (void)hideChildView:(NSView *)view adjustingConstraint:(NSLayoutConstraint *)constraint toValue:(CGFloat)constraintValue animate:(BOOL)animate
+- (void)hideChildViewController:(GLAViewController *)vc adjustingConstraint:(NSLayoutConstraint *)constraint toValue:(CGFloat)constraintValue animate:(BOOL)animate associatedSection:(GLAMainSection *)associatedSection
 {
-	//[self addViewIfNeeded:view layout:YES];
-	
-	GLAMainSection *currentSection = (self.currentSection);
-	GLAViewController *vc = [self viewControllerForSection:currentSection];
+	NSView *view = (vc.view);
 	
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 		if (animate) {
@@ -733,7 +730,7 @@
 		}
 		
 		if (animate) {
-			if (![currentSection isEqual:(self.currentSection)]) {
+			if (![associatedSection isEqual:(self.currentSection)]) {
 				[vc viewWillTransitionOut];
 				[view removeFromSuperview];
 			}
@@ -741,23 +738,27 @@
 	}];
 }
 
-- (void)hideChildView:(NSView *)view movingLeadingTo:(CGFloat)offset animate:(BOOL)animate
+- (void)hideChildViewController:(GLAViewController *)vc movingLeadingTo:(CGFloat)offset animate:(BOOL)animate associatedSection:(GLAMainSection *)associatedSection
 {
+	NSView *view = (vc.view);
 	NSLayoutConstraint *leadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:view];
-	[self hideChildView:view adjustingConstraint:leadingConstraint toValue:offset animate:animate];
+	[self hideChildViewController:vc adjustingConstraint:leadingConstraint toValue:offset animate:animate associatedSection:associatedSection];
 }
 
-- (void)hideChildView:(NSView *)view moveTopTo:(CGFloat)offset animate:(BOOL)animate
+- (void)hideChildViewController:(GLAViewController *)vc moveTopTo:(CGFloat)offset animate:(BOOL)animate associatedSection:(GLAMainSection *)associatedSection
 {
+	NSView *view = (vc.view);
 	NSLayoutConstraint *topConstraint = [self layoutConstraintWithIdentifier:@"top" forChildView:view];
-	[self hideChildView:view adjustingConstraint:topConstraint toValue:offset animate:animate];
+	[self hideChildViewController:vc adjustingConstraint:topConstraint toValue:offset animate:animate associatedSection:associatedSection];
 }
 
 #pragma mark Showing Child Views
 
-- (void)showChildView:(NSView *)view adjustingConstraint:(NSLayoutConstraint *)constraint toValue:(CGFloat)constraintValue animate:(BOOL)animate
+- (void)showChildViewController:(GLAViewController *)vc adjustingConstraint:(NSLayoutConstraint *)constraint toValue:(CGFloat)constraintValue animate:(BOOL)animate associatedSection:(GLAMainSection *)associatedSection
 {
-	NSParameterAssert(view != nil);
+	NSParameterAssert(vc != nil);
+	
+	NSView *view = (vc.view);
 	
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 		(view.hidden) = NO;
@@ -776,19 +777,19 @@
 			(view.alphaValue) = 1.0;
 			(constraint.constant) = constraintValue;
 		}
-		
-		//(context.allowsImplicitAnimation) = YES;
-		//[view layoutSubtreeIfNeeded];
 	} completionHandler:^ {
-		GLAViewController *vc = [self viewControllerForSection:(self.currentSection)];
-		[vc viewDidTransitionIn];
+		if ([associatedSection isEqual:(self.currentSection)]) {
+			GLAViewController *vc = [self viewControllerForSection:(self.currentSection)];
+			[vc viewDidTransitionIn];
+		}
 	}];
 }
 
-- (void)showChildView:(NSView *)view movingLeadingFrom:(CGFloat)leadingInitialValue animate:(BOOL)animate
+- (void)showChildViewController:(GLAViewController *)vc movingLeadingFrom:(CGFloat)leadingInitialValue animate:(BOOL)animate associatedSection:(GLAMainSection *)associatedSection
 {
-	NSParameterAssert(view != nil);
+	NSParameterAssert(vc != nil);
 	
+	NSView *view = (vc.view);
 	[self addViewIfNeeded:view layout:YES];
 	
 	NSLayoutConstraint *leadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:view];
@@ -796,18 +797,19 @@
 	
 	if (animate) {
 		// Move view to initial position.
-		[self hideChildView:view adjustingConstraint:leadingConstraint toValue:leadingInitialValue animate:NO];
+		[self hideChildViewController:vc adjustingConstraint:leadingConstraint toValue:leadingInitialValue animate:NO associatedSection:associatedSection];
 	}
 	
-	[self showChildView:view adjustingConstraint:leadingConstraint toValue:0.0 animate:animate];
+	[self showChildViewController:vc adjustingConstraint:leadingConstraint toValue:0.0 animate:animate associatedSection:associatedSection];
 }
 
-- (void)showChildViewMovingTop:(NSView *)view animate:(BOOL)animate
+- (void)showChildViewControllerMovingTop:(GLAViewController *)vc animate:(BOOL)animate associatedSection:(GLAMainSection *)associatedSection
 {
+	NSView *view = (vc.view);
 	[self addViewIfNeeded:view layout:YES];
 	
 	NSLayoutConstraint *leadingConstraint = [self layoutConstraintWithIdentifier:@"top" forChildView:view];
-	[self showChildView:view adjustingConstraint:leadingConstraint toValue:0.0 animate:animate];
+	[self showChildViewController:vc adjustingConstraint:leadingConstraint toValue:0.0 animate:animate associatedSection:associatedSection];
 }
 
 @end
