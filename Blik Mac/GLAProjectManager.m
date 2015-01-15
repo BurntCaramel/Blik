@@ -287,6 +287,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 		// Added
 		[self collectionsDidChange:(changes.addedChildren)];
 		// Removed
+		[self collectionsWereDeleted:(changes.removedChildren)];
 		[self removeHighlightedItemsWithCollections:(changes.removedChildren) fromProject:project];
 		[store permanentlyDeleteAssociatedFilesForCollections:(changes.removedChildren)];
 		// Replaced
@@ -740,6 +741,15 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 - (void)highlightsListForProjectDidChange:(GLAProject *)project
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectHighlightsDidChangeNotification object:[self notificationObjectForProject:project]];
+}
+
+- (void)collectionsWereDeleted:(NSArray *)collections
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	for (GLACollection *collection in collections) {
+		[nc postNotificationName:GLACollectionWasDeletedNotification object:[self notificationObjectForCollection:collection]];
+	}
 }
 
 - (void)collectionDidChange:(GLACollection *)collection
@@ -1234,6 +1244,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 {
 	for (GLAProject *project in projects) {
 		NSArray *collections = [self copyCollectionsForProject:project];
+		[(self.projectManager) collectionsWereDeleted:collections];
 		[self permanentlyDeleteAssociatedFilesForCollections:collections];
 		[self clearCollectionsArrayEditorForProject:project];
 	}
@@ -1819,5 +1830,6 @@ NSString *GLAProjectCollectionsDidChangeNotification = @"GLAProjectCollectionsDi
 
 NSString *GLAProjectHighlightsDidChangeNotification = @"GLAProjectHighlightsDidChangeNotification";
 
+NSString *GLACollectionWasDeletedNotification = @"GLACollectionWasDeletedNotification";
 NSString *GLACollectionDidChangeNotification = @"GLACollectionDidChangeNotification";
 NSString *GLACollectionFilesListDidChangeNotification = @"GLACollectionFilesListDidChangeNotification";

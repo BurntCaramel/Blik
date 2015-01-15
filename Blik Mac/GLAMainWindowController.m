@@ -64,10 +64,7 @@
 
 - (void)setUpNotifications
 {
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-	[nc addObserver:self selector:@selector(projectManagerNowProjectDidChangeNotification:) name:GLAProjectManagerNowProjectDidChangeNotification object:pm];
 }
 
 - (void)setUpBaseUI
@@ -172,15 +169,21 @@
 	(navigationBarView.layer.backgroundColor) = ([GLAUIStyle activeStyle].barBackgroundColor.CGColor);
 }
 
-#pragma mark Editing Projects
+#pragma mark Window Delegate
 
-- (void)projectManagerNowProjectDidChangeNotification:(NSNotification *)note
+- (void)windowDidBecomeKey:(NSNotification *)notification
 {
-	GLAMainSection *currentSection = (self.currentSection);
-	if (currentSection.isNow) {
-		[(self.mainSectionNavigator) goToNowProject];
-	}
+	NSWindow *window = (self.window);
+	(window.alphaValue) = 32.0/32.0;
 }
+
+- (void)windowDidResignKey:(NSNotification *)notification
+{
+	NSWindow *window = (self.window);
+	(window.alphaValue) = 30.5/32.0;
+}
+
+#pragma mark Editing Projects
 
 - (GLAMainSection *)currentSection
 {

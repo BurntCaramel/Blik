@@ -21,7 +21,7 @@
         <customView identifier="projectView" translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY" customClass="GLAProjectView">
             <rect key="frame" x="0.0" y="0.0" width="500" height="275"/>
             <subviews>
-                <customView placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="8vi-0s-ZAk" customClass="GLAView">
+                <customView placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="8vi-0s-ZAk" customClass="GLAView">
                     <rect key="frame" x="0.0" y="0.0" width="200" height="30"/>
                     <connections>
                         <outlet property="delegate" destination="fD5-0A-qdK" id="OPS-R4-6E8"/>
@@ -44,7 +44,7 @@
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="yM7-GZ-JQa">
                     <rect key="frame" x="0.0" y="38" width="200" height="176"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="200" id="Hnn-sF-Gd8"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="Hnn-sF-Gd8"/>
                     </constraints>
                 </customView>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="NA8-Ro-OD1">
@@ -293,7 +293,7 @@
                     </connections>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="273.5" y="-11.5"/>
+            <point key="canvasLocation" x="160.5" y="-165.5"/>
         </menu>
         <customView placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="30" id="xFc-GO-dGI" customClass="GLAView">
             <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
@@ -356,7 +356,7 @@
                     </menu>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="770" y="44.5"/>
+            <point key="canvasLocation" x="985" y="28.5"/>
         </menu>
         <customView identifier="collectionsListInstructions" id="Idz-io-wKr" userLabel="Collections Instructions">
             <rect key="frame" x="0.0" y="0.0" width="217" height="199"/>
@@ -419,7 +419,7 @@
                 <constraint firstItem="kal-bU-mMW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="OZm-di-0Uz" secondAttribute="leading" constant="20" id="bMe-hd-luO"/>
                 <constraint firstAttribute="trailing" secondItem="kal-bU-mMW" secondAttribute="trailing" constant="20" symbolic="YES" id="e3h-pu-8iC"/>
             </constraints>
-            <point key="canvasLocation" x="573" y="-131.5"/>
+            <point key="canvasLocation" x="760" y="-209.5"/>
         </customView>
         <scrollView verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="YLn-7g-05l">
             <rect key="frame" x="0.0" y="0.0" width="200" height="176"/>
@@ -525,7 +525,7 @@
                                         <rect key="frame" x="1" y="1" width="297" height="36"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wvd-37-nRU">
+                                            <textField verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" misplaced="YES" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wvd-37-nRU">
                                                 <rect key="frame" x="-2" y="7" width="257" height="23"/>
                                                 <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="3JX-zC-0E5">
                                                     <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -556,7 +556,7 @@
                                         <constraints>
                                             <constraint firstItem="wvd-37-nRU" firstAttribute="leading" secondItem="fxr-Bd-KTK" secondAttribute="leading" id="CSp-lD-VDA"/>
                                             <constraint firstItem="ZXO-0g-NsT" firstAttribute="leading" secondItem="wvd-37-nRU" secondAttribute="trailing" constant="8" id="I4R-ik-hlo"/>
-                                            <constraint firstItem="wvd-37-nRU" firstAttribute="top" secondItem="fxr-Bd-KTK" secondAttribute="top" constant="6" id="M1u-gN-6nS"/>
+                                            <constraint firstItem="wvd-37-nRU" firstAttribute="top" secondItem="fxr-Bd-KTK" secondAttribute="top" priority="750" constant="6" id="M1u-gN-6nS"/>
                                             <constraint firstAttribute="trailing" secondItem="ZXO-0g-NsT" secondAttribute="trailing" constant="20" id="TSq-0R-S7p"/>
                                             <constraint firstAttribute="centerY" secondItem="wvd-37-nRU" secondAttribute="centerY" id="inZ-WJ-Li6"/>
                                             <constraint firstItem="ZXO-0g-NsT" firstAttribute="centerY" secondItem="wvd-37-nRU" secondAttribute="centerY" id="sGf-Np-VYJ"/>

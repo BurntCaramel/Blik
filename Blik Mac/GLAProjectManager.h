@@ -132,6 +132,7 @@ extern NSString *GLAProjectCollectionsDidChangeNotification;
 extern NSString *GLAProjectHighlightsDidChangeNotification;
 
 // Object is notificationObjectForCollection: GLACollection
+extern NSString *GLACollectionWasDeletedNotification;
 extern NSString *GLACollectionDidChangeNotification;
 extern NSString *GLACollectionFilesListDidChangeNotification;
 

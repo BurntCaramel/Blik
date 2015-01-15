@@ -101,7 +101,6 @@
 	
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 	GLAProject *project = [pm projectWithUUID:projectUUID];
-	NSAssert(project != nil, @"Must be able to find project with UUID.");
 	
 	return project;
 }
@@ -116,12 +115,14 @@
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
-	// Project Collection List
-	[nc addObserver:self selector:@selector(filesListDidChangeNotification:) name:GLACollectionFilesListDidChangeNotification object:[pm notificationObjectForCollection:collection]];
+	id collectionNotifier = [pm notificationObjectForCollection:collection];
+	[nc addObserver:self selector:@selector(filesListDidChangeNotification:) name:GLACollectionFilesListDidChangeNotification object:collectionNotifier];
+	[nc addObserver:self selector:@selector(collectionWasDeleted:) name:GLACollectionWasDeletedNotification object:collectionNotifier];
 	
 	GLAProject *project = (self.project);
 	if (project) {
-		[nc addObserver:self selector:@selector(highlightedItemsDidChangeNotification:) name:GLAProjectHighlightsDidChangeNotification object:[pm notificationObjectForProject:project]];
+		id projectNotifier = [pm notificationObjectForProject:project];
+		[nc addObserver:self selector:@selector(highlightedItemsDidChangeNotification:) name:GLAProjectHighlightsDidChangeNotification object:projectNotifier];
 	}
 }
 
@@ -202,6 +203,13 @@
 
 - (void)filesListDidChangeNotification:(NSNotification *)note
 {
+	[self reloadSourceFiles];
+}
+
+- (void)collectionWasDeleted:(NSNotification *)note
+{
+	(self.filesListCollection) = nil;
+	
 	[self reloadSourceFiles];
 }
 

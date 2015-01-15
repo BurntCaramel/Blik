@@ -241,7 +241,9 @@
 	[self setOpenerApplicationURLs:applicationURLs forFileURL:URL];
 	
 	NSURL *defaultApplicationURL = [fileInfoRetriever defaultApplicationURLToOpenURL:URL];
-	[self setDefaultOpenerApplicationURL:defaultApplicationURL forFileURL:URL];
+	if (defaultApplicationURL) {
+		[self setDefaultOpenerApplicationURL:defaultApplicationURL forFileURL:URL];
+	}
 	
 	if ([self hasFileURL:URL]) {
 		[self combineOpenerApplicationURLsForFileURL:URL loadIfNeeded:NO];

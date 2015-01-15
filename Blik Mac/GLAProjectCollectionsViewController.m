@@ -386,7 +386,12 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 		return;
 	}
 	
-	GLACollection *collection = (self.collections)[clickedRow];
+	NSArray *collections = (self.collections);
+	if (clickedRow >= (collections.count)) {
+		return;
+	}
+	
+	GLACollection *collection = collections[clickedRow];
 	
 	if (self.editing) {
 		[self chooseColorForCollection:collection atRow:clickedRow];
@@ -494,12 +499,15 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	if ([pboard availableTypeFromArray:@[(__bridge NSString *)kUTTypeFileURL]] != nil) {
 		NSArray *fileURLs = [pboard readObjectsForClasses:@[ [NSURL class] ] options:@{ NSPasteboardURLReadingFileURLsOnlyKey: @(YES) }];
 		if (fileURLs) {
+			NSArray *collections = (self.collections);
+			
 			if (dropOperation == NSTableViewDropAbove) {
+				row = MIN((collections.count), row);
 				[self showAddCollectedFilesChoiceForFileURLs:fileURLs withIndexOfNewCollectionInList:row];
 			}
 			else if (dropOperation == NSTableViewDropOn) {
 				GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-				GLACollection *collection = (self.collections)[row];
+				GLACollection *collection = collections[row];
 				NSArray *collectedFiles = [GLACollectedFile collectedFilesWithFileURLs:fileURLs];
 				[pm editFilesListOfCollection:collection addingCollectedFiles:collectedFiles queueIfNeedsLoading:YES];
 			}
