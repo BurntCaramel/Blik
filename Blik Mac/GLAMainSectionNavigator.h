@@ -33,6 +33,7 @@
 - (void)goToNowProject;
 
 - (void)goToProject:(GLAProject *)project;
+- (void)editPrimaryFoldersOfProject:(GLAProject *)project;
 
 - (void)addNewProject;
 

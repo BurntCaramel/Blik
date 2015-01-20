@@ -59,6 +59,23 @@
 	return collectedFiles;
 }
 
++ (NSArray *)filePathsURLsForCollectedFiles:(NSArray *)collectedFiles ignoreMissing:(BOOL)ignoreMissing
+{
+	NSMutableArray *URLs = [NSMutableArray new];
+	for (GLACollectedFile *collectedFile in collectedFiles) {
+		if (ignoreMissing && (collectedFile.isMissing)) {
+			continue;
+		}
+		
+		NSURL *filePathURL = (collectedFile.filePathURL);
+		if (filePathURL) {
+			[URLs addObject:filePathURL];
+		}
+	}
+	
+	return URLs;
+}
+
 #pragma mark -
 
 - (NSURL *)filePathURL
@@ -200,18 +217,18 @@
 {
 	NSURL *URL = (self.filePathURL);
 	BOOL wasCreatedFromBookmarkData = (self.wasCreatedFromBookmarkData);
+	//wasCreatedFromBookmarkData = YES;
 	
-	if (wasCreatedFromBookmarkData) {
-		BOOL canAccess = [URL startAccessingSecurityScopedResource];
-		if (!canAccess) {
-			*outError = [GLAModelErrors errorForCannotAccessSecurityScopedURL:URL];
-			return nil;
-		}
+	BOOL canAccess = [URL startAccessingSecurityScopedResource];
+	if (!canAccess) {
+		*outError = [GLAModelErrors errorForCannotAccessSecurityScopedURL:URL];
+		//return nil;
 	}
+	
 	NSArray *resourceValueKeys = [[self class] coreResourceValueKeys];
 	NSData *bookmarkData = [URL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys:resourceValueKeys relativeToURL:nil error:outError];
 	
-	if (wasCreatedFromBookmarkData) {
+	if (canAccess) {
 		[URL stopAccessingSecurityScopedResource];
 	}
 	
@@ -304,6 +321,7 @@
 #if DEBUG
 		NSLog(@"IS STALE %@", URL);
 #endif
+		BOOL canAccess = [URL startAccessingSecurityScopedResource];
 		NSArray *resourceValues = [[self class] coreResourceValueKeys];
 		bookmarkData = [URL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys:resourceValues relativeToURL:nil error:&error];
 		if (!bookmarkData) {
@@ -323,6 +341,9 @@
 				*outError = error;
 				return NO;
 			}
+		}
+		if (canAccess) {
+			[URL stopAccessingSecurityScopedResource];
 		}
 		
 		*ioBookmarkData = bookmarkData;

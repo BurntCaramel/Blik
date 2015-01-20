@@ -182,11 +182,8 @@
 	if (filesListCollection) {
 		GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 		
+		[pm loadFilesListForCollectionIfNeeded:filesListCollection];
 		NSArray *collectedFiles = [pm copyFilesListForCollection:filesListCollection];
-		if (!collectedFiles) {
-			[pm loadFilesListForCollectionIfNeeded:filesListCollection];
-			collectedFiles = @[];
-		}
 		
 		(self.collectedFiles) = collectedFiles;
 	}
@@ -334,6 +331,9 @@
 	
 	NSMutableArray *URLs = [NSMutableArray new];
 	for (GLACollectedFile *collectedFile in collectedFiles) {
+		if (collectedFile.isMissing) {
+			continue;
+		}
 		NSURL *fileURL = (collectedFile.filePathURL);
 		if (fileURL) {
 			[URLs addObject:fileURL];
@@ -600,7 +600,7 @@
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 	GLACollection *filesListCollection = (self.filesListCollection);
 	
-	[pm editFilesListOfCollection:filesListCollection insertingCollectedFiles:collectedFiles atIndex:index];
+	[pm editFilesListOfCollection:filesListCollection insertingCollectedFiles:collectedFiles atOptionalIndex:index];
 }
 
 - (void)addFileURLs:(NSArray *)fileURLs
@@ -949,7 +949,8 @@
 	NSImage *iconImage = nil;
 	
 	if (collectedFile.isMissing) {
-		displayName = NSLocalizedString(@"Missing", @"Displayed name when a collected file is missing");
+		displayName = NSLocalizedString(@"Missing %@", @"Displayed name when a collected file is missing");
+		//displayName = [NSString localizedStringWithFormat:NSLocalizedString(@"Missing %@", @"Displayed name when a collected file is missing"), (collectedFile.name)];
 	}
 	else {
 		GLAFileInfoRetriever *fileInfoRetriever = (self.fileInfoRetriever);
@@ -972,12 +973,7 @@
 	
 	return cellView;
 }
-/*
-- (NSIndexSet *)tableView:(NSTableView *)tableView selectionIndexesForProposedSelection:(NSIndexSet *)proposedSelectionIndexes
-{
-	return proposedSelectionIndexes;
-}
-*/
+
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
 	[self updateSelectedURLs];

@@ -112,7 +112,7 @@
                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="180" id="Swz-bH-KE4"/>
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="st1-uY-7GX"/>
                                     </constraints>
-                                    <buttonCell key="cell" type="square" title="Choose File Or Folder" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Sit-FH-MdQ" customClass="GLAButtonCell">
+                                    <buttonCell key="cell" type="square" title="Add File Or Folder" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Sit-FH-MdQ" customClass="GLAButtonCell">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" size="13" name="AvenirNext-Medium"/>
                                     </buttonCell>

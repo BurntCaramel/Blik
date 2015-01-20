@@ -288,32 +288,42 @@
 
 - (IBAction)workOnEditedProjectNow:(id)sender
 {
-	if ([self canWorkOnEditedProjectNow]) {
-		GLAMainSection *currentSection = (self.currentSection);
-		if ([currentSection isKindOfClass:[GLAEditProjectSection class]]) {
-			GLAEditProjectSection *editProjectSection = (id)currentSection;
-			GLAProject *project = (editProjectSection.project);
-			NSAssert(project != nil, @"Must have a project to be able to work on it.");
-			
-			[self workOnProjectNow:project];
-		}
+	if (!(self.canWorkOnEditedProjectNow)) {
+		return;
 	}
+	
+	GLAMainSection *currentSection = (self.currentSection);
+	if ([currentSection isKindOfClass:[GLAEditProjectSection class]]) {
+		GLAEditProjectSection *editProjectSection = (id)currentSection;
+		GLAProject *project = (editProjectSection.project);
+		NSAssert(project != nil, @"Must have a project to be able to work on it.");
+		
+		[self workOnProjectNow:project];
+	}
+}
+
+- (BOOL)canEditPrimaryFoldersOfViewedProject
+{
+	GLAMainSection *currentSection = (self.currentSection);
+	return ((currentSection.isEditProject) || (currentSection.isNowAndHasProject));
+}
+
+- (IBAction)editPrimaryFoldersOfViewedProject:(id)sender
+{
+	if (!(self.canEditPrimaryFoldersOfViewedProject)) {
+		return;
+	}
+	
+	GLAEditProjectSection *editProjectSection = (id)(self.currentSection);
+	GLAProject *project = (editProjectSection.project);
+	
+	[(self.mainSectionNavigator) editPrimaryFoldersOfProject:project];
 }
 
 - (BOOL)canDeleteViewedProject
 {
 	GLAMainSection *currentSection = (self.currentSection);
-	
-	if (currentSection.isEditProject) {
-		return YES;
-	}
-	
-	if (currentSection.isNow) {
-		GLAEditProjectSection *editProjectSection = (id)currentSection;
-		return (editProjectSection.project) != nil;
-	}
-	
-	return NO;
+	return ((currentSection.isEditProject) || (currentSection.isNowAndHasProject));
 }
 
 - (IBAction)deleteViewedProject:(id)sender
@@ -338,6 +348,9 @@
 	SEL action = (anItem.action);
 	if (sel_isEqual(@selector(workOnEditedProjectNow:), action)) {
 		return [self canWorkOnEditedProjectNow];
+	}
+	else if (sel_isEqual(@selector(editPrimaryFoldersOfViewedProject:), action)) {
+		return [self canEditPrimaryFoldersOfViewedProject];
 	}
 	else if (sel_isEqual(@selector(deleteViewedProject:), action)) {
 		return [self canDeleteViewedProject];

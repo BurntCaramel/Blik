@@ -50,6 +50,13 @@
 @end
 
 
+@interface GLAEditProjectPrimaryFoldersSection : GLAEditProjectSection
+
++ (instancetype)editProjectPrimaryFoldersSectionWithProject:(GLAProject *)project previousSection:(GLAMainSection *)previousSection;
+
+@end
+
+
 @interface GLAEditCollectionSection : GLAMainSection
 
 // Designated init:
@@ -82,9 +89,13 @@
 
 - (BOOL)isAllProjects;
 - (BOOL)isPlannedProjects;
+
 - (BOOL)isNow;
+- (BOOL)isNowAndHasProject;
 
 - (BOOL)isEditProject;
+- (BOOL)isEditProjectPrimaryFolders;
+
 - (BOOL)isEditCollection;
 
 - (BOOL)isAddNewProject;
@@ -98,6 +109,7 @@ extern NSString *GLAMainContentSectionBaseIdentifierPlannedProjects;
 extern NSString *GLAMainContentSectionBaseIdentifierNow;
 
 extern NSString *GLAMainContentSectionBaseIdentifierEditProject;
+extern NSString *GLAMainContentSectionBaseIdentifierEditProjectPrimaryFolders;
 extern NSString *GLAMainContentSectionBaseIdentifierEditCollection;
 
 extern NSString *GLAMainContentSectionBaseIdentifierAddNewProject;

@@ -472,6 +472,10 @@
                                             <outlet property="textField" destination="lgO-Iy-LU1" id="rNx-Qn-FNK"/>
                                         </connections>
                                     </tableCellView>
+                                    <customView identifier="NSTableViewRowViewKey" id="Dln-AN-FVo" customClass="GLATableProjectRowView">
+                                        <rect key="frame" x="1" y="35" width="197" height="39"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    </customView>
                                 </prototypeCellViews>
                             </tableColumn>
                         </tableColumns>
@@ -496,13 +500,13 @@
             </scroller>
             <point key="canvasLocation" x="-296" y="611"/>
         </scrollView>
-        <scrollView identifier="width" verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="38" horizontalPageScroll="10" verticalLineScroll="38" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="Ycp-cg-NFY">
+        <scrollView identifier="width" verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="41" horizontalPageScroll="10" verticalLineScroll="41" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="Ycp-cg-NFY">
             <rect key="frame" x="0.0" y="0.0" width="290" height="174"/>
             <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="QRp-oz-4iV">
                 <rect key="frame" x="0.0" y="0.0" width="300" height="175"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="36" rowSizeStyle="automatic" viewBased="YES" id="dqI-ZC-qqF">
+                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="39" rowSizeStyle="automatic" viewBased="YES" id="dqI-ZC-qqF">
                         <autoresizingMask key="autoresizingMask"/>
                         <size key="intercellSpacing" width="3" height="2"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -566,6 +570,10 @@
                                             <outlet property="textField" destination="wvd-37-nRU" id="SAU-iG-6y0"/>
                                         </connections>
                                     </tableCellView>
+                                    <customView identifier="NSTableViewRowViewKey" id="bZu-r8-Vl6" customClass="GLATableProjectRowView">
+                                        <rect key="frame" x="1" y="39" width="287" height="39"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    </customView>
                                 </prototypeCellViews>
                             </tableColumn>
                         </tableColumns>

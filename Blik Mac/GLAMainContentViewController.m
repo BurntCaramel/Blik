@@ -211,7 +211,20 @@
 	
 	(self.editedProjectViewController) = controller;
 	
-	//[self fillViewWithChildView:(controller.view)];
+	[self addViewIfNeeded:(controller.view) layout:YES];
+}
+
+- (void)setUpEditProjectPrimaryFoldersViewControllerIfNeeded
+{
+	if (self.editProjectPrimaryFoldersViewController) {
+		return;
+	}
+	
+	GLAProjectEditPrimaryFoldersViewController *controller = [[GLAProjectEditPrimaryFoldersViewController alloc] initWithNibName:@"GLAProjectEditPrimaryFoldersViewController" bundle:nil];
+	(controller.view.identifier) = @"projectEditPrimaryFolders";
+	
+	(self.editProjectPrimaryFoldersViewController) = controller;
+	
 	[self addViewIfNeeded:(controller.view) layout:YES];
 }
 
@@ -336,6 +349,14 @@
 		(editedProjectViewController.project) = (editProjectSection.project);
 		[self setUpProjectViewController:editedProjectViewController];
 	}
+	else if (section.isEditProjectPrimaryFolders) {
+		[self setUpEditProjectPrimaryFoldersViewControllerIfNeeded];
+		
+		GLAEditProjectPrimaryFoldersSection *editProjectPrimaryFoldersSection = (GLAEditProjectPrimaryFoldersSection *)(section);
+		
+		GLAProjectEditPrimaryFoldersViewController *editProjectPrimaryFoldersViewController = (self.editProjectPrimaryFoldersViewController);
+		(editProjectPrimaryFoldersViewController.project) = (editProjectPrimaryFoldersSection.project);
+	}
 	else if (section.isEditCollection) {
 		GLAEditCollectionSection *editCollectionSection = (GLAEditCollectionSection *)section;
 		[self setUpEditedCollectionViewControllerForSection:editCollectionSection];
@@ -378,6 +399,9 @@
 	}
 	else if (section.isEditProject) {
 		return (self.editedProjectViewController);
+	}
+	else if (section.isEditProjectPrimaryFolders) {
+		return (self.editProjectPrimaryFoldersViewController);
 	}
 	else if (section.isEditCollection) {
 		return (self.activeCollectionViewController);

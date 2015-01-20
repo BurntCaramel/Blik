@@ -149,15 +149,15 @@
 	
 	GLAPendingAddedCollectedFilesInfo *pendingAddedCollectedFilesInfo = (self.pendingAddedCollectedFilesInfo);
 	if (pendingAddedCollectedFilesInfo) {
-		collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilesList color:color inProject:project indexInCollectionsList:(pendingAddedCollectedFilesInfo.indexOfNewCollectionInList)];
+		collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilesList color:color inProject:project insertingInCollectionsListAtIndex:(pendingAddedCollectedFilesInfo.indexOfNewCollectionInList)];
 		
 		NSArray *fileURLs = (pendingAddedCollectedFilesInfo.fileURLs);
 		NSArray *collectedFiles = [GLACollectedFile collectedFilesWithFileURLs:fileURLs];
 		
-		[projectManager editFilesListOfCollection:collection insertingCollectedFiles:collectedFiles atIndex:NSNotFound];
+		[projectManager editFilesListOfCollection:collection insertingCollectedFiles:collectedFiles atOptionalIndex:NSNotFound];
 	}
 	else {
-		collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilesList color:color inProject:project indexInCollectionsList:NSNotFound];
+		collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilesList color:color inProject:project insertingInCollectionsListAtIndex:NSNotFound];
 	}
 	(self.pendingAddedCollectedFilesInfo) = nil;
 	

@@ -13,4 +13,6 @@
 
 - (void)checkMouseLocationIsInside;
 
+@property(nonatomic) BOOL showsDividers;
+
 @end

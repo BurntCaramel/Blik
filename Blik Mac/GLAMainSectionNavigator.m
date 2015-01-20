@@ -112,6 +112,18 @@
 	[self goToSection:[GLAEditProjectSection editProjectSectionWithProject:project previousSection:previousSection]];
 }
 
+- (void)editPrimaryFoldersOfProject:(GLAProject *)project
+{
+	NSParameterAssert(project != nil);
+	
+	GLAMainSection *previousSection = (self.currentSection);
+	if (!((previousSection.isEditProject) || (previousSection.isNow))) {
+		previousSection = nil;
+	}
+	
+	[self goToSection:[GLAEditProjectPrimaryFoldersSection editProjectPrimaryFoldersSectionWithProject:project previousSection:previousSection]];
+}
+
 - (void)addNewProject
 {
 	GLAMainSection *previousSection = (self.currentSection);

@@ -19,15 +19,6 @@
 
 @implementation GLATableProjectRowView
 
-/*
-- (void)drawRect:(NSRect)dirtyRect
-{
-    [super drawRect:dirtyRect];
-    
-    // Drawing code here.
-}
- */
-
 - (void)dealloc
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -102,10 +93,12 @@
 		NSRectFillUsingOperation(dirtyRect, NSCompositeSourceOver);
 	}
 	
-	[(uiStyle.projectTableDividerColor) setFill];
-	CGRect dividerRect, dividerElseRect;
-	CGRectDivide((self.bounds), &dividerRect, &dividerElseRect, 0.5, CGRectMaxYEdge);
-	NSRectFillUsingOperation(dividerRect, NSCompositeSourceOver);
+	if (self.showsDividers) {
+		[(uiStyle.projectTableDividerColor) setFill];
+		CGRect dividerRect, dividerElseRect;
+		CGRectDivide((self.bounds), &dividerRect, &dividerElseRect, 0.5, CGRectMaxYEdge);
+		NSRectFillUsingOperation(dividerRect, NSCompositeSourceOver);
+	}
 }
 
 @end

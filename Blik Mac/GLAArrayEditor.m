@@ -63,6 +63,8 @@
 
 @property(nonatomic) GLAArrayEditorChanges *currentChanges;
 
+@property(nonatomic) NSMutableArray *objectsToAddOnceLoaded;
+
 - (void)notifyObserversArrayWasCreated;
 - (void)notifyObserversDidLoad;
 - (void)notifyObserversDidMakeChanges:(GLAArrayEditorChanges *)changes;
@@ -139,7 +141,17 @@
 	NSDictionary *info = (note.userInfo);
 	NSArray *loadedChildren = info[GLAArrayStoringDidLoadNotificationUserInfoLoadedChildren];
 	//TODO: decide whether this should be in a change block.
+	// Currently isn't as observers will get different notifications
+	// if this is called in change block.
 	[self addChildren:loadedChildren];
+	
+	NSMutableArray *objectsToAddOnceLoaded = (self.objectsToAddOnceLoaded);
+	if (objectsToAddOnceLoaded) {
+		[self changesMadeInBlock:^(id<GLAArrayEditing> arrayEditor) {
+			[arrayEditor addChildren:objectsToAddOnceLoaded];
+		}];
+		(self.objectsToAddOnceLoaded) = nil;
+	}
 	
 	[self notifyObserversDidLoad];
 }
@@ -288,6 +300,8 @@
 
 - (GLAArrayEditorChanges *)changesMadeInBlock:(GLAArrayEditingBlock)editorBlock
 {
+	NSAssert((self.needsLoadingFromStore) ? (self.finishedLoadingFromStore) : YES, @"Array editor must have finished loading to make changes.");
+	
 	GLAArrayEditorChanges *changes = [GLAArrayEditorChanges new];
 	(self.currentChanges) = changes;
 	
@@ -298,6 +312,24 @@
 	(self.currentChanges) = nil;
 	
 	return changes;
+}
+
+- (void)addChildren:(NSArray *)objects queueIfNeedsLoading:(BOOL)queue
+{
+	BOOL hasLoaded = (self.finishedLoadingFromStore);
+	if (hasLoaded) {
+		[self changesMadeInBlock:^(id<GLAArrayEditing> arrayEditor) {
+			[arrayEditor addChildren:objects];
+		}];
+	}
+	else {
+		NSMutableArray *objectsToAddOnceLoaded = (self.objectsToAddOnceLoaded);
+		if (!objectsToAddOnceLoaded) {
+			(self.objectsToAddOnceLoaded) = objectsToAddOnceLoaded = [NSMutableArray new];
+		}
+		
+		[objectsToAddOnceLoaded addObjectsFromArray:objects];
+	}
 }
 
 - (BOOL)needsLoadingFromStore

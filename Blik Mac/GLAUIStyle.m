@@ -39,6 +39,7 @@
 		NSColor *deleteRed = [NSColor colorWithCalibratedHue:0.059 saturation:1 brightness:0.983 alpha:1];
 		
 		NSColor *whiteAlmost30 = [whiteAlmost colorWithAlphaComponent:0.3];
+		//NSColor *whiteAlmost46 = [whiteAlmost colorWithAlphaComponent:0.46];
 		
 		
 		//(style.barBackgroundColor) = grayDark;
@@ -92,6 +93,7 @@
 		(style.contentTableSelectionColor) = whiteAlmost30;
 		
 		(style.splitViewDividerColor) = [whiteAlmost colorWithAlphaComponent:0.057];
+		(style.mainDividerColor) = [whiteAlmost colorWithAlphaComponent:0.46];
 		
 		
 		// Item colors

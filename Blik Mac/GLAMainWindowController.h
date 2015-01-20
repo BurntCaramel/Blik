@@ -63,7 +63,15 @@
 
 - (IBAction)goToAll:(id)sender;
 - (IBAction)goToNowProject:(id)sender;
+
+- (BOOL)canWorkOnEditedProjectNow;
 - (IBAction)workOnEditedProjectNow:(id)sender;
+
+- (BOOL)canEditPrimaryFoldersOfViewedProject;
+- (IBAction)editPrimaryFoldersOfViewedProject:(id)sender;
+
+- (BOOL)canDeleteViewedProject;
+- (IBAction)deleteViewedProject:(id)sender;
 
 - (IBAction)addNewProject:(id)sender;
 

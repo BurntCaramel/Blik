@@ -35,6 +35,11 @@
 	return self;
 }
 
+- (void)dealloc
+{
+	[self stopUsingURLsForAllCollectedFiles];
+}
+
 #pragma mark -
 
 - (void)startAccessingSecurityScopedFileURL:(NSURL *)URL

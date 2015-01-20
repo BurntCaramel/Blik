@@ -89,17 +89,23 @@ DQ
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="YWM-TE-tpN"/>
-                            <menuItem title="Create Copy of Files…" hidden="YES" keyEquivalent="b" id="8ks-1n-RD1">
+                            <menuItem title="Choose Project’s Primary Folders…" keyEquivalent="P" id="IXk-fU-xTp">
+                                <connections>
+                                    <action selector="editPrimaryFoldersOfViewedProject:" target="-1" id="jkh-NZ-qED"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" hidden="YES" id="yQi-bD-hRx"/>
+                            <menuItem title="Copy Files from Project…" hidden="YES" keyEquivalent="b" id="8ks-1n-RD1">
                                 <connections>
                                     <action selector="workOnActiveProjectNow:" target="-1" id="eCb-DV-M8d"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Create Zip Archive of Files…" hidden="YES" keyEquivalent="B" id="1xt-yh-0dZ">
+                            <menuItem title="Zip Files from Project…" hidden="YES" keyEquivalent="B" id="1xt-yh-0dZ">
                                 <connections>
                                     <action selector="workOnActiveProjectNow:" target="-1" id="aoY-7q-1RK"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" hidden="YES" id="7gd-3B-k1s"/>
+                            <menuItem isSeparatorItem="YES" id="7gd-3B-k1s"/>
                             <menuItem title="Delete Project Permanently…" id="K4Z-7H-ScL">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

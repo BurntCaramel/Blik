@@ -53,6 +53,14 @@
 
 - (void)changeNowProject:(GLAProject *)project;
 
+#pragma mark Project Primary Folders
+
+- (BOOL)hasLoadedPrimaryFoldersForProject:(GLAProject *)project;
+- (void)loadPrimaryFoldersForProjectIfNeeded:(GLAProject *)project;
+- (NSArray /* GLACollectedFile */ *)copyPrimaryFoldersForProject:(GLAProject *)project;
+
+- (BOOL)editPrimaryFoldersOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectedFoldersListEditor))block;
+
 #pragma mark Collections
 
 - (BOOL)hasLoadedCollectionsForProject:(GLAProject *)project;
@@ -61,7 +69,7 @@
 
 - (BOOL)editCollectionsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionListEditor))block;
 
-- (GLACollection *)createNewCollectionWithName:(NSString *)name type:(NSString *)type color:(GLACollectionColor *)color inProject:(GLAProject *)project indexInCollectionsList:(NSUInteger)indexInList;
+- (GLACollection *)createNewCollectionWithName:(NSString *)name type:(NSString *)type color:(GLACollectionColor *)color inProject:(GLAProject *)project insertingInCollectionsListAtIndex:(NSUInteger)indexInList;
 
 - (GLACollection *)editCollection:(GLACollection *)collection inProject:(GLAProject *)project usingBlock:(void(^)(id<GLACollectionEditing>collectionEditor))editBlock;
 
@@ -93,7 +101,7 @@
 - (GLACollectedFile *)collectedFileWithUUID:(NSUUID *)collectionUUID insideCollection:(GLACollection *)filesListCollection;
 
 - (BOOL)editFilesListOfCollection:(GLACollection *)filesListCollection usingBlock:(void (^)(id<GLAArrayEditing> filesListEditor))block;
-- (void)editFilesListOfCollection:(GLACollection *)filesListCollection insertingCollectedFiles:(NSArray *)collectedFiles atIndex:(NSUInteger)index;
+- (void)editFilesListOfCollection:(GLACollection *)filesListCollection insertingCollectedFiles:(NSArray *)collectedFiles atOptionalIndex:(NSUInteger)index;
 
 - (void)editFilesListOfCollection:(GLACollection *)filesListCollection addingCollectedFiles:(NSArray *)collectedFiles queueIfNeedsLoading:(BOOL)queue;
 
@@ -128,6 +136,7 @@ extern NSString *GLAProjectManagerNowProjectDidChangeNotification;
 // Object is notificationObjectForProject: GLAProject
 extern NSString *GLAProjectDidChangeNotification;
 extern NSString *GLAProjectWasDeletedNotification;
+extern NSString *GLAProjectPrimaryFoldersDidChangeNotification;
 extern NSString *GLAProjectCollectionsDidChangeNotification;
 extern NSString *GLAProjectHighlightsDidChangeNotification;
 

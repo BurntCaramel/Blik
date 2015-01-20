@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blik Mac/GLACollectedFile.m"
-            timestampString = "439990511.370776"
+            timestampString = "443343085.01111"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "278"
-            endingLineNumber = "278"
+            startingLineNumber = "295"
+            endingLineNumber = "295"
             landmarkName = "-validateBookmarkData:updateProperties:error:"
             landmarkType = "5">
          </BreakpointContent>

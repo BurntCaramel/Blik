@@ -13,9 +13,11 @@
 #import "GLAProjectViewController.h"
 #import "GLANoNowProjectViewController.h"
 #import "GLAEmptyAllProjectsViewController.h"
+#import "GLAProjectEditPrimaryFoldersViewController.h"
 #import "GLAAddNewProjectViewController.h"
 #import "GLAAddNewCollectionViewController.h"
 #import "GLAAddCollectedFilesChoiceActions.h"
+
 @class GLAProject;
 @protocol GLAMainContentViewControllerDelegate;
 
@@ -54,6 +56,8 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 
 @property(nonatomic) GLANoNowProjectViewController *blankNowProjectViewController;
 @property(nonatomic) BOOL isShowingBlankNowProject;
+
+@property(nonatomic) GLAProjectEditPrimaryFoldersViewController *editProjectPrimaryFoldersViewController;
 
 // Collection
 

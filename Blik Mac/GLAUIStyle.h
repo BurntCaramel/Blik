@@ -60,6 +60,7 @@
 @property(nonatomic) NSColor *contentTableSelectionColor;
 
 @property(nonatomic) NSColor *splitViewDividerColor;
+@property(nonatomic) NSColor *mainDividerColor;
 
 
 @property(nonatomic) NSColor *pastelLightBlueItemColor;

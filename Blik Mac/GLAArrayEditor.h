@@ -23,6 +23,7 @@
 
 // Use this method to notify observers and work with changes easily.
 - (GLAArrayEditorChanges *)changesMadeInBlock:(GLAArrayEditingBlock)editorBlock;
+- (void)addChildren:(NSArray *)objects queueIfNeedsLoading:(BOOL)queue;
 
 // Use this if a primary indexer was passed at initialization.
 - (id)objectForKeyedSubscript:(id <NSCopying>)key;

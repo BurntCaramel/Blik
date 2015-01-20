@@ -22,6 +22,7 @@
 - (instancetype)initWithFileURL:(NSURL *)fileURL;
 
 + (NSArray *)collectedFilesWithFileURLs:(NSArray *)fileURLs;
++ (NSArray *)filePathsURLsForCollectedFiles:(NSArray *)collectedFiles ignoreMissing:(BOOL)ignoreMissing;
 
 @property(readonly, nonatomic) NSURL *filePathURL;
 @property(readonly, nonatomic) NSURL *fileReferenceURL;

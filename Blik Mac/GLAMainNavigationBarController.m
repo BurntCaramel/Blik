@@ -160,6 +160,9 @@
 		else if (previousSection.isEditProject) {
 			[self hideButtonsForEditingExistingProject];
 		}
+		else if (previousSection.isEditProjectPrimaryFolders) {
+			[self hideButtonForEditingProjectPrimaryFolders];
+		}
 		else if (previousSection.isEditCollection) {
 			[self hideButtonsForCurrentCollection];
 		}
@@ -176,6 +179,9 @@
 	}
 	else if (newSection.isEditProject) {
 		[self showButtonsForEditingExistingProject];
+	}
+	else if (newSection.isEditProjectPrimaryFolders) {
+		[self showButtonForEditingProjectPrimaryFolders];
 	}
 	else if (newSection.isEditCollection) {
 		[self showButtonsForCurrentCollection];
@@ -379,6 +385,58 @@
 	}];
 }
 
+- (void)showButtonForEditingProjectPrimaryFolders
+{
+#if 0
+	NSString *backTitle = (self.titleForEditingProjectPrimaryFoldersBackButton);
+	GLAButton *backButton = [self addLeadingButtonWithTitle:backTitle action:@selector(exitEditPrimaryFoldersOfProject:) identifier:@"back-editingProjectPrimaryFolders"];
+	(self.editingProjectPrimaryFoldersBackButton) = backButton;
+	
+	NSLayoutConstraint *backLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:backButton];
+	
+	(self.animatingCounter)++;
+	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+		(context.duration) = 4.0 / 12.0;
+		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+		
+		// Back button
+		(backButton.alphaValue) = 0.0;
+		(backButton.animator.alphaValue) = 1.0;
+		// Constraint
+		(backLeadingConstraint.constant) = -250.0;
+		(backLeadingConstraint.animator.constant) = 0.0;
+	} completionHandler:^ {
+		(self.animatingCounter)--;
+	}];
+#endif
+
+	GLAEditProjectPrimaryFoldersSection *editProjectPrimaryFoldersSection = (id)(self.currentSection);
+	GLAProject *project = (editProjectPrimaryFoldersSection.project);
+	
+	
+	GLAMainNavigationButtonGroup *buttonGroup = [GLAMainNavigationButtonGroup buttonGroupWithBarController:self];
+	
+	NSString *backTitle = (self.titleForEditingProjectPrimaryFoldersBackButton);
+	[buttonGroup makeLeadingButtonWithTitle:backTitle action:@selector(exitEditPrimaryFoldersOfProject:) identifier:@"back-editingProjectPrimaryFolders"];
+	
+	NSString *title = [NSString localizedStringWithFormat:NSLocalizedString(@"Project ‘%@’", @"String format for projec title when editing primary folders."), (project.name)];
+	GLAButton *titleButton = [buttonGroup makeCenterButtonWithTitle:title action:nil identifier:@"projectTitle-editingProjectPrimaryFolders"];
+	(titleButton.hasSecondaryStyle) = NO;
+	
+	(buttonGroup.leadingButtonInDuration) = 3.0 / 12.0;
+	(buttonGroup.centerButtonInDuration) = 2.7 / 12.0;
+	[buttonGroup animateButtonsIn];
+
+	(self.editingProjectPrimaryFoldersButtonGroup) = buttonGroup;
+}
+
+- (void)hideButtonForEditingProjectPrimaryFolders
+{
+	[(self.editingProjectPrimaryFoldersButtonGroup) animateButtonsOutWithCompletionHandler:^{
+		(self.editingProjectPrimaryFoldersButtonGroup) = nil;
+	}];
+}
+
 - (void)showButtonsForAddingNewProject
 {
 	GLAMainNavigationButtonGroup *buttonGroup = [GLAMainNavigationButtonGroup buttonGroupWithBarController:self];
@@ -481,19 +539,31 @@
 - (NSString *)titleForEditingProjectBackButton
 {
 	GLAMainSection *currentSection = (self.currentSection);
+	GLAMainSection *previousSection = (currentSection.previousSection);
 	
-	if (currentSection.isAllProjects) {
+	if (previousSection.isAllProjects) {
 		return NSLocalizedString(@"Back to All Projects", @"Title for editing project back button to all projects");
-	}
-	else if (currentSection.isPlannedProjects) {
-		return NSLocalizedString(@"Back to Planned Projects", @"Title for editing project back button to planned projects");
 	}
 	else {
 		return NSLocalizedString(@"Back", @"Title for editing project back button");
 	}
 }
 
+- (NSString *)titleForEditingProjectPrimaryFoldersBackButton
+{
+	return NSLocalizedString(@"Done", @"Title for editing primary folders of project back button");
+}
+
 - (IBAction)exitEditedProject:(id)sender
+{
+	if (self.isAnimating) {
+		return;
+	}
+	
+	[(self.sectionNavigator) goToPreviousSection];
+}
+
+- (IBAction)exitEditPrimaryFoldersOfProject:(id)sender
 {
 	if (self.isAnimating) {
 		return;

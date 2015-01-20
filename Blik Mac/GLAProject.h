@@ -8,7 +8,7 @@
 
 #import "GLAModel.h"
 #import "GLACollection.h"
-#import "GLAReminder.h"
+#import "GLACollectedFile.h"
 #import "GLAArrayEditing.h"
 
 
@@ -25,7 +25,6 @@
 - (instancetype)initWithName:(NSString *)name dateCreated:(NSDate *)dateCreated;
 
 @property(readonly, nonatomic) NSDate *dateCreated;
-
 @property(readonly, copy, nonatomic) NSString *name;
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAProjectEditing> editor))editingBlock;

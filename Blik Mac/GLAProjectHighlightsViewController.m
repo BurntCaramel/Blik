@@ -123,8 +123,12 @@
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
+	id projectNotifier = [pm notificationObjectForProject:project];
+	
 	// Project Collection List
-	[nc addObserver:self selector:@selector(projectHighlightsDidChangeNotification:) name:GLAProjectHighlightsDidChangeNotification object:[pm notificationObjectForProject:project]];
+	[nc addObserver:self selector:@selector(projectHighlightsDidChangeNotification:) name:GLAProjectHighlightsDidChangeNotification object:projectNotifier];
+	
+	[nc addObserver:self selector:@selector(projectPrimaryFoldersDidChangeNotification:) name:GLAProjectPrimaryFoldersDidChangeNotification object:projectNotifier];
 }
 
 - (void)stopProjectObserving
@@ -211,8 +215,15 @@
 	}
 	
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	BOOL hasLoadedPrimaryFolders = [projectManager hasLoadedPrimaryFoldersForProject:project];
 	
-	NSArray *highlightedItems = [projectManager copyHighlightsForProject:project];
+	NSArray *highlightedItems = nil;
+	if (hasLoadedPrimaryFolders) {
+		highlightedItems = [projectManager copyHighlightsForProject:project];
+	}
+	else {
+		[projectManager loadPrimaryFoldersForProjectIfNeeded:project];
+	}
 	
 	if (!highlightedItems) {
 		highlightedItems = @[];
@@ -235,6 +246,11 @@
 }
 
 - (void)projectHighlightsDidChangeNotification:(NSNotification *)note
+{
+	[self reloadHighlightedItems];
+}
+
+- (void)projectPrimaryFoldersDidChangeNotification:(NSNotification *)note
 {
 	[self reloadHighlightedItems];
 }

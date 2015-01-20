@@ -105,6 +105,9 @@
                                             <customView identifier="NSTableViewRowViewKey" id="scR-OX-ZYE" customClass="GLATableProjectRowView">
                                                 <rect key="frame" x="1" y="72" width="497" height="39"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showsDividers" value="YES"/>
+                                                </userDefinedRuntimeAttributes>
                                             </customView>
                                         </prototypeCellViews>
                                     </tableColumn>

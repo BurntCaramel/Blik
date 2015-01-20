@@ -178,11 +178,11 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	}
 	(self.collections) = collections;
 	
+	[(self.tableView) reloadData];
+	
 	if ((collections.count) > 0) {
 		[self showTable];
 		[self hideInstructions];
-		
-		[(self.tableView) reloadData];
 	}
 	else {
 		[self showInstructions];

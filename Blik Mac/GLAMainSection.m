@@ -101,6 +101,19 @@
 @end
 
 
+@implementation GLAEditProjectPrimaryFoldersSection
+
++ (instancetype)editProjectPrimaryFoldersSectionWithProject:(GLAProject *)project previousSection:(GLAMainSection *)previousSection
+{
+	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierEditProjectPrimaryFolders previousSection:previousSection project:project isNow:NO];
+}
+
+@end
+
+
+#pragma mark -
+
+
 @implementation GLAEditCollectionSection
 
 - (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainSection *)previousSection collection:(GLACollection *)collection
@@ -186,9 +199,24 @@
 	return [self hasBaseIdentifier:GLAMainContentSectionBaseIdentifierNow];
 }
 
+- (BOOL)isNowAndHasProject
+{
+	if (!(self.isNow)) {
+		return NO;
+	}
+	
+	GLAEditProjectSection *editProjectSection = (id)(self);
+	return (editProjectSection.project) != nil;
+}
+
 - (BOOL)isEditProject
 {
 	return [self hasBaseIdentifier:GLAMainContentSectionBaseIdentifierEditProject];
+}
+
+- (BOOL)isEditProjectPrimaryFolders
+{
+	return [self hasBaseIdentifier:GLAMainContentSectionBaseIdentifierEditProjectPrimaryFolders];
 }
 
 - (BOOL)isEditCollection
@@ -214,6 +242,7 @@ NSString *GLAMainContentSectionBaseIdentifierPlannedProjects = @"plannedProjects
 NSString *GLAMainContentSectionBaseIdentifierNow = @"now";
 
 NSString *GLAMainContentSectionBaseIdentifierEditProject = @"editProject";
+NSString *GLAMainContentSectionBaseIdentifierEditProjectPrimaryFolders = @"editProject.primaryFolders";
 NSString *GLAMainContentSectionBaseIdentifierEditCollection = @"editCollection";
 
 NSString *GLAMainContentSectionBaseIdentifierAddNewProject = @"addNewProject";
