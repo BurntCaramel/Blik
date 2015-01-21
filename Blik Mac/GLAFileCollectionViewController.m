@@ -212,7 +212,7 @@
 
 - (void)highlightedItemsDidChangeNotification:(NSNotification *)note
 {
-	[self addAnyPendingHighlightedItems];
+	[self updateAddToHighlightsUI];
 }
 
 - (void)stopObservingPreviewFrameChanges
@@ -348,7 +348,7 @@
 	return [self URLsForRowIndexes:[self rowIndexesForActionFrom:nil]];
 }
 
-#pragma mark -
+#pragma mark - UI Updating
 
 - (void)updateQuickLookPreviewAnimating:(BOOL)animate
 {
@@ -452,30 +452,84 @@
 	}
 }
 
-- (void)updateAddToHighlightsUI
+- (BOOL)collectedFilesAreAllHighlightedForActionFrom:(id)sender
 {
-	GLAButton *addToHighlightsButton = (self.addToHighlightsButton);
-	
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 	NSArray *selectedCollectedFiles = [(self.collectedFiles) objectsAtIndexes:[self rowIndexesForActionFrom:nil]];
-	BOOL selectionIsAllHighlighted = NO;
+	BOOL isAllHighlighted = NO;
 	
 	if ((selectedCollectedFiles.count) > 0) {
 		NSArray *collectedFilesNotHighlighted = [pm filterCollectedFiles:selectedCollectedFiles notInHighlightsOfProject:(self.project)];
-		selectionIsAllHighlighted = (collectedFilesNotHighlighted.count) == 0;
+		isAllHighlighted = (collectedFilesNotHighlighted.count) == 0;
 	}
+	
+	return isAllHighlighted;
+}
+
+- (BOOL)canDoHighlightActionsLoadingIfNeeded:(BOOL)load
+{
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProject *project = (self.project);
+	if (load) {
+		[pm loadHighlightsForProjectIfNeeded:project];
+	}
+	return [pm hasLoadedHighlightsForProject:project];
+}
+
+- (void)updateAddToHighlightsUI
+{
+	GLAButton *button = (self.addToHighlightsButton);
+	
+	BOOL canDoHighlightActions = [self canDoHighlightActionsLoadingIfNeeded:YES];
+	if (!canDoHighlightActions) {
+		(button.enabled) = NO;
+		(button.title) = NSLocalizedString(@"(Loading Highlights)", @"Title for 'Add to Highlights' button when the highlights is still loading.");
+		return;
+	}
+	
+	(button.enabled) = YES;
+	
+	BOOL selectionIsAllHighlighted = [self collectedFilesAreAllHighlightedForActionFrom:nil];
 	
 	// If all are already highlighted.
 	if (selectionIsAllHighlighted) {
-		(addToHighlightsButton.title) = NSLocalizedString(@"Highlighted", @"Title for 'Add to Highlights' button when the all of selected collected files are already in the highlights list.");
-		(addToHighlightsButton.hasSecondaryStyle) = NO;
-		(addToHighlightsButton.enabled) = NO;
+		(button.title) = NSLocalizedString(@"Remove from Highlights", @"Title for 'Remove from Highlights' button when the all of selected collected files are already in the highlights list.");
+		(button.action) = @selector(removeSelectedFilesFromHighlights:);
 	}
 	// If some or all are not highlighted.
 	else {
-		(addToHighlightsButton.title) = NSLocalizedString(@"Add to Highlights", @"Title for 'Add to Highlights' button when the some of selected collected files are not yet in the highlights list.");
-		(addToHighlightsButton.hasSecondaryStyle) = YES;
-		(addToHighlightsButton.enabled) = YES;
+		(button.title) = NSLocalizedString(@"Add to Highlights", @"Title for 'Add to Highlights' button when the some of selected collected files are not yet in the highlights list.");
+		(button.action) = @selector(addSelectedFilesToHighlights:);
+		//(button.hasSecondaryStyle) = YES;
+		//(button.enabled) = YES;
+	}
+}
+
+- (void)updateAddToHighlightsMenuItem
+{
+	NSMenuItem *menuItem = (self.addToHighlightsMenuItem);
+	
+	BOOL canDoHighlightActions = [self canDoHighlightActionsLoadingIfNeeded:YES];
+	if (!canDoHighlightActions) {
+		(menuItem.enabled) = NO;
+		(menuItem.title) = NSLocalizedString(@"(Loading Highlights)", @"Title for 'Add to Highlights' menu item when the highlights is still loading.");
+		(menuItem.action) = nil;
+		return;
+	}
+	
+	(menuItem.enabled) = YES;
+	
+	BOOL selectionIsAllHighlighted = [self collectedFilesAreAllHighlightedForActionFrom:menuItem];
+	
+	// If all are already highlighted.
+	if (selectionIsAllHighlighted) {
+		(menuItem.title) = NSLocalizedString(@"Remove from Highlights", @"Title for 'Remove from Highlights' menu item when the all of selected collected files are already in the highlights list.");
+		(menuItem.action) = @selector(removeSelectedFilesFromHighlights:);
+	}
+	// If some or all are not highlighted.
+	else {
+		(menuItem.title) = NSLocalizedString(@"Add to Highlights", @"Title for 'Add to Highlights' menu item when the some of selected collected files are not yet in the highlights list.");
+		(menuItem.action) = @selector(addSelectedFilesToHighlights:);
 	}
 }
 
@@ -687,10 +741,40 @@
 		[highlightedItems addObject:highlightedCollectedFile];
 	}
 	
-	[self addHighlightedItemsToHighlights:highlightedItems loadIfNeeded:YES];
+	[self addHighlightedItemsToHighlights:highlightedItems];
 }
 
-- (void)addHighlightedItemsToHighlights:(NSArray *)highlightedItems loadIfNeeded:(BOOL)load
+- (IBAction)removeSelectedFilesFromHighlights:(id)sender
+{
+	NSIndexSet *collectedFilesIndexes = [self rowIndexesForActionFrom:sender];
+	if ((collectedFilesIndexes.count) == 0) {
+		return;
+	}
+	
+	NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:collectedFilesIndexes];
+	NSSet *collectedFileUUIDs = [NSSet setWithArray:[collectedFiles valueForKey:@"UUID"]];
+	
+	void (^editingBlock)(id<GLAArrayEditing> highlightsEditor) = ^(id<GLAArrayEditing> highlightsEditor)
+	{
+		NSIndexSet *highlightedItemsIndexes = [highlightsEditor indexesOfChildrenWhoseResultFromVisitor:^id(GLAHighlightedItem *child) {
+			if ([child isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+				GLAHighlightedCollectedFile *highlightedCollectedFile = (id)child;
+				return (highlightedCollectedFile.collectedFileUUID);
+			}
+			else {
+				return nil;
+			}
+		} hasValueContainedInSet:collectedFileUUIDs];
+		
+		[highlightsEditor removeChildrenAtIndexes:highlightedItemsIndexes];
+	};
+	
+	GLAProject *project = (self.project);
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	[pm editHighlightsOfProject:project usingBlock:editingBlock];
+}
+
+- (void)addHighlightedItemsToHighlights:(NSArray *)highlightedItems
 {
 	void (^editingBlock)(id<GLAArrayEditing> highlightsEditor) = ^(id<GLAArrayEditing> highlightsEditor)
 	{
@@ -708,32 +792,10 @@
 	
 	GLAProject *project = (self.project);
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	[pm editHighlightsOfProject:project usingBlock:editingBlock];
 	
-	if ([pm hasLoadedHighlightsForProject:project]) {
-		[pm editHighlightsOfProject:project usingBlock:editingBlock];
-		
-		[self updateAddToHighlightsUI];
-	}
-	else if (load) {
-		[pm loadHighlightsForProjectIfNeeded:project];
-		
-		NSMutableArray *highlightedItemsToAddOnceLoaded = (self.highlightedItemsToAddOnceLoaded);
-		if (!highlightedItemsToAddOnceLoaded) {
-			(self.highlightedItemsToAddOnceLoaded) = highlightedItemsToAddOnceLoaded = [NSMutableArray new];
-		}
-		
-		[highlightedItemsToAddOnceLoaded addObjectsFromArray:highlightedItems];
-	}
-}
-
-- (void)addAnyPendingHighlightedItems
-{
-	NSMutableArray *highlightedItemsToAddOnceLoaded = (self.highlightedItemsToAddOnceLoaded);
-	
-	if (highlightedItemsToAddOnceLoaded) {
-		[self addHighlightedItemsToHighlights:highlightedItemsToAddOnceLoaded loadIfNeeded:NO];
-		(self.highlightedItemsToAddOnceLoaded) = nil;
-	}
+	// This is called by the change notification observer:
+	//[self updateAddToHighlightsUI];
 }
 
 #pragma mark Events
@@ -761,6 +823,15 @@
 	NSArray *applicationURLs = CFBridgingRelease(applicationURLs_cf);
 	NSLog(@"APPS: %@", applicationURLs);
 #endif
+}
+
+#pragma mark Menus
+
+- (void)menuNeedsUpdate:(NSMenu *)menu
+{
+	if (menu == (self.sourceFilesListContextualMenu)) {
+		[self updateAddToHighlightsMenuItem];
+	}
 }
 
 #pragma mark QuickLook
@@ -999,13 +1070,6 @@
 	if (self.doNotUpdateViews) {
 		return;
 	}
-}
-
-#pragma mark Menu Delegate
-
-- (void)menuNeedsUpdate:(NSMenu *)menu
-{
-	//[self updateOpenerApplicationsUIMenu];
 }
 
 #pragma mark Opener Application Combiner Notifications

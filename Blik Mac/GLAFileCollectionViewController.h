@@ -21,6 +21,7 @@
 
 @property(nonatomic) IBOutlet NSTableView *sourceFilesListTableView;
 @property(strong, nonatomic) IBOutlet NSMenu *sourceFilesListContextualMenu;
+@property(strong, nonatomic) IBOutlet NSMenuItem *addToHighlightsMenuItem;
 
 @property(strong, nonatomic) IBOutlet GLAPopUpButton *openerApplicationsPopUpButton;
 

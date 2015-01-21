@@ -8,6 +8,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="GLAFileCollectionViewController">
             <connections>
                 <outlet property="addToHighlightsButton" destination="wLr-wc-OZX" id="QCZ-1K-xSh"/>
+                <outlet property="addToHighlightsMenuItem" destination="beX-h3-nbY" id="GBj-fp-Dsu"/>
                 <outlet property="openerApplicationsPopUpButton" destination="CSY-mw-Wdy" id="ZHO-lL-OdE"/>
                 <outlet property="previewHolderView" destination="qn1-n0-gYl" id="lx5-hz-3W2"/>
                 <outlet property="sourceFilesListContextualMenu" destination="JOI-as-pHF" id="q63-4h-AMF"/>
@@ -285,6 +286,9 @@
                     </connections>
                 </menuItem>
             </items>
+            <connections>
+                <outlet property="delegate" destination="-2" id="6vG-Qb-hgz"/>
+            </connections>
             <point key="canvasLocation" x="643" y="688.5"/>
         </menu>
     </objects>

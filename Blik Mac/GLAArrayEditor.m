@@ -61,9 +61,9 @@
 
 @property(readonly, copy, nonatomic) NSArray *constrainers;
 
-@property(nonatomic) GLAArrayEditorChanges *currentChanges;
+@property(nonatomic) NSMutableArray *operationsToCallWhenLoaded;
 
-@property(nonatomic) NSMutableArray *objectsToAddOnceLoaded;
+@property(nonatomic) GLAArrayEditorChanges *currentChanges;
 
 - (void)notifyObserversArrayWasCreated;
 - (void)notifyObserversDidLoad;
@@ -88,8 +88,11 @@
 			_constrainers = [(options.constrainers) copy];
 			
 			id<GLAArrayStoring> store = _store = (options.store);
-			if (store) {
+			if (store && (store.loadState) != GLAArrayStoringLoadStateFinishedLoading) {
 				[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(storeDidLoadNotification:) name:GLAArrayStoringDidLoadNotification object:store];
+			}
+			else {
+				_readyForEditing = YES;
 			}
 		}
 		else {
@@ -105,55 +108,6 @@
 - (instancetype)init
 {
 	return [self initWithObjects:@[] options:nil];
-}
-
-#pragma mark Observers
-
-- (void)notifyObserversArrayWasCreated
-{
-	for (id<GLAArrayEditorObserving> observer in (self.observers)) {
-		if ([observer respondsToSelector:@selector(arrayEditorWasCreated:)]) {
-			[observer arrayEditorWasCreated:self];
-		}
-	}
-}
-
-- (void)notifyObserversDidLoad
-{
-	for (id<GLAArrayEditorObserving> observer in (self.observers)) {
-		if ([observer respondsToSelector:@selector(arrayEditorDidLoad:)]) {
-			[observer arrayEditorDidLoad:self];
-		}
-	}
-}
-
-- (void)notifyObserversDidMakeChanges:(GLAArrayEditorChanges *)changes
-{
-	for (id<GLAArrayEditorObserving> observer in (self.observers)) {
-		if ([observer respondsToSelector:@selector(arrayEditor:didMakeChanges:)]) {
-			[observer arrayEditor:self didMakeChanges:changes];
-		}
-	}
-}
-
-- (void)storeDidLoadNotification:(NSNotification *)note
-{
-	NSDictionary *info = (note.userInfo);
-	NSArray *loadedChildren = info[GLAArrayStoringDidLoadNotificationUserInfoLoadedChildren];
-	//TODO: decide whether this should be in a change block.
-	// Currently isn't as observers will get different notifications
-	// if this is called in change block.
-	[self addChildren:loadedChildren];
-	
-	NSMutableArray *objectsToAddOnceLoaded = (self.objectsToAddOnceLoaded);
-	if (objectsToAddOnceLoaded) {
-		[self changesMadeInBlock:^(id<GLAArrayEditing> arrayEditor) {
-			[arrayEditor addChildren:objectsToAddOnceLoaded];
-		}];
-		(self.objectsToAddOnceLoaded) = nil;
-	}
-	
-	[self notifyObserversDidLoad];
 }
 
 #pragma mark - <GLAArrayInspecting>
@@ -296,6 +250,60 @@
 	}
 }
 
+#pragma mark Observers
+
+- (void)notifyObserversArrayWasCreated
+{
+	for (id<GLAArrayEditorObserving> observer in (self.observers)) {
+		if ([observer respondsToSelector:@selector(arrayEditorWasCreated:)]) {
+			[observer arrayEditorWasCreated:self];
+		}
+	}
+}
+
+- (void)notifyObserversDidLoad
+{
+	for (id<GLAArrayEditorObserving> observer in (self.observers)) {
+		if ([observer respondsToSelector:@selector(arrayEditorDidLoad:)]) {
+			[observer arrayEditorDidLoad:self];
+		}
+	}
+}
+
+- (void)notifyObserversDidMakeChanges:(GLAArrayEditorChanges *)changes
+{
+	for (id<GLAArrayEditorObserving> observer in (self.observers)) {
+		if ([observer respondsToSelector:@selector(arrayEditor:didMakeChanges:)]) {
+			[observer arrayEditor:self didMakeChanges:changes];
+		}
+	}
+}
+
+- (void)storeDidLoadNotification:(NSNotification *)note
+{
+	NSDictionary *info = (note.userInfo);
+	NSArray *loadedChildren = info[GLAArrayStoringDidLoadNotificationUserInfoLoadedChildren];
+	//TODO: decide whether this should be in a change block.
+	// Currently isn't as observers will get different notifications
+	// if this is called in change block.
+	[self addChildren:loadedChildren];
+	
+	[self notifyObserversDidLoad];
+	
+	NSMutableArray *operationsToCallWhenLoaded = (self.operationsToCallWhenLoaded);
+	if (operationsToCallWhenLoaded) {
+		for (NSOperation *operation in operationsToCallWhenLoaded) {
+			[operation start];
+		}
+		
+		(self.operationsToCallWhenLoaded) = nil;
+	}
+	
+	_readyForEditing = YES;
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAArrayEditorWithStoreIsReadyForEditingNotification object:self];
+}
+
 #pragma mark -
 
 - (GLAArrayEditorChanges *)changesMadeInBlock:(GLAArrayEditingBlock)editorBlock
@@ -314,21 +322,31 @@
 	return changes;
 }
 
-- (void)addChildren:(NSArray *)objects queueIfNeedsLoading:(BOOL)queue
+- (NSOperation *)makeChangesInBlockOrQueueOperationIfNeedsLoading:(GLAArrayEditingBlock)editorBlock
 {
-	BOOL hasLoaded = (self.finishedLoadingFromStore);
-	if (hasLoaded) {
-		[self changesMadeInBlock:^(id<GLAArrayEditing> arrayEditor) {
-			[arrayEditor addChildren:objects];
-		}];
-	}
-	else {
-		NSMutableArray *objectsToAddOnceLoaded = (self.objectsToAddOnceLoaded);
-		if (!objectsToAddOnceLoaded) {
-			(self.objectsToAddOnceLoaded) = objectsToAddOnceLoaded = [NSMutableArray new];
+	if (self.needsLoadingFromStore) {
+		// Cannot use a queue as there is no way of guaranteeing of running
+		// it on the main queue, which edit blocks must do.
+		NSMutableArray *operationsToCallWhenLoaded = (self.operationsToCallWhenLoaded);
+		if (!operationsToCallWhenLoaded) {
+			(self.operationsToCallWhenLoaded) = operationsToCallWhenLoaded = [NSMutableArray new];
 		}
 		
-		[objectsToAddOnceLoaded addObjectsFromArray:objects];
+		__weak GLAArrayEditor *weakSelf = self;
+		NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+			__strong GLAArrayEditor *strongSelf = weakSelf;
+			if (strongSelf) {
+				(void)[strongSelf changesMadeInBlock:editorBlock];
+			}
+		}];
+		
+		[operationsToCallWhenLoaded addObject:operation];
+		
+		return operation;
+	}
+	else {
+		[self changesMadeInBlock:editorBlock];
+		return nil;
 	}
 }
 
@@ -483,6 +501,8 @@
 }
 
 @end
+
+NSString *GLAArrayEditorWithStoreIsReadyForEditingNotification = @"GLAArrayEditorWithStoreIsReadyForEditingNotification";
 
 
 #pragma mark -

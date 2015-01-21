@@ -13,7 +13,8 @@
 @class GLAArrayEditorOptions;
 @class GLAArrayEditorChanges;
 
-
+// Designed to be used from main queue,
+// with stores loading and saving in the background.
 @interface GLAArrayEditor : NSObject <GLAArrayInspecting>
 
 // Designated init
@@ -23,7 +24,7 @@
 
 // Use this method to notify observers and work with changes easily.
 - (GLAArrayEditorChanges *)changesMadeInBlock:(GLAArrayEditingBlock)editorBlock;
-- (void)addChildren:(NSArray *)objects queueIfNeedsLoading:(BOOL)queue;
+- (NSOperation *)makeChangesInBlockOrQueueOperationIfNeedsLoading:(GLAArrayEditingBlock)editorBlock;
 
 // Use this if a primary indexer was passed at initialization.
 - (id)objectForKeyedSubscript:(id <NSCopying>)key;
@@ -31,10 +32,13 @@
 @property(readonly, nonatomic) id<GLAArrayStoring> store;
 @property(readonly, nonatomic) BOOL needsLoadingFromStore;
 @property(readonly, nonatomic) BOOL finishedLoadingFromStore;
+@property(readonly, getter = isReadyForEditing, nonatomic) BOOL readyForEditing;
 
 - (NSArray *)constrainPotentialChildren:(NSArray *)potentialChildren;
 
 @end
+
+extern NSString *GLAArrayEditorWithStoreIsReadyForEditingNotification;
 
 
 @interface GLAArrayEditorOptions : NSObject <NSCopying>
