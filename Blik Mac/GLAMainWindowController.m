@@ -169,20 +169,6 @@
 	(navigationBarView.layer.backgroundColor) = ([GLAUIStyle activeStyle].barBackgroundColor.CGColor);
 }
 
-#pragma mark Window Delegate
-
-- (void)windowDidBecomeKey:(NSNotification *)notification
-{
-	NSWindow *window = (self.window);
-	(window.alphaValue) = 32.0/32.0;
-}
-
-- (void)windowDidResignKey:(NSNotification *)notification
-{
-	NSWindow *window = (self.window);
-	(window.alphaValue) = 30.5/32.0;
-}
-
 #pragma mark Editing Projects
 
 - (GLAMainSection *)currentSection
@@ -378,6 +364,18 @@
 }
 
 #pragma mark Window Delegate
+
+- (void)windowDidBecomeMain:(NSNotification *)notification
+{
+	NSWindow *window = (self.window);
+	(window.alphaValue) = 32.0/32.0;
+}
+
+- (void)windowDidResignMain:(NSNotification *)notification
+{
+	NSWindow *window = (self.window);
+	(window.alphaValue) = 30.5/32.0;
+}
 
 #if 1
 - (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)client

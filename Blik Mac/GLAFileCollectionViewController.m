@@ -93,6 +93,13 @@
 	[self reloadSourceFiles];
 }
 
+- (BOOL)hasProject
+{
+	GLACollection *filesListCollection = (self.filesListCollection);
+	NSUUID *projectUUID = (filesListCollection.projectUUID);
+	return projectUUID != nil;
+}
+
 - (GLAProject *)project
 {
 	GLACollection *filesListCollection = (self.filesListCollection);
@@ -478,6 +485,10 @@
 
 - (void)updateAddToHighlightsUI
 {
+	if (! self.hasProject) {
+		return;
+	}
+	
 	GLAButton *button = (self.addToHighlightsButton);
 	
 	BOOL canDoHighlightActions = [self canDoHighlightActionsLoadingIfNeeded:YES];
@@ -500,13 +511,15 @@
 	else {
 		(button.title) = NSLocalizedString(@"Add to Highlights", @"Title for 'Add to Highlights' button when the some of selected collected files are not yet in the highlights list.");
 		(button.action) = @selector(addSelectedFilesToHighlights:);
-		//(button.hasSecondaryStyle) = YES;
-		//(button.enabled) = YES;
 	}
 }
 
 - (void)updateAddToHighlightsMenuItem
 {
+	if (! self.hasProject) {
+		return;
+	}
+	
 	NSMenuItem *menuItem = (self.addToHighlightsMenuItem);
 	
 	BOOL canDoHighlightActions = [self canDoHighlightActionsLoadingIfNeeded:YES];
