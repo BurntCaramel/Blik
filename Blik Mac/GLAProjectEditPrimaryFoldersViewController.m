@@ -43,7 +43,7 @@
 	NSScrollView *primaryFoldersScrollView = (self.primaryFoldersTableView.enclosingScrollView);
 	[(self.mainHolderViewController) fillViewWithChildView:primaryFoldersScrollView];
 	
-	(self.addFoldersButton.enabled) = NO;
+	[self reloadPrimaryFolders];
 }
 
 #pragma mark -
@@ -140,6 +140,10 @@
 	GLAProject *project = (self.project);
 	if (project) {
 		GLAProjectManager *pm = (self.projectManager);
+		
+		BOOL hasLoaded = [pm hasLoadedPrimaryFoldersForProject:project];
+		(self.addFoldersButton.enabled) = hasLoaded;
+		
 		[pm loadPrimaryFoldersForProjectIfNeeded:project];
 		collectedFolders = [pm copyPrimaryFoldersForProject:project];
 		
@@ -148,6 +152,8 @@
 	}
 	else {
 		collectedFolders = @[];
+		
+		(self.addFoldersButton.enabled) = NO;
 	}
 	
 	(self.collectedFolders) = collectedFolders;
@@ -184,12 +190,17 @@
 	
 	GLAProjectManager *pm = (self.projectManager);
 	[pm editPrimaryFoldersOfProject:project usingBlock:^(id<GLAArrayEditing> collectedFoldersListEditor) {
+		NSArray *filteredFolders = [GLACollectedFile filteredCollectedFiles:collectedFoldersToAdd notAlreadyPresentInArrayInspector:collectedFoldersListEditor];
+		if ((filteredFolders.count) == 0) {
+			return;
+		}
+		
 		if (index == NSNotFound) {
-			[collectedFoldersListEditor addChildren:collectedFoldersToAdd];
+			[collectedFoldersListEditor addChildren:filteredFolders];
 		}
 		else {
-			NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, (folderURLs.count))];
-			[collectedFoldersListEditor insertChildren:collectedFoldersToAdd atIndexes:indexes];
+			NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, (filteredFolders.count))];
+			[collectedFoldersListEditor insertChildren:filteredFolders atIndexes:indexes];
 		}
 	}];
 	

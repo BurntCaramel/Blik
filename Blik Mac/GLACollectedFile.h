@@ -8,6 +8,7 @@
 
 #import "GLAModel.h"
 #import "GLACollection.h"
+#import "GLAArrayEditing.h"
 
 /*
 @protocol GLACollectedFileInfoReading <NSObject>
@@ -23,6 +24,8 @@
 
 + (NSArray *)collectedFilesWithFileURLs:(NSArray *)fileURLs;
 + (NSArray *)filePathsURLsForCollectedFiles:(NSArray *)collectedFiles ignoreMissing:(BOOL)ignoreMissing;
+
++ (NSArray *)filteredCollectedFiles:(NSArray *)collectedFiles notAlreadyPresentInArrayInspector:(id<GLAArrayInspecting>)inspectableArray;
 
 @property(readonly, nonatomic) NSURL *filePathURL;
 @property(readonly, nonatomic) NSURL *fileReferenceURL;

@@ -76,6 +76,13 @@
 	return URLs;
 }
 
++ (NSArray *)filteredCollectedFiles:(NSArray *)collectedFiles notAlreadyPresentInArrayInspector:(id<GLAArrayInspecting>)inspectableArray
+{
+	return [inspectableArray filterArray:collectedFiles whoseResultFromVisitorIsNotAlreadyPresent:^id(GLACollectedFile *child) {
+		return (child.filePathURL.path);
+	}];
+}
+
 #pragma mark -
 
 - (NSURL *)filePathURL

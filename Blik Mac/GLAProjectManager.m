@@ -581,9 +581,10 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 - (void)editFilesListOfCollection:(GLACollection *)filesListCollection insertingCollectedFiles:(NSArray *)collectedFiles atOptionalIndex:(NSUInteger)index
 {
 	[self editFilesListOfCollection:filesListCollection usingBlock:^(id<GLAArrayEditing> filesListEditor) {
-		NSArray *filteredItems = [filesListEditor filterArray:collectedFiles whoseResultFromVisitorIsNotAlreadyPresent:^id(GLACollectedFile *child) {
-			return (child.filePathURL.path);
-		}];
+		NSArray *filteredItems = [GLACollectedFile filteredCollectedFiles:collectedFiles notAlreadyPresentInArrayInspector:filesListEditor];
+		if ((filteredItems.count) == 0) {
+			return;
+		}
 		
 		if (index == NSNotFound) {
 			[filesListEditor addChildren:filteredItems];
