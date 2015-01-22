@@ -511,7 +511,18 @@
 	NSString *cancelTitle = NSLocalizedString(@"Cancel", @"Title for cancel creating new collection button");
 	[buttonGroup makeLeadingButtonWithTitle:cancelTitle action:@selector(cancelAddingNewProject:) identifier:@"cancelAddNewProject"];
 	
-	NSString *title = NSLocalizedString(@"New Collection", @"Title label for creating new collection");
+	GLAAddNewCollectionSection *currentSection = (id)(self.currentSection);
+	BOOL hasPendingFiles = (currentSection.pendingAddedCollectedFilesInfo) != nil;
+	
+	NSString *title;
+	if (hasPendingFiles) {
+		//GLAPendingAddedCollectedFilesInfo *filesInfo = (currentSection.pendingAddedCollectedFilesInfo);
+		//NSUInteger fileCount = (filesInfo.fileURLs.count);
+		title = NSLocalizedString(@"New Collection with Files", @"Title label for creating new collection with pending files");
+	}
+	else {
+		title = NSLocalizedString(@"New Collection", @"Title label for creating new collection");
+	}
 	GLAButton *titleButton = [buttonGroup makeCenterButtonWithTitle:title action:nil identifier:@"confirmAddNewCollection"];
 	(titleButton.hasSecondaryStyle) = NO;
 	

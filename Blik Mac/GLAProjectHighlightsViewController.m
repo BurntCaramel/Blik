@@ -429,6 +429,9 @@
 			applicationURL = [workspace URLForApplicationToOpenURL:(collectedFile.filePathURL)];
 		}
 		
+#if DEBUG
+		NSLog(@"OPENING COLLECTED FILE %@", collectedFile);
+#endif
 		[self openCollectedFile:collectedFile withApplication:applicationURL];
 	}
 }

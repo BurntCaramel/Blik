@@ -8,6 +8,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="GLAAddCollectedFilesChoiceViewController">
             <connections>
                 <outlet property="addToNewCollectionButton" destination="KKE-49-EZ2" id="TtJ-SS-Esv"/>
+                <outlet property="mainLabel" destination="y87-2S-EG4" id="EpF-io-Kfp"/>
                 <outlet property="view" destination="EJs-ex-HqP" id="fKu-pc-mLD"/>
             </connections>
         </customObject>

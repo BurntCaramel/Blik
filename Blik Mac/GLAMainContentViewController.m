@@ -482,14 +482,6 @@
 	[(self.sectionNavigator) goToCollection:collection];
 }
 
-- (IBAction)addNewFilesListCollection:(id)sender
-{
-	GLAProjectViewController *activeProjectViewController = (self.activeProjectViewController);
-	if (activeProjectViewController) {
-		[activeProjectViewController addNewFilesListCollection:sender];
-	}
-}
-
 #pragma mark -
 
 #pragma mark Active/Inactive Project View Controller
@@ -660,7 +652,7 @@
 		}
 	}
 	else if (newSection.isEditProject) {
-		if ((outSection.isEditCollection) || (outSection.isAddNewCollection)) {
+		if ((outSection.isEditCollection) || (outSection.isAddNewCollection) || (outSection.isEditProjectPrimaryFolders)) {
 			outLeading = 500.0;
 			inLeading = -500.0;
 		}

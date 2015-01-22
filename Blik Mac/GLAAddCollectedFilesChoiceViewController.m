@@ -7,6 +7,7 @@
 //
 
 #import "GLAAddCollectedFilesChoiceViewController.h"
+#import "GLAUIStyle.h"
 
 
 @interface GLAAddCollectedFilesChoiceViewController ()
@@ -19,7 +20,8 @@
 {
     [super prepareView];
 	
-	
+	GLAUIStyle *style = [GLAUIStyle activeStyle];
+	[style prepareTextLabel:(self.mainLabel)];
 }
 
 - (IBAction)addToExistingCollection:(id)sender

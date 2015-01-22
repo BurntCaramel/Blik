@@ -37,7 +37,7 @@
 	NSScrollView *scrollView = [self enclosingScrollView];
 	if (scrollView) {
 		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-		[nc removeObserver:self name:nil object:scrollView];
+		[nc removeObserver:self name:NSScrollViewDidLiveScrollNotification object:nil];
 		[nc addObserver:self selector:@selector(scrollViewDidScroll:) name:NSScrollViewDidLiveScrollNotification object:scrollView];
 	}
 }

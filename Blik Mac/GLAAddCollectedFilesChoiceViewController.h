@@ -17,6 +17,8 @@
 @property(nonatomic) IBOutlet GLAButton *addToExistingCollectionButton;
 @property(nonatomic) IBOutlet GLAButton *addToNewCollectionButton;
 
+@property(nonatomic) IBOutlet NSTextField *mainLabel;
+
 @property(copy, nonatomic) GLAPendingAddedCollectedFilesInfo *info;
 
 - (IBAction)addToExistingCollection:(id)sender;
