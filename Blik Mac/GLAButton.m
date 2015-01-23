@@ -613,7 +613,9 @@
 	//[controlView setNeedsDisplayInRect:cellFrame];
 	//[controlView displayRect:cellFrame];
 	
+#if 0
 	[NSButton GLAStyledCell:self drawBezelWithFrame:cellFrame inView:controlView highlighted:flag];
+#endif
 }
 
 - (NSRect)drawTitle:(NSAttributedString *)title withFrame:(NSRect)frame inView:(NSView *)controlView
