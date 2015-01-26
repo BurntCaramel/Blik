@@ -64,6 +64,10 @@
 		B28927531A6B1F64007238D6 /* GLACollectedFileListHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927521A6B1F64007238D6 /* GLACollectedFileListHelper.m */; };
 		B28927571A6BA433007238D6 /* NSTableView+GLAActionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927561A6BA433007238D6 /* NSTableView+GLAActionHelpers.m */; };
 		B289275A1A6BDCDB007238D6 /* GLADividerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927591A6BDCDB007238D6 /* GLADividerView.m */; };
+		B28927611A72564E007238D6 /* GLAPluckedItems.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927601A72564E007238D6 /* GLAPluckedItems.m */; };
+		B28927641A7256A4007238D6 /* GLAPluckedCollectedFilesList.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927631A7256A4007238D6 /* GLAPluckedCollectedFilesList.m */; };
+		B28927671A725DF9007238D6 /* NSMutableDictionary+PGWSChecking.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927661A725DF9007238D6 /* NSMutableDictionary+PGWSChecking.m */; };
+		B289276A1A730F43007238D6 /* GLAPluckedCollectedFilesMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927691A730F43007238D6 /* GLAPluckedCollectedFilesMenuController.m */; };
 		B28D217F1977C24000A12C6D /* GLAToggleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B28D217E1977C24000A12C6D /* GLAToggleButton.m */; };
 		B28D21821977D6E600A12C6D /* GLATableProjectRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = B28D21811977D6E600A12C6D /* GLATableProjectRowView.m */; };
 		B292453519DB5BE100DD30CB /* GLACollectionColorPickerPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = B292453419DB5BE100DD30CB /* GLACollectionColorPickerPopover.m */; };
@@ -235,6 +239,14 @@
 		B28927561A6BA433007238D6 /* NSTableView+GLAActionHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTableView+GLAActionHelpers.m"; sourceTree = "<group>"; };
 		B28927581A6BDCDB007238D6 /* GLADividerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLADividerView.h; sourceTree = "<group>"; };
 		B28927591A6BDCDB007238D6 /* GLADividerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLADividerView.m; sourceTree = "<group>"; };
+		B289275F1A72564E007238D6 /* GLAPluckedItems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPluckedItems.h; sourceTree = "<group>"; };
+		B28927601A72564E007238D6 /* GLAPluckedItems.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPluckedItems.m; sourceTree = "<group>"; };
+		B28927621A7256A4007238D6 /* GLAPluckedCollectedFilesList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPluckedCollectedFilesList.h; sourceTree = "<group>"; };
+		B28927631A7256A4007238D6 /* GLAPluckedCollectedFilesList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPluckedCollectedFilesList.m; sourceTree = "<group>"; };
+		B28927651A725DF9007238D6 /* NSMutableDictionary+PGWSChecking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+PGWSChecking.h"; sourceTree = "<group>"; };
+		B28927661A725DF9007238D6 /* NSMutableDictionary+PGWSChecking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+PGWSChecking.m"; sourceTree = "<group>"; };
+		B28927681A730F43007238D6 /* GLAPluckedCollectedFilesMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPluckedCollectedFilesMenuController.h; sourceTree = "<group>"; };
+		B28927691A730F43007238D6 /* GLAPluckedCollectedFilesMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPluckedCollectedFilesMenuController.m; sourceTree = "<group>"; };
 		B28D217D1977C24000A12C6D /* GLAToggleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAToggleButton.h; sourceTree = "<group>"; };
 		B28D217E1977C24000A12C6D /* GLAToggleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAToggleButton.m; sourceTree = "<group>"; };
 		B28D21801977D6E600A12C6D /* GLATableProjectRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLATableProjectRowView.h; sourceTree = "<group>"; };
@@ -545,6 +557,19 @@
 			name = Helpers;
 			sourceTree = "<group>";
 		};
+		B289275E1A7255EA007238D6 /* Plucked Items */ = {
+			isa = PBXGroup;
+			children = (
+				B289275F1A72564E007238D6 /* GLAPluckedItems.h */,
+				B28927601A72564E007238D6 /* GLAPluckedItems.m */,
+				B28927621A7256A4007238D6 /* GLAPluckedCollectedFilesList.h */,
+				B28927631A7256A4007238D6 /* GLAPluckedCollectedFilesList.m */,
+				B28927681A730F43007238D6 /* GLAPluckedCollectedFilesMenuController.h */,
+				B28927691A730F43007238D6 /* GLAPluckedCollectedFilesMenuController.m */,
+			);
+			name = "Plucked Items";
+			sourceTree = "<group>";
+		};
 		B2ADDBC51963DA2E0014EF84 = {
 			isa = PBXGroup;
 			children = (
@@ -609,6 +634,7 @@
 				B24B3604196D1F4D0094FA1F /* Model */,
 				E240A3751A0EF3090043AE93 /* File Helpers */,
 				B2C5FD2E1988AB0A00AEFBAF /* Model Controllers */,
+				B289275E1A7255EA007238D6 /* Plucked Items */,
 				B2ADDBD81963DA2E0014EF84 /* Supporting Files */,
 			);
 			path = "Blik Mac";
@@ -754,6 +780,8 @@
 				B2BB85111A3BD86D00BF186C /* NSOperationQueue+PGWSBlockConvenience.m */,
 				B2BB85131A3BE97A00BF186C /* NSObject+PGWSDispatchBlockConvenience.h */,
 				B2BB85141A3BE97A00BF186C /* NSObject+PGWSDispatchBlockConvenience.m */,
+				B28927651A725DF9007238D6 /* NSMutableDictionary+PGWSChecking.h */,
+				B28927661A725DF9007238D6 /* NSMutableDictionary+PGWSChecking.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1068,6 +1096,7 @@
 				B260F85519ADC91A002E3753 /* GLAStatusItemController.m in Sources */,
 				B219DAA2196AB65D007900DF /* GLAMainWindowController.m in Sources */,
 				B2174F7C19BEDBDF00BAE041 /* GLAModelErrors.m in Sources */,
+				B289276A1A730F43007238D6 /* GLAPluckedCollectedFilesMenuController.m in Sources */,
 				B2BB85181A3F095B00BF186C /* GLAMainContentManners.m in Sources */,
 				B2C154401A00D7BB00912AB1 /* GLAModelUUIDMap.m in Sources */,
 				B2BB85121A3BD86D00BF186C /* NSOperationQueue+PGWSBlockConvenience.m in Sources */,
@@ -1083,6 +1112,7 @@
 				B219DAAE196ACE8D007900DF /* GLAProjectView.m in Sources */,
 				B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */,
 				B292453919E4058A00DD30CB /* GLANoNowProjectViewController.m in Sources */,
+				B28927671A725DF9007238D6 /* NSMutableDictionary+PGWSChecking.m in Sources */,
 				B2302ED81A554B7F00E6AFBA /* GLAArrayMantleJSONStore.m in Sources */,
 				B20362C81A0A3D2E007169C2 /* GLAProjectInstructionsViewController.m in Sources */,
 				B26B6F5019EBE3C800D17ECD /* GLATableView.m in Sources */,
@@ -1096,6 +1126,7 @@
 				B208E3F119F51551000EF97B /* GLAEditCollectionDetailsViewController.m in Sources */,
 				B2C7F29819739239005780B4 /* GLAViewController.m in Sources */,
 				B2711F3C1A69D41D001CB4AF /* GLAProjectEditPrimaryFoldersViewController.m in Sources */,
+				B28927611A72564E007238D6 /* GLAPluckedItems.m in Sources */,
 				B292453519DB5BE100DD30CB /* GLACollectionColorPickerPopover.m in Sources */,
 				B2F0DBCD1994C854001AB5EE /* GLATextField.m in Sources */,
 				B28927571A6BA433007238D6 /* NSTableView+GLAActionHelpers.m in Sources */,
@@ -1128,6 +1159,7 @@
 				B28927531A6B1F64007238D6 /* GLACollectedFileListHelper.m in Sources */,
 				B2ADDBE51963DA2E0014EF84 /* GLAAppDelegate.m in Sources */,
 				B268C2561990EACC000BF39B /* GLASplitView.m in Sources */,
+				B28927641A7256A4007238D6 /* GLAPluckedCollectedFilesList.m in Sources */,
 				B284D5621978EC1F00157126 /* GLACollection.m in Sources */,
 				B26659EF19A37C3C003C4EA4 /* NSColor+GLAExtras.m in Sources */,
 			);

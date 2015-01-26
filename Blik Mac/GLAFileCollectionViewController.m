@@ -15,6 +15,8 @@
 #import "GLACollectedFilesSetting.h"
 #import "GLAFileOpenerApplicationCombiner.h"
 #import "GLAArrayTableDraggingHelper.h"
+#import "GLAPluckedCollectedFilesMenuController.h"
+#import <objc/runtime.h>
 
 
 @interface GLAFileCollectionViewController () <GLAArrayTableDraggingHelperDelegate>
@@ -1090,6 +1092,79 @@
 - (void)openerApplicationCombinerDidChangeNotification:(NSNotification *)note
 {
 	[self updateOpenerApplicationsUIMenu];
+}
+
+#pragma mark Plucked Collected Files
+
+- (BOOL)canPluckSelection
+{
+	NSIndexSet *collectedFilesIndexes = [self rowIndexesForActionFrom:nil];
+	return ((collectedFilesIndexes.count) > 0);
+}
+
+- (IBAction)pluckSelection:(id)sender
+{
+	NSIndexSet *collectedFilesIndexes = [self rowIndexesForActionFrom:nil];
+	if ((collectedFilesIndexes.count) == 0) {
+		return;
+	}
+	NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:collectedFilesIndexes];
+	
+	GLAPluckedCollectedFilesMenuController *pluckedItemsMenuController = [GLAPluckedCollectedFilesMenuController sharedMenuController];
+	GLAPluckedCollectedFilesList *pluckedCollectedFilesList = (pluckedItemsMenuController.pluckedCollectedFilesList);
+	
+	[pluckedCollectedFilesList addCollectedFilesToPluckList:collectedFiles fromCollection:(self.filesListCollection)];
+}
+
+- (BOOL)canClearPluckedFilesList
+{
+	GLAPluckedCollectedFilesMenuController *pluckedItemsMenuController = [GLAPluckedCollectedFilesMenuController sharedMenuController];
+	GLAPluckedCollectedFilesList *pluckedCollectedFilesList = (pluckedItemsMenuController.pluckedCollectedFilesList);
+	
+	return (pluckedCollectedFilesList.hasPluckedCollectedFiles);
+}
+
+- (IBAction)clearPluckedFilesList:(id)sender
+{
+	GLAPluckedCollectedFilesMenuController *pluckedItemsMenuController = [GLAPluckedCollectedFilesMenuController sharedMenuController];
+	GLAPluckedCollectedFilesList *pluckedCollectedFilesList = (pluckedItemsMenuController.pluckedCollectedFilesList);
+	[pluckedCollectedFilesList clearPluckList];
+}
+
+- (BOOL)canPlacePluckedCollectedFiles
+{
+	GLAPluckedCollectedFilesMenuController *pluckedItemsMenuController = [GLAPluckedCollectedFilesMenuController sharedMenuController];
+	GLAPluckedCollectedFilesList *pluckedCollectedFilesList = (pluckedItemsMenuController.pluckedCollectedFilesList);
+	
+	return (pluckedCollectedFilesList.hasPluckedCollectedFiles);
+}
+
+- (IBAction)placePluckedCollectedFiles:(id)sender
+{
+	GLAPluckedCollectedFilesMenuController *pluckedItemsMenuController = [GLAPluckedCollectedFilesMenuController sharedMenuController];
+	
+	if ([sender isKindOfClass:[NSMenuItem class]]) {
+		NSMenuItem *menuItem = (id)sender;
+		[pluckedItemsMenuController placePluckedItemsWithMenuItem:menuItem intoCollection:(self.filesListCollection) project:(self.project)];
+	}
+}
+
+#pragma mark - NSValidatedUserInterfaceItem
+
+- (BOOL)validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)anItem
+{
+	SEL action = (anItem.action);
+	if (sel_isEqual(@selector(pluckSelection:), action)) {
+		return [self canPluckSelection];
+	}
+	else if (sel_isEqual(@selector(clearPluckedFilesList:), action)) {
+		return [self canClearPluckedFilesList];
+	}
+	else if (sel_isEqual(@selector(placePluckedCollectedFiles:), action)) {
+		return [self canPlacePluckedCollectedFiles];
+	}
+	
+	return YES;
 }
 
 @end

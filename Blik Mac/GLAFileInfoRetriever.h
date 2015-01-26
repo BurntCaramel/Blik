@@ -24,6 +24,16 @@
 - (NSDictionary *)loadedResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL requestIfNeeded:(BOOL)request;
 - (NSError *)lastErrorLoadingResourceValuesForURL:(NSURL *)URL;
 
+#pragma mark Convenience
+
+@property(nonatomic) NSArray *defaultResourceKeysToRequest;
+- (void)requestDefaultResourceKeysForURL:(NSURL *)URL;
+
+- (id)resourceValueForKey:(NSString *)key forURL:(NSURL *)URL;
+- (NSString *)localizedNameForURL:(NSURL *)URL;
+- (NSImage *)effectiveIconImageForURL:(NSURL *)URL;
+- (NSImage *)effectiveIconImageForURL:(NSURL *)URL withSizeDimension:(CGFloat)widthAndHeight;
+
 #pragma mark Applications
 
 - (void)requestApplicationURLsToOpenURL:(NSURL *)URL;
@@ -42,6 +52,8 @@
 @protocol GLAFileInfoRetrieverDelegate <NSObject>
 
 @optional
+
+// All methods called on main queue.
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didLoadResourceValuesForURL:(NSURL *)URL;
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didFailWithError:(NSError *)error loadingResourceValuesForURL:(NSURL *)URL;

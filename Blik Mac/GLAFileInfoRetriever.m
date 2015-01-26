@@ -267,6 +267,45 @@
 	return error;
 }
 
+#pragma mark Convenience
+
+- (void)requestDefaultResourceKeysForURL:(NSURL *)URL
+{
+	NSArray *defaultResourceKeysToRequest = (self.defaultResourceKeysToRequest);
+	[self requestResourceValuesForKeys:defaultResourceKeysToRequest forURL:URL];
+}
+
+- (id)resourceValueForKey:(NSString *)key forURL:(NSURL *)URL
+{
+	NSArray *defaultResourceKeysToRequest = (self.defaultResourceKeysToRequest);
+	BOOL isDefault = ([defaultResourceKeysToRequest indexOfObject:key] != NSNotFound);
+	if (isDefault) {
+		[self requestDefaultResourceKeysForURL:URL];
+	}
+	
+	NSDictionary *resourceValues = [self loadedResourceValuesForKeys:@[key] forURL:URL requestIfNeeded:!isDefault];
+	return resourceValues[key];
+}
+
+- (NSString *)localizedNameForURL:(NSURL *)URL
+{
+	return [self resourceValueForKey:NSURLLocalizedNameKey forURL:URL];
+}
+
+- (NSImage *)effectiveIconImageForURL:(NSURL *)URL
+{
+	return [self resourceValueForKey:NSURLEffectiveIconKey forURL:URL];
+}
+
+- (NSImage *)effectiveIconImageForURL:(NSURL *)URL withSizeDimension:(CGFloat)widthAndHeight
+{
+	NSImage *iconImage = [[self effectiveIconImageForURL:URL] copy];
+	if (iconImage) {
+		(iconImage.size) = NSMakeSize(widthAndHeight, widthAndHeight);
+	}
+	return iconImage;
+}
+
 #pragma mark Applications
 
 - (void)requestApplicationURLsToOpenURL:(NSURL *)URL

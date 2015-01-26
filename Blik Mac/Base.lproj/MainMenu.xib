@@ -367,57 +367,34 @@ DQ
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Highlights" hidden="YES" id="96z-eX-NDn">
+                <menuItem title="Pluck" id="96z-eX-NDn">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Highlights" id="5cF-uk-BG1">
+                    <menu key="submenu" title="Pluck" id="5cF-uk-BG1">
                         <items>
-                            <menuItem title="New Reminder…" id="5c0-Ui-wzK">
+                            <menuItem title="Pluck from Collection" id="Zjo-RC-dpk">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="pluckSelection:" target="-1" id="dlQ-VZ-fwX"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Clear Plucked Items" id="ZKR-GR-Bt8">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="clearPluckedFilesList:" target="-1" id="Pac-CI-T8V"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="4sx-jP-j9R"/>
+                            <menuItem title="Place All Plucked Items" id="36D-Py-IxL">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="placePluckedCollectedFiles:" target="-1" id="AgO-yn-3lZ"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="No Plucked Items" id="CJJ-ih-GM4">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
-                            <menuItem title="Choose Existing Reminders…" id="X7c-qw-MSe">
+                            <menuItem title="«Plucked Collected Items»" id="4jZ-Cb-16y">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="cXS-le-q1k"/>
-                            <menuItem title="Schedule Tomorrow…" id="ZKR-GR-Bt8">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="xy5-yP-QlA"/>
-                            <menuItem title="Label Due Times After as Late" id="wXo-kK-QIc">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Label Due Times After as Late" id="e8S-Pr-fJy">
-                                    <items>
-                                        <menuItem title="4PM" id="EWL-oe-RTh">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="5PM" id="JYe-ET-yk2">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="6PM" id="rSx-3K-XzY">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="7PM" state="on" id="bM4-qM-Mv5">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="8PM" id="giC-Sa-tk1">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="9PM" id="ep2-40-HBm">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="10PM" id="6Cc-0N-RJO">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="11PM" id="UbH-9b-b4a">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="12AM" id="gfd-TE-PvH">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="Always Show The Time" id="z3F-jB-jnU">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                    </items>
-                                </menu>
                             </menuItem>
                         </items>
                     </menu>
@@ -461,5 +438,13 @@ DQ
                 </menuItem>
             </items>
         </menu>
+        <customObject id="lhK-sD-kQW" customClass="GLAPluckedCollectedFilesMenuController">
+            <connections>
+                <outlet property="noPluckedItemsMenuItem" destination="CJJ-ih-GM4" id="mYV-tU-6o0"/>
+                <outlet property="placeAllPluckedItemsMenuItem" destination="36D-Py-IxL" id="zeB-G3-0iv"/>
+                <outlet property="pluckedCollectedFilesPlaceholderMenuItem" destination="4jZ-Cb-16y" id="0Cl-ik-zw0"/>
+                <outlet property="pluckedMainMenu" destination="5cF-uk-BG1" id="NNf-tA-BgD"/>
+            </connections>
+        </customObject>
     </objects>
 </document>

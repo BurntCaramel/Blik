@@ -67,6 +67,8 @@
 - (void)loadCollectionsForProjectIfNeeded:(GLAProject *)project;
 - (NSArray *)copyCollectionsForProject:(GLAProject *)project;
 
+- (GLACollection *)collectionWithUUID:(NSUUID *)collectionUUID inProjectWithUUID:(NSUUID *)projectUUID;
+
 - (BOOL)editCollectionsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionListEditor))block;
 
 - (GLACollection *)createNewCollectionWithName:(NSString *)name type:(NSString *)type color:(GLACollectionColor *)color inProject:(GLAProject *)project insertingInCollectionsListAtIndex:(NSUInteger)indexInList;
@@ -99,6 +101,7 @@
 - (void)loadFilesListForCollectionIfNeeded:(GLACollection *)filesListCollection;
 
 - (NSArray *)copyFilesListForCollection:(GLACollection *)filesListCollection;
+- (id<GLAArrayInspecting>)inspectFilesListForCollectionWithUUID:(NSUUID *)filesListCollectionUUID;
 - (GLACollectedFile *)collectedFileWithUUID:(NSUUID *)collectionUUID insideCollection:(GLACollection *)filesListCollection;
 
 - (BOOL)editFilesListOfCollection:(GLACollection *)filesListCollection usingBlock:(void (^)(id<GLAArrayEditing> filesListEditor))block;
@@ -145,6 +148,7 @@ extern NSString *GLAProjectHighlightsDidChangeNotification;
 extern NSString *GLACollectionWasDeletedNotification;
 extern NSString *GLACollectionDidChangeNotification;
 extern NSString *GLACollectionFilesListDidChangeNotification;
+extern NSString *GLACollectionNotificationUserInfoCollectionKey;
 
 //extern NSString *GLAProjectManagerProjectRemindersDidChangeNotification;
 

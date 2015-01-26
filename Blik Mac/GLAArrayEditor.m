@@ -390,6 +390,10 @@
 {
 	NSParameterAssert(objects != nil);
 	
+	if ((objects.count) == 0) {
+		return;
+	}
+	
 	NSMutableArray *mutableChildren = (self.mutableChildren);
 	[mutableChildren addObjectsFromArray:objects];
 	
@@ -403,6 +407,11 @@
 {
 	NSParameterAssert(objects != nil);
 	NSParameterAssert(indexes != nil);
+	NSParameterAssert((indexes.count) == (objects.count));
+	
+	if ((objects.count) == 0) {
+		return;
+	}
 	
 	NSMutableArray *mutableChildren = (self.mutableChildren);
 	[mutableChildren insertObjects:objects atIndexes:indexes];
@@ -416,6 +425,10 @@
 - (void)removeChildrenAtIndexes:(NSIndexSet *)indexes
 {
 	NSParameterAssert(indexes != nil);
+	
+	if ((indexes.count) == 0) {
+		return;
+	}
 	
 	NSMutableArray *mutableChildren = (self.mutableChildren);
 	
@@ -432,6 +445,11 @@
 {
 	NSParameterAssert(indexes != nil);
 	NSParameterAssert(objects != nil);
+	NSParameterAssert((indexes.count) == (objects.count));
+	
+	if ((indexes.count) == 0) {
+		return;
+	}
 	
 	NSMutableArray *mutableChildren = (self.mutableChildren);
 	
@@ -447,6 +465,7 @@
 - (void)moveChildrenAtIndexes:(NSIndexSet *)indexes toIndex:(NSUInteger)toIndex
 {
 	NSParameterAssert(indexes != nil);
+	NSParameterAssert((indexes.count) > 0);
 	NSParameterAssert(toIndex != NSNotFound);
 	
 	NSMutableArray *mutableChildren = (self.mutableChildren);
@@ -465,7 +484,8 @@
 {
 	NSRange entireRange = NSMakeRange(0, (self.childrenCount));
 	NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:entireRange];
-	[self replaceChildrenAtIndexes:indexes withObjects:objects];
+	[self removeChildrenAtIndexes:indexes];
+	[self addChildren:objects];
 }
 
 - (BOOL)removeFirstChildWhoseKey:(NSString *)key hasValue:(id)value
