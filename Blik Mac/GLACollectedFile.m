@@ -15,8 +15,6 @@
 @property(readwrite, nonatomic) NSURL *fileReferenceURL;
 @property(nonatomic) NSURL *sourceFilePathURL;
 
-@property(readwrite, nonatomic) NSString *filePath;
-
 @property(readwrite, nonatomic) BOOL isMissing;
 @property(readwrite, nonatomic) BOOL isDirectory;
 @property(readwrite, nonatomic) BOOL isExecutable;
@@ -28,7 +26,7 @@
 
 @end
 
-#define GLA_USE_REFERENCE_URLS 0
+#define GLA_USE_REFERENCE_URLS 1
 
 @implementation GLACollectedFile
 
@@ -94,9 +92,13 @@
 		NSURL *resolvedFilePathURL = [fileReferenceURL filePathURL];
 		NSAssert(resolvedFilePathURL != nil, @"resolvedFilePathURL must be something");
 		if (accessing) {
-			[resolvedFilePathURL stopAccessingSecurityScopedResource];
+			[fileReferenceURL stopAccessingSecurityScopedResource];
 		}
-		return resolvedFilePathURL;
+		//return resolvedFilePathURL;
+		
+		//NSLog(@"\n %@ \n %@ \n %@", resolvedFilePathURL, (self.sourceFilePathURL), @([resolvedFilePathURL isEqual:(self.sourceFilePathURL)]));
+		
+		return (self.sourceFilePathURL);
 	}
 	else {
 		return (self.sourceFilePathURL);
@@ -157,17 +159,6 @@
 	  ];
 }
 
-- (NSString *)filePath
-{
-	NSURL *URL = (self.filePathURL);
-	if (URL) {
-		return (URL.path);
-	}
-	else {
-		return nil;
-	}
-}
-
 - (void)updateInformationFromURLResourceValues:(NSDictionary *)resourceValues
 {
 	(self.isDirectory) = [@YES isEqual:resourceValues[NSURLIsDirectoryKey]];
@@ -223,6 +214,9 @@
 - (NSData *)bookmarkDataWithError:(NSError *__autoreleasing *)outError
 {
 	NSURL *URL = (self.filePathURL);
+#if DEBUG
+	NSLog(@"BOOKMARK DATA FOR FILE PATH URL %@", URL);
+#endif
 	BOOL wasCreatedFromBookmarkData = (self.wasCreatedFromBookmarkData);
 	//wasCreatedFromBookmarkData = YES;
 	

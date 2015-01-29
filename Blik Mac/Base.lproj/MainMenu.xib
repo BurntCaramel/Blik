@@ -371,21 +371,19 @@ DQ
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Pluck" id="5cF-uk-BG1">
                         <items>
-                            <menuItem title="Pluck from Collection" id="Zjo-RC-dpk">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Pluck from Collection" keyEquivalent="X" id="Zjo-RC-dpk">
                                 <connections>
                                     <action selector="pluckSelection:" target="-1" id="dlQ-VZ-fwX"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Clear Plucked Items" id="ZKR-GR-Bt8">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Clear Plucked Items" keyEquivalent="X" id="ZKR-GR-Bt8">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="clearPluckedFilesList:" target="-1" id="Pac-CI-T8V"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="4sx-jP-j9R"/>
-                            <menuItem title="Place All Plucked Items" id="36D-Py-IxL">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Place All Plucked Items" keyEquivalent="V" id="36D-Py-IxL">
                                 <connections>
                                     <action selector="placePluckedCollectedFiles:" target="-1" id="AgO-yn-3lZ"/>
                                 </connections>

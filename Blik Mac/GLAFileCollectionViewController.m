@@ -158,7 +158,7 @@
 {
 	(self.collectedFilesSetting) = [GLACollectedFilesSetting new];
 	
-	(self.fileInfoRetriever) = [[GLAFileInfoRetriever alloc] initWithDelegate:self];
+	(self.fileInfoRetriever) = [[GLAFileInfoRetriever alloc] initWithDelegate:self defaultResourceKeysToRequest:@[NSURLLocalizedNameKey, NSURLEffectiveIconKey]];
 	
 	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = [GLAFileOpenerApplicationCombiner new];
 	(self.openerApplicationCombiner) = openerApplicationCombiner;
@@ -955,14 +955,26 @@
 
 #pragma mark Table View Data Source
 
+#define EXTRA_ROW_COUNT 0
+
+- (GLACollectedFile *)collectedFileForRow:(NSInteger)row
+{
+	return (self.collectedFiles)[row - EXTRA_ROW_COUNT];
+}
+
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	return (self.collectedFiles.count);
+	return (self.collectedFiles.count) + EXTRA_ROW_COUNT;
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	GLACollectedFile *collectedFile = (self.collectedFiles)[row];
+#if EXTRA_ROW_COUNT == 1
+	if (row == 0) {
+		return nil;
+	}
+#endif
+	GLACollectedFile *collectedFile = [self collectedFileForRow:row];
 	
 	if (!(collectedFile.isMissing)) {
 		[self addUsedURLForCollectedFile:collectedFile];
@@ -973,7 +985,7 @@
 
 - (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row
 {
-	GLACollectedFile *collectedFile = (self.collectedFiles)[row];
+	GLACollectedFile *collectedFile = [self collectedFileForRow:row];
 	return collectedFile;
 }
 
@@ -1024,11 +1036,26 @@
 
 #pragma mark Table View Delegate
 
+#if EXTRA_ROW_COUNT == 1
+- (BOOL)tableView:(NSTableView *)tableView isGroupRow:(NSInteger)row
+{
+	return (row == 0);
+}
+#endif
+
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
 	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	
-	GLACollectedFile *collectedFile = (self.collectedFiles)[row];
+#if EXTRA_ROW_COUNT == 1
+	if (row == 0 || YES) {
+		(cellView.textField.stringValue) = @"Collected";
+		(cellView.imageView.image) = nil;
+		return cellView;
+	}
+#endif
+	
+	GLACollectedFile *collectedFile = [self collectedFileForRow:row];
 	(cellView.objectValue) = collectedFile;
 	
 	NSString *displayName = nil;
@@ -1042,6 +1069,10 @@
 		GLAFileInfoRetriever *fileInfoRetriever = (self.fileInfoRetriever);
 		NSURL *fileURL = (collectedFile.filePathURL);
 		
+#if 1
+		displayName = [fileInfoRetriever localizedNameForURL:fileURL];
+		iconImage = [fileInfoRetriever effectiveIconImageForURL:fileURL];
+#else
 		NSArray *resourceValueKeys =
 		@[
 		  NSURLLocalizedNameKey,
@@ -1052,6 +1083,7 @@
 		
 		displayName = resourceValues[NSURLLocalizedNameKey];
 		iconImage = resourceValues[NSURLEffectiveIconKey];
+#endif
 	}
 	
 	(cellView.textField.stringValue) = displayName ?: @"";

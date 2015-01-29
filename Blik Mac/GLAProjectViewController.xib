@@ -22,7 +22,7 @@
             <rect key="frame" x="0.0" y="0.0" width="500" height="275"/>
             <subviews>
                 <customView placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="8vi-0s-ZAk" customClass="GLAView">
-                    <rect key="frame" x="0.0" y="0.0" width="200" height="30"/>
+                    <rect key="frame" x="0.0" y="0.0" width="500" height="30"/>
                     <connections>
                         <outlet property="delegate" destination="fD5-0A-qdK" id="OPS-R4-6E8"/>
                     </connections>
@@ -48,7 +48,7 @@
                     </constraints>
                 </customView>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="NA8-Ro-OD1">
-                    <rect key="frame" x="210" y="0.0" width="290" height="212"/>
+                    <rect key="frame" x="210" y="38" width="290" height="174"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="290" id="zC6-7U-5ej"/>
                     </constraints>
@@ -56,6 +56,7 @@
             </subviews>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="8vi-0s-ZAk" secondAttribute="bottom" id="52E-z7-sjo"/>
+                <constraint firstAttribute="trailing" secondItem="8vi-0s-ZAk" secondAttribute="trailing" id="6Ve-eS-e5l"/>
                 <constraint firstAttribute="trailing" secondItem="NA8-Ro-OD1" secondAttribute="trailing" id="6yW-nm-WOC"/>
                 <constraint firstItem="uUN-fG-dyR" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" id="Jtf-4x-qzc"/>
                 <constraint firstAttribute="trailing" secondItem="uUN-fG-dyR" secondAttribute="trailing" constant="20" id="KXo-l8-01e"/>
@@ -63,11 +64,10 @@
                 <constraint firstItem="NA8-Ro-OD1" firstAttribute="leading" secondItem="yM7-GZ-JQa" secondAttribute="trailing" constant="10" id="TSH-RS-7kg"/>
                 <constraint firstItem="8vi-0s-ZAk" firstAttribute="top" secondItem="yM7-GZ-JQa" secondAttribute="bottom" constant="8" id="U1g-Rk-SCq"/>
                 <constraint firstItem="NA8-Ro-OD1" firstAttribute="top" secondItem="uUN-fG-dyR" secondAttribute="bottom" constant="16" id="Vn1-gm-7Ym"/>
-                <constraint firstAttribute="bottom" secondItem="NA8-Ro-OD1" secondAttribute="bottom" id="WOw-Ln-weu"/>
                 <constraint firstItem="8vi-0s-ZAk" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="XrK-id-Ay0"/>
                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="500" id="f6P-NC-GhS"/>
-                <constraint firstItem="yM7-GZ-JQa" firstAttribute="trailing" secondItem="8vi-0s-ZAk" secondAttribute="trailing" id="g82-mq-giY"/>
                 <constraint firstItem="yM7-GZ-JQa" firstAttribute="top" secondItem="uUN-fG-dyR" secondAttribute="bottom" constant="14" id="lVJ-kX-TAa"/>
+                <constraint firstItem="NA8-Ro-OD1" firstAttribute="bottom" secondItem="yM7-GZ-JQa" secondAttribute="bottom" id="qat-zh-ltU"/>
                 <constraint firstItem="uUN-fG-dyR" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="15" id="xJ9-mw-q1z"/>
             </constraints>
         </customView>
@@ -108,8 +108,8 @@
             <rect key="frame" x="0.0" y="0.0" width="500" height="35"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <button placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="m3I-Co-wZM" customClass="GLAButton">
-                    <rect key="frame" x="0.0" y="8" width="120" height="27"/>
+                <button misplaced="YES" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="m3I-Co-wZM" customClass="GLAButton">
+                    <rect key="frame" x="0.0" y="8" width="120" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="27" id="t1S-Ar-dx9"/>
                     </constraints>
@@ -157,13 +157,44 @@
                         <action selector="editCollections:" target="-2" id="gGd-l5-s43"/>
                     </connections>
                 </button>
+                <button placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="LJn-o5-zPf" customClass="GLAButton">
+                    <rect key="frame" x="380" y="8" width="120" height="27"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="27" id="5cN-UO-SF9"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="Open All Highlights" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5q1-uw-bIu" customClass="GLAButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="-1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="openAllItems:" target="aDf-pc-aeE" id="yOE-xM-yS2"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
                 <constraint firstItem="UAD-cb-caO" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" id="3G8-0V-NRb"/>
+                <constraint firstItem="LJn-o5-zPf" firstAttribute="top" secondItem="m3I-Co-wZM" secondAttribute="top" id="7Eg-ma-cee"/>
                 <constraint firstAttribute="bottom" secondItem="m3I-Co-wZM" secondAttribute="bottom" constant="8" id="Ari-Y1-C7k"/>
                 <constraint firstItem="m3I-Co-wZM" firstAttribute="leading" secondItem="8EB-qb-bNQ" secondAttribute="leading" id="FN7-jj-iJW"/>
                 <constraint firstItem="UAD-cb-caO" firstAttribute="leading" secondItem="m3I-Co-wZM" secondAttribute="trailing" id="PaM-vf-s9d"/>
                 <constraint firstAttribute="bottom" secondItem="UAD-cb-caO" secondAttribute="bottom" constant="8" id="XmI-Jc-umb"/>
+                <constraint firstAttribute="trailing" secondItem="LJn-o5-zPf" secondAttribute="trailing" id="Zm4-hu-SUS"/>
+                <constraint firstItem="LJn-o5-zPf" firstAttribute="bottom" secondItem="m3I-Co-wZM" secondAttribute="bottom" id="fHM-KM-7fr"/>
                 <constraint firstItem="m3I-Co-wZM" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" id="zkI-9z-aem"/>
             </constraints>
         </customView>

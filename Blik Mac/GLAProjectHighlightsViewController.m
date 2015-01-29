@@ -372,38 +372,17 @@
 	NSBeep();
 }
 
-- (void)openCollectedFile:(GLACollectedFile *)collectedFile withApplication:(NSURL *)applicationURL
+- (void)openHighlightedItem:(GLAHighlightedItem *)highlightedItem
 {
-	NSURL *fileURL = (collectedFile.filePathURL);
-	if (!fileURL) {
-		[self fileAppearsToBeMissing];
-		return;
+	if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+		GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
+		[self openHighlightedCollectedFile:highlightedCollectedFile];
 	}
-	
-	[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL useSecurityScope:YES];
 }
 
-- (void)showCollectedFileInFinder:(GLACollectedFile *)collectedFile
+- (void)openHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile
 {
-	NSURL *fileURL = (collectedFile.filePathURL);
-	if (!fileURL) {
-		[self fileAppearsToBeMissing];
-		return;
-	}
-	
-	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[fileURL]];
-}
-
-- (IBAction)openClickedItem:(id)sender
-{
-	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
-	if ((!highlightedItem) || ![highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
-		return;
-	}
-	
-	GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
-	
-	GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
+	GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedCollectedFile];
 	if (!collectedFile) {
 		return;
 	}
@@ -433,6 +412,45 @@
 		NSLog(@"OPENING COLLECTED FILE %@", collectedFile);
 #endif
 		[self openCollectedFile:collectedFile withApplication:applicationURL];
+	}
+}
+
+- (void)openCollectedFile:(GLACollectedFile *)collectedFile withApplication:(NSURL *)applicationURL
+{
+	NSURL *fileURL = (collectedFile.filePathURL);
+	if (!fileURL) {
+		[self fileAppearsToBeMissing];
+		return;
+	}
+	
+	[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL useSecurityScope:YES];
+}
+
+- (void)showCollectedFileInFinder:(GLACollectedFile *)collectedFile
+{
+	NSURL *fileURL = (collectedFile.filePathURL);
+	if (!fileURL) {
+		[self fileAppearsToBeMissing];
+		return;
+	}
+	
+	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[fileURL]];
+}
+
+- (IBAction)openClickedItem:(id)sender
+{
+	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
+	if (!highlightedItem) {
+		return;
+	}
+	
+	[self openHighlightedItem:highlightedItem];
+}
+
+- (IBAction)openAllItems:(id)sender
+{
+	for (GLAHighlightedItem *highlightedItem in (self.highlightedItems)) {
+		[self openHighlightedItem:highlightedItem];
 	}
 }
 

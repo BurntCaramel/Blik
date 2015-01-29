@@ -28,11 +28,13 @@
 
 @implementation GLAFileInfoRetriever
 
-- (instancetype)initWithDelegate:(id<GLAFileInfoRetrieverDelegate>)delegate
+- (instancetype)initWithDelegate:(id<GLAFileInfoRetrieverDelegate>)delegate defaultResourceKeysToRequest:(NSArray *)defaultResourceKeysToRequest
 {
 	self = [super init];
 	if (self) {
 		_delegate = delegate;
+		
+		_defaultResourceKeysToRequest = [defaultResourceKeysToRequest copy];
 		
 		_backgroundOperationQueue = [NSOperationQueue new];
 		(_backgroundOperationQueue.name) = @"com.burntcaramel.GLAFileInfoRetriever.background";
@@ -49,6 +51,11 @@
 		_cacheOfURLsToDefaultApplicationURLs = [NSCache new];
 	}
 	return self;
+}
+
+- (instancetype)initWithDelegate:(id<GLAFileInfoRetrieverDelegate>)delegate
+{
+	return [self initWithDelegate:delegate defaultResourceKeysToRequest:@[]];
 }
 
 + (instancetype)sharedFileInfoRetrieverForMainQueue

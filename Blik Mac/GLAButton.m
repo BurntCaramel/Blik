@@ -202,6 +202,8 @@
     self = [super initWithFrame:frame];
     if (self) {
 		(self.cell) = [GLAButtonCell new];
+		
+		[self gla_setUpTrackingAreas];
 		//(self.layer.delegate) = self;
     }
     return self;
@@ -212,6 +214,8 @@
 	if ((self.state) == NSOnState) {
 		(self.highlightAmount) = 1.0;
 	}
+	
+	[self gla_setUpTrackingAreas];
 }
 
 - (GLAButtonCell *)cell
@@ -222,6 +226,13 @@
 - (void)setCell:(GLAButtonCell *)cell
 {
 	[super setCell:cell];
+}
+
+- (void)gla_setUpTrackingAreas
+{
+	NSTrackingArea *mainTrackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:NSTrackingInVisibleRect | NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited owner:self userInfo:nil];
+	[self addTrackingArea:mainTrackingArea];
+	(self.mainTrackingArea) = mainTrackingArea;
 }
 
 #pragma mark -
@@ -384,16 +395,19 @@
 	}
 }
 
+#if 0
 - (void)updateTrackingAreas
 {
 	if (self.mainTrackingArea) {
 		[self removeTrackingArea:(self.mainTrackingArea)];
+		(self.mainTrackingArea) = nil;
 	}
 	
 	NSTrackingArea *mainTrackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:NSTrackingInVisibleRect | NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited owner:self userInfo:nil];
 	[self addTrackingArea:mainTrackingArea];
 	(self.mainTrackingArea) = mainTrackingArea;
 }
+#endif
 
 - (void)setState:(NSInteger)newState
 {
@@ -414,17 +428,26 @@
 
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-	if ((self.isEnabled) && (self.state) == NSOffState) {
+	if ((self.isEnabled)/* && (self.state) == NSOffState*/) {
 		[self gla_animateHighlightForHovered:YES];
 	}
 }
 
 - (void)mouseExited:(NSEvent *)theEvent
 {
-	if ((self.isEnabled) && (self.state) == NSOffState) {
+	if ((self.isEnabled)/* && (self.state) == NSOffState*/) {
 		[self gla_animateHighlightForHovered:NO];
 	}
 }
+
+#if 0
+- (BOOL)sendAction:(SEL)theAction to:(id)theTarget
+{
+	//[self gla_animateHighlightForHovered:NO];
+	
+	return [super sendAction:theAction to:theTarget];
+}
+#endif
 
 + (Class)cellClass
 {

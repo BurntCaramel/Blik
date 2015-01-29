@@ -12,12 +12,15 @@
 
 @interface GLAFileInfoRetriever : NSObject
 
-// Designated Init
+- (instancetype)initWithDelegate:(id<GLAFileInfoRetrieverDelegate>)delegate defaultResourceKeysToRequest:(NSArray *)defaultResourceKeysToRequest NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithDelegate:(id<GLAFileInfoRetrieverDelegate>)delegate;
 
 @property(weak, nonatomic) id<GLAFileInfoRetrieverDelegate> delegate;
 
 #pragma mark File Properties
+
+@property(nonatomic) NSArray *defaultResourceKeysToRequest;
+- (void)requestDefaultResourceKeysForURL:(NSURL *)URL;
 
 - (void)requestResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL;
 
@@ -25,9 +28,6 @@
 - (NSError *)lastErrorLoadingResourceValuesForURL:(NSURL *)URL;
 
 #pragma mark Convenience
-
-@property(nonatomic) NSArray *defaultResourceKeysToRequest;
-- (void)requestDefaultResourceKeysForURL:(NSURL *)URL;
 
 - (id)resourceValueForKey:(NSString *)key forURL:(NSURL *)URL;
 - (NSString *)localizedNameForURL:(NSURL *)URL;
