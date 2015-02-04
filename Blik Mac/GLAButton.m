@@ -411,6 +411,7 @@
 
 - (void)setState:(NSInteger)newState
 {
+	NSLog(@"SET STATE %@ %@", @(newState), (self.title));
 	if (newState == NSOnState) {
 		[self gla_animateHighlightForOn:YES];
 	}
@@ -426,16 +427,23 @@
 	return (self.cell.isOnAndShowsOnState);
 }
 
+- (BOOL)stateIsImportant
+{
+	return NO;
+}
+
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-	if ((self.isEnabled)/* && (self.state) == NSOffState*/) {
+	NSInteger state = (self.stateIsImportant) ? (self.state) : NSOffState;
+	if ((self.isEnabled) && state == NSOffState) {
 		[self gla_animateHighlightForHovered:YES];
 	}
 }
 
 - (void)mouseExited:(NSEvent *)theEvent
 {
-	if ((self.isEnabled)/* && (self.state) == NSOffState*/) {
+	NSInteger state = (self.stateIsImportant) ? (self.state) : NSOffState;
+	if ((self.isEnabled) && state == NSOffState) {
 		[self gla_animateHighlightForHovered:NO];
 	}
 }

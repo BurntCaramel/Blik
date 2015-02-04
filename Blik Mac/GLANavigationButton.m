@@ -22,6 +22,11 @@
 	[super setCell:cell];
 }
 
+- (BOOL)stateIsImportant
+{
+	return YES;
+}
+
 - (CGFloat)highlightAmount
 {
 	return (self.cell.highlightAmount);
