@@ -10,6 +10,7 @@
 #import "GLACollectedFilesSetting.h"
 #import "GLACollectedFileListHelper.h"
 #import "GLAArrayTableDraggingHelper.h"
+#import "GLAProjectInstructionsViewController.h"
 
 
 @interface GLAProjectEditPrimaryFoldersViewController : GLAViewController
@@ -22,6 +23,8 @@
 
 @property(nonatomic) IBOutlet NSTableView *primaryFoldersTableView;
 @property(nonatomic) IBOutlet NSMenu *primaryFoldersTableMenu;
+
+@property(nonatomic) IBOutlet GLAProjectInstructionsViewController *instructionsViewController;
 
 @property(nonatomic) GLACollectedFilesSetting *collectedFilesSetting;
 

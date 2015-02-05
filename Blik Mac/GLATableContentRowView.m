@@ -23,10 +23,14 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    [super drawRect:dirtyRect];
+	[super drawRect:dirtyRect];
     
     // Drawing code here.
 }
+
+/*- (void)drawBackgroundInRect:(NSRect)dirtyRect
+{
+}*/
 
 - (void)drawSelectionInRect:(NSRect)dirtyRect
 {

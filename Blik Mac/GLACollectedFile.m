@@ -147,6 +147,24 @@
 	return [NSValueTransformer GLA_DataBase64ValueTransformer];
 }
 
+#pragma mark Pasteboard Writing
+
+- (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard
+{
+	return @[[[self class] objectJSONPasteboardType], (id)kUTTypeFileURL];
+}
+
+- (id)pasteboardPropertyListForType:(NSString *)type
+{
+	if ([type isEqualToString:(id)kUTTypeFileURL]) {
+		NSURL *filePathURL = (self.filePathURL);
+		return [filePathURL pasteboardPropertyListForType:type];
+	}
+	else {
+		return [super pasteboardPropertyListForType:type];
+	}
+}
+
 #pragma mark Bookmark Data
 
 + (NSArray *)coreResourceValueKeys

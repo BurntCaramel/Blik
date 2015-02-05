@@ -199,11 +199,15 @@
 - (IBAction)goToAll:(id)sender
 {
 	[(self.sectionNavigator) goToAllProjects];
+	
+	[self updateSelectedSectionUI];
 }
 
 - (IBAction)goToNowProject:(id)sender
 {
 	[(self.sectionNavigator) goToNowProject];
+	
+	[self updateSelectedSectionUI];
 }
 
 - (NSArray *)allVisibleButtons

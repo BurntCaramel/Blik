@@ -28,7 +28,7 @@
 - (BOOL)canCopyObjects;
 - (NSArray *)makeCopiesOfObjects:(NSArray *)objectsToCopy;
 
-#pragma mark NSTableViewDelegate methods
+#pragma mark NSTableViewDataSource methods
 
 - (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forRowIndexes:(NSIndexSet *)rowIndexes;
 
@@ -49,7 +49,7 @@
 
 @optional
 
-// Do not implement if you do not support copying.
+// Only implement if you support copying.
 - (NSArray *)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper makeCopiesOfObjects:(NSArray *)objectsToCopy;
 
 @end

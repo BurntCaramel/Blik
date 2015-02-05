@@ -284,6 +284,8 @@
 
 - (id)resourceValueForKey:(NSString *)key forURL:(NSURL *)URL
 {
+	NSParameterAssert(URL != nil);
+	
 	NSArray *defaultResourceKeysToRequest = (self.defaultResourceKeysToRequest);
 	BOOL isDefault = ([defaultResourceKeysToRequest indexOfObject:key] != NSNotFound);
 	if (isDefault) {

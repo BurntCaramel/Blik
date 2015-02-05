@@ -19,6 +19,9 @@
 #import <objc/runtime.h>
 
 
+#define EXTRA_ROW_COUNT 0
+
+
 @interface GLAFileCollectionViewController () <GLAArrayTableDraggingHelperDelegate>
 
 @property(copy, nonatomic) NSArray *collectedFiles;
@@ -334,9 +337,38 @@
 	}
 }
 
+- (NSIndexSet *)collectedFilesIndexesForRowIndexes:(NSIndexSet *)indexes
+{
+#if EXTRA_ROW_COUNT == 1
+	NSMutableIndexSet *mutableIndexes = [indexes mutableCopy];
+	[mutableIndexes shiftIndexesStartingAtIndex:0 by:-EXTRA_ROW_COUNT];
+	return mutableIndexes;
+#else
+	return indexes;
+#endif
+}
+
+- (NSIndexSet *)rowIndexesForCollectedFilesIndexes:(NSIndexSet *)indexes
+{
+#if EXTRA_ROW_COUNT == 1
+	NSMutableIndexSet *mutableIndexes = [indexes mutableCopy];
+	[mutableIndexes shiftIndexesStartingAtIndex:0 by:EXTRA_ROW_COUNT];
+	return mutableIndexes;
+#else
+	return indexes;
+#endif
+}
+
+- (NSArray *)collectedFilesForRowIndexes:(NSIndexSet *)indexes
+{
+	indexes = [self collectedFilesIndexesForRowIndexes:indexes];
+	
+	return [(self.collectedFiles) objectsAtIndexes:indexes];
+}
+
 - (NSArray *)URLsForRowIndexes:(NSIndexSet *)indexes
 {
-	NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:indexes];
+	NSArray *collectedFiles = [self collectedFilesForRowIndexes:indexes];
 	
 	NSMutableArray *URLs = [NSMutableArray new];
 	for (GLACollectedFile *collectedFile in collectedFiles) {
@@ -382,7 +414,8 @@
 	NSURL *URL = nil;
 	
 	if ((selectedRowIndexes.count) == 1) {
-		selectedFile = (self.collectedFiles)[selectedRowIndexes.firstIndex];
+		//selectedFile = (self.collectedFiles)[selectedRowIndexes.firstIndex];
+		selectedFile = [self collectedFileForRow:(selectedRowIndexes.firstIndex)];
 		URL = (selectedFile.filePathURL);
 		[self startObservingPreviewFrameChanges];
 	}
@@ -464,7 +497,7 @@
 - (BOOL)collectedFilesAreAllHighlightedForActionFrom:(id)sender
 {
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-	NSArray *selectedCollectedFiles = [(self.collectedFiles) objectsAtIndexes:[self rowIndexesForActionFrom:nil]];
+	NSArray *selectedCollectedFiles = [self collectedFilesForRowIndexes:[self rowIndexesForActionFrom:nil]];
 	BOOL isAllHighlighted = NO;
 	
 	if ((selectedCollectedFiles.count) > 0) {
@@ -589,7 +622,7 @@
 	
 	(self.selectedURLs) = [self URLsForRowIndexes:selectedIndexes];
 	
-	NSArray *selectedCollectedFiles = [(self.collectedFiles) objectsAtIndexes:selectedIndexes];
+	NSArray *selectedCollectedFiles = [self collectedFilesForRowIndexes:selectedIndexes];
 	[(self.collectedFilesSetting) startUsingURLsForCollectedFilesRemovingRemainders:selectedCollectedFiles];
 	
 	[self retrieveApplicationsToOpenSelection];
@@ -605,6 +638,7 @@
 	NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
 	
 	__block NSInteger rowIndex = -1;
+	selectedIndexes = [self collectedFilesIndexesForRowIndexes:selectedIndexes];
 	[(self.collectedFiles) enumerateObjectsAtIndexes:selectedIndexes options:NSEnumerationConcurrent usingBlock:^(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
 		if ([URL isEqual:(collectedFile.filePathURL)]) {
 			rowIndex = idx;
@@ -741,7 +775,7 @@
 		return;
 	}
 	
-	NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:indexes];
+	NSArray *collectedFiles = [self collectedFilesForRowIndexes:indexes];
 	
 	GLACollection *filesListCollection = (self.filesListCollection);
 	NSUUID *projectUUID = (self.project.UUID);
@@ -766,7 +800,7 @@
 		return;
 	}
 	
-	NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:collectedFilesIndexes];
+	NSArray *collectedFiles = [self collectedFilesForRowIndexes:collectedFilesIndexes];
 	NSSet *collectedFileUUIDs = [NSSet setWithArray:[collectedFiles valueForKey:@"UUID"]];
 	
 	void (^editingBlock)(id<GLAArrayEditing> highlightsEditor) = ^(id<GLAArrayEditing> highlightsEditor)
@@ -955,10 +989,13 @@
 
 #pragma mark Table View Data Source
 
-#define EXTRA_ROW_COUNT 0
-
 - (GLACollectedFile *)collectedFileForRow:(NSInteger)row
 {
+#if EXTRA_ROW_COUNT == 1
+	if (row == 0) {
+		return nil;
+	}
+#endif
 	return (self.collectedFiles)[row - EXTRA_ROW_COUNT];
 }
 
@@ -971,7 +1008,7 @@
 {
 #if EXTRA_ROW_COUNT == 1
 	if (row == 0) {
-		return nil;
+		return @"Collected";
 	}
 #endif
 	GLACollectedFile *collectedFile = [self collectedFileForRow:row];
@@ -985,8 +1022,7 @@
 
 - (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row
 {
-	GLACollectedFile *collectedFile = [self collectedFileForRow:row];
-	return collectedFile;
+	return [self collectedFileForRow:row];
 }
 
 - (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forRowIndexes:(NSIndexSet *)rowIndexes
@@ -1043,17 +1079,48 @@
 }
 #endif
 
+- (NSTableRowView *)tableView:(NSTableView *)tableView rowViewForRow:(NSInteger)row
+{
+#if EXTRA_ROW_COUNT == 1
+	if (row == 0) {
+		NSTableRowView *groupRowView = [tableView makeViewWithIdentifier:@"blik.groupRowViewKey" owner:nil];
+		NSLog(@"MADE %@", groupRowView);
+		(groupRowView.backgroundColor) = [NSColor clearColor];
+		return groupRowView;
+		//(rowView.backgroundColor) = [NSColor clearColor];
+	}
+#endif
+	
+	return nil;
+}
+
+- (void)tableView:(NSTableView *)tableView didAddRowView:(NSTableRowView *)rowView forRow:(NSInteger)row
+{
+#if EXTRA_ROW_COUNT == 1
+	if (row == 0) {
+		NSLog(@"DID ADD GROUP ROW VIEW");
+		(rowView.backgroundColor) = [NSColor clearColor];
+	}
+#endif
+}
+
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
+	NSTableCellView *cellView = nil;
 	
 #if EXTRA_ROW_COUNT == 1
-	if (row == 0 || YES) {
+	if (row == 0) {
+		NSLog(@"MAKE CELL VIEW for GROUP ROW");
+		cellView = [tableView makeViewWithIdentifier:@"group" owner:nil];
+		(cellView.backgroundStyle) = NSBackgroundStyleDark;
+		//(cellView.backgroundStyle) = NSBackgroundStyleLight;
 		(cellView.textField.stringValue) = @"Collected";
 		(cellView.imageView.image) = nil;
 		return cellView;
 	}
 #endif
+	
+	cellView = [tableView makeViewWithIdentifier:@"collectedFile" owner:nil];
 	
 	GLACollectedFile *collectedFile = [self collectedFileForRow:row];
 	(cellView.objectValue) = collectedFile;
@@ -1062,7 +1129,7 @@
 	NSImage *iconImage = nil;
 	
 	if (collectedFile.isMissing) {
-		displayName = NSLocalizedString(@"Missing %@", @"Displayed name when a collected file is missing");
+		displayName = NSLocalizedString(@"Missing", @"Displayed name when a collected file is missing");
 		//displayName = [NSString localizedStringWithFormat:NSLocalizedString(@"Missing %@", @"Displayed name when a collected file is missing"), (collectedFile.name)];
 	}
 	else {
@@ -1072,6 +1139,8 @@
 #if 1
 		displayName = [fileInfoRetriever localizedNameForURL:fileURL];
 		iconImage = [fileInfoRetriever effectiveIconImageForURL:fileURL];
+		
+		NSLog(@"Display name %@ %@", displayName, fileURL);
 #else
 		NSArray *resourceValueKeys =
 		@[
@@ -1086,7 +1155,7 @@
 #endif
 	}
 	
-	(cellView.textField.stringValue) = displayName ?: @"";
+	(cellView.textField.stringValue) = displayName ?: @"Loading…";
 	(cellView.imageView.image) = iconImage;
 	
 	return cellView;
@@ -1109,7 +1178,9 @@
 		return [fileURL isEqual:(collectedFile.filePathURL)];
 	}];
 	
-	[(self.sourceFilesListTableView) reloadDataForRowIndexes:indexesToUpdate columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+	NSIndexSet *rowIndexesToUpdate = [self rowIndexesForCollectedFilesIndexes:indexesToUpdate];
+	
+	[(self.sourceFilesListTableView) reloadDataForRowIndexes:rowIndexesToUpdate columnIndexes:[NSIndexSet indexSetWithIndex:0]];
 }
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didFailWithError:(NSError *)error loadingResourceValuesForURL:(NSURL *)URL
@@ -1140,7 +1211,7 @@
 	if ((collectedFilesIndexes.count) == 0) {
 		return;
 	}
-	NSArray *collectedFiles = [(self.collectedFiles) objectsAtIndexes:collectedFilesIndexes];
+	NSArray *collectedFiles = [self collectedFilesForRowIndexes:collectedFilesIndexes];
 	
 	GLAPluckedCollectedFilesMenuController *pluckedItemsMenuController = [GLAPluckedCollectedFilesMenuController sharedMenuController];
 	GLAPluckedCollectedFilesList *pluckedCollectedFilesList = (pluckedItemsMenuController.pluckedCollectedFilesList);

@@ -67,7 +67,7 @@
 	return [delegate arrayEditorTableDraggingHelper:self makeCopiesOfObjects:objectsToCopy];
 }
 
-#pragma mark <NSTableViewDelegate>
+#pragma mark <NSTableViewDataSource>
 
 - (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forRowIndexes:(NSIndexSet *)rowIndexes
 {

@@ -89,6 +89,8 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 - (IBAction)exitEditedCollection:(id)sender;
 
+- (void)updateSelectedSectionUI;
+
 @end
 
 

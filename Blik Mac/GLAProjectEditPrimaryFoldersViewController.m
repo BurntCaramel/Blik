@@ -100,7 +100,7 @@
 
 - (void)showInstructions
 {
-#if 0
+#if 1
 	NSView *instructionsView = (self.instructionsViewController.view);
 	if (!(instructionsView.superview)) {
 		[self fillViewWithChildView:instructionsView];
@@ -113,7 +113,7 @@
 
 - (void)hideInstructions
 {
-#if 0
+#if 1
 	NSView *instructionsView = (self.instructionsViewController.view);
 	if ((instructionsView.superview)) {
 		(instructionsView.hidden) = YES;

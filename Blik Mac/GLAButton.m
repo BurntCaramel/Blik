@@ -411,15 +411,17 @@
 
 - (void)setState:(NSInteger)newState
 {
-	NSLog(@"SET STATE %@ %@", @(newState), (self.title));
-	if (newState == NSOnState) {
+	[super setState:newState];
+	
+	// Get state after NSButton has processed it.
+	NSInteger actualState = (self.state);
+	if (actualState == NSOnState) {
 		[self gla_animateHighlightForOn:YES];
 	}
-	else if (newState == NSOffState) {
+	else if (actualState == NSOffState) {
 		[self gla_animateHighlightForOn:NO];
 	}
 	
-	[super setState:newState];
 }
 
 - (BOOL)isOnAndShowsOnState
@@ -443,14 +445,20 @@
 - (void)mouseExited:(NSEvent *)theEvent
 {
 	NSInteger state = (self.stateIsImportant) ? (self.state) : NSOffState;
-	if ((self.isEnabled) && state == NSOffState) {
-		[self gla_animateHighlightForHovered:NO];
+	if ((self.isEnabled)) {
+		if (state == NSOffState) {
+			[self gla_animateHighlightForHovered:NO];
+		}
+		else {
+			[self gla_animateHighlightForOn:YES];
+		}
 	}
 }
 
 #if 0
 - (BOOL)sendAction:(SEL)theAction to:(id)theTarget
 {
+	NSLog(@"sendAction %@", (self.title));
 	//[self gla_animateHighlightForHovered:NO];
 	
 	return [super sendAction:theAction to:theTarget];
@@ -531,15 +539,6 @@
 	
 	return NO;
 }
-
-#if 0
-- (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView
-{
-	return [super startTrackingAt:startPoint inView:controlView];
-	
-	//return NO;
-}
-#endif
 
 - (NSColor *)textColorForDrawing
 {
@@ -692,6 +691,14 @@
 #endif
 }
 
+#if 0
+- (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView
+{
+	return [super startTrackingAt:startPoint inView:controlView];
+}
+#endif
+
+#if 0
 - (void)stopTracking:(NSPoint)lastPoint at:(NSPoint)stopPoint inView:(NSView *)controlView mouseIsUp:(BOOL)flag
 {
 	NSLog(@"STOP TRACKKING");
@@ -699,5 +706,6 @@
 	
 	[super stopTracking:lastPoint at:stopPoint inView:controlView mouseIsUp:flag];
 }
+#endif
 
 @end
