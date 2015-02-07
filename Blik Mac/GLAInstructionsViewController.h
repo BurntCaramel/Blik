@@ -9,9 +9,10 @@
 #import "GLAViewController.h"
 
 
-@interface GLAProjectInstructionsViewController : GLAViewController
+@interface GLAInstructionsViewController : GLAViewController
 
 @property(nonatomic) IBOutlet NSTextField *mainTextLabel;
+@property(nonatomic) IBOutlet NSTextField *secondaryTextLabel;
 @property(nonatomic) IBOutlet NSTextField *headingTextLabel;
 
 @end

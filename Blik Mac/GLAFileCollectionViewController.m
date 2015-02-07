@@ -190,18 +190,30 @@
 
 - (void)reloadSourceFiles
 {
+	NSArray *collectedFiles = nil;
+	
 	GLACollection *filesListCollection = (self.filesListCollection);
 	if (filesListCollection) {
 		GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 		
+		GLAProject *project = [pm projectWithUUID:(filesListCollection.projectUUID)];
 		[pm loadFilesListForCollectionIfNeeded:filesListCollection];
-		NSArray *collectedFiles = [pm copyFilesListForCollection:filesListCollection];
 		
-		(self.collectedFiles) = collectedFiles;
+		BOOL hasLoadedPrimaryFolders = [pm hasLoadedPrimaryFoldersForProject:project];
+		
+		if (hasLoadedPrimaryFolders) {
+			collectedFiles = [pm copyFilesListForCollection:filesListCollection];
+		}
+		else {
+			[pm loadPrimaryFoldersForProjectIfNeeded:project];
+		}
 	}
-	else {
-		(self.collectedFiles) = @[];
+	
+	if (!collectedFiles) {
+		collectedFiles = @[];
 	}
+	
+	(self.collectedFiles) = collectedFiles;
 	
 	if (self.hasPreparedViews) {
 		[(self.sourceFilesListTableView) reloadData];

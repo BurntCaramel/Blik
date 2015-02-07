@@ -169,9 +169,18 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 - (void)reloadCollections
 {
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	GLAProject *project = (self.project);
 	
-	NSArray *collections = [projectManager copyCollectionsForProject:(self.project)];
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	BOOL hasLoadedPrimaryFolders = [projectManager hasLoadedPrimaryFoldersForProject:project];
+	
+	NSArray *collections = nil;
+	if (hasLoadedPrimaryFolders) {
+		collections = [projectManager copyCollectionsForProject:project];
+	}
+	else {
+		[projectManager loadPrimaryFoldersForProjectIfNeeded:project];
+	}
 	
 	if (!collections) {
 		collections = @[];

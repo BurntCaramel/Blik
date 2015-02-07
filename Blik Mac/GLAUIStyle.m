@@ -79,6 +79,7 @@
 		(style.editedTextBackgroundColor) = whiteAlmost;
 		
 		(style.instructionsTextColor) = whiteAlmost;
+		(style.instructionsSecondaryTextColor) = [whiteAlmost colorWithAlphaComponent:0.55];
 		(style.instructionsHeadingColor) = activeYellow;
 		
 		(style.roundedToggleBorderColor) = whiteAlmost;
@@ -217,9 +218,9 @@
 	(projectNameField.font) = (self.projectTitleFont);
 }
 
-- (void)prepareInstructionalTextLabel:(NSTextField *)textField
+- (void)prepareInstructionalTextLabel:(NSTextField *)textField isSecondary:(BOOL)secondary
 {
-	(textField.textColor) = (self.instructionsTextColor);
+	(textField.textColor) = secondary ? (self.instructionsSecondaryTextColor) : (self.instructionsTextColor);
 	
 	NSMutableAttributedString *mutableAttributedString = [(textField.attributedStringValue) mutableCopy];
 	NSParagraphStyle *paragraphStyle = [mutableAttributedString attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:NULL];
@@ -230,6 +231,16 @@
 	}
 	
 	(textField.attributedStringValue) = mutableAttributedString;
+}
+
+- (void)prepareInstructionalTextLabel:(NSTextField *)textField
+{
+	[self prepareInstructionalTextLabel:textField isSecondary:NO];
+}
+
+- (void)prepareSecondaryInstructionalTextLabel:(NSTextField *)textField
+{
+	[self prepareInstructionalTextLabel:textField isSecondary:YES];
 }
 
 - (void)prepareInstructionalHeadingLabel:(NSTextField *)textField

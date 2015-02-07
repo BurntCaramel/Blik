@@ -47,6 +47,7 @@
 @property(nonatomic) NSColor *editedTextBackgroundColor;
 
 @property(nonatomic) NSColor *instructionsTextColor;
+@property(nonatomic) NSColor *instructionsSecondaryTextColor;
 @property(nonatomic) NSColor *instructionsHeadingColor;
 
 @property(nonatomic) NSColor *roundedToggleBorderColor;
@@ -108,8 +109,9 @@
 
 - (void)prepareProjectNameField:(NSTextField *)projectNameField;
 
-- (void)prepareInstructionalTextLabel:(NSTextField *)textField;
 - (void)prepareInstructionalHeadingLabel:(NSTextField *)textField;
+- (void)prepareInstructionalTextLabel:(NSTextField *)textField;
+- (void)prepareSecondaryInstructionalTextLabel:(NSTextField *)textField;
 
 - (void)prepareOutlinedTextField:(NSTextField *)textField;
 - (void)prepareContentTableView:(NSTableView *)tableView;

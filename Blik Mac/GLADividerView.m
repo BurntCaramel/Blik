@@ -19,8 +19,6 @@
 	NSColor *dividerColor = (style.mainDividerColor);
 	[dividerColor setFill];
 	NSRectFill(dirtyRect);
-	
-	
 }
 
 @end

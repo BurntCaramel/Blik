@@ -368,6 +368,10 @@
 		*ioBookmarkData = bookmarkData;
 	}
 	
+	if (update) {
+		(self.sourceBookmarkData) = bookmarkData;
+	}
+	
 	return YES;
 }
 #endif

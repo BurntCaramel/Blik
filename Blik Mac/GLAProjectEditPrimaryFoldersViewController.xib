@@ -8,12 +8,12 @@
         <customObject id="-2" userLabel="File's Owner" customClass="GLAProjectEditPrimaryFoldersViewController">
             <connections>
                 <outlet property="addFoldersButton" destination="3XD-GW-tQe" id="Bpv-H6-83J"/>
+                <outlet property="foldersTableMenu" destination="kDy-NV-qoA" id="sWz-h5-lrm"/>
+                <outlet property="foldersTableView" destination="68W-60-bLs" id="wp9-55-hoK"/>
                 <outlet property="instructionsViewController" destination="pUk-VA-533" id="UFp-Ka-aGq"/>
                 <outlet property="mainHolderView" destination="qHs-AR-359" id="uiD-LQ-DJm"/>
                 <outlet property="mainHolderViewController" destination="gMM-aO-7LN" id="IqX-nc-iAa"/>
                 <outlet property="mainLabel" destination="3bW-HV-eiW" id="u9n-jp-pp4"/>
-                <outlet property="primaryFoldersTableMenu" destination="kDy-NV-qoA" id="ldl-Mq-Wnn"/>
-                <outlet property="primaryFoldersTableView" destination="68W-60-bLs" id="gYG-Xy-XAg"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
@@ -197,7 +197,7 @@
             <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="hJy-sP-Olc">
                 <autoresizingMask key="autoresizingMask"/>
             </scroller>
-            <point key="canvasLocation" x="166" y="527.5"/>
+            <point key="canvasLocation" x="182" y="490.5"/>
         </scrollView>
         <menu id="kDy-NV-qoA">
             <items>
@@ -215,11 +215,11 @@
                     </connections>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="519" y="507.5"/>
+            <point key="canvasLocation" x="475.5" y="476.5"/>
         </menu>
-        <viewController title="Instructions View Controller" id="pUk-VA-533" customClass="GLAProjectInstructionsViewController">
+        <viewController title="Instructions View Controller" id="pUk-VA-533" customClass="GLAInstructionsViewController">
             <connections>
-                <outlet property="mainTextLabel" destination="Jdc-YU-pLl" id="eqN-O4-c6T"/>
+                <outlet property="secondaryTextLabel" destination="Jdc-YU-pLl" id="Say-Fe-D4l"/>
                 <outlet property="view" destination="Zwd-ik-SA5" id="NeZ-It-cYU"/>
             </connections>
         </viewController>
@@ -243,7 +243,7 @@
                 <constraint firstAttribute="centerX" secondItem="Jdc-YU-pLl" secondAttribute="centerX" constant="7" id="hou-ne-SDR"/>
                 <constraint firstAttribute="centerY" secondItem="Jdc-YU-pLl" secondAttribute="centerY" constant="0.5" id="noW-es-hNG"/>
             </constraints>
-            <point key="canvasLocation" x="-211" y="493"/>
+            <point key="canvasLocation" x="-154" y="492"/>
         </customView>
     </objects>
 </document>

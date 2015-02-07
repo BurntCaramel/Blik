@@ -12,15 +12,6 @@
 
 @implementation GLASplitView
 
-- (id)initWithFrame:(NSRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code here.
-    }
-    return self;
-}
-
 - (NSColor *)dividerColor
 {
 	return ([GLAUIStyle activeStyle].splitViewDividerColor);

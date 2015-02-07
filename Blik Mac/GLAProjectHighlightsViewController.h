@@ -7,7 +7,7 @@
 //
 
 #import "GLAViewController.h"
-#import "GLAProjectInstructionsViewController.h"
+#import "GLAInstructionsViewController.h"
 #import "GLAProject.h"
 #import "GLAHighlightedItem.h"
 #import "GLAFileOpenerApplicationCombiner.h"
@@ -26,7 +26,7 @@
 
 @property(weak) IBOutlet GLAProjectViewController *parentViewController;
 
-@property(strong, nonatomic) IBOutlet GLAProjectInstructionsViewController *instructionsViewController;
+@property(strong, nonatomic) IBOutlet GLAInstructionsViewController *instructionsViewController;
 
 @property(nonatomic) GLAProject *project;
 @property(nonatomic) NSArray *highlightedItems;

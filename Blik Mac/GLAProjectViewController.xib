@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
     </dependencies>
     <objects>
@@ -294,14 +293,14 @@
                 <constraint firstAttribute="bottom" relation="lessThanOrEqual" secondItem="gya-ze-oT1" secondAttribute="bottom" id="vFh-jk-2QI"/>
             </constraints>
         </customView>
-        <viewController title="Collections List Instructions" id="5dd-3O-WRK" customClass="GLAProjectInstructionsViewController">
+        <viewController title="Collections List Instructions" id="5dd-3O-WRK" customClass="GLAInstructionsViewController">
             <connections>
                 <outlet property="headingTextLabel" destination="OSI-F3-63a" id="ghG-87-0vV"/>
                 <outlet property="mainTextLabel" destination="chl-Vp-HVE" id="tfU-7z-DS0"/>
                 <outlet property="view" destination="Idz-io-wKr" id="EYu-4j-kHe"/>
             </connections>
         </viewController>
-        <viewController title="Highlights List Instructions" id="bNf-jR-Sti" customClass="GLAProjectInstructionsViewController">
+        <viewController title="Highlights List Instructions" id="bNf-jR-Sti" customClass="GLAInstructionsViewController">
             <connections>
                 <outlet property="headingTextLabel" destination="M4I-tR-hcL" id="9kM-GL-e6S"/>
                 <outlet property="mainTextLabel" destination="kal-bU-mMW" id="x48-3M-7hC"/>
@@ -359,13 +358,6 @@
         </customView>
         <menu title="Highlighted Item Menu" id="Vkd-RN-V0D">
             <items>
-                <menuItem title="Remove from Highlights" id="CCv-nW-cRP">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="removedClickedItem:" target="aDf-pc-aeE" id="KGO-Tx-rSu"/>
-                    </connections>
-                </menuItem>
-                <menuItem isSeparatorItem="YES" id="gvF-3d-HKU"/>
                 <menuItem title="Open With" id="g7T-tV-92P">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Open With" id="gy9-Mo-SHK">
@@ -385,6 +377,13 @@
                             </menuItem>
                         </items>
                     </menu>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="gvF-3d-HKU"/>
+                <menuItem title="Remove from Highlights" id="CCv-nW-cRP">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="removedClickedItem:" target="aDf-pc-aeE" id="KGO-Tx-rSu"/>
+                    </connections>
                 </menuItem>
             </items>
             <point key="canvasLocation" x="985" y="28.5"/>

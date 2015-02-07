@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
@@ -80,7 +80,7 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="SmP-nQ-mkB"/>
-                            <menuItem title="Work on This Project Now" id="3Gh-mI-doL">
+                            <menuItem title="Work on Project Now" id="3Gh-mI-doL">
                                 <string key="keyEquivalent" base64-UTF8="YES">
 DQ
 </string>
@@ -113,19 +113,14 @@ DQ
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="4t1-vK-tMY"/>
-                            <menuItem title="Now" keyEquivalent="0" id="nqk-On-ocM">
-                                <connections>
-                                    <action selector="goToNowProject:" target="-1" id="OWA-PN-QMf"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="All Projects" keyEquivalent="1" id="lyC-ZA-xy1">
+                            <menuItem title="All Projects" keyEquivalent="9" id="lyC-ZA-xy1">
                                 <connections>
                                     <action selector="goToAll:" target="-1" id="ccn-5J-0qi"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Planned Projects" hidden="YES" keyEquivalent="2" id="bzg-Bt-vsR">
+                            <menuItem title="Now" keyEquivalent="0" id="nqk-On-ocM">
                                 <connections>
-                                    <action selector="goToPlanned:" target="-1" id="TCH-KT-UyY"/>
+                                    <action selector="goToNowProject:" target="-1" id="OWA-PN-QMf"/>
                                 </connections>
                             </menuItem>
                         </items>

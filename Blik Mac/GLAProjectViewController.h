@@ -26,7 +26,7 @@
 @class GLAProjectCollectionsViewController;
 @class GLAProjectPlanViewController;
 @class GLAProjectHighlightsViewController;
-@class GLAProjectInstructionsViewController;
+@class GLAInstructionsViewController;
 @class GLAChooseRemindersViewController;
 
 

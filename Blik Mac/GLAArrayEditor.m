@@ -463,7 +463,7 @@
 }
 
 - (void)moveChildrenAtIndexes:(NSIndexSet *)indexes toIndex:(NSUInteger)toIndex
-{
+{NSLog(@"moveChildrenAtIndexes");
 	NSParameterAssert(indexes != nil);
 	NSParameterAssert((indexes.count) > 0);
 	NSParameterAssert(toIndex != NSNotFound);
@@ -565,7 +565,7 @@ NSString *GLAArrayEditorWithStoreIsReadyForEditingNotification = @"GLAArrayEdito
 }
 
 - (void)includeMovedChildrenFromIndexes:(NSIndexSet *)indexes toIndex:(NSUInteger)toIndex
-{
+{NSLog(@"INCLUDE MOVED CHILDREN");
 	_didMoveChildren = YES;
 	
 	_hasChanges = YES;

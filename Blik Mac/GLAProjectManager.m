@@ -9,6 +9,7 @@
 #import "GLAProjectManager.h"
 #import "Mantle/Mantle.h"
 #import "GLAModelErrors.h"
+#import "GLAWorkingFoldersManager.h"
 #import "GLACollection.h"
 #import "GLACollectionColor.h"
 #import "GLACollectedFile.h"
@@ -1043,6 +1044,20 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 #pragma mark Files
 
+#if 1
+
+- (NSURL *)version1DirectoryURLWithInnerDirectoryComponents:(NSArray *)extraPathComponents
+{
+	return [[GLAWorkingFoldersManager sharedWorkingFoldersManager] version1DirectoryURLWithInnerDirectoryComponents:extraPathComponents];
+}
+
+- (NSURL *)version1DirectoryURL
+{
+	return ([GLAWorkingFoldersManager sharedWorkingFoldersManager].version1DirectoryURL);
+}
+
+#else
+
 - (NSURL *)version1DirectoryURLWithInnerDirectoryComponents:(NSArray *)extraPathComponents
 {
 	GLAProjectManager *projectManager = (self.projectManager);
@@ -1086,6 +1101,8 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 {
 	return [self version1DirectoryURLWithInnerDirectoryComponents:nil];
 }
+
+#endif
 
 - (NSURL *)allProjectsJSONFileURL
 {
