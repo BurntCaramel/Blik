@@ -336,12 +336,19 @@ NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileUR
 		return [(URL1.path) isEqual:(URL2.path)];
 	};
 	
+	BOOL preferredApplicationIsAlsoDefault = (preferredApplicationURL) && (combinedDefaultOpenerApplicationURL) && applicationURLsAreEqual(preferredApplicationURL, combinedDefaultOpenerApplicationURL);
+	
 	if (preferredApplicationURL) {
 		preferredApplicationMenuItem = [self newMenuItemForApplicationURL:preferredApplicationURL target:target action:action];
-		(preferredApplicationMenuItem.title) = [NSString localizedStringWithFormat:NSLocalizedString(@"%@ (preferred)", @"Menu item title format for preferred application."), (preferredApplicationMenuItem.title)];
+		if (preferredApplicationIsAlsoDefault) {
+			(preferredApplicationMenuItem.title) = [NSString localizedStringWithFormat:NSLocalizedString(@"%@ (preferred & default)", @"Menu item title format for preferred application which is also the default."), (preferredApplicationMenuItem.title)];
+		}
+		else {
+			(preferredApplicationMenuItem.title) = [NSString localizedStringWithFormat:NSLocalizedString(@"%@ (preferred)", @"Menu item title format for preferred application."), (preferredApplicationMenuItem.title)];
+		}
 	}
 	
-	if (combinedDefaultOpenerApplicationURL) {
+	if (combinedDefaultOpenerApplicationURL && !preferredApplicationIsAlsoDefault) {
 		defaultApplicationMenuItem = [self newMenuItemForApplicationURL:combinedDefaultOpenerApplicationURL target:target action:action];
 		(defaultApplicationMenuItem.title) = [NSString localizedStringWithFormat:NSLocalizedString(@"%@ (default)", @"Menu item title format for default application."), (defaultApplicationMenuItem.title)];
 	}
