@@ -136,7 +136,7 @@
 			GLAAccessedFileInfo *accessedFileInfo = [collectedFile accessFile];
 			NSURL *filePathURL = (accessedFileInfo.filePathURL);
 			if (filePathURL) {
-				[(self.fileInfoRetriever) requestDefaultResourceKeysForURL:filePathURL];
+				[(self.fileInfoRetriever) requestDefaultResourceKeysForURL:filePathURL alwaysNotify:YES];
 			}
 			
 			[self runAsyncOnInputQueue:^(GLACollectedFilesSetting *self) {

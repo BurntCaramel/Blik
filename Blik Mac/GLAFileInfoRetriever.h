@@ -20,11 +20,11 @@
 #pragma mark File Properties
 
 @property(nonatomic) NSArray *defaultResourceKeysToRequest;
-- (void)requestDefaultResourceKeysForURL:(NSURL *)URL;
+- (void)requestDefaultResourceKeysForURL:(NSURL *)URL alwaysNotify:(BOOL)alwaysNotify;
 
 // All methods are thread-safe
 
-- (void)requestResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL;
+- (void)requestResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL alwaysNotify:(BOOL)alwaysNotify;
 
 - (NSDictionary *)loadedResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL requestIfNeeded:(BOOL)request;
 - (NSError *)lastErrorLoadingResourceValuesForURL:(NSURL *)URL;
