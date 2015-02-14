@@ -22,6 +22,19 @@ typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint
 
 - (void)prepareView; // Like 10.10's -viewDidLoad method.
 
+#pragma mark Transitioning
+
+- (void)transitionToInStateWithoutAnimating;
+- (void)transitionToOutStateWithoutAnimating;
+
+- (void)transitionInWithDuration:(NSTimeInterval)duration adjustingConstraint:(NSLayoutConstraint *)constraint fromValue:(CGFloat)constraintStartValue toValue:(CGFloat)constraintFinishValue isActiveChecker:(BOOL (^)(void))isActiveChecker completionHandler:(BOOL (^)(void))completionHandler;
+
+- (void)transitionOutWithDuration:(NSTimeInterval)duration adjustingConstraint:(NSLayoutConstraint *)constraint fromValue:(CGFloat)constraintStartValue toValue:(CGFloat)constraintFinishValue removeWhenCompleteHandler:(BOOL (^)(void))removeWhenCompleteHandler;
+
+- (void)transitionInWithDuration:(NSTimeInterval)duration adjustingConstraint:(NSLayoutConstraint *)constraint toValue:(CGFloat)constraintValue animate:(BOOL)animate isActiveChecker:(BOOL (^)(void))isActiveChecker completionHandler:(void (^)())completionHandler;
+
+- (void)transitionOutWithDuration:(NSTimeInterval)duration adjustingConstraint:(NSLayoutConstraint *)constraint toValue:(CGFloat)constraintValue animate:(BOOL)animate isNotActiveChecker:(BOOL (^)(void))isNotActiveChecker completionHandler:(void (^)())completionHandler;
+
 - (void)viewWillTransitionIn;
 - (void)viewDidTransitionIn;
 

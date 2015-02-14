@@ -7,30 +7,43 @@
 //
 
 @import Cocoa;
-#import "GLAFileInfoRetriever.h"
 #import "GLACollectedFile.h"
+#import "GLACollectedFilesSetting.h"
 
 
 @protocol GLACollectedFileListHelperDelegate;
 
 
-@interface GLACollectedFileListHelper : NSObject <GLAFileInfoRetrieverDelegate>
+@interface GLACollectedFileListHelper : NSObject
 
 - (instancetype)initWithDelegate:(id<GLACollectedFileListHelperDelegate>)delegate;
 
-@property(nonatomic, weak, readonly) id<GLACollectedFileListHelperDelegate> delegate;
++ (NSArray *)defaultURLResourceKeysToRequest;
 
-@property(nonatomic, copy) NSArray *collectedFiles;
+@property(weak, readonly, nonatomic) id<GLACollectedFileListHelperDelegate> delegate;
 
-@property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
+@property(copy, nonatomic) GLAProject *project;
 
-- (void)setUpTableCellView:(NSTableCellView *)cellView forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
+@property(copy, nonatomic) NSArray *collectedFiles;
+@property(readonly, nonatomic) GLACollectedFilesSetting *collectedFilesSetting;
+//@property(readonly, nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
+
+- (id<GLAFileAccessing>)accessFileForCollectedFile:(GLACollectedFile *)collectedFile;
+
+- (void)setUpTableCellView:(NSTableCellView *)cellView forTableColumn:(NSTableColumn *)tableColumn collectedFile:(GLACollectedFile *)collectedFile;
 
 @end
 
 
-@protocol GLACollectedFileListHelperDelegate
+@protocol GLACollectedFileListHelperDelegate <NSObject>
 
-- (void)collectedFileListHelper:(GLACollectedFileListHelper *)helper didLoadInfoForCollectedFilesAtIndexes:(NSIndexSet *)indexes;
+- (void)collectedFileListHelperDidInvalidate:(GLACollectedFileListHelper *)helper;
+
+@optional
+
+- (void)collectedFileListHelper:(GLACollectedFileListHelper *)helper didLoadInfoForCollectedFiles:(NSArray *)collectedFiles;
+
+//- (NSArray *)orderedCollectedFilesForCollectedFileListHelper:(GLACollectedFileListHelper *)helper;
+//- (void)collectedFileListHelper:(GLACollectedFileListHelper *)helper didLoadInfoForCollectedFilesAtIndexes:(NSIndexSet *)indexes;
 
 @end

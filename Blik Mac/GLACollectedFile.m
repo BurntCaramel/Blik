@@ -21,7 +21,6 @@
 @property(readwrite, copy, nonatomic) NSString *name;
 
 @property(readwrite, nonatomic) BOOL wasCreatedFromBookmarkData;
-@property(nonatomic) NSData *sourceBookmarkData;
 @property(readwrite, nonatomic) NSData *bookmarkData;
 
 @end
@@ -39,6 +38,7 @@
 		_sourceFilePathURL = [fileURL filePathURL];
 		_fileReferenceURL = [fileURL fileReferenceURL];
 		
+		(self.sourceBookmarkData) = (self.bookmarkData);
 		//NSLog(@"COLLECTED FILE INIT %@ | FP %@ | FR %@", fileURL, _sourceFilePathURL, _fileReferenceURL);
 	}
 	return self;
@@ -50,7 +50,7 @@
 	NSError *error = nil;
 	for (NSURL *fileURL in fileURLs) {
 		GLACollectedFile *collectedFile = [[GLACollectedFile alloc] initWithFileURL:fileURL];
-		[collectedFile updateInformationWithError:&error];
+		//[collectedFile updateInformationWithError:&error];
 		[collectedFiles addObject:collectedFile];
 	}
 	
@@ -61,7 +61,7 @@
 {
 	NSMutableArray *URLs = [NSMutableArray new];
 	for (GLACollectedFile *collectedFile in collectedFiles) {
-		if (ignoreMissing && (collectedFile.isMissing)) {
+		if (ignoreMissing) {
 			continue;
 		}
 		
@@ -82,6 +82,29 @@
 }
 
 #pragma mark -
+
+- (GLAAccessedFileInfo *)accessFile
+{
+#if DEBUG
+	CFAbsoluteTime tStart = CFAbsoluteTimeGetCurrent();
+#endif
+	
+	GLAAccessedFileInfo *accessedFileInfo;
+	NSData *bookmarkData = (self.sourceBookmarkData);
+	if (bookmarkData) {
+		accessedFileInfo = [[GLAAccessedFileInfo alloc] initWithBookmarkData:bookmarkData];
+	}
+	else {
+		accessedFileInfo = [[GLAAccessedFileInfo alloc] initWithFileURL:(self.sourceFilePathURL)];
+	}
+	
+#if DEBUG
+	CFAbsoluteTime tEnd = CFAbsoluteTimeGetCurrent();
+	NSLog(@"%@ took %@s", NSStringFromSelector(_cmd), @(tEnd - tStart));
+#endif
+	
+	return accessedFileInfo;
+}
 
 - (NSURL *)filePathURL
 {
@@ -110,7 +133,7 @@
 
 - (NSUInteger)hash
 {
-	return (self.filePathURL.hash);
+	return (self.sourceBookmarkData.hash);
 }
 
 - (BOOL)isEqual:(id)object
@@ -119,7 +142,7 @@
 	if (![object isKindOfClass:(self.class)]) return NO;
 	
 	GLACollectedFile *other = object;
-	return [(self.filePathURL) isEqual:(other.filePathURL)];
+	return [(self.sourceBookmarkData) isEqualToData:(other.sourceBookmarkData)];
 }
 
 + (NSString *)objectJSONPasteboardType
@@ -133,6 +156,7 @@
 	
 	return
   @{
+	@"sourceBookmarkData": null,
 	@"fileReferenceURL": null,
 	@"sourceFilePathURL": null,
 	@"name": null,
@@ -177,6 +201,8 @@
 	  ];
 }
 
+#if 0
+
 - (void)updateInformationFromURLResourceValues:(NSDictionary *)resourceValues
 {
 	(self.isDirectory) = [@YES isEqual:resourceValues[NSURLIsDirectoryKey]];
@@ -213,8 +239,7 @@
 		[self updateInformationFromURLResourceValues:resourceValues];
 		
 		NSError *error = nil;
-		BOOL isReachable = [URL checkResourceIsReachableAndReturnError:&error];
-		(self.isMissing) = !isReachable;
+		//BOOL isReachable = [URL checkResourceIsReachableAndReturnError:&error];
 	}
 
 	if (wasCreatedFromBookmarkData) {
@@ -228,6 +253,8 @@
 {
 	return [self updateInformationApartFromKeys:nil error:outError];
 }
+
+#endif
 
 - (NSData *)bookmarkDataWithError:(NSError *__autoreleasing *)outError
 {
@@ -273,15 +300,14 @@
 	//(self.sourceBookmarkData) = bookmarkData;
 	(self.wasCreatedFromBookmarkData) = YES;
 	
-	if (self.isMissing) {
-		return;
-	}
+#if 0
 	
 	NSArray *resourceValueKeys = [[self class] coreResourceValueKeys];
 	NSDictionary *resourceValues = [NSURL resourceValuesForKeys:resourceValueKeys fromBookmarkData:bookmarkData];
 	[self updateInformationFromURLResourceValues:resourceValues];
 	
 	[self updateInformationApartFromKeys:[resourceValues allKeys] error:&error];
+#endif
 }
 
 #if 1
@@ -294,9 +320,6 @@
 {
 	NSData *bookmarkData = *ioBookmarkData;
 	if (!bookmarkData) {
-		if (update) {
-			(self.isMissing) = YES;
-		}
 		return YES;
 	}
 	
@@ -311,9 +334,6 @@
 			case NSFileReadUnknownError:
 			case NSFileReadNoSuchFileError:
 			//case NSFileReadCorruptFileError:
-			if (update) {
-				(self.isMissing) = YES;
-			}
 			return YES;
 			
 			default:
@@ -351,9 +371,6 @@
 				case NSFileNoSuchFileError:
 				case NSFileReadUnknownError:
 				case NSFileReadNoSuchFileError:
-				if (update) {
-					(self.isMissing) = YES;
-				}
 				return YES;
 				
 				default:

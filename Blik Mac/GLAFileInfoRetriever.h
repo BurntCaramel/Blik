@@ -22,6 +22,8 @@
 @property(nonatomic) NSArray *defaultResourceKeysToRequest;
 - (void)requestDefaultResourceKeysForURL:(NSURL *)URL;
 
+// All methods are thread-safe
+
 - (void)requestResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL;
 
 - (NSDictionary *)loadedResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL requestIfNeeded:(BOOL)request;
@@ -43,7 +45,7 @@
 #pragma mark -
 
 - (void)clearCacheForURLs:(NSArray *)URLs;
-
+- (void)clearCacheForAllURLs;
 - (void)cancelAllLoading;
 
 @end

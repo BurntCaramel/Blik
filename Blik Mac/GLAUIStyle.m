@@ -213,6 +213,11 @@
 	(textField.textColor) = (self.lightTextColor);
 }
 
+- (void)prepareTableTextLabel:(NSTextField *)textField
+{
+	[self prepareTextLabel:textField];
+}
+
 - (void)prepareProjectNameField:(NSTextField *)projectNameField
 {
 	(projectNameField.font) = (self.projectTitleFont);
@@ -245,7 +250,8 @@
 
 - (void)prepareInstructionalHeadingLabel:(NSTextField *)textField
 {
-	(textField.textColor) = (self.instructionsHeadingColor);
+	(textField.textColor) = (self.instructionsSecondaryTextColor);
+	//(textField.textColor) = (self.instructionsHeadingColor);
 }
 
 - (void)prepareOutlinedTextField:(NSTextField *)textField
@@ -266,6 +272,39 @@
 	(tableView.enclosingScrollView.backgroundColor) = backgroundColor;
 }
 
+- (NSAttributedString *)copyAttributedString:(NSAttributedString *)attrString withFont:(NSFont *)font textColor:(NSColor *)color lineHeight:(CGFloat)lineHeight
+{
+	NSMutableAttributedString *mutableAttributedString = [attrString mutableCopy];
+	NSRange fullRange = NSMakeRange(0, (mutableAttributedString.length));
+	
+	[mutableAttributedString addAttribute:NSFontAttributeName value:font range:fullRange];
+	
+	[mutableAttributedString addAttribute:NSForegroundColorAttributeName value:color range:fullRange];
+	
+	NSMutableParagraphStyle *mutableParagraphStyle = nil;
+	NSParagraphStyle *paragraphStyle = [mutableAttributedString attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:NULL];
+	if (paragraphStyle) {
+		mutableParagraphStyle = [paragraphStyle mutableCopy];
+	}
+	else {
+		mutableParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+	}
+
+	(mutableParagraphStyle.paragraphSpacing) = 0.0;
+	(mutableParagraphStyle.paragraphSpacingBefore) = 0.0;
+	(mutableParagraphStyle.minimumLineHeight) = lineHeight;
+	(mutableParagraphStyle.maximumLineHeight) = lineHeight;
+	[mutableAttributedString addAttribute:NSParagraphStyleAttributeName value:mutableParagraphStyle range:fullRange];
+	
+	return mutableAttributedString;
+}
+
+- (void)prepareCheckButton:(NSButton *)checkButton
+{
+	NSAttributedString *attributedString = (checkButton.attributedTitle);
+	attributedString = [self copyAttributedString:attributedString withFont:(self.buttonFont) textColor:(self.lightTextColor) lineHeight:20.0];
+	(checkButton.attributedTitle) = attributedString;
+}
 
 #pragma mark Drawing
 
@@ -294,6 +333,28 @@
 	[color setFill];
 	
 	NSRectFill(topBarRect);
+}
+
+#pragma mark Windows
+
+- (void)primaryWindowDidBecomeMain:(NSWindow *)window
+{
+	(window.alphaValue) = 1.0;
+}
+
+- (void)primaryWindowDidResignMain:(NSWindow *)window
+{
+	(window.alphaValue) = 30.5/32.0;
+}
+
+- (void)secondaryWindowDidBecomeMain:(NSWindow *)window
+{
+	(window.alphaValue) = 1.0;
+}
+
+- (void)secondaryWindowDidResignMain:(NSWindow *)window
+{
+	(window.alphaValue) = 28.5/32.0;
 }
 
 @end

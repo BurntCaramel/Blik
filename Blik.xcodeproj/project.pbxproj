@@ -112,11 +112,20 @@
 		B2E39B361A7C60EC000A9A12 /* GLADirectoryWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E39B351A7C60EC000A9A12 /* GLADirectoryWatcher.m */; };
 		B2E39B3C1A84980B000A9A12 /* GLAPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E39B3A1A84980B000A9A12 /* GLAPreferencesWindowController.m */; };
 		B2E39B3D1A84980B000A9A12 /* GLAPreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2E39B3B1A84980B000A9A12 /* GLAPreferencesWindowController.xib */; };
-		B2E39B421A849F06000A9A12 /* GLAEditApplicationFoldersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E39B401A849F06000A9A12 /* GLAEditApplicationFoldersViewController.m */; };
-		B2E39B431A849F06000A9A12 /* GLAEditApplicationFoldersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2E39B411A849F06000A9A12 /* GLAEditApplicationFoldersViewController.xib */; };
+		B2E39B421A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E39B401A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.m */; };
+		B2E39B431A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2E39B411A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.xib */; };
 		B2E39B461A849F5A000A9A12 /* GLAChooseFoldersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E39B451A849F5A000A9A12 /* GLAChooseFoldersViewController.m */; };
 		B2E39B4B1A859B82000A9A12 /* GLAApplicationSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E39B4A1A859B82000A9A12 /* GLAApplicationSettingsManager.m */; };
 		B2E39B4E1A85B797000A9A12 /* GLAWorkingFoldersManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E39B4D1A85B797000A9A12 /* GLAWorkingFoldersManager.m */; };
+		B2E39B521A88C930000A9A12 /* GLAPreferencesMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E39B501A88C930000A9A12 /* GLAPreferencesMainViewController.m */; };
+		B2E39B571A88FBE8000A9A12 /* GLAPreferencesChooseSectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E39B551A88FBE8000A9A12 /* GLAPreferencesChooseSectionViewController.m */; };
+		B2E39B581A88FBE8000A9A12 /* GLAPreferencesChooseSectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2E39B561A88FBE8000A9A12 /* GLAPreferencesChooseSectionViewController.xib */; };
+		B2E39B5A1A8981E6000A9A12 /* GLAPreferencesSection.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E39B591A8981E6000A9A12 /* GLAPreferencesSection.m */; };
+		B2E39B5E1A89AF56000A9A12 /* GLANavigationButtonGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E39B5D1A89AF56000A9A12 /* GLANavigationButtonGroup.m */; };
+		B2E39B611A89B27B000A9A12 /* GLAPreferencesNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E39B601A89B27B000A9A12 /* GLAPreferencesNavigationViewController.m */; };
+		B2E39B641A89B642000A9A12 /* GLAPreferencesSectionNavigator.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E39B631A89B642000A9A12 /* GLAPreferencesSectionNavigator.m */; };
+		B2ED538A1A8A20B700F6B4FA /* GLAAccessedFileInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ED53891A8A20B700F6B4FA /* GLAAccessedFileInfo.m */; };
+		B2ED538D1A8D6E2B00F6B4FA /* GLAArrayEditorUser.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ED538C1A8D6E2B00F6B4FA /* GLAArrayEditorUser.m */; };
 		B2F0DBB219923887001AB5EE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2F0DBB119923887001AB5EE /* Foundation.framework */; };
 		B2F0DBB819923887001AB5EE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2F0DBB619923887001AB5EE /* InfoPlist.strings */; };
 		B2F0DBBB19923887001AB5EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B2F0DBBA19923887001AB5EE /* main.m */; };
@@ -338,15 +347,32 @@
 		B2E39B391A84980B000A9A12 /* GLAPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPreferencesWindowController.h; sourceTree = "<group>"; };
 		B2E39B3A1A84980B000A9A12 /* GLAPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPreferencesWindowController.m; sourceTree = "<group>"; };
 		B2E39B3B1A84980B000A9A12 /* GLAPreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAPreferencesWindowController.xib; sourceTree = "<group>"; };
-		B2E39B3F1A849F06000A9A12 /* GLAEditApplicationFoldersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAEditApplicationFoldersViewController.h; sourceTree = "<group>"; };
-		B2E39B401A849F06000A9A12 /* GLAEditApplicationFoldersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAEditApplicationFoldersViewController.m; sourceTree = "<group>"; };
-		B2E39B411A849F06000A9A12 /* GLAEditApplicationFoldersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAEditApplicationFoldersViewController.xib; sourceTree = "<group>"; };
+		B2E39B3F1A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAEditPermittedApplicationFoldersViewController.h; sourceTree = "<group>"; };
+		B2E39B401A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAEditPermittedApplicationFoldersViewController.m; sourceTree = "<group>"; };
+		B2E39B411A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAEditPermittedApplicationFoldersViewController.xib; sourceTree = "<group>"; };
 		B2E39B441A849F5A000A9A12 /* GLAChooseFoldersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAChooseFoldersViewController.h; sourceTree = "<group>"; };
 		B2E39B451A849F5A000A9A12 /* GLAChooseFoldersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAChooseFoldersViewController.m; sourceTree = "<group>"; };
 		B2E39B491A859B82000A9A12 /* GLAApplicationSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAApplicationSettingsManager.h; sourceTree = "<group>"; };
 		B2E39B4A1A859B82000A9A12 /* GLAApplicationSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAApplicationSettingsManager.m; sourceTree = "<group>"; };
 		B2E39B4C1A85B797000A9A12 /* GLAWorkingFoldersManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAWorkingFoldersManager.h; sourceTree = "<group>"; };
 		B2E39B4D1A85B797000A9A12 /* GLAWorkingFoldersManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAWorkingFoldersManager.m; sourceTree = "<group>"; };
+		B2E39B4F1A88C930000A9A12 /* GLAPreferencesMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPreferencesMainViewController.h; sourceTree = "<group>"; };
+		B2E39B501A88C930000A9A12 /* GLAPreferencesMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPreferencesMainViewController.m; sourceTree = "<group>"; };
+		B2E39B541A88FBE8000A9A12 /* GLAPreferencesChooseSectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPreferencesChooseSectionViewController.h; sourceTree = "<group>"; };
+		B2E39B551A88FBE8000A9A12 /* GLAPreferencesChooseSectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPreferencesChooseSectionViewController.m; sourceTree = "<group>"; };
+		B2E39B561A88FBE8000A9A12 /* GLAPreferencesChooseSectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAPreferencesChooseSectionViewController.xib; sourceTree = "<group>"; };
+		B2E39B591A8981E6000A9A12 /* GLAPreferencesSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPreferencesSection.m; sourceTree = "<group>"; };
+		B2E39B5B1A8981F6000A9A12 /* GLAPreferencesSection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLAPreferencesSection.h; sourceTree = "<group>"; };
+		B2E39B5C1A89AF56000A9A12 /* GLANavigationButtonGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLANavigationButtonGroup.h; sourceTree = "<group>"; };
+		B2E39B5D1A89AF56000A9A12 /* GLANavigationButtonGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLANavigationButtonGroup.m; sourceTree = "<group>"; };
+		B2E39B5F1A89B27B000A9A12 /* GLAPreferencesNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPreferencesNavigationViewController.h; sourceTree = "<group>"; };
+		B2E39B601A89B27B000A9A12 /* GLAPreferencesNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPreferencesNavigationViewController.m; sourceTree = "<group>"; };
+		B2E39B621A89B642000A9A12 /* GLAPreferencesSectionNavigator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAPreferencesSectionNavigator.h; sourceTree = "<group>"; };
+		B2E39B631A89B642000A9A12 /* GLAPreferencesSectionNavigator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPreferencesSectionNavigator.m; sourceTree = "<group>"; };
+		B2ED53881A8A20B700F6B4FA /* GLAAccessedFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAAccessedFileInfo.h; sourceTree = "<group>"; };
+		B2ED53891A8A20B700F6B4FA /* GLAAccessedFileInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAAccessedFileInfo.m; sourceTree = "<group>"; };
+		B2ED538B1A8D6E2B00F6B4FA /* GLAArrayEditorUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAArrayEditorUser.h; sourceTree = "<group>"; };
+		B2ED538C1A8D6E2B00F6B4FA /* GLAArrayEditorUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAArrayEditorUser.m; sourceTree = "<group>"; };
 		B2F0DBB019923887001AB5EE /* com.burntcaramel.Blik.Mac.QuickLook-Preview.xpc */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "com.burntcaramel.Blik.Mac.QuickLook-Preview.xpc"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2F0DBB119923887001AB5EE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B2F0DBB519923887001AB5EE /* QuickLook Preview-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "QuickLook Preview-Info.plist"; sourceTree = "<group>"; };
@@ -436,6 +462,8 @@
 				B22E80C6198F654E005C4108 /* GLAArrayEditor.m */,
 				B2BB850D1A39C4AB00BF186C /* GLAArrayMantleJSONStore.h */,
 				B2BB850E1A39C4AB00BF186C /* GLAArrayMantleJSONStore.m */,
+				B2ED538B1A8D6E2B00F6B4FA /* GLAArrayEditorUser.h */,
+				B2ED538C1A8D6E2B00F6B4FA /* GLAArrayEditorUser.m */,
 				B207633D1A114AC9003C5922 /* GLAArrayTableDraggingHelper.h */,
 				B207633E1A114AC9003C5922 /* GLAArrayTableDraggingHelper.m */,
 				B2E39B311A7C5BEF000A9A12 /* GLAMultipleArrayTableHelper.h */,
@@ -449,6 +477,8 @@
 			children = (
 				B2C7F29619739239005780B4 /* GLAViewController.h */,
 				B2C7F29719739239005780B4 /* GLAViewController.m */,
+				B2E39B5C1A89AF56000A9A12 /* GLANavigationButtonGroup.h */,
+				B2E39B5D1A89AF56000A9A12 /* GLANavigationButtonGroup.m */,
 				B20362C51A0A3112007169C2 /* Main */,
 				B28927541A6B1F69007238D6 /* Helpers */,
 				B26B6F4A19EBDB0700D17ECD /* Project */,
@@ -856,9 +886,20 @@
 		B2E39B381A8497F4000A9A12 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				B2E39B5B1A8981F6000A9A12 /* GLAPreferencesSection.h */,
+				B2E39B591A8981E6000A9A12 /* GLAPreferencesSection.m */,
+				B2E39B621A89B642000A9A12 /* GLAPreferencesSectionNavigator.h */,
+				B2E39B631A89B642000A9A12 /* GLAPreferencesSectionNavigator.m */,
 				B2E39B391A84980B000A9A12 /* GLAPreferencesWindowController.h */,
 				B2E39B3A1A84980B000A9A12 /* GLAPreferencesWindowController.m */,
 				B2E39B3B1A84980B000A9A12 /* GLAPreferencesWindowController.xib */,
+				B2E39B4F1A88C930000A9A12 /* GLAPreferencesMainViewController.h */,
+				B2E39B501A88C930000A9A12 /* GLAPreferencesMainViewController.m */,
+				B2E39B5F1A89B27B000A9A12 /* GLAPreferencesNavigationViewController.h */,
+				B2E39B601A89B27B000A9A12 /* GLAPreferencesNavigationViewController.m */,
+				B2E39B541A88FBE8000A9A12 /* GLAPreferencesChooseSectionViewController.h */,
+				B2E39B551A88FBE8000A9A12 /* GLAPreferencesChooseSectionViewController.m */,
+				B2E39B561A88FBE8000A9A12 /* GLAPreferencesChooseSectionViewController.xib */,
 				B2E39B3E1A849EC8000A9A12 /* Application Folders */,
 			);
 			name = Preferences;
@@ -867,9 +908,9 @@
 		B2E39B3E1A849EC8000A9A12 /* Application Folders */ = {
 			isa = PBXGroup;
 			children = (
-				B2E39B3F1A849F06000A9A12 /* GLAEditApplicationFoldersViewController.h */,
-				B2E39B401A849F06000A9A12 /* GLAEditApplicationFoldersViewController.m */,
-				B2E39B411A849F06000A9A12 /* GLAEditApplicationFoldersViewController.xib */,
+				B2E39B3F1A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.h */,
+				B2E39B401A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.m */,
+				B2E39B411A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.xib */,
 			);
 			name = "Application Folders";
 			sourceTree = "<group>";
@@ -936,14 +977,16 @@
 		E240A3751A0EF3090043AE93 /* File Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B2ED53881A8A20B700F6B4FA /* GLAAccessedFileInfo.h */,
+				B2ED53891A8A20B700F6B4FA /* GLAAccessedFileInfo.m */,
 				B22E80C9198F8971005C4108 /* GLAFileInfoRetriever.h */,
 				B22E80CA198F8971005C4108 /* GLAFileInfoRetriever.m */,
+				B2E39B341A7C60EC000A9A12 /* GLADirectoryWatcher.h */,
+				B2E39B351A7C60EC000A9A12 /* GLADirectoryWatcher.m */,
 				B20362BF1A0779F3007169C2 /* GLACollectedFilesSetting.h */,
 				B20362C01A0779F3007169C2 /* GLACollectedFilesSetting.m */,
 				B20362C21A077C87007169C2 /* GLAFileOpenerApplicationCombiner.h */,
 				B20362C31A077C87007169C2 /* GLAFileOpenerApplicationCombiner.m */,
-				B2E39B341A7C60EC000A9A12 /* GLADirectoryWatcher.h */,
-				B2E39B351A7C60EC000A9A12 /* GLADirectoryWatcher.m */,
 			);
 			name = "File Helpers";
 			sourceTree = "<group>";
@@ -1058,6 +1101,7 @@
 				B219DAB3196AD462007900DF /* GLAProjectViewController.xib in Resources */,
 				B2F0DBC719936321001AB5EE /* GLAChooseRemindersViewController.xib in Resources */,
 				B2711F3D1A69D41D001CB4AF /* GLAProjectEditPrimaryFoldersViewController.xib in Resources */,
+				B2E39B581A88FBE8000A9A12 /* GLAPreferencesChooseSectionViewController.xib in Resources */,
 				B2A8FCB81A2672E50002108E /* GLAEmptyAllProjectsViewController.xib in Resources */,
 				B24B360C196E336E0094FA1F /* GLAMainNavigationBarController.xib in Resources */,
 				B2ADDBDC1963DA2E0014EF84 /* InfoPlist.strings in Resources */,
@@ -1067,7 +1111,7 @@
 				B2CCF8E31A36D24D00EC7703 /* GLAAddCollectedFilesChoiceViewController.xib in Resources */,
 				B25591FB19C845900039D2AC /* GLACollectionColorPickerViewController.xib in Resources */,
 				B26659EC199C60D7003C4EA4 /* GLAAddNewProjectViewController.xib in Resources */,
-				B2E39B431A849F06000A9A12 /* GLAEditApplicationFoldersViewController.xib in Resources */,
+				B2E39B431A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.xib in Resources */,
 				B2C7F28C197023EF005780B4 /* GLAProjectsListViewController.xib in Resources */,
 				B2ADDBEA1963DA2E0014EF84 /* Images.xcassets in Resources */,
 				B2ADDBE21963DA2E0014EF84 /* Credits.rtf in Resources */,
@@ -1171,9 +1215,11 @@
 				B26B6F4919EBDB0100D17ECD /* GLAProjectPlanViewController.m in Sources */,
 				B208E40019F914A7000EF97B /* GLAObjectNotificationRepresenter.m in Sources */,
 				B2CCF8F01A38682400EC7703 /* GLAPendingAddedCollectedFilesInfo.m in Sources */,
+				B2E39B571A88FBE8000A9A12 /* GLAPreferencesChooseSectionViewController.m in Sources */,
 				B208E3FD19F90CFA000EF97B /* GLAProjectHighlightsViewController.m in Sources */,
 				B29F8DDD1981139300F58F59 /* GLAReminderManager.m in Sources */,
 				B2A8FCB71A2672E50002108E /* GLAEmptyAllProjectsViewController.m in Sources */,
+				B2E39B5A1A8981E6000A9A12 /* GLAPreferencesSection.m in Sources */,
 				B2F0DBC619936321001AB5EE /* GLAChooseRemindersViewController.m in Sources */,
 				B28D21821977D6E600A12C6D /* GLATableProjectRowView.m in Sources */,
 				B260F85519ADC91A002E3753 /* GLAStatusItemController.m in Sources */,
@@ -1189,16 +1235,20 @@
 				B245E83F1A395D9D002ED636 /* GLAMainSectionNavigator.m in Sources */,
 				B25591F519C3CD0D0039D2AC /* GLATableActionsViewController.m in Sources */,
 				B219DAB6196AD698007900DF /* GLAUIStyle.m in Sources */,
+				B2ED538A1A8A20B700F6B4FA /* GLAAccessedFileInfo.m in Sources */,
 				B2CCF8E91A370C7D00EC7703 /* NSObject+PGWSNotificationObserving.m in Sources */,
+				B2E39B641A89B642000A9A12 /* GLAPreferencesSectionNavigator.m in Sources */,
 				B207633F1A114AC9003C5922 /* GLAArrayTableDraggingHelper.m in Sources */,
 				B2F0DBC11992607B001AB5EE /* GLAMainSection.m in Sources */,
 				B2ADDBDE1963DA2E0014EF84 /* main.m in Sources */,
 				B2E39B361A7C60EC000A9A12 /* GLADirectoryWatcher.m in Sources */,
 				B219DAAE196ACE8D007900DF /* GLAProjectView.m in Sources */,
 				B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */,
+				B2E39B5E1A89AF56000A9A12 /* GLANavigationButtonGroup.m in Sources */,
 				B292453919E4058A00DD30CB /* GLANoNowProjectViewController.m in Sources */,
 				B2E39B461A849F5A000A9A12 /* GLAChooseFoldersViewController.m in Sources */,
 				B28927671A725DF9007238D6 /* NSMutableDictionary+PGWSChecking.m in Sources */,
+				B2E39B611A89B27B000A9A12 /* GLAPreferencesNavigationViewController.m in Sources */,
 				B2302ED81A554B7F00E6AFBA /* GLAArrayMantleJSONStore.m in Sources */,
 				B20362C81A0A3D2E007169C2 /* GLAInstructionsViewController.m in Sources */,
 				B26B6F5019EBE3C800D17ECD /* GLATableView.m in Sources */,
@@ -1221,7 +1271,7 @@
 				B29F8DDA1980D45400F58F59 /* NSValueTransformer+GLAModel.m in Sources */,
 				B2D0331C19FFA69000C396FB /* GLAHighlightsTableCellView.m in Sources */,
 				B24B3607196D1F720094FA1F /* GLAReminder.m in Sources */,
-				B2E39B421A849F06000A9A12 /* GLAEditApplicationFoldersViewController.m in Sources */,
+				B2E39B421A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.m in Sources */,
 				B2C7F28B197023EF005780B4 /* GLAProjectsListViewController.m in Sources */,
 				B2F0DBCA199449FB001AB5EE /* GLAPopUpButton.m in Sources */,
 				B2E39B331A7C5BEF000A9A12 /* GLAMultipleArrayTableHelper.m in Sources */,
@@ -1230,6 +1280,7 @@
 				B26B6F4D19EBDB3200D17ECD /* GLAProjectCollectionsViewController.m in Sources */,
 				B208E40319F91B66000EF97B /* GLAModel.m in Sources */,
 				B22E80CB198F8971005C4108 /* GLAFileInfoRetriever.m in Sources */,
+				B2ED538D1A8D6E2B00F6B4FA /* GLAArrayEditorUser.m in Sources */,
 				B2C7F2921970D5D3005780B4 /* GLAMainWindow.m in Sources */,
 				B219DAB2196AD462007900DF /* GLAProjectViewController.m in Sources */,
 				B208E3FA19F8E38F000EF97B /* GLAHighlightedItem.m in Sources */,
@@ -1237,6 +1288,7 @@
 				B20362C41A077C87007169C2 /* GLAFileOpenerApplicationCombiner.m in Sources */,
 				B2CCF8E21A36D24D00EC7703 /* GLAAddCollectedFilesChoiceViewController.m in Sources */,
 				B219DAAB196AB8D1007900DF /* GLANavigationButton.m in Sources */,
+				B2E39B521A88C930000A9A12 /* GLAPreferencesMainViewController.m in Sources */,
 				B20362C11A0779F3007169C2 /* GLACollectedFilesSetting.m in Sources */,
 				B2E39B3C1A84980B000A9A12 /* GLAPreferencesWindowController.m in Sources */,
 				B25591FA19C845900039D2AC /* GLACollectionColorPickerViewController.m in Sources */,

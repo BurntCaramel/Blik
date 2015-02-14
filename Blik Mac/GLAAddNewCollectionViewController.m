@@ -62,9 +62,13 @@
 		NSArray *fileURLs = (pendingAddedCollectedFilesInfo.fileURLs);
 		if ((fileURLs.count) == 1) {
 			GLACollectedFile *collectedFile = [[GLACollectedFile alloc] initWithFileURL:fileURLs[0]];
-			NSError *fileError = nil;
-			if ([collectedFile updateInformationWithError:&fileError]) {
-				return (collectedFile.name);
+			// Get the name synchronously, just to get it done immediately.
+			GLAAccessedFileInfo *accessedFile = [collectedFile accessFile];
+			NSURL *fileURL = (accessedFile.filePathURL);
+			NSString *localizedName = nil;
+			BOOL success = [fileURL getResourceValue:&localizedName forKey:NSURLLocalizedNameKey error:nil];
+			if (success) {
+				return localizedName;
 			}
 		}
 	}

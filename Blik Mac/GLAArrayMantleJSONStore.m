@@ -45,6 +45,10 @@
 	if (self) {
 		_modelClass = modelClass;
 		_JSONFileURL = [JSONFileURL copy];
+		
+		if (!JSONKey) {
+			JSONKey = @"items";
+		}
 		_JSONDictionaryKeyForArray = [JSONKey copy];
 		
 		_freshlyMade = freshlyMade;

@@ -7,16 +7,20 @@
 //
 
 #import "GLAPluckedCollectedFilesMenuController.h"
+#import "GLACollectedFilesSetting.h"
 #import "GLAFileInfoRetriever.h"
 
 
 static GLAPluckedCollectedFilesMenuController *sharedMenuController;
+
+NSString *GLAPluckedCollectedFilesMenuController_IconImage16PixelsIdentifier = @"GLAPluckedCollectedFilesMenuController.icon-16px";
 
 
 @interface GLAPluckedCollectedFilesMenuController () <NSMenuDelegate, GLAFileInfoRetrieverDelegate>
 
 @property(nonatomic) NSArray *pluckedCollectedFilesMenuItems;
 
+@property(readonly, nonatomic) GLACollectedFilesSetting *collectedFilesSetting;
 @property(readonly, nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
 
 @end
@@ -32,21 +36,26 @@ static GLAPluckedCollectedFilesMenuController *sharedMenuController;
 	return sharedMenuController;
 }
 
+- (instancetype)init
+{
+	return self;
+}
+
 - (instancetype)initProper
 {
 	self = [super init];
 	if (self) {
 		_pluckedCollectedFilesList = [[GLAPluckedCollectedFilesList alloc] initWithProjectManager:[GLAProjectManager sharedProjectManager]];
 		
-		GLAFileInfoRetriever *fileInfoRetriever = [[GLAFileInfoRetriever alloc] initWithDelegate:self];
-		(fileInfoRetriever.defaultResourceKeysToRequest) = @[NSURLLocalizedNameKey, NSURLEffectiveIconKey];
-		_fileInfoRetriever = fileInfoRetriever;
+		GLACollectedFilesSetting *collectedFilesSetting = [GLACollectedFilesSetting new];
+		[collectedFilesSetting addToDefaultURLResourceKeysToRequest:@[NSURLLocalizedNameKey]];
+		[collectedFilesSetting addRetrieverBlockForFileInfo:^id(GLAFileInfoRetriever *fileInfoRetriever, NSURL *fileURL) {
+			return [fileInfoRetriever effectiveIconImageForURL:fileURL withSizeDimension:16.0];
+		} withIdentifier:GLAPluckedCollectedFilesMenuController_IconImage16PixelsIdentifier];
+		_collectedFilesSetting = collectedFilesSetting;
+		
+		[self startObservingCollectedFilesSetting];
 	}
-	return self;
-}
-
-- (instancetype)init
-{
 	return self;
 }
 
@@ -63,6 +72,20 @@ static GLAPluckedCollectedFilesMenuController *sharedMenuController;
 
 #pragma mark - Notifications
 
+- (void)startObservingCollectedFilesSetting
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+	
+	[nc addObserver:self selector:@selector(loadedFileInfoDidChangeNotification:) name:GLACollectedFilesSettingLoadedFileInfoDidChangeNotification object:collectedFilesSetting];
+}
+
+- (void)loadedFileInfoDidChangeNotification:(NSNotification *)note
+{
+	[self updateMenu];
+}
+
+#if 0
 - (void)startObservingPluckedCollectedFilesList
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -74,10 +97,26 @@ static GLAPluckedCollectedFilesMenuController *sharedMenuController;
 
 - (void)pluckedCollectedFilesListDidChange:(NSNotification *)note
 {
+	GLAPluckedCollectedFilesList *pluckedCollectedFilesList = (self.pluckedCollectedFilesList);
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+	
+	NSArray *collectedFiles = [pluckedCollectedFilesList copyPluckedCollectedFiles];
+	[collectedFilesSetting startAccessingCollectedFilesRemovingRemainders:collectedFiles];
+	
 	[self updateMenu];
 }
+#endif
 
 #pragma mark -
+
+- (void)updatePluckedCollectedFiles
+{
+	GLAPluckedCollectedFilesList *pluckedCollectedFilesList = (self.pluckedCollectedFilesList);
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+	
+	NSArray *collectedFiles = [pluckedCollectedFilesList copyPluckedCollectedFiles];
+	[collectedFilesSetting startAccessingCollectedFilesStoppingRemainders:collectedFiles invalidateAll:YES];
+}
 
 - (NSArray *)createMenuItemsForPluckedCollectedFiles
 {
@@ -85,19 +124,20 @@ static GLAPluckedCollectedFilesMenuController *sharedMenuController;
 	SEL action = @selector(placePluckedCollectedFiles:);
 	
 	GLAPluckedCollectedFilesList *pluckedCollectedFilesList = (self.pluckedCollectedFilesList);
-	GLAFileInfoRetriever *fileInfoRetriever = (self.fileInfoRetriever);
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
 	
 	NSArray *collectedFiles = [pluckedCollectedFilesList copyPluckedCollectedFiles];
 	for (GLACollectedFile *collectedFile in collectedFiles) {
-		NSURL *fileURL = (collectedFile.filePathURL);
-		NSString *name = [fileInfoRetriever localizedNameForURL:fileURL];
+		NSString *name = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+		NSImage *iconImage = [collectedFilesSetting copyValueForFileInfoIdentifier:GLAPluckedCollectedFilesMenuController_IconImage16PixelsIdentifier forCollectedFile:collectedFile];
+		
 		if (!name) {
 			name = NSLocalizedString(@"(Loading)", @"Menu item title for plucked collected file when its name is still loading.");
 		}
 		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:name action:action keyEquivalent:@""];
 		(menuItem.representedObject) = collectedFile;
 		
-		(menuItem.image) = [fileInfoRetriever effectiveIconImageForURL:fileURL withSizeDimension:16.0];
+		(menuItem.image) = iconImage;
 		[menuItems addObject:menuItem];
 	}
 	
@@ -106,6 +146,9 @@ static GLAPluckedCollectedFilesMenuController *sharedMenuController;
 
 - (void)updateMenu
 {
+#if DEBUG
+	NSLog(@"update plucked menu");
+#endif
 	NSMenu *menu = (self.pluckedMainMenu);
 	NSArray *menuItemsToAdd = [self createMenuItemsForPluckedCollectedFiles];
 	
@@ -151,6 +194,7 @@ static GLAPluckedCollectedFilesMenuController *sharedMenuController;
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
 	if (menu == (self.pluckedMainMenu)) {
+		[self updatePluckedCollectedFiles];
 		[self updateMenu];
 	}
 }
@@ -159,8 +203,7 @@ static GLAPluckedCollectedFilesMenuController *sharedMenuController;
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didLoadResourceValuesForURL:(NSURL *)URL
 {
-	//[(self.pluckedMainMenu) update];
-	[self updateMenu];
+	//[self updateMenu];
 }
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didFailWithError:(NSError *)error loadingResourceValuesForURL:(NSURL *)URL

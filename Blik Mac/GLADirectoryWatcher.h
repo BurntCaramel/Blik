@@ -15,9 +15,9 @@
 
 - (instancetype)initWithDelegate:(id<GLADirectoryWatcherDelegate>)delegate previousStateData:(NSData *)data;
 
-@property(weak, nonatomic) id<GLADirectoryWatcherDelegate> delegate;
+@property(readonly, weak, nonatomic) id<GLADirectoryWatcherDelegate> delegate;
 
-@property(copy, nonatomic) NSSet *directoryURLs;
+@property(copy, nonatomic) NSSet *directoryURLsToWatch;
 
 @property(nonatomic) id representedObject;
 
@@ -25,14 +25,14 @@
 
 @end
 
-extern NSString *GLADirectoryWatcherDirectoryDidChangeNotification;
+extern NSString *GLADirectoryWatcherDirectoriesDidChangeNotification;
 
 
 @protocol GLADirectoryWatcherDelegate <NSObject>
 
 // All methods are called on a background queue.
 
-- (void)directoryWatcher:(GLADirectoryWatcher *)directoryWatcher directoriesDidChangeForURLs:(NSArray *)directoryURLs;
+- (void)directoryWatcher:(GLADirectoryWatcher *)directoryWatcher directoriesURLsDidChange:(NSArray *)directoryURLs;
 
 @optional
 

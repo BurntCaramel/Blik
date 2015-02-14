@@ -8,14 +8,44 @@
 
 @import Foundation;
 #import "GLACollectedFile.h"
+#import "GLAFileInfoRetriever.h"
+
+
+typedef id (^ GLACollectedFilesSettingFileInfoRetriever)(GLAFileInfoRetriever *fileInfoRetriever, NSURL *fileURL);
 
 
 @interface GLACollectedFilesSetting : NSObject
 
-- (void)startUsingURLForCollectedFile:(GLACollectedFile *)collectedFile;
-- (void)stopUsingURLForCollectedFile:(GLACollectedFile *)collectedFile;
-- (void)stopUsingURLsForAllCollectedFiles;
+@property(nonatomic) NSSet *directoryURLsToWatch;
 
-- (void)startUsingURLsForCollectedFilesRemovingRemainders:(NSArray *)collectedFiles;
+- (void)startAccessingCollectedFile:(GLACollectedFile *)collectedFile;
+- (void)startAccessingCollectedFile:(GLACollectedFile *)collectedFile invalidate:(BOOL)invalidate;
+- (void)stopAccessingCollectedFile:(GLACollectedFile *)collectedFile;
+
+- (void)stopAccessingAllCollectedFilesWaitingUntilDone;
+
+- (void)startAccessingCollectedFilesStoppingRemainders:(NSArray *)collectedFiles;
+- (void)startAccessingCollectedFilesStoppingRemainders:(NSArray *)collectedFiles invalidateAll:(BOOL)invalidateAll;
+
+@property(nonatomic) id<GLALoadableArrayUsing> sourceCollectedFilesLoadableArray;
+
+// Must call -startAccessing first. Can be nil.
+- (GLAAccessedFileInfo *)accessedFileInfoForCollectedFile:(GLACollectedFile *)collectedFile;
+
+- (void)invalidateAllAccessedFiles;
+
+#pragma mark -
+
+@property(copy, nonatomic) NSArray *defaultURLResourceKeysToRequest;
+- (void)addToDefaultURLResourceKeysToRequest:(NSArray *)array;
+
+- (id)copyValueForURLResourceKey:(NSString *)resourceKey forCollectedFile:(GLACollectedFile *)collectedFile;
+
+- (void)addRetrieverBlockForFileInfo:(GLACollectedFilesSettingFileInfoRetriever)retrieverBlock withIdentifier:(NSString *)infoIdentifier;
+// Will be nil until it has loaded.
+- (id)copyValueForFileInfoIdentifier:(NSString *)infoIdentifier forCollectedFile:(GLACollectedFile *)collectedFile;
 
 @end
+
+extern NSString *GLACollectedFilesSettingDirectoriesDidChangeNotification;
+extern NSString *GLACollectedFilesSettingLoadedFileInfoDidChangeNotification;

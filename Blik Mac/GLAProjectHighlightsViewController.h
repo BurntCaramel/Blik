@@ -11,6 +11,7 @@
 #import "GLAProject.h"
 #import "GLAHighlightedItem.h"
 #import "GLAFileOpenerApplicationCombiner.h"
+#import "GLAButton.h"
 
 @class GLAProjectViewController;
 
@@ -23,6 +24,8 @@
 @property(nonatomic) IBOutlet NSMenu *contextualMenu;
 @property(nonatomic) IBOutlet NSMenu *openerApplicationMenu;
 @property(nonatomic) IBOutlet NSMenu *preferredOpenerApplicationMenu;
+
+@property(nonatomic) IBOutlet GLAButton *openAllHighlightsButton;
 
 @property(weak) IBOutlet GLAProjectViewController *parentViewController;
 

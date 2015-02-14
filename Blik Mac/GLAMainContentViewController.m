@@ -31,33 +31,13 @@
 {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	if (self) {
-		[self setUpProjectManagerObserving];
 	}
 	return self;
 }
 
 - (void)dealloc
 {
-	[self stopProjectManagerObserving];
 	[self stopSectionNavigatorObserving];
-}
-
-- (void)setUpProjectManagerObserving
-{
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	
-	// Now Project
-	[nc addObserver:self selector:@selector(projectManagerNowProjectDidChangeNotification:) name:GLAProjectManagerNowProjectDidChangeNotification object:projectManager];
-}
-
-- (void)stopProjectManagerObserving
-{
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	
-	// Stop observing any notifications on the project manager.
-	[nc removeObserver:self name:nil object:projectManager];
 }
 
 - (void)setUpSectionNavigatorObserving
@@ -154,32 +134,6 @@
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver:self selector:@selector(projectsListViewControllerDidClickOnProjectNotification:) name:GLAProjectsListViewControllerDidChooseProjectNotification object:controller];
 	[nc addObserver:self selector:@selector(projectsListViewControllerDidPerformWorkOnProjectNowNotification:) name:GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification object:controller];
-}
-
-#pragma mark Now Project
-
-- (void)setUpNowProjectViewControllerIfNeeded
-{
-	if (self.nowProjectViewController) {
-		return;
-	}
-	
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	
-	GLAProjectViewController *controller = [[GLAProjectViewController alloc] initWithNibName:@"GLAProjectViewController" bundle:nil];
-	(controller.view.identifier) = @"nowProject";
-	
-	[projectManager loadNowProjectIfNeeded];
-	GLAProject *nowProject = (projectManager.nowProject);
-	if (nowProject) {
-		(controller.project) = nowProject;
-	}
-	
-	(self.nowProjectViewController) = controller;
-	
-	// Add it to the content view
-	//[self fillViewWithChildView:(controller.view)];
-	[self addViewIfNeeded:(controller.view) layout:YES];
 }
 
 #pragma mark No Now Project
@@ -300,18 +254,6 @@
 	[self transitionToSection:newSection fromSection:previousSection animate:YES];
 }
 
-#pragma mark - Project Manager Notifications
-
-- (void)projectManagerNowProjectDidChangeNotification:(NSNotification *)note
-{
-	GLAProjectManager *projectManager = (note.object);
-	GLAProjectViewController *nowProjectViewController = (self.nowProjectViewController);
-	
-	if (nowProjectViewController) {
-		(nowProjectViewController.project) = (projectManager.nowProject);
-	}
-}
-
 #pragma mark - Accessing View Controllers
 
 - (void)setUpViewControllerForSection:(GLAMainSection *)section
@@ -324,11 +266,11 @@
 		
 		GLAProject *nowProject = (nowProjectSection.project);
 		if (nowProject) {
-			[self setUpNowProjectViewControllerIfNeeded];
+			[self setUpEditedProjectViewControllerIfNeeded];
 			
-			GLAProjectViewController *nowProjectViewController = (self.nowProjectViewController);
-			(nowProjectViewController.project) = nowProject;
-			[self setUpProjectViewController:nowProjectViewController];
+			GLAProjectViewController *editedProjectViewController = (self.editedProjectViewController);
+			(editedProjectViewController.project) = (nowProjectSection.project);
+			[self setUpProjectViewController:editedProjectViewController];
 			
 			(self.isShowingBlankNowProject) = NO;
 		}
@@ -388,7 +330,7 @@
 		GLAEditProjectSection *nowProjectSection = (GLAEditProjectSection *)(section);
 		
 		if (nowProjectSection.project) {
-			return (self.nowProjectViewController);
+			return (self.editedProjectViewController);
 		}
 		else {
 			return (self.blankNowProjectViewController);
@@ -425,7 +367,7 @@
 		GLAEditProjectSection *nowProjectSection = (GLAEditProjectSection *)(currentSection);
 		
 		if (nowProjectSection.project) {
-			return (self.nowProjectViewController);
+			return (self.editedProjectViewController);
 		}
 		else {
 			return nil;
@@ -584,10 +526,7 @@
 		return;
 	}
 	
-	if (outViewController) {
-		[self didBeginTransitioningOutViewController:outViewController];
-	}
-	else {
+	if (!outViewController) {
 		// If this is the first view in, just make it appear instantly.
 		animate = NO;
 	}
@@ -609,8 +548,6 @@
 		}
 	}
 	else if (newSection.isNow) {
-		//[self setUpNowProjectViewControllerIfNeeded];
-		
 		outLeading = 500.0;
 		inLeading = -500.0;
 		
@@ -620,15 +557,8 @@
 				inLeading = 500.0;
 			}
 			else if (outSection.isEditProject) {
-				GLAProject *nowProject = (self.nowProjectViewController.project);
-				GLAProject *editedProject = (self.editedProjectViewController.project);
-				
-				if (nowProject == editedProject) {
-					[(self.nowProjectViewController) matchWithOtherProjectViewController:(self.editedProjectViewController)];
-					//[(outViewController.view) removeFromSuperview];
-					
-					animate = NO;
-				}
+				// No transition needed.
+				return;
 			}
 			else if (outSection.isNow) {
 				outLeading = 0.0;
@@ -660,22 +590,21 @@
 	
 	// HIDE OUT
 	if (outViewController && !isnan(outLeading)) {
+		[self didBeginTransitioningOutViewController:outViewController];
 		[self hideChildViewController:outViewController movingLeadingTo:outLeading animate:animate associatedSection:outSection];
 	}
 	// SHOW IN
 	if (!isnan(inLeading)) {
 		[self showChildViewController:inViewController movingLeadingFrom:inLeading animate:animate associatedSection:newSection];
+		[self didBeginTransitioningInViewController:inViewController];
 	}
-	
-	
-	[self didBeginTransitioningInViewController:inViewController];
 }
 
 - (void)didBeginTransitioningInViewController:(GLAViewController *)viewController
 {
 	[viewController viewWillTransitionIn];
 	
-	if (viewController == (self.nowProjectViewController) || viewController == (self.editedProjectViewController)) {
+	if (viewController == (self.editedProjectViewController)) {
 		GLAProjectViewController *projectVC = (GLAProjectViewController *)viewController;
 		[self projectViewControllerDidBecomeActive:projectVC];
 	}
@@ -687,7 +616,7 @@
 
 - (void)didBeginTransitioningOutViewController:(GLAViewController *)viewController
 {
-	if (viewController == (self.nowProjectViewController) || viewController == (self.editedProjectViewController)) {
+	if (viewController == (self.editedProjectViewController)) {
 		GLAProjectViewController *projectVC = (GLAProjectViewController *)viewController;
 		[self projectViewControllerDidBecomeInactive:projectVC];
 	}

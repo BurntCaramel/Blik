@@ -26,6 +26,23 @@
 	return self;
 }
 
+- (GLAModel *)objectWithUUID:(NSUUID *)UUID
+{
+	return (self.mutableDictionary)[UUID];
+}
+
+- (GLAModel *)objectForKeyedSubscript:(NSUUID *)UUID
+{
+	return [self objectWithUUID:UUID];
+}
+
+- (NSArray *)allObjects
+{
+	return (self.mutableDictionary.allValues);
+}
+
+#pragma mark -
+
 - (void)addObjects:(NSArray *)objects
 {
 	NSMutableDictionary *mutableDictionary = (self.mutableDictionary);
@@ -48,9 +65,11 @@
 		mutableDictionary[UUID] = model;
 		
 		if (objectsBefore[UUID]) {
+			// Remove existing objects, to leave only the remainders.
 			[objectsBefore removeObjectForKey:UUID];
 		}
 		else {
+			// If object wasn't present before, include it in the additions.
 			[additions addObject:model];
 		}
 	}
@@ -71,16 +90,6 @@
 - (void)removeAllObjects
 {
 	[(self.mutableDictionary) removeAllObjects];
-}
-
-- (GLAModel *)objectWithUUID:(NSUUID *)UUID
-{
-	return (self.mutableDictionary)[UUID];
-}
-
-- (GLAModel *)objectForKeyedSubscript:(NSUUID *)UUID
-{
-	return [self objectWithUUID:UUID];
 }
 
 #pragma mark <GLAArrayObserving>

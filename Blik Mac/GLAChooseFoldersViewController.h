@@ -7,7 +7,6 @@
 //
 
 #import "GLAViewController.h"
-#import "GLACollectedFilesSetting.h"
 #import "GLACollectedFileListHelper.h"
 #import "GLAArrayTableDraggingHelper.h"
 #import "GLAInstructionsViewController.h"
@@ -29,8 +28,6 @@
 
 @property(nonatomic) NSArray *collectedFolders;
 
-@property(nonatomic) GLACollectedFilesSetting *collectedFilesSetting;
-
 @property(nonatomic) GLACollectedFileListHelper *foldersListHelper;
 @property(nonatomic) GLAArrayTableDraggingHelper *tableDraggingHelper;
 
@@ -42,6 +39,8 @@
 
  // Needs subclassing:
 - (void)makeChangesToFoldersUsingEditingBlock:(GLAArrayEditingBlock)editingBlock;
+
+- (BOOL)tableHasDarkBackground;
 
 #pragma mark -
 

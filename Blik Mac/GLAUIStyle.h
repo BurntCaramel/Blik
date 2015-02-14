@@ -106,6 +106,7 @@
 
 - (void)prepareContentTextField:(NSTextField *)textField;
 - (void)prepareTextLabel:(NSTextField *)textField;
+- (void)prepareTableTextLabel:(NSTextField *)textField;
 
 - (void)prepareProjectNameField:(NSTextField *)projectNameField;
 
@@ -116,10 +117,19 @@
 - (void)prepareOutlinedTextField:(NSTextField *)textField;
 - (void)prepareContentTableView:(NSTableView *)tableView;
 
+- (void)prepareCheckButton:(NSButton *)checkButton;
 
 #pragma mark Drawing
 
 - (CGRect)drawingRectOfActiveHighlightForBounds:(CGRect)bounds time:(CGFloat)t;
 - (void)drawActiveHighlightForBounds:(CGRect)bounds withColor:(NSColor *)color time:(CGFloat)t;
+
+#pragma mark Windows
+
+- (void)primaryWindowDidBecomeMain:(NSWindow *)window;
+- (void)primaryWindowDidResignMain:(NSWindow *)window;
+
+- (void)secondaryWindowDidBecomeMain:(NSWindow *)window;
+- (void)secondaryWindowDidResignMain:(NSWindow *)window;
 
 @end

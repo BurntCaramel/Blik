@@ -20,11 +20,31 @@ NSString *GLAStatusItemShowsItem = @"statusItem.showsItem";
 
 @implementation GLAStatusItemController
 
++ (instancetype)allocWithZone:(struct _NSZone *)zone
+{
+	static GLAStatusItemController *sharedStatusItemController;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		sharedStatusItemController = [[super allocWithZone:zone] initProper];
+	});
+	return sharedStatusItemController;
+}
+
 - (instancetype)init
+{
+	return self;
+}
+
++ (instancetype)sharedStatusItemController
+{
+	return [self allocWithZone:nil];
+}
+
+- (instancetype)initProper
 {
     self = [super init];
     if (self) {
-		_showsItem = YES;
+		_showsItem = NO;
 		
 		[self loadSettings];
     }
@@ -40,10 +60,9 @@ NSString *GLAStatusItemShowsItem = @"statusItem.showsItem";
 	   }
 	 ];
 	
-	(self.showsItem) = [ud boolForKey:GLAStatusItemShowsItem];
-	
-	if (self.showsItem) {
-		[self show];
+	BOOL showsItem = [ud boolForKey:GLAStatusItemShowsItem];
+	if (showsItem) {
+		[self showItem];
 	}
 }
 
@@ -69,39 +88,63 @@ NSString *GLAStatusItemShowsItem = @"statusItem.showsItem";
 	(statusItem.image) = symbolImage;
 	
 	(statusItem.target) = self;
-	(statusItem.action) = @selector(toggle:);
+	(statusItem.action) = @selector(toggleAppIsActive:);
 	[statusItem sendActionOn:NSLeftMouseUpMask];
 	
 	(self.statusItem) = statusItem;
 }
 
-- (void)show
+- (void)showItem
 {
+	if (self.showsItem) {
+		return;
+	}
+	
 	(self.showsItem) = YES;
 	
 	[self setUpStatusItemIfNeeded];
+	
+	[self saveSettings];
+	[self notifyShowsItemChanged];
 }
 
-- (void)hide
+- (void)hideItem
 {
+	if (! self.showsItem) {
+		return;
+	}
+	
 	(self.showsItem) = NO;
 	
 	NSStatusItem *statusItem = (self.statusItem);
 	[(statusItem.statusBar) removeStatusItem:statusItem];
 	(self.statusItem) = nil;
-}
-
-- (void)toggleShowing:(id)sender
-{
-	(self.showsItem) ? [self hide] : [self show];
+	
 	[self saveSettings];
+	[self notifyShowsItemChanged];
 }
 
-- (IBAction)toggle:(id)sender
+- (void)notifyShowsItemChanged
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAStatusItemControllerToggleNotification object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAStatusItemControllerItemShowsItemChangedNotification object:self];
+}
+
+- (void)toggleShowingItem:(id)sender
+{
+	if (self.showsItem) {
+		[self hideItem];
+	}
+	else {
+		[self showItem];
+	}
+}
+
+- (IBAction)toggleAppIsActive:(id)sender
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAStatusItemControllerItemWasClickedNotification object:self];
 }
 
 @end
 
-NSString *GLAStatusItemControllerToggleNotification = @"GLAStatusItemControllerToggleNotification";
+NSString *GLAStatusItemControllerItemShowsItemChangedNotification = @"GLAStatusItemControllerItemShowsItemChangedNotification";
+NSString *GLAStatusItemControllerItemWasClickedNotification = @"GLAStatusItemControllerToggleNotification";

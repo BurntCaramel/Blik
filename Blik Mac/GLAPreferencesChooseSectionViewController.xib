@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="GLAPreferencesChooseSectionViewController">
+            <connections>
+                <outlet property="editPermittedApplicationFoldersButton" destination="cUl-LF-03T" id="2Gf-4G-rc2"/>
+                <outlet property="editPermittedApplicationFoldersLabel" destination="nuV-8B-eaD" id="vGh-aR-Lii"/>
+                <outlet property="showStatusMenuItemCheckButton" destination="0AQ-QA-VI6" id="VfP-zV-Yjp"/>
+                <outlet property="view" destination="BUd-m3-8GV" id="0CN-R3-Fyl"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="BUd-m3-8GV">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="200"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button identifier="chooseSection" misplaced="YES" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="cUl-LF-03T" customClass="GLAButton">
+                    <rect key="frame" x="90" y="99" width="300" height="27"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="27" id="WIY-03-eB0"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="Edit Permitted Application Folders" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="opn-Rk-p3d" customClass="GLAButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="-1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="goToEditPermittedApplicationFolders:" target="-2" id="2tf-wE-tIx"/>
+                    </connections>
+                </button>
+                <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nuV-8B-eaD">
+                    <rect key="frame" x="88" y="134" width="304" height="46"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="300" id="ctg-1T-MH8"/>
+                    </constraints>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Allow applications outside of the standard locations to open files (e.g. Downloads folder)." id="roj-eQ-KFs">
+                        <font key="font" size="13" name="AvenirNext-MediumItalic"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="0AQ-QA-VI6">
+                    <rect key="frame" x="155" y="47" width="170" height="18"/>
+                    <buttonCell key="cell" type="check" title="Show Status Menu Item" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="KlU-bO-BMH">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="toggleShowStatusMenuItem:" target="-2" id="67E-jR-Upr"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="0AQ-QA-VI6" firstAttribute="top" secondItem="cUl-LF-03T" secondAttribute="bottom" constant="36" id="Irw-aA-bBk"/>
+                <constraint firstItem="cUl-LF-03T" firstAttribute="top" secondItem="nuV-8B-eaD" secondAttribute="bottom" constant="8" id="UnO-dH-aDY"/>
+                <constraint firstItem="nuV-8B-eaD" firstAttribute="top" secondItem="BUd-m3-8GV" secondAttribute="top" constant="20" id="WcV-XM-JhP"/>
+                <constraint firstAttribute="centerX" secondItem="nuV-8B-eaD" secondAttribute="centerX" id="cs6-ed-peO"/>
+                <constraint firstAttribute="centerX" secondItem="cUl-LF-03T" secondAttribute="centerX" id="w7f-yS-EzO"/>
+                <constraint firstAttribute="centerX" secondItem="0AQ-QA-VI6" secondAttribute="centerX" id="yus-jP-WKK"/>
+            </constraints>
+            <point key="canvasLocation" x="231" y="234"/>
+        </customView>
+    </objects>
+</document>

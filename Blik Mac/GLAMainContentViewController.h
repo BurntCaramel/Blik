@@ -51,7 +51,6 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 // Single Project
 
 @property(readonly, nonatomic) GLAProjectViewController *activeProjectViewController;
-@property(nonatomic) GLAProjectViewController *nowProjectViewController;
 @property(nonatomic) GLAProjectViewController *editedProjectViewController;
 
 @property(nonatomic) GLANoNowProjectViewController *blankNowProjectViewController;

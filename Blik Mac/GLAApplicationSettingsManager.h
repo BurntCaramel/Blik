@@ -15,8 +15,15 @@
 + (instancetype)sharedApplicationSettingsManager; // Works on the main queue
 
 
+- (BOOL)hasLoadedPermittedApplicationFolders;
 - (void)loadPermittedApplicationFolders;
 - (NSArray *)copyPermittedApplicationFolders;
-- (BOOL)editPermittedApplicationFoldersUsingBlock:(void (^)(id<GLAArrayEditing> foldersEditor))block;
+- (void)editPermittedApplicationFoldersUsingBlock:(void (^)(id<GLAArrayEditing> foldersEditor))block;
+
+- (id<GLALoadableArrayUsing>)usePermittedApplicationFolders;
+
+- (void)ensureAccessToPermittedApplicationsFolders;
 
 @end
+
+extern NSString *GLAApplicationSettingsManagerPermittedApplicationFoldersDidChangeNotification;

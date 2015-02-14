@@ -9,6 +9,8 @@
 #import "GLAAppDelegate.h"
 #import <objc/runtime.h>
 #import "GLAProjectManager.h"
+#import "GLAPreferencesWindowController.h"
+#import "GLAApplicationSettingsManager.h"
 
 
 @interface GLAAppDelegate ()
@@ -43,6 +45,8 @@
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	(projectManager.shouldLoadTestProjects) = YES;
 #endif
+	
+	[[GLAApplicationSettingsManager sharedApplicationSettingsManager] ensureAccessToPermittedApplicationsFolders];
 }
 
 - (void)prepareIfNeeded
@@ -54,7 +58,7 @@
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
 	(self.statusItemController) = [GLAStatusItemController new];
-	[nc addObserver:self selector:@selector(toggleShowingMainWindowAndApplicationHidden:) name:GLAStatusItemControllerToggleNotification object:(self.statusItemController)];
+	[nc addObserver:self selector:@selector(toggleShowingMainWindowAndApplicationHidden:) name:GLAStatusItemControllerItemWasClickedNotification object:(self.statusItemController)];
 	
 	[nc addObserver:self selector:@selector(helpMenuDidBeginTracking:) name:NSMenuDidBeginTrackingNotification object:(self.mainHelpMenu)];
 	
@@ -136,7 +140,14 @@
 
 - (void)toggleShowingStatusItem:(id)sender
 {
-	[(self.statusItemController) toggleShowing:sender];
+	[(self.statusItemController) toggleShowingItem:sender];
+}
+
+- (IBAction)showAppPreferences:(id)sender
+{
+	GLAPreferencesWindowController *sharedPreferencesWindowController = [GLAPreferencesWindowController sharedPreferencesWindowController];
+	//[(sharedPreferencesWindowController.window) display];
+	[sharedPreferencesWindowController showWindow:nil];
 }
 
 #pragma mark Help Menu
@@ -148,7 +159,9 @@
 	NSMenuItem *activityStatusMenuItem = (self.activityStatusMenuItem);
 	
 	NSString *status = (projectManager.statusOfCompletedActivity);
+#if DEBUG
 	NSLog(@"%@", status);
+#endif
 	/*NSArray *actionStati = [status componentsSeparatedByString:@"\n"];
 	for (NSString *actionStatus in actionStati) {
 		

@@ -7,66 +7,209 @@
 //
 
 #import "GLACollectedFileListHelper.h"
+#import "GLAProjectManager.h"
+
+
+@interface GLACollectedFileListHelper ()
+
+@end
 
 @implementation GLACollectedFileListHelper
 
++ (NSArray *)defaultURLResourceKeysToRequest
+{
+	return
+  @[
+	NSURLLocalizedNameKey,
+	NSURLEffectiveIconKey
+	];
+}
+
 - (instancetype)initWithDelegate:(id<GLACollectedFileListHelperDelegate>)delegate
 {
+	NSParameterAssert(delegate != nil);
+	
 	self = [super init];
 	if (self) {
 		_delegate = delegate;
-		_fileInfoRetriever = [[GLAFileInfoRetriever alloc] initWithDelegate:self];
+		
+		GLACollectedFilesSetting *collectedFilesSetting = [GLACollectedFilesSetting new];
+		(collectedFilesSetting.defaultURLResourceKeysToRequest) = (self.class.defaultURLResourceKeysToRequest);
+		_collectedFilesSetting = collectedFilesSetting;
+		
+		[self startObservingCollectedFilesSetting];
 	}
 	return self;
 }
 
-- (void)setUpTableCellView:(NSTableCellView *)cellView forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+- (void)dealloc
 {
-	GLACollectedFile *collectedFile = (self.collectedFiles)[row];
-	(cellView.objectValue) = collectedFile;
+	[self stopWatchingProjectPrimaryFolders];
+	[self stopObservingProject];
+	[self stopObservingCollectedFilesSetting];
+}
+
+- (GLAProjectManager *)projectManager
+{
+	return [GLAProjectManager sharedProjectManager];
+}
+
+- (void)invalidate
+{
+	id<GLACollectedFileListHelperDelegate> delegate = (self.delegate);
+	[delegate collectedFileListHelperDidInvalidate:self];
+}
+
+- (void)setProject:(GLAProject *)project
+{
+	[self stopObservingProject];
+	[self stopWatchingProjectPrimaryFolders];
 	
+	_project = project;
+	
+	[self startObservingProject];
+	[self updateWatchedProjectPrimaryFolders];
+}
+
+- (void)startObservingProject
+{
+	GLAProject *project = (self.project);
+	if (!project) {
+		return;
+	}
+	
+	GLAProjectManager *pm = (self.projectManager);
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	if (project) {
+		id projectNotifier = [pm notificationObjectForProject:project];
+		[nc addObserver:self selector:@selector(projectPrimaryFoldersDidChangeNotification:) name:GLAProjectPrimaryFoldersDidChangeNotification object:projectNotifier];
+	}
+}
+
+- (void)stopObservingProject
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc removeObserver:self name:GLAProjectPrimaryFoldersDidChangeNotification object:nil];
+}
+
+- (void)startObservingCollectedFilesSetting
+{
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	[nc addObserver:self selector:@selector(collectedFilesSettingLoadedFileInfoDidChangeNotification:) name:GLACollectedFilesSettingLoadedFileInfoDidChangeNotification object:collectedFilesSetting];
+	[nc addObserver:self selector:@selector(watchedDirectoriesDidChangeNotification:) name:GLACollectedFilesSettingDirectoriesDidChangeNotification object:collectedFilesSetting];
+}
+
+- (void)stopObservingCollectedFilesSetting
+{
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	[nc removeObserver:self name:nil object:collectedFilesSetting];
+}
+
+- (void)updateWatchedProjectPrimaryFolders
+{
+	GLAProjectManager *pm = (self.projectManager);
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+#if DEBUG
+	NSLog(@"updateWatchedProjectPrimaryFolders %@", collectedFilesSetting);
+#endif
+	NSArray *projectFolders = [pm copyPrimaryFoldersForProject:(self.project)];
+	NSMutableSet *directoryURLs = [NSMutableSet new];
+	for (GLACollectedFile *collectedFile in projectFolders) {
+		GLAAccessedFileInfo *accessedFileInfo = [collectedFile accessFile];
+		NSURL *directoryURL = (accessedFileInfo.filePathURL);
+		[directoryURLs addObject:directoryURL];
+	}
+	(collectedFilesSetting.directoryURLsToWatch) = directoryURLs;
+}
+
+- (void)stopWatchingProjectPrimaryFolders
+{
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+	(collectedFilesSetting.directoryURLsToWatch) = nil;
+}
+
+- (void)projectPrimaryFoldersDidChangeNotification:(NSNotification *)note
+{
+	[self updateWatchedProjectPrimaryFolders];
+	[self invalidate];
+}
+
+- (void)watchedDirectoriesDidChangeNotification:(NSNotification *)note
+{
+	[(self.collectedFilesSetting) invalidateAllAccessedFiles];
+	
+	[self invalidate];
+}
+
+- (void)collectedFilesSettingLoadedFileInfoDidChangeNotification:(NSNotification *)note
+{
+	[self invalidate];
+}
+
+- (void)setCollectedFiles:(NSArray *)collectedFiles
+{
+	_collectedFiles = [collectedFiles copy];
+	
+	[(self.collectedFilesSetting) startAccessingCollectedFilesStoppingRemainders:collectedFiles];
+	//[self invalidate];
+}
+
+- (id<GLAFileAccessing>)accessFileForCollectedFile:(GLACollectedFile *)collectedFile
+{
+	return [(self.collectedFilesSetting) accessedFileInfoForCollectedFile:collectedFile];
+}
+
+- (void)setUpTableCellView:(NSTableCellView *)cellView forTableColumn:(NSTableColumn *)tableColumn collectedFile:(GLACollectedFile *)collectedFile
+{
 	NSString *displayName = nil;
 	NSImage *iconImage = nil;
+	BOOL hasImageView = (cellView.imageView != nil);
 	
-	if (collectedFile.isMissing) {
-		displayName = NSLocalizedString(@"(Missing)", @"Displayed name when a collected file is missing");
-		//displayName = [NSString localizedStringWithFormat:NSLocalizedString(@"Missing %@", @"Displayed name when a collected file is missing"), (collectedFile.name)];
-	}
-	else {
-		GLAFileInfoRetriever *fileInfoRetriever = (self.fileInfoRetriever);
-		NSURL *fileURL = (collectedFile.filePathURL);
-		
-		NSArray *resourceValueKeys =
-		@[
-		  NSURLLocalizedNameKey,
-		  NSURLEffectiveIconKey
-		  ];
-		
-		NSDictionary *resourceValues = [fileInfoRetriever loadedResourceValuesForKeys:resourceValueKeys forURL:fileURL requestIfNeeded:YES];
-		
-		displayName = resourceValues[NSURLLocalizedNameKey];
-		iconImage = resourceValues[NSURLEffectiveIconKey];
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+	displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+	if (hasImageView) {
+		iconImage = [collectedFilesSetting copyValueForURLResourceKey:NSURLEffectiveIconKey forCollectedFile:collectedFile];
 	}
 	
 	(cellView.textField.stringValue) = displayName ?: @"";
-	(cellView.imageView.image) = iconImage;
+	if (hasImageView) {
+		(cellView.imageView.image) = iconImage;
+	}
 }
+
+#if 0
 
 #pragma mark File Info Retriever Delegate
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didLoadResourceValuesForURL:(NSURL *)fileURL
 {
-	NSIndexSet *indexesToUpdate = [(self.collectedFiles) indexesOfObjectsPassingTest:^BOOL(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
-		return [fileURL isEqual:(collectedFile.filePathURL)];
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+	
+	NSArray *allCollectedFiles = (self.collectedFiles);
+	NSUInteger matchingIndex = [allCollectedFiles indexOfObjectPassingTest:^BOOL(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
+		GLAAccessedFileInfo *accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
+		return [fileURL isEqual:(accessedFile.filePathURL)];
 	}];
-
+	GLACollectedFile *matchingCollectedFile = allCollectedFiles[matchingIndex];
+	
 	id<GLACollectedFileListHelperDelegate> delegate = (self.delegate);
-	[delegate collectedFileListHelper:self didLoadInfoForCollectedFilesAtIndexes:indexesToUpdate];
+	if ([delegate respondsToSelector:@selector(collectedFileListHelper:didLoadInfoForCollectedFiles:)]) {
+		[delegate collectedFileListHelper:self didLoadInfoForCollectedFiles:@[matchingCollectedFile]];
+	}
+	else {
+		[self invalidate];
+	}
 }
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didFailWithError:(NSError *)error loadingResourceValuesForURL:(NSURL *)URL
 {
 
 }
+
+#endif
 
 @end

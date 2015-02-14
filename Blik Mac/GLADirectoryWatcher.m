@@ -7,9 +7,13 @@
 //
 
 #import "GLADirectoryWatcher.h"
+@import CoreServices;
+#import "GLAAccessedFileInfo.h"
 
 
 @interface GLADirectoryWatcher ()
+
+@property(nonatomic) NSMutableDictionary *directoryURLsToAccessedFileInfos;
 
 @property(nonatomic) FSEventStreamRef fsEventStream;
 @property(nonatomic) BOOL eventStreamHasStarted;
@@ -38,8 +42,15 @@ void GLADirectoryWatcherCallback( ConstFSEventStreamRef streamRef, void *clientC
 		_eventStreamQueue = dispatch_queue_create("com.burntcaramel.GLADirectoryWatcher", DISPATCH_QUEUE_SERIAL);
 		
 		_lastReceivedEventID = [self FSEventStreamEventIDWithStateData:previousStateData];
+		
+		_directoryURLsToAccessedFileInfos = [NSMutableDictionary new];
 	}
 	return self;
+}
+
+- (instancetype)init
+{
+	return [self initWithDelegate:nil previousStateData:nil];
 }
 
 - (void)dealloc
@@ -112,7 +123,15 @@ NSString *GLADirectoryWatcherArchiverKey_FSEventStreamEventId = @"FSEventStreamE
 {
 	[self clearEventStream];
 	
-	NSSet *directoryURLs = (self.directoryURLs);
+	NSSet *directoryURLs = (self.directoryURLsToWatch);
+	if (!directoryURLs || (directoryURLs.count) == 0) {
+		return;
+	}
+	
+#if DEBUG
+	NSLog(@"WATCHING directoryURLs %@", directoryURLs);
+#endif
+	
 	NSArray *directoryPaths = [(directoryURLs.allObjects) valueForKey:@"path"];
 	
 	FSEventStreamContext eventStreamContext = {
@@ -133,9 +152,19 @@ NSString *GLADirectoryWatcherArchiverKey_FSEventStreamEventId = @"FSEventStreamE
 	(self.eventStreamHasStarted) = YES;
 }
 
-- (void)setDirectoryURLs:(NSSet *)directoryURLs
+- (void)setDirectoryURLsToWatch:(NSSet *)directoryURLs
 {
-	_directoryURLs = [directoryURLs copy];
+	NSMutableDictionary *directoryURLsToAccessedFileInfos = (self.directoryURLsToAccessedFileInfos);
+	[directoryURLsToAccessedFileInfos removeAllObjects];
+	
+	_directoryURLsToWatch = directoryURLs ? [directoryURLs copy] : nil;
+	
+	if (_directoryURLsToWatch) {
+		for (NSURL *directoryURL in _directoryURLsToWatch) {
+			directoryURLsToAccessedFileInfos[directoryURL] = [[GLAAccessedFileInfo alloc] initWithFileURL:directoryURL];
+		}
+	}
+	
 	[self createEventStream];
 }
 
@@ -162,16 +191,30 @@ NSString *GLADirectoryWatcherArchiverKey_FSEventStreamEventId = @"FSEventStreamE
 		[URLs addObject:[NSURL fileURLWithPath:filePath]];
 	}
 	
+#if DEBUG
+	NSLog(@"DIRECTORIES did change %@", URLs);
+#endif
+	
+	[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+		NSNotification *note = [NSNotification notificationWithName:GLADirectoryWatcherDirectoriesDidChangeNotification object:self];
+		[[NSNotificationQueue defaultQueue] enqueueNotification:note postingStyle:NSPostASAP coalesceMask:(NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender) forModes:@[NSRunLoopCommonModes]];
+	}];
+	
+	
 	id<GLADirectoryWatcherDelegate> delegate = (self.delegate);
-	[delegate directoryWatcher:self directoriesDidChangeForURLs:URLs];
-	
-	if (subdirectoriesDidChange && [delegate respondsToSelector:@selector(directoryWatcher:subdirectoriesDidChangeForURLs:)]) {
-		[delegate directoryWatcher:self subdirectoriesDidChangeForURLs:URLs];
-	}
-	
-	if (mainDirectoriesWereMoved && [delegate respondsToSelector:@selector(directoryWatcher:mainDirectoriesWereMovedOrDeleted:)]) {
-		[delegate directoryWatcher:self mainDirectoriesWereMovedOrDeleted:URLs];
+	if (delegate) {
+		[delegate directoryWatcher:self directoriesURLsDidChange:URLs];
+		
+		if (subdirectoriesDidChange && [delegate respondsToSelector:@selector(directoryWatcher:subdirectoriesDidChangeForURLs:)]) {
+			[delegate directoryWatcher:self subdirectoriesDidChangeForURLs:URLs];
+		}
+		
+		if (mainDirectoriesWereMoved && [delegate respondsToSelector:@selector(directoryWatcher:mainDirectoriesWereMovedOrDeleted:)]) {
+			[delegate directoryWatcher:self mainDirectoriesWereMovedOrDeleted:URLs];
+		}
 	}
 }
 
 @end
+
+NSString *GLADirectoryWatcherDirectoriesDidChangeNotification = @"GLADirectoryWatcherDirectoriesDidChangeNotification";

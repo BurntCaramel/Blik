@@ -11,6 +11,7 @@
 #import "GLAPopUpButton.h"
 // Model
 #import "GLACollection.h"
+#import "GLACollectedFilesSetting.h"
 #import "GLAFileInfoRetriever.h"
 #import "GLAFileOpenerApplicationCombiner.h"
 // Frameworks
@@ -33,9 +34,6 @@
 
 @property(nonatomic) GLACollection *filesListCollection;
 @property(nonatomic) GLAProject *project;
-
-@property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
-@property(nonatomic) GLAFileOpenerApplicationCombiner *openerApplicationCombiner;
 
 - (void)makeSourceFilesListFirstResponder;
 

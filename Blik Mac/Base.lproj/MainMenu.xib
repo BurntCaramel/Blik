@@ -31,7 +31,11 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
-                            <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
+                            <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
+                                <connections>
+                                    <action selector="showAppPreferences:" target="Voe-Tx-rLC" id="Hjx-Mg-ZIk"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Show Status Menu Item" id="ZUB-Aa-pTP">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -89,7 +93,7 @@ DQ
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="YWM-TE-tpN"/>
-                            <menuItem title="Choose Project’s Primary Folders…" keyEquivalent="P" id="IXk-fU-xTp">
+                            <menuItem title="Choose Primary Folders…" keyEquivalent="P" id="IXk-fU-xTp">
                                 <connections>
                                     <action selector="editPrimaryFoldersOfViewedProject:" target="-1" id="jkh-NZ-qED"/>
                                 </connections>
@@ -396,9 +400,14 @@ DQ
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Window" systemMenu="window" id="Td7-aD-5lo">
                         <items>
-                            <menuItem title="Minimize" keyEquivalent="m" id="OY7-WF-poV">
+                            <menuItem title="Close" keyEquivalent="w" id="OY7-WF-poV">
                                 <connections>
-                                    <action selector="performMiniaturize:" target="-1" id="VwT-WD-YPe"/>
+                                    <action selector="performClose:" target="-1" id="e09-HJ-4kb"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Minimize" keyEquivalent="m" id="eZa-Zl-29z">
+                                <connections>
+                                    <action selector="performMiniaturize:" target="-1" id="gTj-wj-0zB"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Zoom" id="R4o-n2-Eq4">

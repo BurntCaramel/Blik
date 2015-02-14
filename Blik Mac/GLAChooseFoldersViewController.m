@@ -17,8 +17,6 @@
 
 - (void)prepareView
 {
-	(self.collectedFilesSetting) = [GLACollectedFilesSetting new];
-	
 	(self.foldersListHelper) = [[GLACollectedFileListHelper alloc] initWithDelegate:self];
 	
 	(self.tableDraggingHelper) = [[GLAArrayTableDraggingHelper alloc] initWithDelegate:self];
@@ -43,37 +41,38 @@
 
 - (void)showInstructions
 {
-#if 1
 	NSView *instructionsView = (self.instructionsViewController.view);
 	if (!(instructionsView.superview)) {
+		(instructionsView.wantsLayer) = YES;
 		[self fillViewWithChildView:instructionsView];
 	}
 	else {
 		(instructionsView.hidden) = NO;
 	}
-#endif
 }
 
 - (void)hideInstructions
 {
-#if 1
 	NSView *instructionsView = (self.instructionsViewController.view);
 	if ((instructionsView.superview)) {
 		(instructionsView.hidden) = YES;
 	}
-#endif
 }
 
 - (void)showTable
 {
 	NSScrollView *foldersScrollView = (self.foldersTableView.enclosingScrollView);
 	
+	(foldersScrollView.wantsLayer) = YES;
 	(foldersScrollView.alphaValue) = 1.0;
 }
 
 - (void)hideTable
 {
-	(self.foldersTableView.enclosingScrollView.alphaValue) = 0.0;
+	NSScrollView *foldersScrollView = (self.foldersTableView.enclosingScrollView);
+	
+	//(foldersScrollView.hidden) = YES;
+	(foldersScrollView.alphaValue) = 0.0;
 }
 
 #pragma mark -
@@ -98,6 +97,11 @@
 	// Needs subclassing
 }
 
+- (BOOL)tableHasDarkBackground
+{
+	return YES;
+}
+
 #pragma mark -
 
 - (void)reloadFolders
@@ -109,9 +113,6 @@
 		(self.addFoldersButton.enabled) = hasLoaded;
 		
 		collectedFolders = [self copyFolders];
-		
-		GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
-		[collectedFilesSetting startUsingURLsForCollectedFilesRemovingRemainders:collectedFolders];
 	}
 	else {
 		collectedFolders = @[];
@@ -233,9 +234,6 @@
 	NSArray *collectedFolders = (self.collectedFolders);
 	GLACollectedFile *collectedFile = collectedFolders[row];
 	
-	//GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
-	//[collectedFilesSetting startUsingURLForCollectedFile:collectedFile];
-	
 	return collectedFile;
 }
 
@@ -245,7 +243,16 @@
 {
 	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	
-	[(self.foldersListHelper) setUpTableCellView:cellView forTableColumn:tableColumn row:row];
+	GLACollectedFile *collectedFile = (self.collectedFolders)[row];
+	(cellView.objectValue) = collectedFile;
+	
+	[(self.foldersListHelper) setUpTableCellView:cellView forTableColumn:tableColumn collectedFile:collectedFile];
+	
+	BOOL tableHasDarkBackground = (self.tableHasDarkBackground);
+	if (tableHasDarkBackground) {
+		GLAUIStyle *style = [GLAUIStyle activeStyle];
+		[style prepareTableTextLabel:(cellView.textField)];
+	}
 	
 	return cellView;
 }
@@ -313,6 +320,11 @@
 }
 
 #pragma mark -
+
+- (void)collectedFileListHelperDidInvalidate:(GLACollectedFileListHelper *)helper
+{
+	[(self.foldersTableView) reloadData];
+}
 
 - (void)collectedFileListHelper:(GLACollectedFileListHelper *)helper didLoadInfoForCollectedFilesAtIndexes:(NSIndexSet *)indexes
 {

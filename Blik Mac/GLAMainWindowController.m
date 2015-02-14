@@ -41,8 +41,11 @@
 - (void)windowDidLoad
 {
     [super windowDidLoad];
-    
-	(self.window.movableByWindowBackground) = YES;
+	
+	NSWindow *window = (self.window);
+	(window.movableByWindowBackground) = YES;
+	//(window.excludedFromWindowsMenu) = NO;
+	[NSApp addWindowsItem:window title:NSLocalizedString(@"Main Window", @"Title for main window as it appears in the Windows menu") filename:NO];
 	
 	(self.mainSectionNavigator) = [[GLAMainSectionNavigator alloc] initWithProjectManager:[GLAProjectManager sharedProjectManager]];
 	
@@ -367,14 +370,12 @@
 
 - (void)windowDidBecomeMain:(NSNotification *)notification
 {
-	NSWindow *window = (self.window);
-	(window.alphaValue) = 32.0/32.0;
+	[[GLAUIStyle activeStyle] primaryWindowDidBecomeMain:(self.window)];
 }
 
 - (void)windowDidResignMain:(NSNotification *)notification
 {
-	NSWindow *window = (self.window);
-	(window.alphaValue) = 30.5/32.0;
+	[[GLAUIStyle activeStyle] primaryWindowDidResignMain:(self.window)];
 }
 
 #if 1

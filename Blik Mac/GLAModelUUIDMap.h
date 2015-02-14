@@ -13,6 +13,7 @@
 @interface GLAModelUUIDMap : NSObject <GLAArrayEditorIndexing>
 
 - (GLAModel *)objectWithUUID:(NSUUID *)UUID;
+- (NSArray *)allObjects;
 
 - (GLAModel *)objectForKeyedSubscript:(NSUUID *)UUID;
 

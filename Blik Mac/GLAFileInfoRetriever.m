@@ -34,7 +34,7 @@
 	if (self) {
 		_delegate = delegate;
 		
-		_defaultResourceKeysToRequest = [defaultResourceKeysToRequest copy];
+		_input_defaultResourceKeysToRequest = [defaultResourceKeysToRequest copy];
 		
 		_backgroundOperationQueue = [NSOperationQueue new];
 		(_backgroundOperationQueue.name) = @"com.burntcaramel.GLAFileInfoRetriever.background";
@@ -142,6 +142,30 @@
 	
 	return delegate;
 }
+
+@synthesize defaultResourceKeysToRequest = _input_defaultResourceKeysToRequest;
+
+- (NSArray *)defaultResourceKeysToRequest
+{
+	__block NSArray *defaultResourceKeysToRequest;
+	
+	dispatch_sync((self.inputDispatchQueue), ^{
+		defaultResourceKeysToRequest = self->_input_defaultResourceKeysToRequest;
+	});
+	
+	return defaultResourceKeysToRequest;
+}
+
+- (void)setDefaultResourceKeysToRequest:(NSArray *)defaultResourceKeysToRequest
+{
+	defaultResourceKeysToRequest = [defaultResourceKeysToRequest copy];
+	
+	[self runAsyncOnInputQueue:^(GLAFileInfoRetriever *retriever) {
+		retriever->_input_defaultResourceKeysToRequest = defaultResourceKeysToRequest;
+	}];
+}
+
+#pragma mark -
 
 - (void)addRequestedResourceKeys:(NSArray *)resourceKeys forURL:(NSURL *)URL
 {
@@ -279,6 +303,10 @@
 - (void)requestDefaultResourceKeysForURL:(NSURL *)URL
 {
 	NSArray *defaultResourceKeysToRequest = (self.defaultResourceKeysToRequest);
+	if ((defaultResourceKeysToRequest.count) == 0) {
+		return;
+	}
+	
 	[self requestResourceValuesForKeys:defaultResourceKeysToRequest forURL:URL];
 }
 
@@ -402,6 +430,19 @@
 			[cacheOfURLsToMutableDictionaryOfResourceValues removeObjectForKey:fileURL];
 			[cacheOfURLsToApplicationURLs removeObjectForKey:fileURL];
 		}
+	});
+}
+
+- (void)clearCacheForAllURLs
+{
+	[self cancelAllLoading];
+	
+	dispatch_sync((self.inputDispatchQueue), ^{
+		NSCache *cacheOfURLsToMutableDictionaryOfResourceValues = (self.cacheOfURLsToMutableDictionaryOfResourceValues);
+		NSCache *cacheOfURLsToApplicationURLs = (self.cacheOfURLsToApplicationURLs);
+		
+		[cacheOfURLsToMutableDictionaryOfResourceValues removeAllObjects];
+		[cacheOfURLsToApplicationURLs removeAllObjects];
 	});
 }
 

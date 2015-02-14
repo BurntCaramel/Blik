@@ -11,16 +11,21 @@
 
 @interface GLAStatusItemController : NSObject
 
++ (instancetype)sharedStatusItemController;
+
 @property(nonatomic) NSStatusItem *statusItem;
 @property(readonly, nonatomic) BOOL showsItem;
 
-- (void)show;
-- (void)hide;
-- (IBAction)toggleShowing:(id)sender;
+- (void)showItem;
+- (void)hideItem;
+- (IBAction)toggleShowingItem:(id)sender;
 
 - (void)loadSettings;
 - (void)saveSettings;
 
+- (IBAction)toggleAppIsActive:(id)sender;
+
 @end
 
-extern NSString *GLAStatusItemControllerToggleNotification;
+extern NSString *GLAStatusItemControllerItemShowsItemChangedNotification;
+extern NSString *GLAStatusItemControllerItemWasClickedNotification;

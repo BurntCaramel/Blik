@@ -26,4 +26,6 @@
 
 - (IBAction)toggleShowingStatusItem:(id)sender;
 
+- (IBAction)showAppPreferences:(id)sender;
+
 @end

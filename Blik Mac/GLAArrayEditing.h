@@ -8,8 +8,9 @@
 
 @import Foundation;
 
-@protocol GLAArrayEditing;
+@protocol GLAArrayInspecting, GLAArrayEditing;
 
+typedef void (^ GLAArrayInspectingBlock)(id<GLAArrayInspecting> arrayInspector);
 typedef void (^ GLAArrayEditingBlock)(id<GLAArrayEditing> arrayEditor);
 typedef id (^ GLAArrayChildVisitorBlock)(id child);
 
@@ -47,5 +48,21 @@ typedef id (^ GLAArrayChildVisitorBlock)(id child);
 - (BOOL)removeFirstChildWhoseKey:(NSString *)key hasValue:(id)value;
 
 - (id)replaceFirstChildWhoseKey:(NSString *)key hasValue:(id)value usingChangeBlock:(id (^)(id originalObject))objectChanger;
+
+@end
+
+
+@protocol GLALoadableArrayUsing <NSObject>
+
+@property(nonatomic) id representedObject;
+
+//@property(copy, nonatomic) dispatch_block_t loadCompletionBlock;
+@property(copy, nonatomic) GLAArrayInspectingBlock changeCompletionBlock;
+
+@property(readonly, nonatomic) BOOL finishedLoading;
+
+- (NSArray *)copyChildrenLoadingIfNeeded;
+- (id<GLAArrayInspecting>)inspectLoadingIfNeeded;
+- (void)editChildrenUsingBlock:(GLAArrayEditingBlock)block;
 
 @end

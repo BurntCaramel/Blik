@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="GLAEditPermittedApplicationFoldersViewController">
+            <connections>
+                <outlet property="addFoldersButton" destination="TFO-fO-vbZ" id="zQd-uv-sUz"/>
+                <outlet property="foldersTableMenu" destination="He5-nU-mUM" id="BOA-49-lTf"/>
+                <outlet property="foldersTableView" destination="P5N-fk-h8u" id="6yW-Cb-HHc"/>
+                <outlet property="instructionsViewController" destination="5Du-cT-Vm5" id="c3e-ei-XaE"/>
+                <outlet property="mainHolderView" destination="q61-72-dsU" id="ssZ-mi-lzN"/>
+                <outlet property="mainHolderViewController" destination="fRh-rO-jJu" id="OtA-D3-WFZ"/>
+                <outlet property="mainLabel" destination="CTr-Gj-N5w" id="4f8-hv-i9a"/>
+                <outlet property="view" destination="7VJ-3J-GrK" id="vsF-LY-q3b"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView identifier="editPermittedApplicationFolders" id="7VJ-3J-GrK">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="191"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CTr-Gj-N5w">
+                    <rect key="frame" x="88" y="148" width="305" height="23"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="CDB-vA-seM"/>
+                    </constraints>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Select permitted folders for finding applications in:" id="vW0-jz-uXM">
+                        <font key="font" size="13" name="AvenirNext-MediumItalic"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="q61-72-dsU">
+                    <rect key="frame" x="0.0" y="55" width="480" height="84"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="81" id="bU2-yL-mLJ"/>
+                    </constraints>
+                </customView>
+                <box autoresizesSubviews="NO" title="Box" boxType="custom" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="9rV-yo-Acy" customClass="GLADividerView">
+                    <rect key="frame" x="0.0" y="139" width="480" height="1"/>
+                    <view key="contentView">
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="0MF-R9-jVj"/>
+                    </constraints>
+                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="alignToLower" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                </box>
+                <box autoresizesSubviews="NO" title="Box" boxType="custom" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="E41-Lg-POb" customClass="GLADividerView">
+                    <rect key="frame" x="0.0" y="54" width="480" height="1"/>
+                    <view key="contentView">
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="Y3X-xk-mzM"/>
+                    </constraints>
+                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="alignToUpper" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                </box>
+                <button placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="TFO-fO-vbZ" customClass="GLAButton">
+                    <rect key="frame" x="180" y="20" width="120" height="27"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="27" id="qIf-df-VAr"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="Add Folders" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="rL9-8V-Lwx" customClass="GLAButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="-1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="addFolder:" target="-2" id="0Bt-Eg-Doz"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="q61-72-dsU" secondAttribute="trailing" id="4eO-rh-bZl"/>
+                <constraint firstItem="q61-72-dsU" firstAttribute="top" secondItem="9rV-yo-Acy" secondAttribute="bottom" id="DtN-aN-hzc"/>
+                <constraint firstItem="q61-72-dsU" firstAttribute="leading" secondItem="7VJ-3J-GrK" secondAttribute="leading" id="F3L-vR-RbA"/>
+                <constraint firstItem="E41-Lg-POb" firstAttribute="leading" secondItem="7VJ-3J-GrK" secondAttribute="leading" id="FJR-HE-lnh"/>
+                <constraint firstAttribute="bottom" secondItem="TFO-fO-vbZ" secondAttribute="bottom" constant="20" id="Gen-zr-kfH"/>
+                <constraint firstAttribute="centerX" secondItem="TFO-fO-vbZ" secondAttribute="centerX" id="H0W-4w-VSa"/>
+                <constraint firstAttribute="centerX" secondItem="q61-72-dsU" secondAttribute="centerX" id="IG1-hH-U0A"/>
+                <constraint firstAttribute="trailing" secondItem="E41-Lg-POb" secondAttribute="trailing" id="LEe-hu-Z0E"/>
+                <constraint firstItem="9rV-yo-Acy" firstAttribute="top" secondItem="CTr-Gj-N5w" secondAttribute="bottom" constant="8" id="NEZ-VF-AAB"/>
+                <constraint firstAttribute="centerX" secondItem="CTr-Gj-N5w" secondAttribute="centerX" id="OiF-9v-SqQ"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="CTr-Gj-N5w" secondAttribute="trailing" constant="20" symbolic="YES" id="QtM-vs-1ly"/>
+                <constraint firstAttribute="trailing" secondItem="9rV-yo-Acy" secondAttribute="trailing" id="ka4-JJ-kOU"/>
+                <constraint firstItem="9rV-yo-Acy" firstAttribute="leading" secondItem="7VJ-3J-GrK" secondAttribute="leading" id="l5t-yr-bhk"/>
+                <constraint firstItem="CTr-Gj-N5w" firstAttribute="top" secondItem="7VJ-3J-GrK" secondAttribute="top" constant="20" id="mG8-CQ-p1P"/>
+                <constraint firstItem="TFO-fO-vbZ" firstAttribute="top" secondItem="q61-72-dsU" secondAttribute="bottom" constant="8" id="tUb-73-ucc"/>
+                <constraint firstItem="E41-Lg-POb" firstAttribute="top" secondItem="q61-72-dsU" secondAttribute="bottom" id="ywF-9V-Nvs"/>
+            </constraints>
+            <point key="canvasLocation" x="191" y="274.5"/>
+        </customView>
+        <viewController id="fRh-rO-jJu" customClass="GLAViewController">
+            <connections>
+                <outlet property="view" destination="q61-72-dsU" id="v4W-r1-XQl"/>
+            </connections>
+        </viewController>
+        <scrollView verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" id="pdK-kO-dOL">
+            <rect key="frame" x="0.0" y="0.0" width="360" height="81"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="rlH-PI-9jU">
+                <rect key="frame" x="0.0" y="0.0" width="171" height="240"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <subviews>
+                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnResizing="NO" autosaveColumns="NO" rowHeight="32" viewBased="YES" id="P5N-fk-h8u">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <size key="intercellSpacing" width="3" height="2"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                        <tableColumns>
+                            <tableColumn identifier="main" width="357" minWidth="40" maxWidth="1000" id="OQc-1R-K6B">
+                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
+                                </tableHeaderCell>
+                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="ncn-qI-eFL">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                <prototypeCellViews>
+                                    <tableCellView placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="32" id="AFW-yH-G0g">
+                                        <rect key="frame" x="1" y="1" width="357" height="27"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <subviews>
+                                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="2Rf-9t-SKr">
+                                                <rect key="frame" x="29" y="0.0" width="300" height="27"/>
+                                                <subviews>
+                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Az7-YO-uCC">
+                                                        <rect key="frame" x="42" y="2" width="95" height="23"/>
+                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="XZN-kd-NRU">
+                                                            <font key="font" size="13" name="AvenirNext-Medium"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pEo-fv-nKC">
+                                                        <rect key="frame" x="20" y="4" width="16" height="16"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="16" id="fRa-Rg-7ag"/>
+                                                            <constraint firstAttribute="height" constant="16" id="tOo-46-6zx"/>
+                                                        </constraints>
+                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="3T2-bK-Nfa"/>
+                                                    </imageView>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="pEo-fv-nKC" firstAttribute="leading" secondItem="2Rf-9t-SKr" secondAttribute="leading" constant="20" id="EEB-dk-Jdf"/>
+                                                    <constraint firstItem="pEo-fv-nKC" firstAttribute="centerY" secondItem="Az7-YO-uCC" secondAttribute="centerY" constant="1.5" id="Nuw-0a-OZF"/>
+                                                    <constraint firstAttribute="centerY" secondItem="Az7-YO-uCC" secondAttribute="centerY" id="QEu-S2-tHh"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Az7-YO-uCC" secondAttribute="trailing" constant="10" id="ZSU-Nd-yC9"/>
+                                                    <constraint firstItem="Az7-YO-uCC" firstAttribute="leading" secondItem="pEo-fv-nKC" secondAttribute="trailing" constant="8" id="bp7-fU-AW1"/>
+                                                    <constraint firstAttribute="width" constant="300" id="hvX-x3-HuA"/>
+                                                </constraints>
+                                            </customView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="2Rf-9t-SKr" secondAttribute="bottom" id="BJl-cm-h5h"/>
+                                            <constraint firstItem="2Rf-9t-SKr" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="AFW-yH-G0g" secondAttribute="leading" id="LBZ-7r-Eoc"/>
+                                            <constraint firstItem="2Rf-9t-SKr" firstAttribute="top" secondItem="AFW-yH-G0g" secondAttribute="top" id="RlP-pR-q1f"/>
+                                            <constraint firstAttribute="centerX" secondItem="2Rf-9t-SKr" secondAttribute="centerX" id="jKu-Yo-TLh"/>
+                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="2Rf-9t-SKr" secondAttribute="trailing" id="vbK-FN-Sjp"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="imageView" destination="pEo-fv-nKC" id="eKi-8l-bwK"/>
+                                            <outlet property="textField" destination="Az7-YO-uCC" id="c3e-Uo-PjN"/>
+                                        </connections>
+                                    </tableCellView>
+                                    <customView identifier="NSTableViewRowViewKey" id="IBk-FC-LwK" customClass="GLATableContentRowView">
+                                        <rect key="frame" x="1" y="30" width="357" height="39"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    </customView>
+                                </prototypeCellViews>
+                            </tableColumn>
+                        </tableColumns>
+                    </tableView>
+                </subviews>
+                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+            </clipView>
+            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="bLl-d3-cE1">
+                <rect key="frame" x="-100" y="-100" width="223" height="15"/>
+                <autoresizingMask key="autoresizingMask"/>
+            </scroller>
+            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="rMA-6y-n1h">
+                <autoresizingMask key="autoresizingMask"/>
+            </scroller>
+            <point key="canvasLocation" x="243.5" y="490.5"/>
+        </scrollView>
+        <menu id="He5-nU-mUM">
+            <items>
+                <menuItem title="Show in Finder…" id="Ioa-95-jcc">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="revealSelectedFoldersInFinder:" target="-2" id="fQf-zD-96I"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="dKP-FT-od4"/>
+                <menuItem title="Remove from Permitted Folders" id="g5o-gx-KkT">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="removeSelectedFoldersFromList:" target="-2" id="Bgv-1s-4lG"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="642.5" y="467.5"/>
+        </menu>
+        <viewController title="Instructions View Controller" id="5Du-cT-Vm5" customClass="GLAInstructionsViewController">
+            <connections>
+                <outlet property="secondaryTextLabel" destination="kj4-S3-Kjh" id="6bB-Bp-GiU"/>
+                <outlet property="view" destination="AyF-Km-48z" id="Cal-dq-Wuk"/>
+            </connections>
+        </viewController>
+        <customView id="AyF-Km-48z">
+            <rect key="frame" x="0.0" y="0.0" width="300" height="84"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kj4-S3-Kjh">
+                    <rect key="frame" x="36" y="8" width="214" height="69"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="210" id="HVV-JJ-DbL"/>
+                    </constraints>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="To allow applications to be found in your Downloads folder or other folders, add them here." id="hBg-7N-gDU">
+                        <font key="font" size="13" name="AvenirNext-MediumItalic"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="centerX" secondItem="kj4-S3-Kjh" secondAttribute="centerX" constant="7" id="5qG-s1-xu1"/>
+                <constraint firstAttribute="centerY" secondItem="kj4-S3-Kjh" secondAttribute="centerY" constant="0.5" id="tF7-U1-V4C"/>
+            </constraints>
+            <point key="canvasLocation" x="-154" y="492"/>
+        </customView>
+    </objects>
+</document>

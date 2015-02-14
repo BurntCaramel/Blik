@@ -27,6 +27,8 @@
 @property(copy, nonatomic) NSArray *collectedFiles;
 
 @property(nonatomic) GLACollectedFilesSetting *collectedFilesSetting;
+@property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
+@property(nonatomic) GLAFileOpenerApplicationCombiner *openerApplicationCombiner;
 
 @property(nonatomic) BOOL doNotUpdateViews;
 
@@ -64,6 +66,12 @@
 	[self stopCollectionObserving];
 	[self stopObservingPreviewFrameChanges];
 	[self stopAccessingAllSecurityScopedFileURLs];
+	[self stopWatchingProjectPrimaryFolders];
+}
+
+- (void)awakeFromNib
+{
+	[self setUpFileHelpersIfNeeded];
 }
 
 - (void)prepareView
@@ -90,12 +98,15 @@
 	
 	(self.tableDraggingHelper) = [[GLAArrayTableDraggingHelper alloc] initWithDelegate:self];
 	
-	[self setUpFileHelpers];
-	
 	[self updateSelectedFilesUIVisibilityAnimating:NO];
 	[self updateQuickLookPreviewAnimating:NO];
 	
 	[self reloadSourceFiles];
+}
+
+- (GLAProjectManager *)projectManager
+{
+	return [GLAProjectManager sharedProjectManager];
 }
 
 - (BOOL)hasProject
@@ -111,7 +122,7 @@
 	NSUUID *projectUUID = (filesListCollection.projectUUID);
 	NSAssert(projectUUID != nil, @"Collection must have a project associated with it.");
 	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	GLAProject *project = [pm projectWithUUID:projectUUID];
 	
 	return project;
@@ -124,7 +135,7 @@
 		return;
 	}
 	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
 	id collectionNotifier = [pm notificationObjectForCollection:collection];
@@ -134,7 +145,8 @@
 	GLAProject *project = (self.project);
 	if (project) {
 		id projectNotifier = [pm notificationObjectForProject:project];
-		[nc addObserver:self selector:@selector(highlightedItemsDidChangeNotification:) name:GLAProjectHighlightsDidChangeNotification object:projectNotifier];
+		[nc addObserver:self selector:@selector(projectHighlightedItemsDidChangeNotification:) name:GLAProjectHighlightsDidChangeNotification object:projectNotifier];
+		[nc addObserver:self selector:@selector(projectPrimaryFoldersDidChangeNotification:) name:GLAProjectPrimaryFoldersDidChangeNotification object:projectNotifier];
 	}
 }
 
@@ -145,7 +157,7 @@
 		return;
 	}
 	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
 	// Stop observing any notifications on the project manager.
@@ -157,16 +169,26 @@
 	}
 }
 
-- (void)setUpFileHelpers
+- (void)setUpFileHelpersIfNeeded
 {
-	(self.collectedFilesSetting) = [GLACollectedFilesSetting new];
+	if (self.collectedFilesSetting) {
+		return;
+	}
+	
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	GLACollectedFilesSetting *collectedFilesSetting = [GLACollectedFilesSetting new];
+	[nc addObserver:self selector:@selector(watchedDirectoriesDidChangeNotification:) name:GLACollectedFilesSettingDirectoriesDidChangeNotification object:collectedFilesSetting];
+	[nc addObserver:self selector:@selector(collectedFilesSettingLoadedFileInfoDidChangeNotification:) name:GLACollectedFilesSettingLoadedFileInfoDidChangeNotification object:collectedFilesSetting];
+	[collectedFilesSetting addToDefaultURLResourceKeysToRequest:@[NSURLLocalizedNameKey, NSURLEffectiveIconKey]];
+	(self.collectedFilesSetting) = collectedFilesSetting;
+	
 	
 	(self.fileInfoRetriever) = [[GLAFileInfoRetriever alloc] initWithDelegate:self defaultResourceKeysToRequest:@[NSURLLocalizedNameKey, NSURLEffectiveIconKey]];
 	
 	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = [GLAFileOpenerApplicationCombiner new];
 	(self.openerApplicationCombiner) = openerApplicationCombiner;
 	
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver:self selector:@selector(openerApplicationCombinerDidChangeNotification:) name:GLAFileURLOpenerApplicationCombinerDidChangeNotification object:openerApplicationCombiner];
 	
 }
@@ -180,10 +202,14 @@
 	}
 	
 	[self stopCollectionObserving];
+	[self stopWatchingProjectPrimaryFolders];
 	
 	_filesListCollection = filesListCollection;
 	
+	[self setUpFileHelpersIfNeeded];
+	
 	[self startCollectionObserving];
+	[self watchProjectPrimaryFolders];
 	
 	[self reloadSourceFiles];
 }
@@ -194,7 +220,7 @@
 	
 	GLACollection *filesListCollection = (self.filesListCollection);
 	if (filesListCollection) {
-		GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+		GLAProjectManager *pm = (self.projectManager);
 		
 		GLAProject *project = [pm projectWithUUID:(filesListCollection.projectUUID)];
 		[pm loadFilesListForCollectionIfNeeded:filesListCollection];
@@ -214,6 +240,8 @@
 	}
 	
 	(self.collectedFiles) = collectedFiles;
+	// Maybe rely on lazy-loading ability of table view?
+	//[(self.collectedFilesSetting) startAccessingCollectedFilesRemovingRemainders:collectedFiles];
 	
 	if (self.hasPreparedViews) {
 		[(self.sourceFilesListTableView) reloadData];
@@ -234,10 +262,53 @@
 	[self reloadSourceFiles];
 }
 
-- (void)highlightedItemsDidChangeNotification:(NSNotification *)note
+- (void)projectHighlightedItemsDidChangeNotification:(NSNotification *)note
 {
 	[self updateAddToHighlightsUI];
 }
+
+- (void)projectPrimaryFoldersDidChangeNotification:(NSNotification *)note
+{
+	[self watchProjectPrimaryFolders];
+}
+
+#pragma mark - Watching
+
+- (void)watchProjectPrimaryFolders
+{
+	GLAProject *project = (self.project);
+	if (!project) {
+		return;
+	}
+	
+	GLAProjectManager *pm = (self.projectManager);
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+#if DEBUG
+	NSLog(@"watchProjectPrimaryFolders %@", collectedFilesSetting);
+#endif
+	NSArray *projectFolders = [pm copyPrimaryFoldersForProject:project];
+	NSMutableSet *directoryURLs = [NSMutableSet new];
+	for (GLACollectedFile *collectedFile in projectFolders) {
+		GLAAccessedFileInfo *accessedFileInfo = [collectedFile accessFile];
+		NSURL *directoryURL = (accessedFileInfo.filePathURL);
+		[directoryURLs addObject:directoryURL];
+	}
+	(collectedFilesSetting.directoryURLsToWatch) = directoryURLs;
+}
+
+- (void)watchedDirectoriesDidChangeNotification:(NSNotification *)note
+{
+	[(self.fileInfoRetriever) clearCacheForAllURLs];
+	[self reloadSourceFiles];
+}
+
+- (void)stopWatchingProjectPrimaryFolders
+{
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+	(collectedFilesSetting.directoryURLsToWatch) = nil;
+}
+
+#pragma mark -
 
 - (void)stopObservingPreviewFrameChanges
 {
@@ -289,12 +360,12 @@
 
 - (void)addUsedURLForCollectedFile:(GLACollectedFile *)collectedFile
 {
-	[(self.collectedFilesSetting) startUsingURLForCollectedFile:collectedFile];
+	[(self.collectedFilesSetting) startAccessingCollectedFile:collectedFile];
 }
 
 - (void)stopAccessingAllSecurityScopedFileURLs
 {
-	[(self.collectedFilesSetting) stopUsingURLsForAllCollectedFiles];
+	[(self.collectedFilesSetting) stopAccessingAllCollectedFilesWaitingUntilDone];
 }
 
 - (void)makeSourceFilesListFirstResponder
@@ -380,14 +451,13 @@
 
 - (NSArray *)URLsForRowIndexes:(NSIndexSet *)indexes
 {
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
 	NSArray *collectedFiles = [self collectedFilesForRowIndexes:indexes];
 	
 	NSMutableArray *URLs = [NSMutableArray new];
 	for (GLACollectedFile *collectedFile in collectedFiles) {
-		if (collectedFile.isMissing) {
-			continue;
-		}
-		NSURL *fileURL = (collectedFile.filePathURL);
+		GLAAccessedFileInfo *accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
+		NSURL *fileURL = (accessedFile.filePathURL);
 		if (fileURL) {
 			[URLs addObject:fileURL];
 		}
@@ -428,7 +498,8 @@
 	if ((selectedRowIndexes.count) == 1) {
 		//selectedFile = (self.collectedFiles)[selectedRowIndexes.firstIndex];
 		selectedFile = [self collectedFileForRow:(selectedRowIndexes.firstIndex)];
-		URL = (selectedFile.filePathURL);
+		GLAAccessedFileInfo *accessedFile = [(self.collectedFilesSetting) accessedFileInfoForCollectedFile:selectedFile];
+		URL = (accessedFile.filePathURL);
 		[self startObservingPreviewFrameChanges];
 	}
 	
@@ -508,7 +579,7 @@
 
 - (BOOL)collectedFilesAreAllHighlightedForActionFrom:(id)sender
 {
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	NSArray *selectedCollectedFiles = [self collectedFilesForRowIndexes:[self rowIndexesForActionFrom:nil]];
 	BOOL isAllHighlighted = NO;
 	
@@ -522,7 +593,7 @@
 
 - (BOOL)canDoHighlightActionsLoadingIfNeeded:(BOOL)load
 {
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	GLAProject *project = (self.project);
 	if (load) {
 		[pm loadHighlightsForProjectIfNeeded:project];
@@ -634,8 +705,8 @@
 	
 	(self.selectedURLs) = [self URLsForRowIndexes:selectedIndexes];
 	
-	NSArray *selectedCollectedFiles = [self collectedFilesForRowIndexes:selectedIndexes];
-	[(self.collectedFilesSetting) startUsingURLsForCollectedFilesRemovingRemainders:selectedCollectedFiles];
+	//NSArray *selectedCollectedFiles = [self collectedFilesForRowIndexes:selectedIndexes];
+	//[(self.collectedFilesSetting) startAccessingCollectedFilesRemovingRemainders:selectedCollectedFiles];
 	
 	[self retrieveApplicationsToOpenSelection];
 	[self setNeedsToUpdateOpenerApplicationsUI];
@@ -646,13 +717,15 @@
 
 - (NSInteger)rowIndexForSelectedURL:(NSURL *)URL
 {
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
 	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
 	NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
 	
 	__block NSInteger rowIndex = -1;
 	selectedIndexes = [self collectedFilesIndexesForRowIndexes:selectedIndexes];
 	[(self.collectedFiles) enumerateObjectsAtIndexes:selectedIndexes options:NSEnumerationConcurrent usingBlock:^(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
-		if ([URL isEqual:(collectedFile.filePathURL)]) {
+		GLAAccessedFileInfo *accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
+		if ([URL isEqual:(accessedFile.filePathURL)]) {
 			rowIndex = idx;
 			*stop = YES;
 		}
@@ -712,7 +785,7 @@
 {
 	NSArray *collectedFiles = [GLACollectedFile collectedFilesWithFileURLs:fileURLs];
 	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	GLACollection *filesListCollection = (self.filesListCollection);
 	
 	[pm editFilesListOfCollection:filesListCollection insertingCollectedFiles:collectedFiles atOptionalIndex:index];
@@ -732,8 +805,10 @@
 		return;
 	}
 	
+#if DEBUG
 	NSLog(@"FCV OPEN %@", selectedURLs);
 	NSLog(@"REF %@", [[selectedURLs valueForKey:@"fileReferenceURL"] valueForKey:@"filePathURL"]);
+#endif
 	//selectedURLs = [[selectedURLs valueForKey:@"fileReferenceURL"] valueForKey:@"filePathURL"];
 	
 	NSURL *applicationURL = (self.chosenOpenerApplicationForSelection);
@@ -770,7 +845,7 @@
 	}
 	
 	GLACollection *filesListCollection = (self.filesListCollection);
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	
 	[pm editFilesListOfCollection:filesListCollection usingBlock:^(id<GLAArrayEditing> filesListEditor) {
 		[filesListEditor removeChildrenAtIndexes:indexes];
@@ -831,7 +906,7 @@
 	};
 	
 	GLAProject *project = (self.project);
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	[pm editHighlightsOfProject:project usingBlock:editingBlock];
 }
 
@@ -852,7 +927,7 @@
 	};
 	
 	GLAProject *project = (self.project);
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	[pm editHighlightsOfProject:project usingBlock:editingBlock];
 	
 	// This is called by the change notification observer:
@@ -863,7 +938,7 @@
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-	unichar u = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
+	unichar u = [(theEvent.charactersIgnoringModifiers) characterAtIndex:0];
 	//NSEventModifierFlags modifierFlags = (theEvent.modifierFlags);
 	NSUInteger modifierFlags = (theEvent.modifierFlags);
 	
@@ -878,12 +953,6 @@
 	else if (u == ' ') {
 		[self quickLookPreviewItems:self];
 	}
-	
-#if 0
-	CFArrayRef applicationURLs_cf = LSCopyApplicationURLsForURL((__bridge CFURLRef)fileURL, kLSRolesViewer | kLSRolesEditor);
-	NSArray *applicationURLs = CFBridgingRelease(applicationURLs_cf);
-	NSLog(@"APPS: %@", applicationURLs);
-#endif
 }
 
 #pragma mark Menus
@@ -995,7 +1064,7 @@
 
 - (void)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
 {
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *projectManager = (self.projectManager);
 	[projectManager editFilesListOfCollection:(self.filesListCollection) usingBlock:editBlock];
 }
 
@@ -1025,9 +1094,7 @@
 #endif
 	GLACollectedFile *collectedFile = [self collectedFileForRow:row];
 	
-	if (!(collectedFile.isMissing)) {
-		[self addUsedURLForCollectedFile:collectedFile];
-	}
+	[self addUsedURLForCollectedFile:collectedFile];
 	
 	return collectedFile;
 }
@@ -1055,19 +1122,26 @@
 	
 	NSPasteboard *pboard = (info.draggingPasteboard);
 	
+	// GLACollectedFile supports kUTTypeFileURL so check for its own type first.
+	if ([pboard availableTypeFromArray:@[[GLACollectedFile objectJSONPasteboardType]]] != nil) {
+		return [(self.tableDraggingHelper) tableView:tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
+	}
 	// canReadObjectForClasses
-	if ([pboard availableTypeFromArray:@[(__bridge NSString *)kUTTypeFileURL]] != nil) {
+	else if ([pboard availableTypeFromArray:@[(__bridge NSString *)kUTTypeFileURL]] != nil) {
 		return NSDragOperationLink;
 	}
 	
-	return [(self.tableDraggingHelper) tableView:tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
+	return NO;
 }
 
 - (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation
 {
 	NSPasteboard *pboard = (info.draggingPasteboard);
 	
-	if ([pboard availableTypeFromArray:@[(__bridge NSString *)kUTTypeFileURL]] != nil) {
+	if ([pboard availableTypeFromArray:@[[GLACollectedFile objectJSONPasteboardType]]] != nil) {
+		return [(self.tableDraggingHelper) tableView:tableView acceptDrop:info row:row dropOperation:dropOperation];
+	}
+	else if ([pboard availableTypeFromArray:@[(__bridge NSString *)kUTTypeFileURL]] != nil) {
 		NSArray *fileURLs = [pboard readObjectsForClasses:@[ [NSURL class] ] options:@{ NSPasteboardURLReadingFileURLsOnlyKey: @(YES) }];
 		if (fileURLs) {
 			[self insertFilesURLs:fileURLs atIndex:row];
@@ -1079,7 +1153,7 @@
 		}
 	}
 	
-	return [(self.tableDraggingHelper) tableView:tableView acceptDrop:info row:row dropOperation:dropOperation];
+	return NO;
 }
 
 #pragma mark Table View Delegate
@@ -1122,7 +1196,9 @@
 	
 #if EXTRA_ROW_COUNT == 1
 	if (row == 0) {
+#if DEBUG
 		NSLog(@"MAKE CELL VIEW for GROUP ROW");
+#endif
 		cellView = [tableView makeViewWithIdentifier:@"group" owner:nil];
 		(cellView.backgroundStyle) = NSBackgroundStyleDark;
 		//(cellView.backgroundStyle) = NSBackgroundStyleLight;
@@ -1140,32 +1216,10 @@
 	NSString *displayName = nil;
 	NSImage *iconImage = nil;
 	
-	if (collectedFile.isMissing) {
-		displayName = NSLocalizedString(@"Missing", @"Displayed name when a collected file is missing");
-		//displayName = [NSString localizedStringWithFormat:NSLocalizedString(@"Missing %@", @"Displayed name when a collected file is missing"), (collectedFile.name)];
-	}
-	else {
-		GLAFileInfoRetriever *fileInfoRetriever = (self.fileInfoRetriever);
-		NSURL *fileURL = (collectedFile.filePathURL);
-		
-#if 1
-		displayName = [fileInfoRetriever localizedNameForURL:fileURL];
-		iconImage = [fileInfoRetriever effectiveIconImageForURL:fileURL];
-		
-		NSLog(@"Display name %@ %@", displayName, fileURL);
-#else
-		NSArray *resourceValueKeys =
-		@[
-		  NSURLLocalizedNameKey,
-		  NSURLEffectiveIconKey
-		  ];
-		
-		NSDictionary *resourceValues = [fileInfoRetriever loadedResourceValuesForKeys:resourceValueKeys forURL:fileURL requestIfNeeded:YES];
-		
-		displayName = resourceValues[NSURLLocalizedNameKey];
-		iconImage = resourceValues[NSURLEffectiveIconKey];
-#endif
-	}
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+	[collectedFilesSetting startAccessingCollectedFile:collectedFile];
+	displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+	iconImage = [collectedFilesSetting copyValueForURLResourceKey:NSURLEffectiveIconKey forCollectedFile:collectedFile];
 	
 	(cellView.textField.stringValue) = displayName ?: @"Loading…";
 	(cellView.imageView.image) = iconImage;
@@ -1178,6 +1232,17 @@
 	[self updateSelectedURLs];
 }
 
+#pragma mark Collected Files Setting
+
+- (void)collectedFilesSettingLoadedFileInfoDidChangeNotification:(NSNotification *)note
+{
+#if DEBUG
+	NSLog(@"collectedFilesSettingLoadedFileInfoDidChangeNotification");
+#endif
+	
+	[(self.sourceFilesListTableView) reloadData];
+}
+
 #pragma mark File Info Retriever Delegate
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didLoadResourceValuesForURL:(NSURL *)fileURL
@@ -1186,8 +1251,11 @@
 		return;
 	}
 	
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+	
 	NSIndexSet *indexesToUpdate = [(self.collectedFiles) indexesOfObjectsPassingTest:^BOOL(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
-		return [fileURL isEqual:(collectedFile.filePathURL)];
+		GLAAccessedFileInfo *accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
+		return [fileURL isEqual:(accessedFile.filePathURL)];
 	}];
 	
 	NSIndexSet *rowIndexesToUpdate = [self rowIndexesForCollectedFilesIndexes:indexesToUpdate];
