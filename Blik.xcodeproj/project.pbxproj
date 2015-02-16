@@ -373,6 +373,10 @@
 		B2ED53891A8A20B700F6B4FA /* GLAAccessedFileInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAAccessedFileInfo.m; sourceTree = "<group>"; };
 		B2ED538B1A8D6E2B00F6B4FA /* GLAArrayEditorUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAArrayEditorUser.h; sourceTree = "<group>"; };
 		B2ED538C1A8D6E2B00F6B4FA /* GLAArrayEditorUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAArrayEditorUser.m; sourceTree = "<group>"; };
+		B2ED53921A8F2F5600F6B4FA /* GLAFolderQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAFolderQuery.h; sourceTree = "<group>"; };
+		B2ED53931A8F2F5600F6B4FA /* GLAFolderQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAFolderQuery.m; sourceTree = "<group>"; };
+		B2ED53961A8F2F7800F6B4FA /* GLAFolderQueryResults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAFolderQueryResults.h; sourceTree = "<group>"; };
+		B2ED53971A8F2F7800F6B4FA /* GLAFolderQueryResults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAFolderQueryResults.m; sourceTree = "<group>"; };
 		B2F0DBB019923887001AB5EE /* com.burntcaramel.Blik.Mac.QuickLook-Preview.xpc */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "com.burntcaramel.Blik.Mac.QuickLook-Preview.xpc"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2F0DBB119923887001AB5EE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B2F0DBB519923887001AB5EE /* QuickLook Preview-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "QuickLook Preview-Info.plist"; sourceTree = "<group>"; };
@@ -515,13 +519,13 @@
 			name = Collections;
 			sourceTree = "<group>";
 		};
-		B226E95E1988D36300D607CC /* Collection Content */ = {
+		B226E95E1988D36300D607CC /* Collected File */ = {
 			isa = PBXGroup;
 			children = (
 				B22E80C2198CAE38005C4108 /* GLACollectedFile.h */,
 				B22E80C3198CAE38005C4108 /* GLACollectedFile.m */,
 			);
-			name = "Collection Content";
+			name = "Collected File";
 			sourceTree = "<group>";
 		};
 		B24B3604196D1F4D0094FA1F /* Model */ = {
@@ -534,11 +538,9 @@
 				B2C1543F1A00D7BB00912AB1 /* GLAModelUUIDMap.m */,
 				B2841B3119809E15005BB6A3 /* GLAProject.h */,
 				B2841B3219809E15005BB6A3 /* GLAProject.m */,
-				B284D5601978EC1F00157126 /* GLACollection.h */,
-				B284D5611978EC1F00157126 /* GLACollection.m */,
-				B25591FC19C846920039D2AC /* GLACollectionColor.h */,
-				B25591FD19C846920039D2AC /* GLACollectionColor.m */,
-				B226E95E1988D36300D607CC /* Collection Content */,
+				B2ED53911A8F2EE000F6B4FA /* Collection */,
+				B226E95E1988D36300D607CC /* Collected File */,
+				B2ED53951A8F2F5900F6B4FA /* Folder Query */,
 				B208E3F719F8E36E000EF97B /* Highlighted Item */,
 				B24B3605196D1F720094FA1F /* GLAReminder.h */,
 				B24B3606196D1F720094FA1F /* GLAReminder.m */,
@@ -931,6 +933,28 @@
 				B28927521A6B1F64007238D6 /* GLACollectedFileListHelper.m */,
 			);
 			name = "File List Helper";
+			sourceTree = "<group>";
+		};
+		B2ED53911A8F2EE000F6B4FA /* Collection */ = {
+			isa = PBXGroup;
+			children = (
+				B284D5601978EC1F00157126 /* GLACollection.h */,
+				B284D5611978EC1F00157126 /* GLACollection.m */,
+				B25591FC19C846920039D2AC /* GLACollectionColor.h */,
+				B25591FD19C846920039D2AC /* GLACollectionColor.m */,
+			);
+			name = Collection;
+			sourceTree = "<group>";
+		};
+		B2ED53951A8F2F5900F6B4FA /* Folder Query */ = {
+			isa = PBXGroup;
+			children = (
+				B2ED53921A8F2F5600F6B4FA /* GLAFolderQuery.h */,
+				B2ED53931A8F2F5600F6B4FA /* GLAFolderQuery.m */,
+				B2ED53961A8F2F7800F6B4FA /* GLAFolderQueryResults.h */,
+				B2ED53971A8F2F7800F6B4FA /* GLAFolderQueryResults.m */,
+			);
+			name = "Folder Query";
 			sourceTree = "<group>";
 		};
 		B2F0DBB319923887001AB5EE /* QuickLook Preview */ = {

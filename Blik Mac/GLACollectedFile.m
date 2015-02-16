@@ -50,7 +50,6 @@
 	NSError *error = nil;
 	for (NSURL *fileURL in fileURLs) {
 		GLACollectedFile *collectedFile = [[GLACollectedFile alloc] initWithFileURL:fileURL];
-		//[collectedFile updateInformationWithError:&error];
 		[collectedFiles addObject:collectedFile];
 	}
 	
@@ -201,61 +200,6 @@
 	  ];
 }
 
-#if 0
-
-- (void)updateInformationFromURLResourceValues:(NSDictionary *)resourceValues
-{
-	(self.isDirectory) = [@YES isEqual:resourceValues[NSURLIsDirectoryKey]];
-	(self.isExecutable) = [@YES isEqual:resourceValues[NSURLIsExecutableKey]];
-	(self.name) = resourceValues[NSURLLocalizedNameKey];
-}
-
-- (BOOL)updateInformationApartFromKeys:(NSArray *)keysToExclude error:(NSError *__autoreleasing *)outError
-{
-	NSURL *URL = (self.filePathURL);
-	BOOL wasCreatedFromBookmarkData = (self.wasCreatedFromBookmarkData);
-	NSArray *resourceValueKeys = [[self class] coreResourceValueKeys];
-	
-	if (keysToExclude) {
-		NSMutableArray *resourceValueKeysMutable = [resourceValueKeys mutableCopy];
-		[resourceValueKeysMutable removeObjectsInArray:keysToExclude];
-		if ((resourceValueKeysMutable.count) == 0) {
-			return YES;
-		}
-		
-		resourceValueKeys = resourceValueKeysMutable;
-	}
-	
-	if (wasCreatedFromBookmarkData) {
-		BOOL canAccess = [URL startAccessingSecurityScopedResource];
-		if (!canAccess) {
-			*outError = [GLAModelErrors errorForCannotAccessSecurityScopedURL:URL];
-			return NO;
-		}
-	}
-	
-	NSDictionary *resourceValues = [URL resourceValuesForKeys:resourceValueKeys error:outError];
-	if (resourceValues) {
-		[self updateInformationFromURLResourceValues:resourceValues];
-		
-		NSError *error = nil;
-		//BOOL isReachable = [URL checkResourceIsReachableAndReturnError:&error];
-	}
-
-	if (wasCreatedFromBookmarkData) {
-		[URL stopAccessingSecurityScopedResource];
-	}
-	
-	return (resourceValues != nil);
-}
-
-- (BOOL)updateInformationWithError:(NSError *__autoreleasing *)outError
-{
-	return [self updateInformationApartFromKeys:nil error:outError];
-}
-
-#endif
-
 - (NSData *)bookmarkDataWithError:(NSError *__autoreleasing *)outError
 {
 	NSURL *URL = (self.filePathURL);
@@ -299,15 +243,6 @@
 	
 	//(self.sourceBookmarkData) = bookmarkData;
 	(self.wasCreatedFromBookmarkData) = YES;
-	
-#if 0
-	
-	NSArray *resourceValueKeys = [[self class] coreResourceValueKeys];
-	NSDictionary *resourceValues = [NSURL resourceValuesForKeys:resourceValueKeys fromBookmarkData:bookmarkData];
-	[self updateInformationFromURLResourceValues:resourceValues];
-	
-	[self updateInformationApartFromKeys:[resourceValues allKeys] error:&error];
-#endif
 }
 
 #if 1

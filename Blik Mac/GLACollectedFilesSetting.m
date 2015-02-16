@@ -51,6 +51,8 @@
 		
 		_infoIdentifiersToRetrieverBlocks = [NSMutableDictionary new];
 		_collectedFileUUIDsToDictionaryOfInfoIdentifiersToLastRetrievedValues = [NSCache new];
+		
+		[self startObservingApplication];
 	}
 	return self;
 }
@@ -58,6 +60,7 @@
 - (void)dealloc
 {
 	[self stopAccessingAllCollectedFilesWaitingUntilDone];
+	[self stopObservingApplication];
 }
 
 #pragma mark - Queue Convenience
@@ -112,6 +115,22 @@
 	[self invalidateAllAccessedFiles];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLACollectedFilesSettingDirectoriesDidChangeNotification object:self];
+}
+
+- (void)startObservingApplication
+{
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillBecomeActive:) name:NSApplicationWillBecomeActiveNotification object:NSApp];
+}
+
+- (void)stopObservingApplication
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationWillBecomeActiveNotification object:NSApp];
+}
+
+- (void)applicationWillBecomeActive:(NSNotification *)note
+{
+	// Update when application becomes active to ensure all files are up to date.
+	[self directoryWatcherDirectoriesDidChangeNotification:nil];
 }
 
 #pragma mark -
