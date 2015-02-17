@@ -315,7 +315,7 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="6vG-Qb-hgz"/>
             </connections>
-            <point key="canvasLocation" x="643" y="688.5"/>
+            <point key="canvasLocation" x="624" y="619.5"/>
         </menu>
     </objects>
 </document>

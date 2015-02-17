@@ -94,3 +94,4 @@
 
 
 NSString *GLACollectionTypeFilesList = @"filesList";
+NSString *GLACollectionTypeFilteredFolder = @"filteredFolder";

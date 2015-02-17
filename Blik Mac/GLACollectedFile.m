@@ -82,9 +82,11 @@
 
 #pragma mark -
 
+#define TIME_ACCESS_FILE 0
+
 - (GLAAccessedFileInfo *)accessFile
 {
-#if DEBUG
+#if TIME_ACCESS_FILE && DEBUG
 	CFAbsoluteTime tStart = CFAbsoluteTimeGetCurrent();
 #endif
 	
@@ -97,7 +99,7 @@
 		accessedFileInfo = [[GLAAccessedFileInfo alloc] initWithFileURL:(self.sourceFilePathURL)];
 	}
 	
-#if DEBUG
+#if TIME_ACCESS_FILE && DEBUG
 	CFAbsoluteTime tEnd = CFAbsoluteTimeGetCurrent();
 	NSLog(@"%@ took %@s", NSStringFromSelector(_cmd), @(tEnd - tStart));
 #endif

@@ -32,21 +32,13 @@
 
 @property(nonatomic) BOOL doNotUpdateViews;
 
-@property(nonatomic) NSMutableSet *accessedSecurityScopedURLs;
-@property(nonatomic) NSMutableDictionary *usedURLsToCollectedFiles;
-
 @property(nonatomic) NSArray *selectedURLs;
-@property(nonatomic) NSMutableDictionary *URLsToOpenerApplicationURLs;
-@property(nonatomic) NSMutableDictionary *URLsToDefaultOpenerApplicationURLs;
 
 @property(nonatomic) BOOL openerApplicationsPopUpButtonNeedsUpdate;
 
 @property(nonatomic) QLPreviewPanel *activeQuickLookPreviewPanel;
 
 @property(nonatomic) GLAArrayTableDraggingHelper *tableDraggingHelper;
-@property(nonatomic) NSIndexSet *draggedRowIndexes;
-
-@property(nonatomic) NSMutableArray *highlightedItemsToAddOnceLoaded;
 
 @end
 
@@ -56,7 +48,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Initialization code here.
+        [self setUpFileHelpersIfNeeded];
     }
     return self;
 }

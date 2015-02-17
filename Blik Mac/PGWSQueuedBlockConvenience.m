@@ -1,15 +1,15 @@
 //
-//  NSObject+PGWSDispatchBlockConvenience.m
+//  PGWSQueuedBlockConvenience.m
 //  Blik
 //
 //  Created by Patrick Smith on 13/12/2014.
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-#import "NSObject+PGWSDispatchBlockConvenience.h"
+#import "PGWSQueuedBlockConvenience.h"
 
 
-@implementation NSObject (PGWSDispatchBlockConvenience)
+@implementation NSObject (PGWSQueuedBlockConvenience)
 
 - (void)pgws_useReceiverAsyncOnDispatchQueue:(dispatch_queue_t)dispatchQueue block:(void (^)(id receiver))block
 {
@@ -61,6 +61,25 @@
 	});
 	
 	return result;
+}
+
+@end
+
+
+@implementation NSOperationQueue (PGWSQueuedBlockConvenience)
+
+- (NSBlockOperation *)pgws_useObject:(id)object inAddedOperationBlock:(void (^)(id object))block
+{
+	__weak id weakObject = object;
+	
+	NSBlockOperation *blockOperation = [NSBlockOperation blockOperationWithBlock:^{
+		id strongObject = weakObject;
+		
+		block(strongObject);
+	}];
+	[self addOperation:blockOperation];
+	
+	return blockOperation;
 }
 
 @end

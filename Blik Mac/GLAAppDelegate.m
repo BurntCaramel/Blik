@@ -12,10 +12,19 @@
 #import "GLAPreferencesWindowController.h"
 #import "GLAApplicationSettingsManager.h"
 
+#define DO_FOLDER_QUERY_TEST 1 && DEBUG
+
+#import "GLAFolderQuery.h"
+#import "GLAFolderQueryResults.h"
+
 
 @interface GLAAppDelegate ()
 
 @property(nonatomic) BOOL hasPrepared;
+
+#if DO_FOLDER_QUERY_TEST
+@property(nonatomic) GLAFolderQueryResults *folderQueryResults;
+#endif
 
 @end
 
@@ -47,6 +56,18 @@
 #endif
 	
 	[[GLAApplicationSettingsManager sharedApplicationSettingsManager] ensureAccessToPermittedApplicationsFolders];
+	
+#if DO_FOLDER_QUERY_TEST
+	GLAFolderQuery *folderQuery = [[GLAFolderQuery alloc] initCreatingByEditing:^(id<GLAFolderQueryEditing> editor) {
+		(editor.tagNames) = [NSSet setWithObject:@"Backburner"];
+	}];
+	
+	NSURL *folderURL = [NSURL fileURLWithPath:NSHomeDirectory()];
+	GLAFolderQueryResults *folderQueryResults = [[GLAFolderQueryResults alloc] initWithFolderQuery:folderQuery folderURLs:@[folderURL]];
+	
+	[folderQueryResults startSearching];
+	(self.folderQueryResults) = folderQueryResults;
+#endif
 }
 
 - (void)prepareIfNeeded

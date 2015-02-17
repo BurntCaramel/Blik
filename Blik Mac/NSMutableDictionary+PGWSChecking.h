@@ -11,8 +11,8 @@
 
 @interface NSMutableDictionary (PGWSChecking)
 
-- (id)objectForKey:(id<NSCopying>)key addingInstanceOfClassIfNotPresent:(Class)aClass;
+- (id)pgws_objectForKey:(id<NSCopying>)key addingResultOfBlockIfNotPresent:(id (^)())block;
 
-- (id)objectForKey:(id<NSCopying>)key addingResultOfBlockIfNotPresent:(id (^)())block;
+- (id)pgws_objectForKey:(id<NSCopying>)key addingInstanceOfClassIfNotPresent:(Class)aClass;
 
 @end

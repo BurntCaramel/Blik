@@ -10,18 +10,7 @@
 
 @implementation NSMutableDictionary (PGWSChecking)
 
-- (id)objectForKey:(id<NSCopying>)key addingInstanceOfClassIfNotPresent:(Class)aClass
-{
-	id object = [self objectForKey:key];
-	if (!object) {
-		object = [aClass new];
-		[self setObject:object forKey:key];
-	}
-	
-	return object;
-}
-
-- (id)objectForKey:(id<NSCopying>)key addingResultOfBlockIfNotPresent:(id (^)())block
+- (id)pgws_objectForKey:(id<NSCopying>)key addingResultOfBlockIfNotPresent:(id (^)())block
 {
 	id object = [self objectForKey:key];
 	if (!object) {
@@ -30,6 +19,13 @@
 	}
 	
 	return object;
+}
+
+- (id)pgws_objectForKey:(id<NSCopying>)key addingInstanceOfClassIfNotPresent:(Class)aClass
+{
+	return [self pgws_objectForKey:key addingResultOfBlockIfNotPresent:^id{
+		return [aClass new];
+	}];
 }
 
 @end

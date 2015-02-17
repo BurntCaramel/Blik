@@ -14,9 +14,13 @@
 #import "GLACollectionColor.h"
 #import "GLACollectedFile.h"
 #import "GLAArrayEditor.h"
+#import "GLAJSONStore.h"
+#import "GLAMantleObjectJSONStore.h"
 #import "GLAArrayMantleJSONStore.h"
-#import "GLAObjectNotificationRepresenter.h"
+#import "GLAArrayEditorUser.h"
 #import "GLAModelUUIDMap.h"
+#import "GLAObjectNotificationRepresenter.h"
+#import "NSMutableDictionary+PGWSChecking.h"
 
 @class GLAProjectManagerStore;
 
@@ -26,6 +30,8 @@
 - (instancetype)initWithProjectManager:(GLAProjectManager *)projectManager;
 
 @property(weak, nonatomic) GLAProjectManager *projectManager;
+
+- (void)runInForeground:(void (^)(GLAProjectManagerStore *store, GLAProjectManager *projectManager))block;
 
 @property(readonly, nonatomic) NSURL *version1DirectoryURL;
 
@@ -59,6 +65,7 @@
 - (BOOL)hasLoadedPrimaryFoldersForProject:(GLAProject *)project;
 - (void)loadPrimaryFoldersForProjectIfNeeded:(GLAProject *)project;
 - (GLAArrayEditor *)primaryFoldersArrayEditorForProject:(GLAProject *)project;
+- (GLAArrayEditor *)primaryFoldersArrayEditorForProject:(GLAProject *)project createIfNeeded:(BOOL)create loadIfNeeded:(BOOL)load;
 
 - (void)clearPrimaryFoldersArrayEditorForProject:(GLAProject *)project;
 
@@ -91,6 +98,10 @@
 
 - (NSArray *)copyFilesListForCollection:(GLACollection *)filesListCollection;
 - (GLACollectedFile *)collectedFileWithUUID:(NSUUID *)collectionUUID insideCollection:(GLACollection *)filesListCollection;
+
+#pragma mark Filtered Folders
+
+- (GLAMantleObjectJSONStore *)mantleJSONStoreForFilteredFolderCollectionWithUUID:(NSUUID *)collectionUUID loadCompletionHandler:(dispatch_block_t)loadCompletionHandler;
 
 @end
 
@@ -302,7 +313,20 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	else {
 		return NO;
 	}
+}
 
+- (id<GLALoadableArrayUsing>)usePrimaryFoldersForProject:(GLAProject *)project
+{
+	GLAArrayEditorUser *arrayEditorUser = [[GLAArrayEditorUser alloc] initWithOwner:self accessingBlock:^GLAArrayEditor *(BOOL createIfNeeded, BOOL loadIfNeeded) {
+		return [(self.store) primaryFoldersArrayEditorForProject:project createIfNeeded:createIfNeeded loadIfNeeded:loadIfNeeded];
+	} editBlock:^(GLAArrayEditingBlock editingBlock) {
+		[self editPrimaryFoldersOfProject:project usingBlock:editingBlock];
+	}];
+	
+	id projectNotifier = [self notificationObjectForProject:project];
+	[arrayEditorUser makeObserverOfObject:projectNotifier forLoadNotificationWithName:nil changeNotificationWithName:GLAProjectPrimaryFoldersDidChangeNotification];
+	
+	return arrayEditorUser;
 }
 
 #pragma mark Collections
@@ -634,6 +658,35 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	}
 }
 
+#pragma mark Filtered Folder
+
+- (GLAMantleObjectJSONStore *)mantleJSONStoreForFilteredFolderCollectionWithUUID:(NSUUID *)collectionUUID
+{
+	GLAProjectManagerStore *store = (self.store);
+	__weak GLAProjectManagerStore *weakStore = store;
+	
+	return [store mantleJSONStoreForFilteredFolderCollectionWithUUID:collectionUUID loadCompletionHandler:^{
+		__strong GLAProjectManagerStore *store = weakStore;
+		[store runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
+			[projectManager folderQueryForCollectionWithUUIDDidChange:collectionUUID];
+		}];
+	}];
+}
+
+- (GLAFolderQuery *)folderQueryLoadingIfNeededForFilteredFolderCollectionWithUUID:(NSUUID *)collectionUUID
+{
+	GLAMantleObjectJSONStore *JSONStore = [self mantleJSONStoreForFilteredFolderCollectionWithUUID:collectionUUID];
+	
+	return (GLAFolderQuery *)(JSONStore.object);
+}
+
+- (void)setFolderQuery:(GLAFolderQuery *)folderQuery forFilteredFolderCollectionWithUUID:(NSUUID *)collectionUUID
+{
+	GLAMantleObjectJSONStore *JSONStore = [self mantleJSONStoreForFilteredFolderCollectionWithUUID:collectionUUID];
+	
+	(JSONStore.object) = folderQuery;
+}
+
 #pragma mark Highlighted Collected File
 
 - (GLACollection *)collectionForHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile loadIfNeeded:(BOOL)load
@@ -855,6 +908,11 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLACollectionFilesListDidChangeNotification object:[self notificationObjectForCollection:collection]];
 }
 
+- (void)folderQueryForCollectionWithUUIDDidChange:(NSUUID *)collectionUUID
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLACollectionFolderQueryDidChangeNotification object:[self notificationObjectForCollectionUUID:collectionUUID]];
+}
+
 #pragma mark Status
 
 - (NSString *)statusOfCurrentActivity
@@ -956,6 +1014,8 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 @property(nonatomic) BOOL needsToSaveNowProject;
 - (void)writeNowProject:(dispatch_block_t)completionBlock;
 
+@property(nonatomic) NSMutableDictionary *collectionUUIDsToFolderQueryJSONStores;
+
 #pragma Status
 
 @property(nonatomic) NSMutableSet *actionsThatAreRunning;
@@ -1044,8 +1104,6 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 #pragma mark Files
 
-#if 1
-
 - (NSURL *)version1DirectoryURLWithInnerDirectoryComponents:(NSArray *)extraPathComponents
 {
 	return [[GLAWorkingFoldersManager sharedWorkingFoldersManager] version1DirectoryURLWithInnerDirectoryComponents:extraPathComponents];
@@ -1055,54 +1113,6 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 {
 	return ([GLAWorkingFoldersManager sharedWorkingFoldersManager].version1DirectoryURL);
 }
-
-#else
-
-- (NSURL *)version1DirectoryURLWithInnerDirectoryComponents:(NSArray *)extraPathComponents
-{
-	GLAProjectManager *projectManager = (self.projectManager);
-	
-	NSFileManager *fm = [NSFileManager defaultManager];
-	NSError *error = nil;
-	NSURL *directoryURL = [fm URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:&error];
-	
-	if (!directoryURL) {
-		[projectManager handleError:error fromSelector:_cmd];
-		return nil;
-	}
-	
-	// Convert path to its components, so we can add more components
-	// and convert back into a URL.
-	NSMutableArray *pathComponents = [(directoryURL.pathComponents) mutableCopy];
-	
-	// {appBundleID}/v1/
-	NSString *appBundleID = ([NSBundle mainBundle].bundleIdentifier);
-	[pathComponents addObject:appBundleID];
-	[pathComponents addObject:@"v1"];
-	
-	// Append extra path components passed to this method.
-	if (extraPathComponents) {
-		[pathComponents addObjectsFromArray:extraPathComponents];
-	}
-	
-	// Convert components back into a URL.
-	directoryURL = [NSURL fileURLWithPathComponents:pathComponents];
-	
-	BOOL directorySuccess = [fm createDirectoryAtURL:directoryURL withIntermediateDirectories:YES attributes:nil error:&error];
-	if (!directorySuccess) {
-		[projectManager handleError:error fromSelector:_cmd];
-		return nil;
-	}
-	
-	return directoryURL;
-}
-
-- (NSURL *)version1DirectoryURL
-{
-	return [self version1DirectoryURLWithInnerDirectoryComponents:nil];
-}
-
-#endif
 
 - (NSURL *)allProjectsJSONFileURL
 {
@@ -1176,6 +1186,16 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	
 	NSURL *directoryURL = [self collectionDirectoryURLForCollectionID:collectionUUID];
 	NSURL *fileURL = [directoryURL URLByAppendingPathComponent:@"files-list.json"];
+	
+	return fileURL;
+}
+
+- (NSURL *)folderQueryJSONFileURLForCollectionID:(NSUUID *)collectionUUID
+{
+	NSAssert(collectionUUID != nil, @"Collection UUID must not be nil.");
+	
+	NSURL *directoryURL = [self collectionDirectoryURLForCollectionID:collectionUUID];
+	NSURL *fileURL = [directoryURL URLByAppendingPathComponent:@"folder-query.json"];
 	
 	return fileURL;
 }
@@ -1864,6 +1884,25 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	return filesListArrayEditor[collectedFileUUID];
 }
 
+#pragma mark Filtered Folder
+
+- (GLAMantleObjectJSONStore *)mantleJSONStoreForFilteredFolderCollectionWithUUID:(NSUUID *)collectionUUID loadCompletionHandler:(dispatch_block_t)loadCompletionHandler
+{
+	NSMutableDictionary *collectionUUIDsToFolderQueryJSONStores = (self.collectionUUIDsToFolderQueryJSONStores);
+	if (!collectionUUIDsToFolderQueryJSONStores) {
+		(self.collectionUUIDsToFolderQueryJSONStores) = collectionUUIDsToFolderQueryJSONStores = [NSMutableDictionary new];
+	}
+	
+	GLAMantleObjectJSONStore *JSONStore = [collectionUUIDsToFolderQueryJSONStores pgws_objectForKey:collectionUUID addingResultOfBlockIfNotPresent:^ id {
+		NSURL *fileURL = [self folderQueryJSONFileURLForCollectionID:collectionUUID];
+		NSOperationQueue *operationQueue = (self.backgroundOperationQueue);
+		
+		return [[GLAMantleObjectJSONStore alloc] initLoadingFromFileURL:fileURL modelClass:[GLAFolderQuery class] operationQueue:operationQueue loadCompletionHandler:loadCompletionHandler];
+	}];
+	
+	return JSONStore;
+}
+
 #pragma mark - Saving
 
 #pragma mark Save Now Project
@@ -2016,4 +2055,5 @@ NSString *GLAProjectHighlightsDidChangeNotification = @"GLAProjectHighlightsDidC
 NSString *GLACollectionWasDeletedNotification = @"GLACollectionWasDeletedNotification";
 NSString *GLACollectionDidChangeNotification = @"GLACollectionDidChangeNotification";
 NSString *GLACollectionFilesListDidChangeNotification = @"GLACollectionFilesListDidChangeNotification";
+NSString *GLACollectionFolderQueryDidChangeNotification = @"GLACollectionFolderQueryDidChangeNotification";
 NSString *GLACollectionNotificationUserInfoCollectionKey = @"GLACollectionNotificationUserInfoCollectionKey";

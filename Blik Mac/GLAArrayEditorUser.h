@@ -19,5 +19,6 @@ typedef void (^ GLAArrayEditorUserEditBlock)(GLAArrayEditingBlock editingBlock);
 - (instancetype)initWithOwner:(id)owner accessingBlock:(GLAArrayEditorUserAccessingBlock)accessingBlock editBlock:(GLAArrayEditorUserEditBlock)editBlock;
 
 - (void)makeObserverOfOwnerForLoadNotificationWithName:(NSString *)loadNotificationName changeNotificationWithName:(NSString *)changeNotificationName;
+- (void)makeObserverOfObject:(id)notifier forLoadNotificationWithName:(NSString *)loadNotificationName changeNotificationWithName:(NSString *)changeNotificationName;
 
 @end

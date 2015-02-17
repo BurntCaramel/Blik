@@ -42,18 +42,23 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:nil];
 }
 
-- (void)makeObserverOfOwnerForLoadNotificationWithName:(NSString *)loadNotificationName changeNotificationWithName:(NSString *)changeNotificationName
+- (void)makeObserverOfObject:(id)notifier forLoadNotificationWithName:(NSString *)loadNotificationName changeNotificationWithName:(NSString *)changeNotificationName
 {
-	id owner = (self.owner);
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
 	if (loadNotificationName) {
-		[nc addObserver:self selector:@selector(didLoadNotification:) name:loadNotificationName object:owner];
+		[nc addObserver:self selector:@selector(didLoadNotification:) name:loadNotificationName object:notifier];
 	}
 	
 	if (changeNotificationName) {
-		[nc addObserver:self selector:@selector(didChangeNotification:) name:changeNotificationName object:owner];
+		[nc addObserver:self selector:@selector(didChangeNotification:) name:changeNotificationName object:notifier];
 	}
+}
+
+- (void)makeObserverOfOwnerForLoadNotificationWithName:(NSString *)loadNotificationName changeNotificationWithName:(NSString *)changeNotificationName
+{
+	id owner = (self.owner);
+	[self makeObserverOfObject:owner forLoadNotificationWithName:loadNotificationName changeNotificationWithName:changeNotificationName];
 }
 
 - (GLAArrayEditor *)arrayEditorCreatingIfNeeded:(BOOL)createIfNeeded LoadingIfNeeded:(BOOL)loadIfNeeded

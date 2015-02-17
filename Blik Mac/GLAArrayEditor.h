@@ -111,6 +111,7 @@ typedef NS_ENUM(NSUInteger, GLAArrayStoringSaveState) {
 };
 
 
+// A store works by observing the array for changes, saving when one is made.
 @protocol GLAArrayStoring <GLAArrayEditorObserving>
 
 @property(readonly, nonatomic) BOOL freshlyMade;

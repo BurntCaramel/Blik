@@ -380,6 +380,13 @@
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem isSeparatorItem="YES" id="Ya3-rJ-738"/>
+                <menuItem title="Show in Finder…" id="ung-bt-hSl">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showItemInFinder:" target="aDf-pc-aeE" id="E86-TR-DlG"/>
+                    </connections>
+                </menuItem>
                 <menuItem isSeparatorItem="YES" id="gvF-3d-HKU"/>
                 <menuItem title="Remove from Highlights" id="CCv-nW-cRP">
                     <modifierMask key="keyEquivalentModifierMask"/>

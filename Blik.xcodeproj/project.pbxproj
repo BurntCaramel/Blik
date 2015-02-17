@@ -89,8 +89,7 @@
 		B2ADDBF11963DA2E0014EF84 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBF01963DA2E0014EF84 /* XCTest.framework */; };
 		B2ADDBF21963DA2E0014EF84 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */; };
 		B2ADDBFA1963DA2E0014EF84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBF81963DA2E0014EF84 /* InfoPlist.strings */; };
-		B2BB85121A3BD86D00BF186C /* NSOperationQueue+PGWSBlockConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85111A3BD86D00BF186C /* NSOperationQueue+PGWSBlockConvenience.m */; };
-		B2BB85151A3BE97A00BF186C /* NSObject+PGWSDispatchBlockConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85141A3BE97A00BF186C /* NSObject+PGWSDispatchBlockConvenience.m */; };
+		B2BB85151A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85141A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m */; };
 		B2BB85181A3F095B00BF186C /* GLAMainContentManners.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85171A3F095B00BF186C /* GLAMainContentManners.m */; };
 		B2C154401A00D7BB00912AB1 /* GLAModelUUIDMap.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C1543F1A00D7BB00912AB1 /* GLAModelUUIDMap.m */; };
 		B2C5FD2D1988AB0200AEFBAF /* GLAProjectManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C5FD2C1988AB0200AEFBAF /* GLAProjectManager.m */; };
@@ -126,6 +125,11 @@
 		B2E39B641A89B642000A9A12 /* GLAPreferencesSectionNavigator.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E39B631A89B642000A9A12 /* GLAPreferencesSectionNavigator.m */; };
 		B2ED538A1A8A20B700F6B4FA /* GLAAccessedFileInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ED53891A8A20B700F6B4FA /* GLAAccessedFileInfo.m */; };
 		B2ED538D1A8D6E2B00F6B4FA /* GLAArrayEditorUser.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ED538C1A8D6E2B00F6B4FA /* GLAArrayEditorUser.m */; };
+		B2ED54271A9183D400F6B4FA /* GLAFolderQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ED53931A8F2F5600F6B4FA /* GLAFolderQuery.m */; };
+		B2ED54281A9183D700F6B4FA /* GLAFolderQueryResults.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ED53971A8F2F7800F6B4FA /* GLAFolderQueryResults.m */; };
+		B2ED542B1A92FB8C00F6B4FA /* GLAJSONStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ED542A1A92FB8C00F6B4FA /* GLAJSONStore.m */; };
+		B2ED542F1A930ACB00F6B4FA /* GLAMantleObjectJSONStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ED542E1A930ACB00F6B4FA /* GLAMantleObjectJSONStore.m */; };
+		B2ED54331A93EFE000F6B4FA /* GLAQuickLookPreviewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ED54321A93EFE000F6B4FA /* GLAQuickLookPreviewHelper.m */; };
 		B2F0DBB219923887001AB5EE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2F0DBB119923887001AB5EE /* Foundation.framework */; };
 		B2F0DBB819923887001AB5EE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2F0DBB619923887001AB5EE /* InfoPlist.strings */; };
 		B2F0DBBB19923887001AB5EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B2F0DBBA19923887001AB5EE /* main.m */; };
@@ -303,10 +307,8 @@
 		B2ADDBF91963DA2E0014EF84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B2BB850D1A39C4AB00BF186C /* GLAArrayMantleJSONStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAArrayMantleJSONStore.h; sourceTree = "<group>"; };
 		B2BB850E1A39C4AB00BF186C /* GLAArrayMantleJSONStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAArrayMantleJSONStore.m; sourceTree = "<group>"; };
-		B2BB85101A3BD86D00BF186C /* NSOperationQueue+PGWSBlockConvenience.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSOperationQueue+PGWSBlockConvenience.h"; sourceTree = "<group>"; };
-		B2BB85111A3BD86D00BF186C /* NSOperationQueue+PGWSBlockConvenience.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSOperationQueue+PGWSBlockConvenience.m"; sourceTree = "<group>"; };
-		B2BB85131A3BE97A00BF186C /* NSObject+PGWSDispatchBlockConvenience.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+PGWSDispatchBlockConvenience.h"; sourceTree = "<group>"; };
-		B2BB85141A3BE97A00BF186C /* NSObject+PGWSDispatchBlockConvenience.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PGWSDispatchBlockConvenience.m"; sourceTree = "<group>"; };
+		B2BB85131A3BE97A00BF186C /* PGWSQueuedBlockConvenience.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGWSQueuedBlockConvenience.h; sourceTree = "<group>"; };
+		B2BB85141A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGWSQueuedBlockConvenience.m; sourceTree = "<group>"; };
 		B2BB85161A3F095B00BF186C /* GLAMainContentManners.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainContentManners.h; sourceTree = "<group>"; };
 		B2BB85171A3F095B00BF186C /* GLAMainContentManners.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainContentManners.m; sourceTree = "<group>"; };
 		B2C1543E1A00D7BB00912AB1 /* GLAModelUUIDMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAModelUUIDMap.h; sourceTree = "<group>"; };
@@ -377,6 +379,13 @@
 		B2ED53931A8F2F5600F6B4FA /* GLAFolderQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAFolderQuery.m; sourceTree = "<group>"; };
 		B2ED53961A8F2F7800F6B4FA /* GLAFolderQueryResults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAFolderQueryResults.h; sourceTree = "<group>"; };
 		B2ED53971A8F2F7800F6B4FA /* GLAFolderQueryResults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAFolderQueryResults.m; sourceTree = "<group>"; };
+		B2ED54291A92FB8C00F6B4FA /* GLAJSONStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAJSONStore.h; sourceTree = "<group>"; };
+		B2ED542A1A92FB8C00F6B4FA /* GLAJSONStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAJSONStore.m; sourceTree = "<group>"; };
+		B2ED542D1A930ACB00F6B4FA /* GLAMantleObjectJSONStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMantleObjectJSONStore.h; sourceTree = "<group>"; };
+		B2ED542E1A930ACB00F6B4FA /* GLAMantleObjectJSONStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMantleObjectJSONStore.m; sourceTree = "<group>"; };
+		B2ED54301A930BB800F6B4FA /* GLAStoring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLAStoring.h; sourceTree = "<group>"; };
+		B2ED54311A93EFE000F6B4FA /* GLAQuickLookPreviewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAQuickLookPreviewHelper.h; sourceTree = "<group>"; };
+		B2ED54321A93EFE000F6B4FA /* GLAQuickLookPreviewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAQuickLookPreviewHelper.m; sourceTree = "<group>"; };
 		B2F0DBB019923887001AB5EE /* com.burntcaramel.Blik.Mac.QuickLook-Preview.xpc */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "com.burntcaramel.Blik.Mac.QuickLook-Preview.xpc"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2F0DBB119923887001AB5EE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B2F0DBB519923887001AB5EE /* QuickLook Preview-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "QuickLook Preview-Info.plist"; sourceTree = "<group>"; };
@@ -462,12 +471,12 @@
 			isa = PBXGroup;
 			children = (
 				B22E80C8198F65A9005C4108 /* GLAArrayEditing.h */,
+				B2ED54301A930BB800F6B4FA /* GLAStoring.h */,
 				B22E80C5198F654E005C4108 /* GLAArrayEditor.h */,
 				B22E80C6198F654E005C4108 /* GLAArrayEditor.m */,
-				B2BB850D1A39C4AB00BF186C /* GLAArrayMantleJSONStore.h */,
-				B2BB850E1A39C4AB00BF186C /* GLAArrayMantleJSONStore.m */,
 				B2ED538B1A8D6E2B00F6B4FA /* GLAArrayEditorUser.h */,
 				B2ED538C1A8D6E2B00F6B4FA /* GLAArrayEditorUser.m */,
+				B2ED542C1A930A8300F6B4FA /* JSON */,
 				B207633D1A114AC9003C5922 /* GLAArrayTableDraggingHelper.h */,
 				B207633E1A114AC9003C5922 /* GLAArrayTableDraggingHelper.m */,
 				B2E39B311A7C5BEF000A9A12 /* GLAMultipleArrayTableHelper.h */,
@@ -828,6 +837,8 @@
 			children = (
 				B226E9561988D00C00D607CC /* GLAFileCollectionViewController.h */,
 				B226E9571988D00C00D607CC /* GLAFileCollectionViewController.m */,
+				B2ED54311A93EFE000F6B4FA /* GLAQuickLookPreviewHelper.h */,
+				B2ED54321A93EFE000F6B4FA /* GLAQuickLookPreviewHelper.m */,
 				B226E9581988D00C00D607CC /* GLAFileCollectionViewController.xib */,
 				B2CCF8EC1A37138300EC7703 /* Add Collected Files Choice */,
 			);
@@ -839,10 +850,8 @@
 			children = (
 				B2CCF8E71A370C7D00EC7703 /* NSObject+PGWSNotificationObserving.h */,
 				B2CCF8E81A370C7D00EC7703 /* NSObject+PGWSNotificationObserving.m */,
-				B2BB85101A3BD86D00BF186C /* NSOperationQueue+PGWSBlockConvenience.h */,
-				B2BB85111A3BD86D00BF186C /* NSOperationQueue+PGWSBlockConvenience.m */,
-				B2BB85131A3BE97A00BF186C /* NSObject+PGWSDispatchBlockConvenience.h */,
-				B2BB85141A3BE97A00BF186C /* NSObject+PGWSDispatchBlockConvenience.m */,
+				B2BB85131A3BE97A00BF186C /* PGWSQueuedBlockConvenience.h */,
+				B2BB85141A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m */,
 				B28927651A725DF9007238D6 /* NSMutableDictionary+PGWSChecking.h */,
 				B28927661A725DF9007238D6 /* NSMutableDictionary+PGWSChecking.m */,
 			);
@@ -955,6 +964,19 @@
 				B2ED53971A8F2F7800F6B4FA /* GLAFolderQueryResults.m */,
 			);
 			name = "Folder Query";
+			sourceTree = "<group>";
+		};
+		B2ED542C1A930A8300F6B4FA /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				B2ED54291A92FB8C00F6B4FA /* GLAJSONStore.h */,
+				B2ED542A1A92FB8C00F6B4FA /* GLAJSONStore.m */,
+				B2ED542D1A930ACB00F6B4FA /* GLAMantleObjectJSONStore.h */,
+				B2ED542E1A930ACB00F6B4FA /* GLAMantleObjectJSONStore.m */,
+				B2BB850D1A39C4AB00BF186C /* GLAArrayMantleJSONStore.h */,
+				B2BB850E1A39C4AB00BF186C /* GLAArrayMantleJSONStore.m */,
+			);
+			name = JSON;
 			sourceTree = "<group>";
 		};
 		B2F0DBB319923887001AB5EE /* QuickLook Preview */ = {
@@ -1240,6 +1262,7 @@
 				B208E40019F914A7000EF97B /* GLAObjectNotificationRepresenter.m in Sources */,
 				B2CCF8F01A38682400EC7703 /* GLAPendingAddedCollectedFilesInfo.m in Sources */,
 				B2E39B571A88FBE8000A9A12 /* GLAPreferencesChooseSectionViewController.m in Sources */,
+				B2ED54271A9183D400F6B4FA /* GLAFolderQuery.m in Sources */,
 				B208E3FD19F90CFA000EF97B /* GLAProjectHighlightsViewController.m in Sources */,
 				B29F8DDD1981139300F58F59 /* GLAReminderManager.m in Sources */,
 				B2A8FCB71A2672E50002108E /* GLAEmptyAllProjectsViewController.m in Sources */,
@@ -1249,14 +1272,15 @@
 				B260F85519ADC91A002E3753 /* GLAStatusItemController.m in Sources */,
 				B219DAA2196AB65D007900DF /* GLAMainWindowController.m in Sources */,
 				B2174F7C19BEDBDF00BAE041 /* GLAModelErrors.m in Sources */,
+				B2ED542F1A930ACB00F6B4FA /* GLAMantleObjectJSONStore.m in Sources */,
 				B289276A1A730F43007238D6 /* GLAPluckedCollectedFilesMenuController.m in Sources */,
 				B2BB85181A3F095B00BF186C /* GLAMainContentManners.m in Sources */,
 				B2C154401A00D7BB00912AB1 /* GLAModelUUIDMap.m in Sources */,
-				B2BB85121A3BD86D00BF186C /* NSOperationQueue+PGWSBlockConvenience.m in Sources */,
 				B24B360B196E336E0094FA1F /* GLAMainNavigationBarController.m in Sources */,
 				B2E39B4E1A85B797000A9A12 /* GLAWorkingFoldersManager.m in Sources */,
 				B2C7F29D1973998C005780B4 /* GLAProjectActionsBarController.m in Sources */,
 				B245E83F1A395D9D002ED636 /* GLAMainSectionNavigator.m in Sources */,
+				B2ED54281A9183D700F6B4FA /* GLAFolderQueryResults.m in Sources */,
 				B25591F519C3CD0D0039D2AC /* GLATableActionsViewController.m in Sources */,
 				B219DAB6196AD698007900DF /* GLAUIStyle.m in Sources */,
 				B2ED538A1A8A20B700F6B4FA /* GLAAccessedFileInfo.m in Sources */,
@@ -1276,11 +1300,12 @@
 				B2302ED81A554B7F00E6AFBA /* GLAArrayMantleJSONStore.m in Sources */,
 				B20362C81A0A3D2E007169C2 /* GLAInstructionsViewController.m in Sources */,
 				B26B6F5019EBE3C800D17ECD /* GLATableView.m in Sources */,
+				B2ED54331A93EFE000F6B4FA /* GLAQuickLookPreviewHelper.m in Sources */,
 				B226E9591988D00C00D607CC /* GLAFileCollectionViewController.m in Sources */,
 				B22E80C7198F654E005C4108 /* GLAArrayEditor.m in Sources */,
 				B22E80C4198CAE38005C4108 /* GLACollectedFile.m in Sources */,
 				B255920119C84E4B0039D2AC /* GLAColorChoiceView.m in Sources */,
-				B2BB85151A3BE97A00BF186C /* NSObject+PGWSDispatchBlockConvenience.m in Sources */,
+				B2BB85151A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m in Sources */,
 				B23515331973BEAB00883FB3 /* GLAButton.m in Sources */,
 				B2C7F28F19704A2C005780B4 /* GLAProjectOverviewTableCellView.m in Sources */,
 				B208E3F119F51551000EF97B /* GLAEditCollectionDetailsViewController.m in Sources */,
@@ -1323,6 +1348,7 @@
 				B2C5FD2D1988AB0200AEFBAF /* GLAProjectManager.m in Sources */,
 				B25591FE19C846920039D2AC /* GLACollectionColor.m in Sources */,
 				B28927531A6B1F64007238D6 /* GLACollectedFileListHelper.m in Sources */,
+				B2ED542B1A92FB8C00F6B4FA /* GLAJSONStore.m in Sources */,
 				B2ADDBE51963DA2E0014EF84 /* GLAAppDelegate.m in Sources */,
 				B268C2561990EACC000BF39B /* GLASplitView.m in Sources */,
 				B28927641A7256A4007238D6 /* GLAPluckedCollectedFilesList.m in Sources */,

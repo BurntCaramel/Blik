@@ -12,6 +12,7 @@
 
 
 extern NSString *GLACollectionTypeFilesList;
+extern NSString *GLACollectionTypeFilteredFolder;
 
 
 @protocol GLACollectedItem <NSObject>

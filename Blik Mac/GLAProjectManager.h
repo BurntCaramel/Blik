@@ -9,6 +9,7 @@
 @import Foundation;
 #import "GLAProject.h"
 #import "GLACollection.h"
+#import "GLAFolderQuery.h"
 #import "GLAHighlightedItem.h"
 
 
@@ -109,6 +110,11 @@
 
 - (void)editFilesListOfCollection:(GLACollection *)filesListCollection addingCollectedFiles:(NSArray *)collectedFiles queueIfNeedsLoading:(BOOL)queue;
 
+#pragma mark Collection Filtered Folder
+
+- (GLAFolderQuery *)folderQueryLoadingIfNeededForFilteredFolderCollectionWithUUID:(NSUUID *)collectionUUID; // Notifies with GLACollectionFolderQueryDidChangeNotification when loaded.
+- (void)setFolderQuery:(GLAFolderQuery *)folderQuery forFilteredFolderCollectionWithUUID:(NSUUID *)collectionUUID;
+
 #pragma mark Highlighted Collected File
 
 - (GLACollection *)collectionForHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile loadIfNeeded:(BOOL)load;
@@ -148,6 +154,7 @@ extern NSString *GLAProjectHighlightsDidChangeNotification;
 extern NSString *GLACollectionWasDeletedNotification;
 extern NSString *GLACollectionDidChangeNotification;
 extern NSString *GLACollectionFilesListDidChangeNotification;
+extern NSString *GLACollectionFolderQueryDidChangeNotification;
 extern NSString *GLACollectionNotificationUserInfoCollectionKey;
 
 //extern NSString *GLAProjectManagerProjectRemindersDidChangeNotification;

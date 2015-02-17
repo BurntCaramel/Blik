@@ -9,6 +9,7 @@
 #import "GLACollectedFilesSetting.h"
 #import "GLAModelUUIDMap.h"
 #import "GLADirectoryWatcher.h"
+#import "GLAFolderQuery.h"
 
 
 @interface GLACollectedFilesSetting () <GLAFileInfoRetrieverDelegate>
@@ -105,6 +106,14 @@
 	directoryURLsToWatch = [directoryURLsToWatch copy];
 	_directoryURLsToWatch = directoryURLsToWatch;
 	(_directoryWatcher.directoryURLsToWatch) = directoryURLsToWatch;
+	
+#if 0 && DEBUG
+	if (directoryURLsToWatch && (directoryURLsToWatch.count > 0)) {
+		NSURL *directoryURL = [directoryURLsToWatch anyObject];
+		NSSet *tagNames = [GLAFolderQuery availableTagNamesInsideFolderURL:directoryURL];
+		NSLog(@"TAG NAMES INSIDE %@: %@", directoryURL, tagNames);
+	}
+#endif
 }
 
 - (void)directoryWatcherDirectoriesDidChangeNotification:(NSNotification *)note
@@ -414,7 +423,7 @@
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didLoadResourceValuesForURL:(NSURL *)URL
 {
-#if DEBUG
+#if 0 && DEBUG
 	NSLog(@"didLoadResourceValuesForURL %@", URL);
 #endif
 	[self notifyLoadedFileInfoDidChange];

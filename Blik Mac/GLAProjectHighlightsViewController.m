@@ -417,10 +417,46 @@
 	}
 }
 
+- (void)showHighlightedItemInFinder:(GLAHighlightedItem *)highlightedItem
+{
+	NSURL *fileURL = [self fileURLForHighlightedItem:highlightedItem];
+	if (!fileURL) {
+		return;
+	}
+	
+	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[fileURL]];
+}
+
 - (void)openHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile
 {
 	NSURL *fileURL = [self fileURLForHighlightedItem:highlightedCollectedFile];
 	if (!fileURL) {
+		return;
+	}
+	
+	NSURL *applicationURL = nil;
+	GLACollectedFile *applicationToOpenFileCollected = (highlightedCollectedFile.applicationToOpenFile);
+	if (applicationToOpenFileCollected) {
+		GLAAccessedFileInfo *preferredApplicationAccessedFile = [applicationToOpenFileCollected accessFile];
+		applicationURL = (preferredApplicationAccessedFile.filePathURL);
+	}
+	
+	if (!applicationURL) {
+		NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+		applicationURL = [workspace URLForApplicationToOpenURL:fileURL];
+	}
+	
+#if DEBUG
+	NSLog(@"OPENING COLLECTED FILE %@", fileURL);
+#endif
+	
+	[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL useSecurityScope:YES];
+}
+
+- (IBAction)openClickedItem:(id)sender
+{
+	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
+	if (!highlightedItem) {
 		return;
 	}
 	
@@ -431,37 +467,11 @@
 	}
 	
 	if (showInFinder) {
-		[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[fileURL]];
+		[self showHighlightedItemInFinder:highlightedItem];
 	}
 	else {
-		NSURL *applicationURL = nil;
-		GLACollectedFile *applicationToOpenFileCollected = (highlightedCollectedFile.applicationToOpenFile);
-		if (applicationToOpenFileCollected) {
-			GLAAccessedFileInfo *preferredApplicationAccessedFile = [applicationToOpenFileCollected accessFile];
-			applicationURL = (preferredApplicationAccessedFile.filePathURL);
-		}
-		
-		if (!applicationURL) {
-			NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
-			applicationURL = [workspace URLForApplicationToOpenURL:fileURL];
-		}
-		
-#if DEBUG
-		NSLog(@"OPENING COLLECTED FILE %@", fileURL);
-#endif
-		
-		[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL useSecurityScope:YES];
+		[self openHighlightedItem:highlightedItem];
 	}
-}
-
-- (IBAction)openClickedItem:(id)sender
-{
-	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
-	if (!highlightedItem) {
-		return;
-	}
-	
-	[self openHighlightedItem:highlightedItem];
 }
 
 - (IBAction)openAllItems:(id)sender
@@ -513,6 +523,16 @@
 			(editor.applicationToOpenFile) = nil;
 		}
 	}];
+}
+
+- (IBAction)showItemInFinder:(id)sender
+{
+	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
+	if (!highlightedItem) {
+		return;
+	}
+	
+	[self showHighlightedItemInFinder:highlightedItem];
 }
 
 #pragma mark Notifications

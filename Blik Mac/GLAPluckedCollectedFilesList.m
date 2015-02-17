@@ -85,9 +85,9 @@
 	
 	NSMutableDictionary *projectUUIDsToCollectionUUIDsToPluckedCollectedFileUUIDs = (self.projectUUIDsToCollectionUUIDsToPluckedCollectedFileUUIDs);
 	
-	NSMutableDictionary *collectionUUIDsToCollectedFileUUIDs = [projectUUIDsToCollectionUUIDsToPluckedCollectedFileUUIDs objectForKey:projectUUID addingInstanceOfClassIfNotPresent:[NSMutableDictionary class]];
+	NSMutableDictionary *collectionUUIDsToCollectedFileUUIDs = [projectUUIDsToCollectionUUIDsToPluckedCollectedFileUUIDs pgws_objectForKey:projectUUID addingInstanceOfClassIfNotPresent:[NSMutableDictionary class]];
 	
-	NSMutableSet *pluckedCollectedFileUUIDs = [collectionUUIDsToCollectedFileUUIDs objectForKey:collectionUUID addingInstanceOfClassIfNotPresent:[NSMutableSet class]];
+	NSMutableSet *pluckedCollectedFileUUIDs = [collectionUUIDsToCollectedFileUUIDs pgws_objectForKey:collectionUUID addingInstanceOfClassIfNotPresent:[NSMutableSet class]];
 	
 	NSSet *collectedFileUUIDsToAdd = [NSSet setWithArray:[collectedFiles valueForKey:@"UUID"]];
 	[pluckedCollectedFileUUIDs unionSet:collectedFileUUIDsToAdd];
