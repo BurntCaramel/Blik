@@ -61,6 +61,8 @@
 		(style.secondaryButtonBackgroundColor) = [whiteAlmost colorWithAlphaComponent:0.0695];
 		(style.secondaryButtonTextColor) = whiteAlmost;
 		
+		(style.disabledButtonBackgroundColor) = [whiteAlmost colorWithAlphaComponent:0.01];
+		
 		(style.lightTextColor) =  whiteAlmost;
 		(style.lightTextDisabledColor) = whiteAlmost30;
 		(style.lightTextColorAtLevelBlock) = ^ (GLAUIStyle *style, NSUInteger level) {

@@ -23,6 +23,11 @@
 {
 	[super prepareView];
 	
+	NSView *view = (self.view);
+	(view.wantsLayer) = YES;
+	(view.canDrawSubviewsIntoLayer) = YES;
+	(view.layerContentsRedrawPolicy) = NSViewLayerContentsRedrawDuringViewResize;
+	
 	(self.chosenCollectionColor) = [GLACollectionColor pastelLightBlue];
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
@@ -30,6 +35,7 @@
 	[uiStyle prepareTextLabel:(self.nameLabel)];
 	[uiStyle prepareOutlinedTextField:(self.nameTextField)];
 	[uiStyle prepareTextLabel:(self.colorLabel)];
+	(self.nameTextField.wantsLayer) = YES;
 	
 	GLAColorChoiceView *colorChoiceView = (self.colorChoiceView);
 	(colorChoiceView.color) = [uiStyle colorForCollectionColor:(self.chosenCollectionColor)];

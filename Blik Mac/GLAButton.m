@@ -16,11 +16,11 @@
 
 + (NSColor *)backgroundColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button highlighted:(BOOL)highlighted
 {
-	if (!(button.isEnabled)) {
-		return nil;
-	}
-	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	
+	if (!(button.isEnabled)) {
+		return (uiStyle.disabledButtonBackgroundColor);
+	}
 	
 	NSColor *backgroundColor = (button.backgroundColor);
 	if (!backgroundColor) {
@@ -82,6 +82,13 @@
 	else {
 		return (uiStyle.lightTextColor);
 	}
+}
+
++ (NSRect)insetBoundsForGLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell withBounds:(NSRect)bounds inView:(NSView *)controlView
+{
+	CGFloat backgroundInsetXAmount = (buttonCell.backgroundInsetXAmount);
+	CGFloat backgroundInsetYAmount = (buttonCell.backgroundInsetYAmount);
+	return CGRectInset(bounds, backgroundInsetXAmount, backgroundInsetYAmount);
 }
 
 + (void)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView
@@ -202,6 +209,7 @@
     self = [super initWithFrame:frame];
     if (self) {
 		(self.cell) = [GLAButtonCell new];
+		//(self.cell.backgroundStyle) = NSBackgroundStyleDark;
 		
 		[self gla_setUpTrackingAreas];
 		//(self.layer.delegate) = self;
@@ -214,6 +222,8 @@
 	if ((self.state) == NSOnState) {
 		(self.highlightAmount) = 1.0;
 	}
+	
+	//(self.cell.backgroundStyle) = NSBackgroundStyleDark;
 	
 	[self gla_setUpTrackingAreas];
 }
@@ -357,6 +367,11 @@
 	(self.needsDisplay) = YES;
 }
 
+- (NSRect)insetBounds
+{
+	return [NSButton insetBoundsForGLAStyledCell:(self.cell) withBounds:(self.bounds) inView:self];
+}
+
 - (BOOL)hasPrimaryStyle
 {
 	return (self.cell.hasPrimaryStyle);
@@ -491,15 +506,14 @@
 @synthesize backgroundInsetXAmount = _backgroundInsetXAmount;
 @synthesize backgroundInsetYAmount = _backgroundInsetYAmount;
 
-- (CGFloat)backgroundInsetAmount
+- (NSBackgroundStyle)backgroundStyle
 {
-	return (self.backgroundInsetXAmount);
+	return NSBackgroundStyleDark;
 }
 
-- (void)setBackgroundInsetAmount:(CGFloat)backgroundInsetAmount
+- (NSBackgroundStyle)interiorBackgroundStyle
 {
-	(self.backgroundInsetXAmount) = backgroundInsetAmount;
-	(self.backgroundInsetYAmount) = backgroundInsetAmount;
+	return NSBackgroundStyleDark;
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone
@@ -529,6 +543,17 @@
 	NSSize cellSize = [super cellSizeForBounds:aRect];
 	cellSize.width += (self.leftSpacing) + (self.rightSpacing);
 	return cellSize;
+}
+
+- (CGFloat)backgroundInsetAmount
+{
+	return (self.backgroundInsetXAmount);
+}
+
+- (void)setBackgroundInsetAmount:(CGFloat)backgroundInsetAmount
+{
+	(self.backgroundInsetXAmount) = backgroundInsetAmount;
+	(self.backgroundInsetYAmount) = backgroundInsetAmount;
 }
 
 - (BOOL)isOnAndShowsOnState

@@ -28,7 +28,7 @@
 	return self;
 }
 
-- (instancetype)init
+- (instancetype)init __unavailable
 {
 	@throw [NSException exceptionWithName:NSGenericException reason:@"GLAArrayEditorTableDraggingHelper must be initialised with a delegate. Use -initWithDelegate:" userInfo:nil];
 	

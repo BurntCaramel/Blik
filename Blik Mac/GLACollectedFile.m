@@ -47,7 +47,6 @@
 + (NSArray *)collectedFilesWithFileURLs:(NSArray *)fileURLs
 {
 	NSMutableArray *collectedFiles = [NSMutableArray array];
-	NSError *error = nil;
 	for (NSURL *fileURL in fileURLs) {
 		GLACollectedFile *collectedFile = [[GLACollectedFile alloc] initWithFileURL:fileURL];
 		[collectedFiles addObject:collectedFile];
@@ -208,7 +207,6 @@
 #if DEBUG
 	NSLog(@"BOOKMARK DATA FOR FILE PATH URL %@", URL);
 #endif
-	BOOL wasCreatedFromBookmarkData = (self.wasCreatedFromBookmarkData);
 	//wasCreatedFromBookmarkData = YES;
 	
 	BOOL canAccess = [URL startAccessingSecurityScopedResource];

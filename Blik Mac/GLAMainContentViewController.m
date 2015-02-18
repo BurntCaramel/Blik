@@ -163,6 +163,8 @@
 	GLAProjectViewController *controller = [[GLAProjectViewController alloc] initWithNibName:@"GLAProjectViewController" bundle:nil];
 	(controller.view.identifier) = @"editedProject";
 	
+	(controller.sectionNavigator) = (self.sectionNavigator);
+	
 	(self.editedProjectViewController) = controller;
 	
 	[self addViewIfNeeded:(controller.view) layout:YES];
@@ -190,7 +192,7 @@
 		return;
 	}
 	
-	GLAAddNewProjectViewController *controller = [[GLAAddNewProjectViewController alloc] initWithNibName:@"GLAAddNewProjectViewController" bundle:nil];
+	GLAAddNewProjectViewController *controller = [[GLAAddNewProjectViewController alloc] initWithNibName:NSStringFromClass([GLAAddNewProjectViewController class]) bundle:nil];
 	(controller.view.identifier) = @"addNewProject";
 	
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -210,13 +212,45 @@
 		return;
 	}
 	
-	GLAAddNewCollectionViewController *controller = [[GLAAddNewCollectionViewController alloc] initWithNibName:@"GLAAddNewCollectionViewController" bundle:nil];
+	GLAAddNewCollectionViewController *controller = [[GLAAddNewCollectionViewController alloc] initWithNibName:NSStringFromClass([GLAAddNewCollectionViewController class]) bundle:nil];
 	(controller.view.identifier) = @"addNewCollection";
 	
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver:self selector:@selector(addNewCollectionViewControllerDidConfirmCreatingNotification:) name:GLAAddNewCollectionViewControllerDidConfirmCreatingNotification object:controller];
 	
 	(self.addedCollectionViewController) = controller;
+	
+	[self fillViewWithChildView:(controller.view)];
+}
+
+- (void)setUpAddedCollectionChooseTypeViewControllerIfNeeded
+{
+	if (self.addedCollectionChooseTypeViewController) {
+		return;
+	}
+	
+	GLAAddNewCollectionChooseTypeViewController *controller = [[GLAAddNewCollectionChooseTypeViewController alloc] initWithNibName:NSStringFromClass([GLAAddNewCollectionChooseTypeViewController class]) bundle:nil];
+	(controller.view.identifier) = @"addNewCollectionChooseType";
+	
+	(controller.sectionNavigator) = (self.sectionNavigator);
+	
+	(self.addedCollectionChooseTypeViewController) = controller;
+	
+	[self fillViewWithChildView:(controller.view)];
+}
+
+- (void)setUpAddedCollectionFilteredFolderChooseFolderViewControllerIfNeeded
+{
+	if (self.addedCollectionFilteredFolderChooseFolderViewController) {
+		return;
+	}
+	
+	GLAAddNewCollectionFilteredFolderChooseFolderViewController *controller = [[GLAAddNewCollectionFilteredFolderChooseFolderViewController alloc] initWithNibName:NSStringFromClass([GLAAddNewCollectionFilteredFolderChooseFolderViewController class]) bundle:nil];
+	(controller.view.identifier) = @"addNewCollectionFilteredFolderChooseFolder";
+	
+	(controller.sectionNavigator) = (self.sectionNavigator);
+	
+	(self.addedCollectionFilteredFolderChooseFolderViewController) = controller;
 	
 	[self fillViewWithChildView:(controller.view)];
 }
@@ -306,13 +340,28 @@
 	else if (section.isAddNewProject) {
 		[self setUpAddedProjectViewControllerIfNeeded];
 	}
+	else if (section.isAddNewCollectionChooseType) {
+		[self setUpAddedCollectionChooseTypeViewControllerIfNeeded];
+		
+		GLAAddNewCollectionSection *addCollectionSection = (GLAAddNewCollectionSection *)(section);
+		GLAAddNewCollectionChooseTypeViewController *vc = (self.addedCollectionChooseTypeViewController);
+		(vc.project) = (addCollectionSection.project);
+	}
+	else if (section.isAddNewCollectionFilteredFolderChooseFilteredFolder) {
+		[self setUpAddedCollectionFilteredFolderChooseFolderViewControllerIfNeeded];
+	}
 	else if (section.isAddNewCollection) {
 		[self setUpAddedCollectionViewControllerIfNeeded];
 		
-		GLAAddNewCollectionSection *addCollectionSection = (GLAAddNewCollectionSection *)(section);
+		GLAAddNewCollectionSection *addCollectionSection = (GLAAddNewCollectionSection *)section;
+		
 		GLAAddNewCollectionViewController *addNewCollectionViewController = (self.addedCollectionViewController);
 		(addNewCollectionViewController.project) = (addCollectionSection.project);
-		(addNewCollectionViewController.pendingAddedCollectedFilesInfo) = (addCollectionSection.pendingAddedCollectedFilesInfo);
+		
+		if ([addCollectionSection isKindOfClass:[GLAAddNewCollectedFilesCollectionSection class]]) {
+			GLAAddNewCollectedFilesCollectionSection *collectedFilesCollectionSection = (GLAAddNewCollectedFilesCollectionSection *)addCollectionSection;
+			(addNewCollectionViewController.pendingAddedCollectedFilesInfo) = (collectedFilesCollectionSection.pendingAddedCollectedFilesInfo);
+		}
 	}
 }
 
@@ -350,6 +399,12 @@
 	}
 	else if (section.isAddNewProject) {
 		return (self.addedProjectViewController);
+	}
+	else if (section.isAddNewCollectionChooseType) {
+		return (self.addedCollectionChooseTypeViewController);
+	}
+	else if (section.isAddNewCollectionFilteredFolderChooseFilteredFolder) {
+		return (self.addedCollectionFilteredFolderChooseFolderViewController);
 	}
 	else if (section.isAddNewCollection) {
 		return (self.addedCollectionViewController);
@@ -765,7 +820,7 @@
 - (void)projectViewController:(GLAProjectViewController *)projectViewController performAddCollectedFilesToNewCollection:(GLAPendingAddedCollectedFilesInfo *)info
 {
 	GLAProject *project = (projectViewController.project);
-	[(self.sectionNavigator) addNewCollectionToProject:project pendingCollectedFilesInfo:info];
+	[(self.sectionNavigator) addNewCollectedFilesCollectionToProject:project pendingCollectedFilesInfo:info];
 }
 
 @end

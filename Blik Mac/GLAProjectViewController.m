@@ -203,24 +203,9 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	}
 }
 
-- (void)requestAddNewCollectionWithPendingCollectedFilesInfo:(GLAPendingAddedCollectedFilesInfo *)pendingCollectedFilesInfo
-{
-	NSMutableDictionary *userInfo = [NSMutableDictionary new];
-	if (pendingCollectedFilesInfo) {
-		userInfo[@"pendingAddedCollectedFilesInfo"] = pendingCollectedFilesInfo;
-	}
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerRequestAddNewCollectionNotification object:self userInfo:userInfo];
-}
-
 - (IBAction)addNewCollection:(id)sender
 {
-	[self requestAddNewCollectionWithPendingCollectedFilesInfo:nil];
-}
-
-- (IBAction)addNewFilesListCollection:(id)sender
-{
-	[self addNewCollection:sender];
+	[(self.sectionNavigator) addNewCollectionToProject:(self.project)];
 }
 
 #if 0

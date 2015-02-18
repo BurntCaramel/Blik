@@ -16,6 +16,8 @@
 #import "GLAProjectEditPrimaryFoldersViewController.h"
 #import "GLAAddNewProjectViewController.h"
 #import "GLAAddNewCollectionViewController.h"
+#import "GLAAddNewCollectionChooseTypeViewController.h"
+#import "GLAAddNewCollectionFilteredFolderChooseFolderViewController.h"
 #import "GLAAddCollectedFilesChoiceActions.h"
 
 @class GLAProject;
@@ -66,13 +68,9 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 
 @property(nonatomic) GLAAddNewProjectViewController *addedProjectViewController;
 @property(nonatomic) GLAAddNewCollectionViewController *addedCollectionViewController;
+@property(nonatomic) GLAAddNewCollectionChooseTypeViewController *addedCollectionChooseTypeViewController;
+@property(nonatomic) GLAAddNewCollectionFilteredFolderChooseFolderViewController *addedCollectionFilteredFolderChooseFolderViewController;
 
-- (void)setUpAllProjectsViewControllerIfNeeded;
-- (void)setUpPlannedProjectsViewControllerIfNeeded;
-- (void)setUpNowProjectViewControllerIfNeeded;
-- (void)setUpEditedProjectViewControllerIfNeeded;
-- (void)setUpAddedProjectViewControllerIfNeeded;
-- (void)setUpAddedCollectionViewControllerIfNeeded;
 
 - (GLAViewController *)viewControllerForSection:(GLAMainSection *)section;
 

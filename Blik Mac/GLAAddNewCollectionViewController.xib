@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
@@ -18,11 +18,11 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="vCb-Py-Wb1">
-            <rect key="frame" x="0.0" y="0.0" width="500" height="272"/>
+            <rect key="frame" x="0.0" y="0.0" width="500" height="238"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" placeholderIntrinsicWidth="312" placeholderIntrinsicHeight="29" translatesAutoresizingMaskIntoConstraints="NO" id="765-VU-j1R" customClass="GLATextField">
-                    <rect key="frame" x="108" y="170" width="284" height="32"/>
+                    <rect key="frame" x="108" y="153" width="284" height="32"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="32" id="Z6U-Ki-vaq"/>
                         <constraint firstAttribute="width" constant="280" id="liI-ek-Zws"/>
@@ -34,7 +34,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="U6r-xK-0vx">
-                    <rect key="frame" x="166" y="210" width="169" height="23"/>
+                    <rect key="frame" x="166" y="193" width="169" height="23"/>
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="TwS-tt-s4N"/>
                     </constraints>
@@ -45,7 +45,7 @@
                     </textFieldCell>
                 </textField>
                 <button placeholderIntrinsicWidth="180" placeholderIntrinsicHeight="36" translatesAutoresizingMaskIntoConstraints="NO" id="7Fn-gf-0Un" customClass="GLAButton">
-                    <rect key="frame" x="160" y="32" width="180" height="36"/>
+                    <rect key="frame" x="160" y="24" width="180" height="36"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="36" id="aeY-KB-v4T"/>
                     </constraints>
@@ -73,7 +73,7 @@ DQ
                     </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="y1p-bF-gca">
-                    <rect key="frame" x="212" y="131" width="76" height="23"/>
+                    <rect key="frame" x="212" y="114" width="76" height="23"/>
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="f0K-s8-zD7"/>
                     </constraints>
@@ -84,7 +84,7 @@ DQ
                     </textFieldCell>
                 </textField>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="SJ2-69-dck" customClass="GLAColorChoiceView">
-                    <rect key="frame" x="232" y="87" width="36" height="36"/>
+                    <rect key="frame" x="232" y="70" width="36" height="36"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="36" id="4B2-yH-VMH"/>
                         <constraint firstAttribute="width" constant="36" id="ZXe-rI-0ze"/>
@@ -99,14 +99,14 @@ DQ
                 <constraint firstItem="SJ2-69-dck" firstAttribute="top" secondItem="y1p-bF-gca" secondAttribute="bottom" constant="8" id="Bc3-hR-5aY"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="765-VU-j1R" secondAttribute="trailing" constant="20" id="OBQ-gL-GEY"/>
                 <constraint firstItem="y1p-bF-gca" firstAttribute="centerX" secondItem="SJ2-69-dck" secondAttribute="centerX" id="RkY-GB-bLA"/>
-                <constraint firstAttribute="bottom" secondItem="7Fn-gf-0Un" secondAttribute="bottom" constant="32" id="bUw-RZ-k0C"/>
+                <constraint firstAttribute="bottom" secondItem="7Fn-gf-0Un" secondAttribute="bottom" constant="24" id="bUw-RZ-k0C"/>
                 <constraint firstItem="7Fn-gf-0Un" firstAttribute="top" relation="greaterThanOrEqual" secondItem="SJ2-69-dck" secondAttribute="bottom" constant="10" id="eZG-EY-6Gz"/>
                 <constraint firstAttribute="centerY" secondItem="765-VU-j1R" secondAttribute="centerY" constant="50" id="ixi-we-Lfj"/>
                 <constraint firstAttribute="centerX" secondItem="7Fn-gf-0Un" secondAttribute="centerX" id="jIN-yX-hcC"/>
                 <constraint firstAttribute="centerX" secondItem="SJ2-69-dck" secondAttribute="centerX" id="lQv-U9-faO"/>
                 <constraint firstItem="y1p-bF-gca" firstAttribute="top" secondItem="765-VU-j1R" secondAttribute="bottom" constant="16" id="y07-RG-0LB"/>
             </constraints>
-            <point key="canvasLocation" x="221" y="269"/>
+            <point key="canvasLocation" x="221" y="286.5"/>
         </customView>
     </objects>
 </document>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="GLAAddNewCollectionChooseTypeViewController">
+            <connections>
+                <outlet property="collectedFilesLabel" destination="ajc-me-0hI" id="XTN-eU-E1B"/>
+                <outlet property="filteredFolderLabel" destination="sGJ-EF-9G8" id="3Tp-Lp-cHG"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="481" height="264"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button identifier="chooseSection" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="aAo-2v-yNG" customClass="GLAButton">
+                    <rect key="frame" x="181" y="149" width="120" height="27"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="27" id="fJr-ix-svg"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="New Collected Files Collection" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4z0-bx-fyy" customClass="GLAButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="-1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="createNewCollectedFilesCollection:" target="-2" id="6Cc-0d-B8m"/>
+                    </connections>
+                </button>
+                <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ajc-me-0hI">
+                    <rect key="frame" x="54" y="184" width="374" height="23"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="370" id="2L9-LJ-xCv"/>
+                    </constraints>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="A collection of whichever files you want." id="8zj-wn-NIK">
+                        <font key="font" size="13" name="AvenirNext-MediumItalic"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button identifier="chooseSection" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="ESc-Px-Uyz" customClass="GLAButton">
+                    <rect key="frame" x="181" y="61" width="120" height="27"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="27" id="6yY-l1-SIv"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="New Filtered Folder Collection" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="irL-sa-nbQ" customClass="GLAButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="-1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="createNewFilteredFolderCollection:" target="-2" id="MuW-ie-Ppt"/>
+                    </connections>
+                </button>
+                <textField misplaced="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sGJ-EF-9G8">
+                    <rect key="frame" x="54" y="79" width="374" height="46"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="370" id="afo-Ch-8z1"/>
+                    </constraints>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="A collection of files with a particular tag." id="IJ5-sS-X25">
+                        <font key="font" size="13" name="AvenirNext-MediumItalic"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="sGJ-EF-9G8" firstAttribute="top" secondItem="aAo-2v-yNG" secondAttribute="bottom" constant="30" id="01u-km-aS9"/>
+                <constraint firstItem="ESc-Px-Uyz" firstAttribute="top" secondItem="sGJ-EF-9G8" secondAttribute="bottom" constant="8" id="5Cn-an-WTR"/>
+                <constraint firstAttribute="centerX" secondItem="ESc-Px-Uyz" secondAttribute="centerX" id="6KG-MA-pHd"/>
+                <constraint firstAttribute="centerX" secondItem="aAo-2v-yNG" secondAttribute="centerX" id="NkU-to-Fya"/>
+                <constraint firstAttribute="centerY" secondItem="aAo-2v-yNG" secondAttribute="centerY" constant="30" id="OYO-ni-AG0"/>
+                <constraint firstAttribute="centerX" secondItem="ajc-me-0hI" secondAttribute="centerX" id="Pjc-jW-bIP"/>
+                <constraint firstItem="aAo-2v-yNG" firstAttribute="top" secondItem="ajc-me-0hI" secondAttribute="bottom" constant="8" id="XKw-pV-ul7"/>
+                <constraint firstAttribute="centerX" secondItem="sGJ-EF-9G8" secondAttribute="centerX" id="pV8-3F-IlA"/>
+            </constraints>
+            <point key="canvasLocation" x="323.5" y="236"/>
+        </customView>
+    </objects>
+</document>

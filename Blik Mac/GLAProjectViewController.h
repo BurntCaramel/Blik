@@ -10,6 +10,7 @@
 #import "GLAViewController.h"
 // VIEW
 #import "GLAView.h"
+#import "GLAMainSectionNavigator.h"
 #import "GLAProjectActionsBarController.h"
 #import "GLATableActionsViewController.h"
 #import "GLACollectionColorPickerPopover.h"
@@ -40,6 +41,8 @@
 @interface GLAProjectViewController : GLAViewController <GLAViewDelegate, NSTextFieldDelegate>
 
 @property(nonatomic) GLAProject *project;
+
+@property(nonatomic) GLAMainSectionNavigator *sectionNavigator;
 
 @property(weak, nonatomic) id<GLAProjectViewControllerDelegate> delegate;
 

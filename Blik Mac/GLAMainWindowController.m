@@ -210,11 +210,6 @@
 
 #pragma mark New Collection
 
-- (void)showAddNewCollectionToProject:(GLAProject *)project
-{
-	[(self.mainSectionNavigator) addNewCollectionToProject:project];
-}
-
 - (GLAProject *)projectToAddNewCollectionTo
 {
 	GLAMainSection *currentSection = (self.mainSectionNavigator.currentSection);
@@ -239,11 +234,19 @@
 	return (project != nil);
 }
 
-- (IBAction)addNewFilesListCollection:(id)sender
+- (IBAction)addNewCollectedFilesCollection:(id)sender
 {
 	GLAProject *project = (self.projectToAddNewCollectionTo);
 	if (project) {
-		[self showAddNewCollectionToProject:project];
+		[(self.mainSectionNavigator) addNewCollectedFilesCollectionToProject:project];
+	}
+}
+
+- (IBAction)addNewFilteredFolderCollection:(id)sender
+{
+	GLAProject *project = (self.projectToAddNewCollectionTo);
+	if (project) {
+		[(self.mainSectionNavigator) addNewFilteredFolderCollectionToProject:project];
 	}
 }
 
@@ -344,7 +347,10 @@
 	else if (sel_isEqual(@selector(deleteViewedProject:), action)) {
 		return [self canDeleteViewedProject];
 	}
-	else if (sel_isEqual(@selector(addNewFilesListCollection:), action)) {
+	else if (sel_isEqual(@selector(addNewCollectedFilesCollection:), action)) {
+		return [self canAddNewCollection];
+	}
+	else if (sel_isEqual(@selector(addNewFilteredFolderCollection:), action)) {
 		return [self canAddNewCollection];
 	}
 	
@@ -436,7 +442,8 @@
 {
 	GLAProjectViewController *controller = (note.object);
 	GLAProject *project = (controller.project);
-	[self showAddNewCollectionToProject:project];
+	
+	[(self.mainSectionNavigator) addNewCollectionToProject:project];
 }
 
 #pragma mark GLAMainContentViewControllerDelegate

@@ -323,7 +323,7 @@ NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileUR
 	return menuItem;
 }
 
-- (void)updateOpenerApplicationsMenu:(NSMenu *)menu target:(id)target action:(SEL)action preferredApplicationURL:(NSURL *)preferredApplicationURL
+- (void)updateOpenerApplicationsMenu:(NSMenu *)menu target:(id)target action:(SEL)action preferredApplicationURL:(NSURL *)preferredApplicationURL forPopUpMenu:(BOOL)forPopUpMenu
 {
 	NSSet *combinedOpenerApplicationURLs = (self.combinedOpenerApplicationURLs);
 	NSURL *combinedDefaultOpenerApplicationURL = (self.combinedDefaultOpenerApplicationURL);
@@ -405,6 +405,21 @@ NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileUR
 	for (NSMenuItem *menuItem in menuItems) {
 		[menu addItem:menuItem];
 	}
+	
+	if (forPopUpMenu) {
+		// Duplicate the first item, so it appears as the button's content.
+		NSMenuItem *firstItem = (menu.itemArray)[0];
+		if (firstItem) {
+			NSMenuItem *titleMenuItem = [firstItem copy];
+			(titleMenuItem.title) = NSLocalizedString(@"Open in", @"Title for 'Open in' application menu");
+			[menu insertItem:titleMenuItem atIndex:0];
+		}
+	}
+}
+
+- (void)updateOpenerApplicationsMenu:(NSMenu *)menu target:(id)target action:(SEL)action preferredApplicationURL:(NSURL *)preferredApplicationURL
+{
+	[self updateOpenerApplicationsMenu:menu target:target action:action preferredApplicationURL:preferredApplicationURL forPopUpMenu:NO];
 }
 
 - (void)updatePreferredOpenerApplicationsChoiceMenu:(NSMenu *)menu target:(id)target action:(SEL)action chosenPreferredApplicationURL:(NSURL *)preferredApplicationURL

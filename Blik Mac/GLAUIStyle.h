@@ -35,6 +35,8 @@
 @property(nonatomic) NSColor *secondaryButtonBackgroundColor;
 @property(nonatomic) NSColor *secondaryButtonTextColor;
 
+@property(nonatomic) NSColor *disabledButtonBackgroundColor;
+
 @property(nonatomic) NSColor *lightTextColor;
 @property(nonatomic) NSColor *lightTextDisabledColor;
 @property(strong, nonatomic) NSColor *(^lightTextColorAtLevelBlock)(GLAUIStyle *style, NSUInteger level);

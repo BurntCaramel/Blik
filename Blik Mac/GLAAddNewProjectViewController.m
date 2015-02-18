@@ -21,10 +21,16 @@
 {
 	[super prepareView];
 	
+	NSView *view = (self.view);
+	(view.wantsLayer) = YES;
+	(view.canDrawSubviewsIntoLayer) = YES;
+	(view.layerContentsRedrawPolicy) = NSViewLayerContentsRedrawDuringViewResize;
+	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	
 	[uiStyle prepareTextLabel:(self.nameLabel)];
 	[uiStyle prepareOutlinedTextField:(self.nameTextField)];
+	(self.nameTextField.wantsLayer) = YES;
 	
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver:self selector:@selector(nameTextFieldTextDidChange:) name:NSControlTextDidChangeNotification object:(self.nameTextField)];

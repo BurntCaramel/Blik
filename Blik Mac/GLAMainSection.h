@@ -16,12 +16,16 @@
 
 //+ (instancetype)unknownSection;
 
-// Designated init:
+- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier secondaryIdentifier:(NSString *)secondaryIdentifier previousSection:(GLAMainSection *)previousSection NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainSection *)previousSection;
 - (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier;
 
 @property(readonly, nonatomic) NSString *baseIdentifier;
+@property(readonly, nonatomic) NSString *secondaryIdentifier;
 @property(readonly, nonatomic) GLAMainSection *previousSection;
+@property(readonly, nonatomic) GLAMainSection *previousUnrelatedSection;
+
+//@property(nonatomic) id state;
 
 #pragma mark -
 
@@ -29,8 +33,6 @@
 + (instancetype)plannedProjectsSection;
 
 + (instancetype)addNewProjectSectionWithPreviousSection:(GLAMainSection *)previousSection;
-
-+ (instancetype)addNewCollectionSectionWithPreviousSection:(GLAMainSection *)previousSection;
 
 @end
 
@@ -71,14 +73,34 @@
 
 @interface GLAAddNewCollectionSection : GLAMainSection
 
-// Designated init:
-- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier pendingAddedCollectedFilesInfo:(GLAPendingAddedCollectedFilesInfo *)pendingAddedCollectedFilesInfo previousSection:(GLAMainSection *)previousSection project:(GLAProject *)project;
+- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier secondaryIdentifier:(NSString *)secondaryIdentifier previousSection:(GLAMainSection *)previousSection project:(GLAProject *)project NS_DESIGNATED_INITIALIZER;
 
 @property(readonly, nonatomic) GLAProject *project;
-@property(readonly, nonatomic) GLAPendingAddedCollectedFilesInfo *pendingAddedCollectedFilesInfo;
 
 + (instancetype)addNewCollectionSectionToProject:(GLAProject *)project previousSection:(GLAMainSection *)previousSection;
-+ (instancetype)addNewCollectionSectionToProject:(GLAProject *)project pendingAddedCollectedFilesInfo:(GLAPendingAddedCollectedFilesInfo *)pendingAddedCollectedFilesInfo previousSection:(GLAMainSection *)previousSection;
+
+@end
+
+@interface GLAAddNewCollectedFilesCollectionSection : GLAAddNewCollectionSection
+
+- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier secondaryIdentifier:(NSString *)secondaryIdentifier previousSection:(GLAMainSection *)previousSection project:(GLAProject *)project pendingAddedCollectedFilesInfo:(GLAPendingAddedCollectedFilesInfo *)pendingAddedCollectedFilesInfo NS_DESIGNATED_INITIALIZER;
+
+@property(readonly, nonatomic) GLAPendingAddedCollectedFilesInfo *pendingAddedCollectedFilesInfo;
+
++ (instancetype)addNewCollectionChooseNameAndColorSectionWithProject:(GLAProject *)project pendingAddedCollectedFilesInfo:(GLAPendingAddedCollectedFilesInfo *)pendingAddedCollectedFilesInfo previousSection:(GLAMainSection *)previousSection;
+
+@end
+
+@interface GLAAddNewFilteredFolderCollectionSection : GLAAddNewCollectionSection
+
+@property(readonly, nonatomic) NSURL *chosenFolderURL;
+@property(readonly, nonatomic) NSString *chosenTagName;
+
+- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier secondaryIdentifier:(NSString *)secondaryIdentifier previousSection:(GLAMainSection *)previousSection project:(GLAProject *)project chosenFolderURL:(NSURL *)chosenFolderURL chosenTagName:(NSString *)chosenTagName NS_DESIGNATED_INITIALIZER;
+
++ (instancetype)addNewFilteredFolderCollectionChooseFolderSectionWithProject:(GLAProject *)project previousSection:(GLAMainSection *)previousSection;
+
++ (instancetype)addNewCollectionChooseNameAndColorSectionWithProject:(GLAProject *)project chosenFolderURL:(NSURL *)folderURL chosenTagName:(NSString *)tagName previousSection:(GLAMainSection *)previousSection;
 
 @end
 
@@ -86,6 +108,7 @@
 @interface GLAMainSection (ConvenienceCheckingIdentifier)
 
 - (BOOL)hasBaseIdentifier:(NSString *)baseIdentifier;
+- (BOOL)hasSecondaryIdentifier:(NSString *)secondaryIdentifier;
 
 - (BOOL)isAllProjects;
 - (BOOL)isPlannedProjects;
@@ -99,7 +122,11 @@
 - (BOOL)isEditCollection;
 
 - (BOOL)isAddNewProject;
+
 - (BOOL)isAddNewCollection;
+- (BOOL)isAddNewCollectionChooseType;
+- (BOOL)isAddNewCollectionChooseNameAndColor;
+- (BOOL)isAddNewCollectionFilteredFolderChooseFilteredFolder;
 
 @end
 
@@ -113,4 +140,8 @@ extern NSString *GLAMainContentSectionBaseIdentifierEditProjectPrimaryFolders;
 extern NSString *GLAMainContentSectionBaseIdentifierEditCollection;
 
 extern NSString *GLAMainContentSectionBaseIdentifierAddNewProject;
+
 extern NSString *GLAMainContentSectionBaseIdentifierAddNewCollection;
+extern NSString *GLAMainContentSectionAddNewCollectionSecondaryIdentifierChooseType;
+extern NSString *GLAMainContentSectionAddNewCollectionSecondaryIdentifierChooseNameAndColor;
+extern NSString *GLAMainContentSectionAddNewCollectionSecondaryIdentifierFilteredFolderChooseFolder;

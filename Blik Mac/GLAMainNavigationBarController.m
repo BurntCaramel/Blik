@@ -170,6 +170,10 @@
 			[self hideButtonsForAddingNewProject];
 		}
 		else if (previousSection.isAddNewCollection) {
+			if (newSection.isAddNewCollection) {
+				return;
+			}
+			
 			[self hideButtonsForAddingNewCollection];
 		}
 	}
@@ -446,7 +450,7 @@
 	GLAMainNavigationButtonGroup *buttonGroup = [GLAMainNavigationButtonGroup buttonGroupWithBarController:self];
 	
 	NSString *cancelTitle = NSLocalizedString(@"Cancel", @"Title for cancel creating new project button");
-	(self.addingNewProjectCancelButton) = [buttonGroup makeLeadingButtonWithTitle:cancelTitle action:@selector(cancelAddingNewProject:) identifier:@"cancelAddNewProject"];
+	(self.addingNewProjectCancelButton) = [buttonGroup makeLeadingButtonWithTitle:cancelTitle action:@selector(cancelGoingToPreviousUnrelatedSection:) identifier:@"cancelAddNewProject"];
 	
 	NSString *title = NSLocalizedString(@"New Project", @"Title label for creating new project");
 	GLAButton *titleButton = [buttonGroup makeCenterButtonWithTitle:title action:nil identifier:@"confirmAddNewProject"];
@@ -513,10 +517,15 @@
 	GLAMainNavigationButtonGroup *buttonGroup = [GLAMainNavigationButtonGroup buttonGroupWithBarController:self];
 	
 	NSString *cancelTitle = NSLocalizedString(@"Cancel", @"Title for cancel creating new collection button");
-	[buttonGroup makeLeadingButtonWithTitle:cancelTitle action:@selector(cancelAddingNewProject:) identifier:@"cancelAddNewProject"];
+	[buttonGroup makeLeadingButtonWithTitle:cancelTitle action:@selector(cancelGoingToPreviousUnrelatedSection:) identifier:@"cancelAddNewProject"];
 	
-	GLAAddNewCollectionSection *currentSection = (id)(self.currentSection);
-	BOOL hasPendingFiles = (currentSection.pendingAddedCollectedFilesInfo) != nil;
+	GLAAddNewCollectionSection *currentSection = (GLAAddNewCollectionSection *)(self.currentSection);
+	BOOL hasPendingFiles = NO;
+	
+	if ([currentSection isKindOfClass:[GLAAddNewCollectedFilesCollectionSection class]]) {
+		GLAAddNewCollectedFilesCollectionSection *collectedFilesSection = (GLAAddNewCollectedFilesCollectionSection *)currentSection;
+		hasPendingFiles = (collectedFilesSection.pendingAddedCollectedFilesInfo != nil);
+	}
 	
 	NSString *title;
 	if (hasPendingFiles) {
@@ -600,13 +609,13 @@
 	}
 }
 
-- (IBAction)cancelAddingNewProject:(id)sender
+- (IBAction)cancelGoingToPreviousUnrelatedSection:(id)sender
 {
 	if (self.isAnimating) {
 		return;
 	}
 	
-	[self exitEditedProject:sender];
+	[(self.sectionNavigator) goToPreviousUnrelatedSection];
 }
 
 #pragma mark Collections

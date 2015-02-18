@@ -30,6 +30,8 @@
 @property(nonatomic) BOOL hasPrimaryStyle;
 @property(nonatomic) BOOL hasSecondaryStyle;
 
+@property(nonatomic) NSRect insetBounds;
+
 @end
 
 
@@ -37,6 +39,7 @@
 
 + (NSColor *)backgroundColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button highlighted:(BOOL)highlighted;
 + (NSColor *)textColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button;
++ (NSRect)insetBoundsForGLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell withBounds:(NSRect)bounds inView:(NSView *)controlView;
 
 + (void)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView;
 

@@ -19,6 +19,16 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="200"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="0AQ-QA-VI6">
+                    <rect key="frame" x="155" y="47" width="170" height="18"/>
+                    <buttonCell key="cell" type="check" title="Show Status Menu Item" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="KlU-bO-BMH">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="toggleShowStatusMenuItem:" target="-2" id="67E-jR-Upr"/>
+                    </connections>
+                </button>
                 <button identifier="chooseSection" misplaced="YES" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="cUl-LF-03T" customClass="GLAButton">
                     <rect key="frame" x="90" y="99" width="300" height="27"/>
                     <constraints>
@@ -58,16 +68,6 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button translatesAutoresizingMaskIntoConstraints="NO" id="0AQ-QA-VI6">
-                    <rect key="frame" x="155" y="47" width="170" height="18"/>
-                    <buttonCell key="cell" type="check" title="Show Status Menu Item" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="KlU-bO-BMH">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="toggleShowStatusMenuItem:" target="-2" id="67E-jR-Upr"/>
-                    </connections>
-                </button>
             </subviews>
             <constraints>
                 <constraint firstItem="0AQ-QA-VI6" firstAttribute="top" secondItem="cUl-LF-03T" secondAttribute="bottom" constant="36" id="Irw-aA-bBk"/>

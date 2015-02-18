@@ -27,6 +27,7 @@
 
 - (void)goToSection:(GLAMainSection *)newSection;
 - (void)goToPreviousSection;
+- (void)goToPreviousUnrelatedSection;
 
 - (void)goToAllProjects;
 
@@ -40,7 +41,15 @@
 - (void)goToCollection:(GLACollection *)collection;
 
 - (void)addNewCollectionToProject:(GLAProject *)project;
-- (void)addNewCollectionToProject:(GLAProject *)project pendingCollectedFilesInfo:(GLAPendingAddedCollectedFilesInfo *)pendingCollectedFilesInfo;
+- (void)addNewCollectionGoToCollectedFilesSection;
+- (void)addNewCollectionGoToFilteredFolderSection;
+
+- (void)addNewCollectedFilesCollectionToProject:(GLAProject *)project;
+- (void)addNewCollectedFilesCollectionToProject:(GLAProject *)project pendingCollectedFilesInfo:(GLAPendingAddedCollectedFilesInfo *)pendingCollectedFilesInfo;
+- (void)addNewCollectedFilesCollectionGoToChooseNameAndColor;
+
+- (void)addNewFilteredFolderCollectionToProject:(GLAProject *)project;
+- (void)addNewFilteredFolderCollectionGoToChooseNameAndColorWithChosenFolder:(NSURL *)folderURL chosenTagName:(NSString *)tagName;
 
 @end
 

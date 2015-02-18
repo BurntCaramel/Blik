@@ -84,7 +84,7 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="SmP-nQ-mkB"/>
-                            <menuItem title="Work on Project Now" id="3Gh-mI-doL">
+                            <menuItem title="Work on Now" id="3Gh-mI-doL">
                                 <string key="keyEquivalent" base64-UTF8="YES">
 DQ
 </string>
@@ -126,6 +126,18 @@ DQ
                                 <connections>
                                     <action selector="goToNowProject:" target="-1" id="OWA-PN-QMf"/>
                                 </connections>
+                            </menuItem>
+                            <menuItem title="Go To Project" hidden="YES" id="UMx-z8-o7u">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Go To Project" id="Pbt-3W-U7J">
+                                    <items>
+                                        <menuItem title="«Project A»" keyEquivalent="1" id="jxi-LQ-nVE"/>
+                                        <menuItem title="«Project B»" keyEquivalent="2" id="Ere-I8-a49"/>
+                                        <menuItem title="«Project C»" keyEquivalent="3" id="mvm-Wm-MkL"/>
+                                        <menuItem title="«Project D»" keyEquivalent="4" id="87R-xS-eRM"/>
+                                        <menuItem title="«Project E»" keyEquivalent="5" id="luT-7M-6nB"/>
+                                    </items>
+                                </menu>
                             </menuItem>
                         </items>
                     </menu>
@@ -349,13 +361,19 @@ DQ
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Collections" id="Vc8-OF-5QR">
+                <menuItem title="Collection" id="Vc8-OF-5QR">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Collections" id="y5R-d6-Gfj">
+                    <menu key="submenu" title="Collection" id="y5R-d6-Gfj">
                         <items>
-                            <menuItem title="New Files Collection…" keyEquivalent="N" id="jfO-Ol-vRE">
+                            <menuItem title="New Collected Files Collection…" keyEquivalent="N" id="jfO-Ol-vRE">
                                 <connections>
-                                    <action selector="addNewFilesListCollection:" target="-1" id="dQd-Ke-bDS"/>
+                                    <action selector="addNewCollectedFilesCollection:" target="-1" id="F8x-c0-ljy"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="New Filtered Folder Collection…" keyEquivalent="n" id="G63-i9-Bhj">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="addNewFilteredFolderCollection:" target="-1" id="FIi-u1-m8k"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="New Contacts Collection…" hidden="YES" keyEquivalent="C" id="McO-7U-HxW"/>

@@ -26,6 +26,8 @@
 
 - (instancetype)initWithProjectManager:(GLAProjectManager *)projectManager
 {
+	NSParameterAssert(projectManager != nil);
+	
 	self = [super init];
 	if (self) {
 		_projectManager = projectManager;
@@ -35,10 +37,8 @@
 	return self;
 }
 
-- (instancetype)init
+- (instancetype)init __unavailable
 {
-	self = nil;
-	
 	[NSException raise:NSGenericException format:@"GLAMainSectionNavigator -init cannot be called, use -initWithProjectManager: instead."];
 	
 	return nil;
@@ -74,12 +74,28 @@
 	[nc postNotificationName:GLAMainSectionNavigatorDidChangeCurrentSectionNotification object:self userInfo:userInfo];
 }
 
+- (GLAMainSection *)defaultSection
+{
+	return [GLAMainSection allProjectsSection];
+}
+
 - (void)goToPreviousSection
 {
 	GLAMainSection *previousSection = (self.currentSection.previousSection);
 	
 	if (!previousSection) {
-		previousSection = [GLAMainSection allProjectsSection];
+		previousSection = (self.defaultSection);
+	}
+	
+	[self goToSection:previousSection];
+}
+
+- (void)goToPreviousUnrelatedSection
+{
+	GLAMainSection *previousSection = (self.currentSection.previousUnrelatedSection);
+	
+	if (!previousSection) {
+		previousSection = (self.defaultSection);
 	}
 	
 	[self goToSection:previousSection];
@@ -157,17 +173,65 @@
 		}
 	}
 	
-	[self goToSection:[GLAEditCollectionSection editCollectionSectionWithCollection:collection previousSection:editProjectSection]];
+	[self goToSection:
+	 [GLAEditCollectionSection editCollectionSectionWithCollection:collection previousSection:editProjectSection]
+	 ];
 }
 
 - (void)addNewCollectionToProject:(GLAProject *)project
 {
-	[self goToSection:[GLAAddNewCollectionSection addNewCollectionSectionToProject:project previousSection:(self.currentSection)]];
+	[self goToSection:
+	 [GLAAddNewCollectionSection addNewCollectionSectionToProject:project previousSection:(self.currentSection)]
+	 ];
 }
 
-- (void)addNewCollectionToProject:(GLAProject *)project pendingCollectedFilesInfo:(GLAPendingAddedCollectedFilesInfo *)pendingCollectedFilesInfo
+- (void)addNewCollectionGoToCollectedFilesSection
 {
-	[self goToSection:[GLAAddNewCollectionSection addNewCollectionSectionToProject:project pendingAddedCollectedFilesInfo:pendingCollectedFilesInfo previousSection:(self.currentSection)]];
+	GLAAddNewCollectionSection *currentSection = (GLAAddNewCollectionSection *)(self.currentSection);
+	NSAssert(currentSection != nil && [currentSection isKindOfClass:[GLAAddNewCollectionSection class]], @"There must be a section to go from.");
+	
+	GLAProject *project = (currentSection.project);
+	[self addNewCollectedFilesCollectionToProject:project];
+}
+
+- (void)addNewCollectedFilesCollectionToProject:(GLAProject *)project
+{
+	[self goToSection:
+	 [GLAAddNewCollectedFilesCollectionSection addNewCollectionChooseNameAndColorSectionWithProject:project pendingAddedCollectedFilesInfo:nil previousSection:(self.currentSection)]
+	 ];
+}
+
+- (void)addNewCollectedFilesCollectionToProject:(GLAProject *)project pendingCollectedFilesInfo:(GLAPendingAddedCollectedFilesInfo *)pendingCollectedFilesInfo
+{
+	[self goToSection:
+	 [GLAAddNewCollectedFilesCollectionSection addNewCollectionChooseNameAndColorSectionWithProject:project pendingAddedCollectedFilesInfo:pendingCollectedFilesInfo previousSection:(self.currentSection)]
+	 ];
+}
+
+- (void)addNewCollectionGoToFilteredFolderSection
+{
+	GLAAddNewCollectionSection *currentSection = (GLAAddNewCollectionSection *)(self.currentSection);
+	NSAssert(currentSection != nil && [currentSection isKindOfClass:[GLAAddNewCollectionSection class]], @"There must be a section to go from.");
+	
+	GLAProject *project = (currentSection.project);
+	[self addNewFilteredFolderCollectionToProject:project];
+}
+
+- (void)addNewFilteredFolderCollectionToProject:(GLAProject *)project
+{
+	[self goToSection:
+	 [GLAAddNewFilteredFolderCollectionSection addNewFilteredFolderCollectionChooseFolderSectionWithProject:project previousSection:(self.currentSection)]
+	 ];
+}
+
+- (void)addNewFilteredFolderCollectionGoToChooseNameAndColorWithChosenFolder:(NSURL *)folderURL chosenTagName:(NSString *)tagName
+{
+	GLAAddNewFilteredFolderCollectionSection *currentSection = (GLAAddNewFilteredFolderCollectionSection *)(self.currentSection);
+	NSAssert(currentSection != nil && [currentSection isKindOfClass:[GLAAddNewFilteredFolderCollectionSection class]], @"There must be a section to go from.");
+	
+	[self goToSection:
+	 [GLAAddNewFilteredFolderCollectionSection addNewCollectionChooseNameAndColorSectionWithProject:(currentSection.project) chosenFolderURL:folderURL chosenTagName:tagName previousSection:(self.currentSection)]
+	 ];
 }
 
 #pragma mark - Project Manager Notifications

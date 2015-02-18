@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="GLAAddNewCollectionFilteredFolderChooseFolderViewController">
+            <connections>
+                <outlet property="chooseFolderButton" destination="Ixe-ZU-3F7" id="kyw-dw-krB"/>
+                <outlet property="chooseFolderLabel" destination="1ie-od-BhX" id="Krv-7l-38Z"/>
+                <outlet property="chooseTagLabel" destination="Uxv-2r-Ibm" id="LiF-rK-Ulu"/>
+                <outlet property="chooseTagPopUpButton" destination="WNd-kM-Kh5" id="ubG-hd-naz"/>
+                <outlet property="chosenFolderIconImageView" destination="BOg-Tf-SnB" id="Hp4-5f-4Y0"/>
+                <outlet property="chosenFolderNameField" destination="IGP-zY-4cn" id="Btx-q6-rrs"/>
+                <outlet property="nextButton" destination="aM9-88-qUv" id="Zgg-qP-Drz"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button identifier="chooseSection" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="Ixe-ZU-3F7" customClass="GLAButton">
+                    <rect key="frame" x="180" y="178" width="120" height="27"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="27" id="EwB-Qc-pL7"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="Choose Folder" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ICl-Z7-fxY" customClass="GLAButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="-1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="chooseFolder:" target="-2" id="d34-t1-JQ0"/>
+                    </connections>
+                </button>
+                <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1ie-od-BhX">
+                    <rect key="frame" x="53" y="213" width="374" height="23"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="370" id="96w-rV-dOd"/>
+                    </constraints>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Choose the folder you want to filter files from:" id="KW1-zd-RG1">
+                        <font key="font" size="13" name="AvenirNext-MediumItalic"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="WNd-kM-Kh5" customClass="GLAPopUpButton">
+                    <rect key="frame" x="190" y="69" width="100" height="27"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="27" id="X4L-hM-bRt"/>
+                        <constraint firstAttribute="width" constant="100" id="qQj-1j-8FI"/>
+                    </constraints>
+                    <popUpButtonCell key="cell" type="roundTextured" title="«Tag A»" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" selectedItem="arU-b4-b0J" id="6C7-Tv-Tju" customClass="GLAPopUpButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                        <menu key="menu" id="Rqz-L6-evk">
+                            <items>
+                                <menuItem title="«Tag A»" state="on" id="arU-b4-b0J">
+                                    <modifierMask key="keyEquivalentModifierMask"/>
+                                </menuItem>
+                                <menuItem title="«Tag B»" id="5vF-34-HcQ"/>
+                                <menuItem title="«Tag C»" id="iLj-ow-xIe"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                            <integer key="value" value="4"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="-1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                            <integer key="value" value="4"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="chosenTagNameDidChange:" target="-2" id="Rmg-dY-lZ9"/>
+                    </connections>
+                </popUpButton>
+                <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Uxv-2r-Ibm">
+                    <rect key="frame" x="53" y="104" width="374" height="23"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="370" id="iVj-vw-ndl"/>
+                    </constraints>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Filter files inside with tag:" id="pVy-RF-m9V">
+                        <font key="font" size="13" name="AvenirNext-MediumItalic"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button identifier="chooseSection" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="aM9-88-qUv" customClass="GLAButton">
+                    <rect key="frame" x="180" y="24" width="120" height="27"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="27" id="11q-VM-QS4"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="Next" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="a1E-2k-Id6" customClass="GLAButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                        <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="-1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasPrimaryStyle" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="goToNextSection:" target="-2" id="xUb-2r-sbY"/>
+                    </connections>
+                </button>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="dlC-Bh-o8V">
+                    <rect key="frame" x="20" y="143" width="440" height="27"/>
+                    <subviews>
+                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BOg-Tf-SnB">
+                            <rect key="frame" x="138" y="6" width="16" height="16"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="16" id="VK8-e0-XwL"/>
+                                <constraint firstAttribute="width" constant="16" id="gwt-ON-vV6"/>
+                            </constraints>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="o93-On-6uL"/>
+                        </imageView>
+                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="IGP-zY-4cn">
+                            <rect key="frame" x="160" y="4" width="144" height="23"/>
+                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="«Chosen Folder Name»" id="8Aw-AF-7ga">
+                                <font key="font" size="13" name="AvenirNext-Medium"/>
+                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="centerY" secondItem="BOg-Tf-SnB" secondAttribute="centerY" id="G8l-VC-A6H"/>
+                        <constraint firstItem="IGP-zY-4cn" firstAttribute="leading" secondItem="BOg-Tf-SnB" secondAttribute="trailing" constant="8" id="Gus-wl-VQs"/>
+                        <constraint firstAttribute="centerX" secondItem="IGP-zY-4cn" secondAttribute="centerX" constant="-12" id="Hmq-52-zWG"/>
+                        <constraint firstItem="IGP-zY-4cn" firstAttribute="centerY" secondItem="BOg-Tf-SnB" secondAttribute="centerY" constant="-2" id="NvO-ym-OgL"/>
+                        <constraint firstAttribute="height" constant="27" id="yOb-aj-41t"/>
+                    </constraints>
+                </customView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="Ixe-ZU-3F7" firstAttribute="top" secondItem="1ie-od-BhX" secondAttribute="bottom" constant="8" id="7NB-O7-6al"/>
+                <constraint firstAttribute="centerX" secondItem="Ixe-ZU-3F7" secondAttribute="centerX" id="9lW-aO-BOg"/>
+                <constraint firstItem="dlC-Bh-o8V" firstAttribute="centerX" secondItem="Ixe-ZU-3F7" secondAttribute="centerX" id="NHi-zX-68I"/>
+                <constraint firstAttribute="trailing" secondItem="dlC-Bh-o8V" secondAttribute="trailing" constant="20" symbolic="YES" id="S79-bS-Ee7"/>
+                <constraint firstItem="dlC-Bh-o8V" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" symbolic="YES" id="cjd-ko-W1o"/>
+                <constraint firstItem="aM9-88-qUv" firstAttribute="top" relation="greaterThanOrEqual" secondItem="WNd-kM-Kh5" secondAttribute="bottom" constant="10" id="ckx-Tc-2Kw"/>
+                <constraint firstAttribute="centerX" secondItem="aM9-88-qUv" secondAttribute="centerX" id="edr-wU-eXW"/>
+                <constraint firstItem="Uxv-2r-Ibm" firstAttribute="centerX" secondItem="WNd-kM-Kh5" secondAttribute="centerX" id="ixd-gp-OHp"/>
+                <constraint firstItem="1ie-od-BhX" firstAttribute="centerX" secondItem="Ixe-ZU-3F7" secondAttribute="centerX" id="lIU-ll-3cW"/>
+                <constraint firstItem="Uxv-2r-Ibm" firstAttribute="top" secondItem="dlC-Bh-o8V" secondAttribute="bottom" constant="16" id="lgf-CZ-Z2U"/>
+                <constraint firstAttribute="bottom" secondItem="aM9-88-qUv" secondAttribute="bottom" constant="24" id="oyp-KK-X6S"/>
+                <constraint firstAttribute="centerY" secondItem="dlC-Bh-o8V" secondAttribute="centerY" constant="20" id="qRd-i8-kmB"/>
+                <constraint firstItem="dlC-Bh-o8V" firstAttribute="top" secondItem="Ixe-ZU-3F7" secondAttribute="bottom" constant="8" id="rG7-DR-qm6"/>
+                <constraint firstAttribute="centerX" secondItem="WNd-kM-Kh5" secondAttribute="centerX" id="rsa-lf-sSS"/>
+                <constraint firstItem="WNd-kM-Kh5" firstAttribute="top" secondItem="Uxv-2r-Ibm" secondAttribute="bottom" constant="8" id="um2-k5-23b"/>
+            </constraints>
+            <point key="canvasLocation" x="198" y="232"/>
+        </customView>
+    </objects>
+</document>

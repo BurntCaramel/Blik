@@ -118,7 +118,7 @@
 
 - (void)directoryWatcherDirectoriesDidChangeNotification:(NSNotification *)note
 {
-#if DEBUG
+#if 0 && DEBUG
 	NSLog(@"directoryWatcherDirectoriesDidChangeNotification");
 #endif
 	[self invalidateAllAccessedFiles];
