@@ -11,7 +11,8 @@
 
 @interface GLAFolderQuery ()
 
-@property(readwrite, copy, nonatomic) NSSet *tagNames;
+@property(readwrite, copy, nonatomic) GLACollectedFile *collectedFileForFolderURL;
+@property(readwrite, copy, nonatomic) NSArray *tagNames;
 
 @end
 
@@ -22,6 +23,58 @@
 @implementation GLAFolderQuery
 
 @synthesize tagNames = _tagNames;
+
+- (instancetype)initCreatingByEditing:(void(^)(id<GLAFolderQueryEditing> editor))editingBlock
+{
+	self = [super init];
+	if (self) {
+		editingBlock(self);
+	}
+	return self;
+}
+
+- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAFolderQueryEditing> editor))editingBlock
+{
+	GLAFolderQuery *copy = [self copy];
+	editingBlock(copy);
+	
+	return copy;
+}
+
++ (NSValueTransformer *)collectedFileForFolderURLJSONTransformer
+{
+	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLACollectedFile class]];
+}
+
+- (NSString *)escapedStringForMetadataQuery:(NSString *)inputString
+{
+	NSMutableString *alteredString = [inputString mutableCopy];
+	
+	[alteredString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:0 range:NSMakeRange(0, (alteredString.length))];
+	[alteredString replaceOccurrencesOfString:@"'" withString:@"\'" options:0 range:NSMakeRange(0, (alteredString.length))];
+	
+	return alteredString;
+}
+
+- (NSString *)fileMetadataQueryRepresentation
+{
+	NSMutableArray *queryParts = [NSMutableArray new];
+	
+	NSArray *tagNames = (self.tagNames);
+	if (tagNames) {
+		NSMutableArray *tagNamesQueries = [NSMutableArray new];
+		for (NSString *tagName in tagNames) {
+			NSString *tagQuery = [NSString stringWithFormat:@"%@ = \"%@*\"cdwt", @"kMDItemUserTags", [self escapedStringForMetadataQuery:tagName]];
+			[tagNamesQueries addObject:tagQuery];
+		}
+		
+		[queryParts addObject:[tagNamesQueries componentsJoinedByString:@" || "]];
+	}
+	
+	return [queryParts componentsJoinedByString:@" && "];
+}
+
+#pragma mark -
 
 + (NSSet *)availableTagNamesInsideFolderURL:(NSURL *)folderURL
 {
@@ -50,51 +103,6 @@
 	}
 	
 	return foundTagNames;
-}
-
-- (instancetype)initCreatingByEditing:(void(^)(id<GLAFolderQueryEditing> editor))editingBlock
-{
-	self = [super init];
-	if (self) {
-		editingBlock(self);
-	}
-	return self;
-}
-
-- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAFolderQueryEditing> editor))editingBlock
-{
-	GLAFolderQuery *copy = [self copy];
-	editingBlock(copy);
-	
-	return copy;
-}
-
-- (NSString *)escapedStringForMetadataQuery:(NSString *)inputString
-{
-	NSMutableString *alteredString = [inputString mutableCopy];
-	
-	[alteredString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:0 range:NSMakeRange(0, (alteredString.length))];
-	[alteredString replaceOccurrencesOfString:@"'" withString:@"\'" options:0 range:NSMakeRange(0, (alteredString.length))];
-	
-	return alteredString;
-}
-
-- (NSString *)fileMetadataQueryRepresentation
-{
-	NSMutableArray *queryParts = [NSMutableArray new];
-	
-	NSSet *tagNames = (self.tagNames);
-	if (tagNames) {
-		NSMutableArray *tagNamesQueries = [NSMutableArray new];
-		for (NSString *tagName in tagNames) {
-			NSString *tagQuery = [NSString stringWithFormat:@"%@ == \"%@\"", @"kMDItemUserTags", [self escapedStringForMetadataQuery:tagName]];
-			[tagNamesQueries addObject:tagQuery];
-		}
-		
-		[queryParts addObject:[tagNamesQueries componentsJoinedByString:@" || "]];
-	}
-	
-	return [queryParts componentsJoinedByString:@" && "];
 }
 
 @end

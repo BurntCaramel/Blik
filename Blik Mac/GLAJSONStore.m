@@ -18,16 +18,31 @@
 
 @implementation GLAJSONStore
 
-- (instancetype)init
+- (instancetype)initWithFileURL:(NSURL *)fileURL backgroundOperationQueue:(NSOperationQueue *)operationQueue freshlyMade:(BOOL)freshlyMade
 {
 	self = [super init];
 	if (self) {
+		_fileURL = fileURL;
+		_backgroundOperationQueue = operationQueue;
+		
 		_inputDispatchQueue = dispatch_queue_create("com.burntcaramel.GLAJSONStore.input", DISPATCH_QUEUE_SERIAL);
 		
-		_loadState = GLAStoringLoadStateNeedsLoading;
 		_saveState = GLAStoringSaveStateNeedsSaving;
+		_freshlyMade = freshlyMade;
+		
+		if (freshlyMade) {
+			_loadState = GLAStoringLoadStateFinishedLoading;
+		}
+		else {
+			_loadState = GLAStoringLoadStateNeedsLoading;
+		}
 	}
 	return self;
+}
+
+- (instancetype)init __unavailable
+{
+	return nil;
 }
 
 @synthesize loadState = _loadState;
@@ -113,12 +128,6 @@
 - (void)background_readJSONDictionaryFromFileURL:(NSURL *)fileURL completionBlock:(GLAJSONStoreLoadCompletionBlock)block
 {
 	NSError *error = nil;
-#if 0
-	NSFileManager *fm = [NSFileManager defaultManager];
-	if (![fm fileExistsAtPath:(fileURL.path)]) {
-		block(nil, error);
-	}
-#endif
 	
 	NSData *JSONData = [NSData dataWithContentsOfURL:fileURL options:0 error:&error];
 	if (!JSONData) {
@@ -137,10 +146,21 @@
 
 - (void)saveJSONDictionary:(NSDictionary *)dictionary
 {
+#if DEBUG
+	NSLog(@"SAVING JSON DICTIONARY %@", dictionary);
+#endif
+	
 	GLAStoringSaveState saveState = (self.saveState);
 	if (saveState != GLAStoringSaveStateNeedsSaving) {
+#if DEBUG
+		NSLog(@"NO NEED TO SAVE");
+#endif
 		return;
 	}
+	
+#if DEBUG
+	NSLog(@"NEEDS TO SAVE %@", (self.backgroundOperationQueue));
+#endif
 	
 	(self.saveState) = GLAStoringSaveStateCurrentlySaving;
 	
@@ -148,6 +168,9 @@
 	GLAJSONStoreSaveCompletionBlock saveCompletionBlock = (self.saveCompletionBlock);
 	
 	[(self.backgroundOperationQueue) pgws_useObject:self inAddedOperationBlock:^(GLAJSONStore *self) {
+#if DEBUG
+		NSLog(@"WRITING JSON DICTIONARY");
+#endif
 		[self background_writeJSONDictionary:dictionary toFileURL:fileURL completionBlock:saveCompletionBlock];
 		
 		(self.saveState) = GLAStoringSaveStateFinishedSaving;
@@ -162,8 +185,17 @@
 	@try {
 		JSONData = [NSJSONSerialization dataWithJSONObject:JSONDictionary options:0 error:&error];
 		if (!JSONData) {
-			block(NO, error);
+#if DEBUG
+			NSLog(@"ERROR %@ SAVING JSON to %@", error, fileURL);
+#endif
+			if (block) {
+				block(NO, error);
+			}
 		}
+		
+#if DEBUG
+		NSLog(@"SAVED JSON DATA %@ to %@", @(JSONData.length), fileURL);
+#endif
 	}
 	@catch (NSException *e) {
 		NSLog(@"EXCEPTION converting to JSON %@", JSONDictionary);
@@ -172,7 +204,9 @@
 	
 	[JSONData writeToURL:fileURL atomically:YES];
 	
-	block(YES, nil);
+	if (block) {
+		block(YES, nil);
+	}
 }
 
 @end

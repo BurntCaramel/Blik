@@ -65,17 +65,17 @@
 
 - (void)windowDidStartLiveResize:(NSNotification *)note
 {
-	(self.previewHolderView.animator.alphaValue) = 0.0;
+	//(self.previewHolderView.animator.alphaValue) = 0.0;
 }
 
 - (void)windowDidEndLiveResize:(NSNotification *)note
 {
 	QLPreviewView *quickLookPreviewView = (self.quickLookPreviewView);
 	if (quickLookPreviewView && ![quickLookPreviewView isHiddenOrHasHiddenAncestor]) {
-		[quickLookPreviewView refreshPreviewItem];
+		//[quickLookPreviewView refreshPreviewItem];
 	}
 	
-	(self.previewHolderView.animator.alphaValue) = 1.0;
+	//(self.previewHolderView.animator.alphaValue) = 1.0;
 }
 
 - (void)previewFrameDidChange:(NSNotification *)note
@@ -116,11 +116,15 @@
 	
 	if (!(self.quickLookPreviewView)) {
 		GLAViewController *previewHolderViewController = [[GLAViewController alloc] init];
-		(previewHolderViewController.view) = (self.previewHolderView);
+		NSView *holderView = (self.previewHolderView);
+		(holderView.wantsLayer) = YES;
+		(holderView.canDrawSubviewsIntoLayer) = YES;
+		(previewHolderViewController.view) = holderView;
 		
 		(self.previewHolderViewController) = previewHolderViewController;
 		
 		QLPreviewView *quickLookPreviewView = [[QLPreviewView alloc] initWithFrame:NSZeroRect style:QLPreviewViewStyleNormal];
+		(quickLookPreviewView.wantsLayer) = YES;
 		[previewHolderViewController fillViewWithChildView:quickLookPreviewView];
 		(self.quickLookPreviewView) = quickLookPreviewView;
 	}

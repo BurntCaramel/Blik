@@ -7,26 +7,31 @@
 //
 
 #import "GLAModel.h"
+#import "GLACollectedFile.h"
 
 
 @protocol GLAFolderQueryEditing <NSObject>
 
-@property(readwrite, copy, nonatomic) NSSet *tagNames;
+@property(readwrite, copy, nonatomic) GLACollectedFile *collectedFileForFolderURL;
+@property(readwrite, copy, nonatomic) NSArray *tagNames;
 
 @end
 
 
 @interface GLAFolderQuery : GLAModel
 
-+ (NSSet *)availableTagNamesInsideFolderURL:(NSURL *)folderURL;
-
 - (instancetype)initCreatingByEditing:(void(^)(id<GLAFolderQueryEditing> editor))editingBlock;
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAFolderQueryEditing> editor))editingBlock;
 
-@property(readonly, copy, nonatomic) NSSet *tagNames;
+@property(readonly, copy, nonatomic) GLACollectedFile *collectedFileForFolderURL;
+//@property(readonly, copy, nonatomic) NSURL *folderURL;
+@property(readonly, copy, nonatomic) NSArray *tagNames;
 //@property(copy, nonatomic) NSSet *ignoredFileNames;
 
 - (NSString *)fileMetadataQueryRepresentation;
+
+
++ (NSSet *)availableTagNamesInsideFolderURL:(NSURL *)folderURL;
 
 @end

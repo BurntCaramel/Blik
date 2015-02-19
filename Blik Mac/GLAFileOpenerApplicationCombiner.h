@@ -26,6 +26,8 @@
 + (void)openFileURLs:(NSArray *)fileURLs withApplicationURL:(NSURL *)applicationURL;
 + (void)openFileURLs:(NSArray *)fileURLs withApplicationURL:(NSURL *)applicationURL useSecurityScope:(BOOL)useSecurityScope;
 
+- (void)openFileURLsUsingDefaultApplications;
+
 @end
 
 extern NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification;
@@ -39,5 +41,9 @@ extern NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification;
 - (void)updatePreferredOpenerApplicationsChoiceMenu:(NSMenu *)menu target:(id)target action:(SEL)action chosenPreferredApplicationURL:(NSURL *)preferredApplicationURL;
 
 - (NSMenuItem *)newMenuItemForApplicationURL:(NSURL *)applicationURL target:(id)target action:(SEL)action;
+
+- (NSURL *)openerApplicationURLForMenuItem:(NSMenuItem *)menuItem;
+- (void)openFileURLsUsingMenuItem:(NSMenuItem *)menuItem;
+- (void)openFileURLsUsingChosenOpenerApplicationPopUpButton:(NSPopUpButton *)popUpButton;
 
 @end

@@ -13,6 +13,8 @@
 @import QuartzCore;
 
 #import "GLAFileCollectionViewController.h"
+#import "GLAFilteredFolderCollectionViewController.h"
+
 #import "GLAAddCollectedFilesChoiceActions.h"
 #import "GLAPendingAddedCollectedFilesInfo.h"
 
@@ -206,19 +208,20 @@
 
 #pragma mark Added Collection
 
-- (void)setUpAddedCollectionViewControllerIfNeeded
+- (void)setUpAddedCollectionChooseNameAndColorViewControllerIfNeeded
 {
-	if (self.addedCollectionViewController) {
+	if (self.addedCollectionChooseNameAndColorViewController) {
 		return;
 	}
 	
-	GLAAddNewCollectionViewController *controller = [[GLAAddNewCollectionViewController alloc] initWithNibName:NSStringFromClass([GLAAddNewCollectionViewController class]) bundle:nil];
-	(controller.view.identifier) = @"addNewCollection";
+	GLAAddNewCollectionChooseNameAndColorViewController *controller = [[GLAAddNewCollectionChooseNameAndColorViewController alloc] initWithNibName:NSStringFromClass([GLAAddNewCollectionChooseNameAndColorViewController class]) bundle:nil];
+	(controller.view.identifier) = @"addNewCollectionChooseNameAndColor";
+	(controller.sectionNavigator) = (self.sectionNavigator);
 	
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver:self selector:@selector(addNewCollectionViewControllerDidConfirmCreatingNotification:) name:GLAAddNewCollectionViewControllerDidConfirmCreatingNotification object:controller];
 	
-	(self.addedCollectionViewController) = controller;
+	(self.addedCollectionChooseNameAndColorViewController) = controller;
 	
 	[self fillViewWithChildView:(controller.view)];
 }
@@ -231,7 +234,6 @@
 	
 	GLAAddNewCollectionChooseTypeViewController *controller = [[GLAAddNewCollectionChooseTypeViewController alloc] initWithNibName:NSStringFromClass([GLAAddNewCollectionChooseTypeViewController class]) bundle:nil];
 	(controller.view.identifier) = @"addNewCollectionChooseType";
-	
 	(controller.sectionNavigator) = (self.sectionNavigator);
 	
 	(self.addedCollectionChooseTypeViewController) = controller;
@@ -247,7 +249,6 @@
 	
 	GLAAddNewCollectionFilteredFolderChooseFolderViewController *controller = [[GLAAddNewCollectionFilteredFolderChooseFolderViewController alloc] initWithNibName:NSStringFromClass([GLAAddNewCollectionFilteredFolderChooseFolderViewController class]) bundle:nil];
 	(controller.view.identifier) = @"addNewCollectionFilteredFolderChooseFolder";
-	
 	(controller.sectionNavigator) = (self.sectionNavigator);
 	
 	(self.addedCollectionFilteredFolderChooseFolderViewController) = controller;
@@ -351,17 +352,12 @@
 		[self setUpAddedCollectionFilteredFolderChooseFolderViewControllerIfNeeded];
 	}
 	else if (section.isAddNewCollection) {
-		[self setUpAddedCollectionViewControllerIfNeeded];
+		[self setUpAddedCollectionChooseNameAndColorViewControllerIfNeeded];
 		
 		GLAAddNewCollectionSection *addCollectionSection = (GLAAddNewCollectionSection *)section;
 		
-		GLAAddNewCollectionViewController *addNewCollectionViewController = (self.addedCollectionViewController);
+		GLAAddNewCollectionChooseNameAndColorViewController *addNewCollectionViewController = (self.addedCollectionChooseNameAndColorViewController);
 		(addNewCollectionViewController.project) = (addCollectionSection.project);
-		
-		if ([addCollectionSection isKindOfClass:[GLAAddNewCollectedFilesCollectionSection class]]) {
-			GLAAddNewCollectedFilesCollectionSection *collectedFilesCollectionSection = (GLAAddNewCollectedFilesCollectionSection *)addCollectionSection;
-			(addNewCollectionViewController.pendingAddedCollectedFilesInfo) = (collectedFilesCollectionSection.pendingAddedCollectedFilesInfo);
-		}
 	}
 }
 
@@ -407,7 +403,7 @@
 		return (self.addedCollectionFilteredFolderChooseFolderViewController);
 	}
 	else if (section.isAddNewCollection) {
-		return (self.addedCollectionViewController);
+		return (self.addedCollectionChooseNameAndColorViewController);
 	}
 	else {
 		return nil;
@@ -447,11 +443,18 @@
 {
 	GLAViewController *controller = nil;
 	
-	if ([(collection.type) isEqualToString:GLACollectionTypeFilesList]) {
-		GLAFileCollectionViewController *fileCollectionViewController = [[GLAFileCollectionViewController alloc] initWithNibName:@"GLAFileCollectionViewController" bundle:nil];
+	NSString *collectionType = (collection.type);
+	if ([collectionType isEqualToString:GLACollectionTypeFilesList]) {
+		GLAFileCollectionViewController *fileCollectionViewController = [[GLAFileCollectionViewController alloc] initWithNibName:NSStringFromClass([GLAFileCollectionViewController class]) bundle:nil];
 		(fileCollectionViewController.filesListCollection) = collection;
 		
 		controller = fileCollectionViewController;
+	}
+	else if ([collectionType isEqualToString:GLACollectionTypeFilteredFolder]) {
+		GLAFilteredFolderCollectionViewController *filteredFolderCollectionViewController = [[GLAFilteredFolderCollectionViewController alloc] initWithNibName:NSStringFromClass([GLAFilteredFolderCollectionViewController class]) bundle:nil];
+		(filteredFolderCollectionViewController.filteredFolderCollection) = collection;
+		
+		controller = filteredFolderCollectionViewController;
 	}
 	
 	return controller;
@@ -542,7 +545,7 @@
 
 #pragma mark Add New Collection View Controller
 
-- (void)addNewCollectionViewControllerDidBecomeActive:(GLAAddNewCollectionViewController *)addNewCollectionViewController
+- (void)addNewCollectionViewControllerDidBecomeActive:(GLAAddNewCollectionChooseNameAndColorViewController *)addNewCollectionViewController
 {
 	id<GLAMainContentViewControllerDelegate> delegate = (self.delegate);
 	if (delegate) {
@@ -552,7 +555,7 @@
 
 - (void)addNewCollectionViewControllerDidConfirmCreatingNotification:(NSNotification *)note
 {
-	GLAAddNewCollectionViewController *addNewCollectionViewController = (note.object);
+	GLAAddNewCollectionChooseNameAndColorViewController *addNewCollectionViewController = (note.object);
 	NSDictionary *userInfo = (note.userInfo);
 	GLACollection *collection = userInfo[@"collection"];
 	GLAProject *project = userInfo[@"project"];
@@ -663,8 +666,8 @@
 		GLAProjectViewController *projectVC = (GLAProjectViewController *)viewController;
 		[self projectViewControllerDidBecomeActive:projectVC];
 	}
-	else if (viewController == (self.addedCollectionViewController)) {
-		GLAAddNewCollectionViewController *addNewCollectionViewController = (GLAAddNewCollectionViewController *)viewController;
+	else if (viewController == (self.addedCollectionChooseNameAndColorViewController)) {
+		GLAAddNewCollectionChooseNameAndColorViewController *addNewCollectionViewController = (GLAAddNewCollectionChooseNameAndColorViewController *)viewController;
 		[self addNewCollectionViewControllerDidBecomeActive:addNewCollectionViewController];
 	}
 }

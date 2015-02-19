@@ -15,7 +15,7 @@
 #import "GLAEmptyAllProjectsViewController.h"
 #import "GLAProjectEditPrimaryFoldersViewController.h"
 #import "GLAAddNewProjectViewController.h"
-#import "GLAAddNewCollectionViewController.h"
+#import "GLAAddNewCollectionChooseNameAndColorViewController.h"
 #import "GLAAddNewCollectionChooseTypeViewController.h"
 #import "GLAAddNewCollectionFilteredFolderChooseFolderViewController.h"
 #import "GLAAddCollectedFilesChoiceActions.h"
@@ -23,18 +23,7 @@
 @class GLAProject;
 @protocol GLAMainContentViewControllerDelegate;
 
-/*
-typedef NS_ENUM(NSInteger, GLAMainContentSection) {
-	GLAMainContentSectionUnknown,
-	GLAMainContentSectionAll,
-	GLAMainContentSectionToday,
-	GLAMainContentSectionPlanned,
-	GLAMainContentSectionAllEditProject,
-	GLAMainContentSectionPlannedEditProject,
-	GLAMainContentSectionAddNewProject,
-	GLAMainContentSectionCollection
-};
-*/
+
 
 @interface GLAMainContentViewController : GLAViewController
 
@@ -67,7 +56,7 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 // Adding Project or Collection
 
 @property(nonatomic) GLAAddNewProjectViewController *addedProjectViewController;
-@property(nonatomic) GLAAddNewCollectionViewController *addedCollectionViewController;
+@property(nonatomic) GLAAddNewCollectionChooseNameAndColorViewController *addedCollectionChooseNameAndColorViewController;
 @property(nonatomic) GLAAddNewCollectionChooseTypeViewController *addedCollectionChooseTypeViewController;
 @property(nonatomic) GLAAddNewCollectionFilteredFolderChooseFolderViewController *addedCollectionFilteredFolderChooseFolderViewController;
 
@@ -110,8 +99,8 @@ typedef NS_ENUM(NSInteger, GLAMainContentSection) {
 
 #pragma mark Adding New Collection
 
-- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewControllerDidBecomeActive:(GLAAddNewCollectionViewController *)addNewCollectionViewController;
+- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewControllerDidBecomeActive:(GLAAddNewCollectionChooseNameAndColorViewController *)addNewCollectionViewController;
 
-- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewController:(GLAAddNewCollectionViewController *)addNewCollectionViewController didConfirmCreatingCollection:(GLACollection *)collection inProject:(GLAProject *)project;
+- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewController:(GLAAddNewCollectionChooseNameAndColorViewController *)addNewCollectionViewController didConfirmCreatingCollection:(GLACollection *)collection inProject:(GLAProject *)project;
 
 @end

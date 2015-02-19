@@ -12,7 +12,7 @@
 #import "GLAPreferencesWindowController.h"
 #import "GLAApplicationSettingsManager.h"
 
-#define DO_FOLDER_QUERY_TEST 1 && DEBUG
+#define DO_FOLDER_QUERY_TEST 0 && DEBUG
 
 #import "GLAFolderQuery.h"
 #import "GLAFolderQueryResults.h"
@@ -59,11 +59,11 @@
 	
 #if DO_FOLDER_QUERY_TEST
 	GLAFolderQuery *folderQuery = [[GLAFolderQuery alloc] initCreatingByEditing:^(id<GLAFolderQueryEditing> editor) {
-		(editor.tagNames) = [NSSet setWithObject:@"Backburner"];
+		(editor.collectedFileForFolderURL) = [[GLACollectedFile alloc] initWithFileURL:[NSURL fileURLWithPath:NSHomeDirectory()]];
+		(editor.tagNames) = @[@"Backburner"];
 	}];
 	
-	NSURL *folderURL = [NSURL fileURLWithPath:NSHomeDirectory()];
-	GLAFolderQueryResults *folderQueryResults = [[GLAFolderQueryResults alloc] initWithFolderQuery:folderQuery folderURLs:@[folderURL]];
+	GLAFolderQueryResults *folderQueryResults = [[GLAFolderQueryResults alloc] initWithFolderQuery:folderQuery];
 	
 	[folderQueryResults startSearching];
 	(self.folderQueryResults) = folderQueryResults;

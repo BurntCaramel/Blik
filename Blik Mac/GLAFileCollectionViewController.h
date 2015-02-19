@@ -15,8 +15,6 @@
 #import "GLACollectedFilesSetting.h"
 #import "GLAFileInfoRetriever.h"
 #import "GLAFileOpenerApplicationCombiner.h"
-// Frameworks
-@import Quartz;
 
 
 @interface GLAFileCollectionViewController : GLAViewController <NSTableViewDataSource, NSTableViewDelegate, NSMenuDelegate, GLAFileInfoRetrieverDelegate>
@@ -26,13 +24,10 @@
 @property(strong, nonatomic) IBOutlet NSMenuItem *addToHighlightsMenuItem;
 
 @property(strong, nonatomic) IBOutlet GLAPopUpButton *openerApplicationsPopUpButton;
-
-@property(strong, nonatomic) IBOutlet GLAButton *addToHighlightsButton;
 @property(strong, nonatomic) IBOutlet GLAButton *shareButton;
+@property(strong, nonatomic) IBOutlet GLAButton *addToHighlightsButton;
 
-@property(nonatomic) IBOutlet GLAViewController *previewHolderViewController;
 @property(nonatomic) IBOutlet NSView *previewHolderView;
-@property(nonatomic) QLPreviewView *quickLookPreviewView;
 
 @property(nonatomic) GLACollection *filesListCollection;
 @property(nonatomic) GLAProject *project;

@@ -16,8 +16,12 @@ typedef void(^ GLAJSONStoreSaveCompletionBlock)(BOOL success, NSError *error);
 
 @interface GLAJSONStore : NSObject
 
-@property(copy, nonatomic) NSURL *fileURL;
-@property(copy, nonatomic) NSOperationQueue *backgroundOperationQueue;
+- (instancetype)initWithFileURL:(NSURL *)fileURL backgroundOperationQueue:(NSOperationQueue *)operationQueue freshlyMade:(BOOL)freshlyMade NS_DESIGNATED_INITIALIZER;
+
+@property(readonly, copy, nonatomic) NSURL *fileURL;
+@property(readonly, nonatomic) NSOperationQueue *backgroundOperationQueue;
+@property(readonly, nonatomic) BOOL freshlyMade;
+
 @property(copy, nonatomic) GLAJSONStoreLoadCompletionBlock loadCompletionBlock;
 @property(copy, nonatomic) GLAJSONStoreSaveCompletionBlock saveCompletionBlock;
 

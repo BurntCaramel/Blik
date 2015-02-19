@@ -157,6 +157,7 @@
 	return
   @{
 	@"sourceBookmarkData": null,
+	@"wasCreatedFromBookmarkData": null,
 	@"fileReferenceURL": null,
 	@"sourceFilePathURL": null,
 	@"name": null,

@@ -26,18 +26,16 @@
 
 @property(copy, nonatomic) NSArray *collectedFiles;
 
+@property(nonatomic) BOOL doNotUpdateViews;
+
 @property(nonatomic) GLACollectedFilesSetting *collectedFilesSetting;
 @property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
 @property(nonatomic) GLAFileOpenerApplicationCombiner *openerApplicationCombiner;
-
-@property(nonatomic) BOOL doNotUpdateViews;
+@property(nonatomic) BOOL openerApplicationsPopUpButtonNeedsUpdate;
 
 @property(nonatomic) NSArray *selectedURLs;
 
-@property(nonatomic) BOOL openerApplicationsPopUpButtonNeedsUpdate;
-
 @property(nonatomic) GLAQuickLookPreviewHelper *quickLookPreviewHelper;
-@property(nonatomic) QLPreviewPanel *activeQuickLookPreviewPanel;
 
 @property(nonatomic) GLAArrayTableDraggingHelper *tableDraggingHelper;
 
@@ -86,12 +84,8 @@
 	
 	[tableView registerForDraggedTypes:@[[GLACollectedFile objectJSONPasteboardType], (__bridge NSString *)kUTTypeFileURL]];
 	
-	// Allow self to handle keyDown: events.
-	// FIXME: Stops table view scrolling from working!!
-	//(self.nextResponder) = (tableView.nextResponder);
-	//(tableView.nextResponder) = self;
-	
 	// Add this view controller to the responder chain pre-Yosemite.
+	// Allows self to handle keyDown: events
 	if ((view.nextResponder) != self) {
 		(self.nextResponder) = (view.nextResponder);
 		(view.nextResponder) = self;
@@ -197,7 +191,6 @@
 	(self.openerApplicationCombiner) = openerApplicationCombiner;
 	
 	[nc addObserver:self selector:@selector(openerApplicationCombinerDidChangeNotification:) name:GLAFileURLOpenerApplicationCombinerDidChangeNotification object:openerApplicationCombiner];
-	
 }
 
 @synthesize filesListCollection = _filesListCollection;
@@ -440,12 +433,33 @@
 	return URLs;
 }
 
-#if 0
-- (NSArray *)selectedURLs
+- (NSIndexSet *)rowIndexesForURLs:(NSSet *)fileURLsSet
 {
-	return [self URLsForRowIndexes:[self rowIndexesForActionFrom:nil]];
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+	
+	NSMutableIndexSet *indexes = [NSMutableIndexSet new];
+	[(self.collectedFiles) enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
+		GLAAccessedFileInfo *accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
+		if (accessedFile) {
+			if ([fileURLsSet containsObject:(accessedFile.filePathURL)]) {
+				[indexes addIndex:idx];
+			}
+		}
+	}];
+	
+	return indexes;
 }
-#endif
+
+- (NSInteger)rowIndexForURL:(NSURL *)URL
+{
+	NSIndexSet *indexes = [self rowIndexesForURLs:[NSSet setWithObject:URL]];
+	if (indexes.count == 1) {
+		return [indexes firstIndex];
+	}
+	else {
+		return -1;
+	}
+}
 
 - (void)updateSelectedURLs
 {
@@ -464,43 +478,12 @@
 	[self updateSelectedFilesUIVisibilityAnimating:YES];
 }
 
-- (NSInteger)rowIndexForURL:(NSURL *)URL
+#if 0
+- (NSArray *)selectedURLs
 {
-	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
-	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
-	NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
-	
-	__block NSInteger rowIndex = -1;
-	selectedIndexes = [self collectedFilesIndexesForRowIndexes:selectedIndexes];
-	[(self.collectedFiles) enumerateObjectsAtIndexes:selectedIndexes options:NSEnumerationConcurrent usingBlock:^(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
-		GLAAccessedFileInfo *accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
-		if (accessedFile) {
-			if ([URL isEqual:(accessedFile.filePathURL)]) {
-				rowIndex = idx;
-				*stop = YES;
-			}
-		}
-	}];
-	
-	return rowIndex;
+	return [self URLsForRowIndexes:[self rowIndexesForActionFrom:nil]];
 }
-
-- (NSIndexSet *)rowIndexesForURLs:(NSSet *)fileURLsSet
-{
-	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
-	
-	NSMutableIndexSet *indexes = [NSMutableIndexSet new];
-	[(self.collectedFiles) enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
-		GLAAccessedFileInfo *accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
-		if (accessedFile) {
-			if ([fileURLsSet containsObject:(accessedFile.filePathURL)]) {
-				[indexes addIndex:idx];
-			}
-		}
-	}];
-	
-	return indexes;
-}
+#endif
 
 #pragma mark - UI Updating
 
@@ -531,11 +514,6 @@
 			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
 			
 			[[views valueForKey:@"animator"] setValue:@(alphaValue) forKey:@"alphaValue"];
-			/*
-			 (popUpButton.animator.alphaValue) = alphaValue;
-			 (label.animator.alphaValue) = alphaValue;
-			 (addToHighlightsButton.animator.alphaValue) = alphaValue;
-			 */
 		} completionHandler:^{
 			if (hasNoURLs) {
 				[self updateAddToHighlightsUI];
@@ -638,10 +616,9 @@
 
 - (void)updateOpenerApplicationsUIMenu
 {
-	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
-	
 	NSMenu *menu = (self.openerApplicationsPopUpButton.menu);
 	
+	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
 	[openerApplicationCombiner updateOpenerApplicationsMenu:menu target:self action:@selector(openWithChosenApplication:) preferredApplicationURL:nil forPopUpMenu:YES];
 }
 
@@ -661,30 +638,15 @@
 	}];
 }
 
-#pragma mark -
-
 - (void)retrieveApplicationsToOpenSelection
 {
 	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
 	(openerApplicationCombiner.fileURLs) = [NSSet setWithArray:(self.selectedURLs)];
 }
 
-- (NSURL *)chosenOpenerApplicationForSelection
+- (void)openerApplicationCombinerDidChangeNotification:(NSNotification *)note
 {
-	NSPopUpButton *openerApplicationsPopUpButton = (self.openerApplicationsPopUpButton);
-	
-	NSMenuItem *selectedItem = (openerApplicationsPopUpButton.selectedItem);
-	if (!selectedItem) {
-		return nil;
-	}
-	
-	NSURL *applicationURL = (selectedItem.representedObject);
-	if ((applicationURL != nil) && [applicationURL isKindOfClass:[NSURL class]]) {
-		return applicationURL;
-	}
-	else {
-		return nil;
-	}
+	[self updateOpenerApplicationsUIMenu];
 }
 
 #pragma mark - Actions
@@ -729,39 +691,22 @@
 
 - (IBAction)openSelectedFiles:(id)sender
 {
-	NSArray *selectedURLs = (self.selectedURLs);
-	if ((selectedURLs.count) == 0) {
-		return;
-	}
+	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
 	
-#if DEBUG
-	NSLog(@"FCV OPEN %@", selectedURLs);
-	NSLog(@"REF %@", [[selectedURLs valueForKey:@"fileReferenceURL"] valueForKey:@"filePathURL"]);
-#endif
-	//selectedURLs = [[selectedURLs valueForKey:@"fileReferenceURL"] valueForKey:@"filePathURL"];
-	
-	NSURL *applicationURL = (self.chosenOpenerApplicationForSelection);
-	
-	[GLAFileOpenerApplicationCombiner openFileURLs:selectedURLs withApplicationURL:applicationURL useSecurityScope:YES];
+	[openerApplicationCombiner openFileURLsUsingDefaultApplications];
+	//[openerApplicationCombiner openFileURLsUsingChosenOpenerApplicationPopUpButton:(self.openerApplicationsPopUpButton)];
 }
 
 - (IBAction)openWithChosenApplication:(NSMenuItem *)menuItem
 {
-	id representedObject = (menuItem.representedObject);
-	if ((!representedObject) || ![representedObject isKindOfClass:[NSURL class]]) {
-		return;
-	}
+	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
 	
-	NSURL *applicationURL = representedObject;
-	
-	NSArray *selectedURLs = (self.selectedURLs);
-	
-	[GLAFileOpenerApplicationCombiner openFileURLs:selectedURLs withApplicationURL:applicationURL useSecurityScope:YES];
+	[openerApplicationCombiner openFileURLsUsingMenuItem:menuItem];
 }
 
 - (IBAction)revealSelectedFilesInFinder:(id)sender
 {
-	NSArray *URLs = [self URLsForRowIndexes:[self rowIndexesForActionFrom:sender]];
+	NSArray *URLs = (self.selectedURLs);
 	
 	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:URLs];
 }
@@ -1175,13 +1120,6 @@
 	if (self.doNotUpdateViews) {
 		return;
 	}
-}
-
-#pragma mark Opener Application Combiner Notifications
-
-- (void)openerApplicationCombinerDidChangeNotification:(NSNotification *)note
-{
-	[self updateOpenerApplicationsUIMenu];
 }
 
 #pragma mark Plucked Collected Files

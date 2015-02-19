@@ -26,8 +26,7 @@
                 <splitView dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Hs-az-1x2" customClass="GLASplitView">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
                     <subviews>
-                        <customView id="5CS-nQ-aL8">
-                            <rect key="frame" x="0.0" y="0.0" width="180" height="272"/>
+                        <customView misplaced="YES" placeholderIntrinsicWidth="180" placeholderIntrinsicHeight="272" id="5CS-nQ-aL8">
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <subviews>
                                 <scrollView verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="G7e-U8-1HC">
@@ -59,8 +58,8 @@
                                                                 <rect key="frame" x="1" y="1" width="177" height="27"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
-                                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="KcS-Xl-css">
-                                                                        <rect key="frame" x="18" y="4" width="161" height="23"/>
+                                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KcS-Xl-css">
+                                                                        <rect key="frame" x="18" y="4" width="141" height="23"/>
                                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="sQ8-J7-d7J">
                                                                             <font key="font" size="13" name="AvenirNext-Medium"/>
                                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -78,11 +77,11 @@
                                                                 </connections>
                                                             </tableCellView>
                                                             <tableCellView identifier="collectedFile" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="32" id="Ewx-kx-foZ">
-                                                                <rect key="frame" x="1" y="1" width="177" height="27"/>
+                                                                <rect key="frame" x="1" y="30" width="177" height="27"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
-                                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="a6i-8q-QKU">
-                                                                        <rect key="frame" x="34" y="4" width="145" height="23"/>
+                                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a6i-8q-QKU">
+                                                                        <rect key="frame" x="34" y="4" width="125" height="23"/>
                                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="ok1-l5-fkZ">
                                                                             <font key="font" size="13" name="AvenirNext-Medium"/>
                                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -111,11 +110,11 @@
                                                                 </connections>
                                                             </tableCellView>
                                                             <customView identifier="NSTableViewRowViewKey" id="dvA-we-tIg" customClass="GLATableContentRowView">
-                                                                <rect key="frame" x="1" y="30" width="177" height="39"/>
+                                                                <rect key="frame" x="1" y="59" width="177" height="39"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             </customView>
                                                             <customView identifier="blik.groupRowViewKey" id="yM1-mD-waY" customClass="GLATableContentRowView">
-                                                                <rect key="frame" x="1" y="30" width="177" height="39"/>
+                                                                <rect key="frame" x="1" y="100" width="177" height="39"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             </customView>
                                                         </prototypeCellViews>
@@ -171,8 +170,8 @@
                                 <constraint firstItem="hPc-Yl-sIY" firstAttribute="top" secondItem="G7e-U8-1HC" secondAttribute="bottom" id="onK-Ti-AqS"/>
                             </constraints>
                         </customView>
-                        <customView id="Tix-1S-YGD">
-                            <rect key="frame" x="181" y="0.0" width="299" height="272"/>
+                        <customView misplaced="YES" id="Tix-1S-YGD">
+                            <rect key="frame" x="1" y="0.0" width="479" height="272"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <subviews>
                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="qn1-n0-gYl">

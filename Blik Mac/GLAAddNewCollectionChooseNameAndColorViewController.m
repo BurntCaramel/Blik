@@ -6,18 +6,18 @@
 //  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
-#import "GLAAddNewCollectionViewController.h"
+#import "GLAAddNewCollectionChooseNameAndColorViewController.h"
 #import "GLAUIStyle.h"
 #import "GLAProjectManager.h"
 #import "GLACollectionColorPickerPopover.h"
 #import "GLACollectionColorPickerViewController.h"
 
 
-@interface GLAAddNewCollectionViewController ()
+@interface GLAAddNewCollectionChooseNameAndColorViewController ()
 
 @end
 
-@implementation GLAAddNewCollectionViewController
+@implementation GLAAddNewCollectionChooseNameAndColorViewController
 
 - (void)prepareView
 {
@@ -61,19 +61,55 @@
 	(self.confirmCreateButton.enabled) = [projectManager nameIsValid:stringValue];
 }
 
+- (GLAAddNewCollectionSection *)currentAddNewCollectionSection
+{
+	GLAMainSectionNavigator *sectionNavigator = (self.sectionNavigator);
+	GLAAddNewCollectionSection *addNewCollectionSection = (GLAAddNewCollectionSection *)(sectionNavigator.currentSection);
+	NSAssert(addNewCollectionSection != nil, @"Current section must be present");
+	NSAssert([addNewCollectionSection isKindOfClass:[GLAAddNewCollectionSection class]], @"Current section must be an 'add new collection' section");
+	
+	return addNewCollectionSection;
+}
+
 - (NSString *)defaultName
 {
-	GLAPendingAddedCollectedFilesInfo *pendingAddedCollectedFilesInfo = (self.pendingAddedCollectedFilesInfo);
-	if (pendingAddedCollectedFilesInfo) {
-		NSArray *fileURLs = (pendingAddedCollectedFilesInfo.fileURLs);
-		if ((fileURLs.count) == 1) {
-			GLACollectedFile *collectedFile = [[GLACollectedFile alloc] initWithFileURL:fileURLs[0]];
-			// Get the name synchronously, just to get it done immediately.
-			GLAAccessedFileInfo *accessedFile = [collectedFile accessFile];
-			NSURL *fileURL = (accessedFile.filePathURL);
-			NSString *localizedName = nil;
-			BOOL success = [fileURL getResourceValue:&localizedName forKey:NSURLLocalizedNameKey error:nil];
-			if (success) {
+	GLAAddNewCollectionSection *currentAddNewCollectionSection = (self.currentAddNewCollectionSection);
+	
+	NSURL *fileURL = nil;
+	NSString *suffixString = nil;
+	
+	if ([currentAddNewCollectionSection isKindOfClass:[GLAAddNewCollectedFilesCollectionSection class]]) {
+		GLAAddNewCollectedFilesCollectionSection *collectedFilesSection = (GLAAddNewCollectedFilesCollectionSection *)currentAddNewCollectionSection;
+		GLAPendingAddedCollectedFilesInfo *pendingAddedCollectedFilesInfo = (collectedFilesSection.pendingAddedCollectedFilesInfo);
+		if (pendingAddedCollectedFilesInfo) {
+			NSArray *fileURLs = (pendingAddedCollectedFilesInfo.fileURLs);
+			if ((fileURLs.count) == 1) {
+				GLACollectedFile *collectedFile = [[GLACollectedFile alloc] initWithFileURL:fileURLs[0]];
+				// Get the name synchronously, just to get it done immediately.
+				GLAAccessedFileInfo *accessedFile = [collectedFile accessFile];
+				
+				fileURL = (accessedFile.filePathURL);
+			}
+		}
+	}
+	else if ([currentAddNewCollectionSection isKindOfClass:[GLAAddNewFilteredFolderCollectionSection class]]) {
+		GLAAddNewFilteredFolderCollectionSection *filteredFolderSection = (GLAAddNewFilteredFolderCollectionSection *)currentAddNewCollectionSection;
+		
+		NSURL *folderURL = (filteredFolderSection.chosenFolderURL);
+		NSString *tagName = (filteredFolderSection.chosenTagName);
+		
+		fileURL = folderURL;
+		suffixString = [@" " stringByAppendingString:tagName];
+	}
+	
+	if (fileURL) {
+		NSString *localizedName = nil;
+		BOOL success = [fileURL getResourceValue:&localizedName forKey:NSURLLocalizedNameKey error:nil];
+		if (success) {
+			if (suffixString) {
+				return [localizedName stringByAppendingString:suffixString];
+			}
+			else {
 				return localizedName;
 			}
 		}
@@ -154,22 +190,42 @@
 		return;
 	}
 	
+	
+	
 	GLACollectionColor *color = (self.chosenCollectionColor);
 	GLACollection *collection = nil;
 	
-	GLAPendingAddedCollectedFilesInfo *pendingAddedCollectedFilesInfo = (self.pendingAddedCollectedFilesInfo);
-	if (pendingAddedCollectedFilesInfo) {
-		collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilesList color:color inProject:project insertingInCollectionsListAtIndex:(pendingAddedCollectedFilesInfo.indexOfNewCollectionInList)];
+	GLAAddNewCollectionSection *addNewCollectionSection = (self.currentAddNewCollectionSection);
+	
+	if ([addNewCollectionSection isKindOfClass:[GLAAddNewCollectedFilesCollectionSection class]]) {
+		GLAAddNewCollectedFilesCollectionSection *collectedFilesSection = (GLAAddNewCollectedFilesCollectionSection *)addNewCollectionSection;
 		
-		NSArray *fileURLs = (pendingAddedCollectedFilesInfo.fileURLs);
-		NSArray *collectedFiles = [GLACollectedFile collectedFilesWithFileURLs:fileURLs];
+	GLAPendingAddedCollectedFilesInfo *pendingAddedCollectedFilesInfo = (collectedFilesSection.pendingAddedCollectedFilesInfo);
+		if (pendingAddedCollectedFilesInfo) {
+			collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilesList color:color inProject:project insertingInCollectionsListAtIndex:(pendingAddedCollectedFilesInfo.indexOfNewCollectionInList)];
+			
+			NSArray *fileURLs = (pendingAddedCollectedFilesInfo.fileURLs);
+			NSArray *collectedFiles = [GLACollectedFile collectedFilesWithFileURLs:fileURLs];
+			
+			[projectManager editFilesListOfCollection:collection insertingCollectedFiles:collectedFiles atOptionalIndex:NSNotFound];
+		}
+		else {
+			collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilesList color:color inProject:project insertingInCollectionsListAtIndex:NSNotFound];
+		}
+	}
+	else if ([addNewCollectionSection isKindOfClass:[GLAAddNewFilteredFolderCollectionSection class]]) {
+		GLAAddNewFilteredFolderCollectionSection *filteredFolderSection = (GLAAddNewFilteredFolderCollectionSection *)addNewCollectionSection;
 		
-		[projectManager editFilesListOfCollection:collection insertingCollectedFiles:collectedFiles atOptionalIndex:NSNotFound];
+		collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilteredFolder color:color inProject:project insertingInCollectionsListAtIndex:NSNotFound];
+		
+		NSURL *folderURL = (filteredFolderSection.chosenFolderURL);
+		NSString *tagName = (filteredFolderSection.chosenTagName);
+		GLAFolderQuery *folderQuery = [[GLAFolderQuery alloc] initCreatingByEditing:^(id<GLAFolderQueryEditing> editor) {
+			(editor.collectedFileForFolderURL) = [[GLACollectedFile alloc] initWithFileURL:folderURL];
+			(editor.tagNames) = @[tagName];
+		}];
+		[projectManager setFolderQuery:folderQuery forFilteredFolderCollectionWithUUID:(collection.UUID)];
 	}
-	else {
-		collection = [projectManager createNewCollectionWithName:name type:GLACollectionTypeFilesList color:color inProject:project insertingInCollectionsListAtIndex:NSNotFound];
-	}
-	(self.pendingAddedCollectedFilesInfo) = nil;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAAddNewCollectionViewControllerDidConfirmCreatingNotification object:self userInfo:@{@"collection": collection, @"project": project}];
 }

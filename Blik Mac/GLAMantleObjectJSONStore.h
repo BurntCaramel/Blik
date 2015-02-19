@@ -13,15 +13,21 @@
 
 @interface GLAMantleObjectJSONStore : NSObject
 
-- (instancetype)initLoadingFromFileURL:(NSURL *)fileURL modelClass:(Class)modelClass operationQueue:(NSOperationQueue *)operationQueue loadCompletionHandler:(dispatch_block_t)loadCompletionHandler;
+- (instancetype)initWithFileURL:(NSURL *)fileURL modelClass:(Class)modelClass freshlyMade:(BOOL)freshlyMade operationQueue:(NSOperationQueue *)operationQueue loadCompletionHandler:(dispatch_block_t)loadCompletionHandler NS_DESIGNATED_INITIALIZER;
+
+- (instancetype)initWithFileURL:(NSURL *)fileURL modelClass:(Class)modelClass modelObject:(MTLModel<MTLJSONSerializing> *)modelObject operationQueue:(NSOperationQueue *)operationQueue loadCompletionHandler:(dispatch_block_t)loadCompletionHandler;
 
 @property(readonly, copy, nonatomic) NSURL *fileURL;
 @property(readonly, nonatomic) Class modelClass;
-@property(readonly, nonatomic) NSOperationQueue *operationQueue;
+@property(readonly, nonatomic) BOOL freshlyMade;
 
 @property(readonly, nonatomic) GLAStoringLoadState loadState;
 @property(readonly, nonatomic) GLAStoringSaveState saveState;
 
+// Is present once loading has completed.
+// Set to a new object to save it.
 @property(nonatomic) MTLModel<MTLJSONSerializing> *object;
+@property(readonly, nonatomic) NSError *errorLoading;
+@property(readonly, nonatomic) NSError *errorSaving;
 
 @end

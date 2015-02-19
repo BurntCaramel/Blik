@@ -489,12 +489,12 @@
 	[self editProject:project];
 }
 
-- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewControllerDidBecomeActive:(GLAAddNewCollectionViewController *)addNewCollectionViewController
+- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewControllerDidBecomeActive:(GLAAddNewCollectionChooseNameAndColorViewController *)addNewCollectionViewController
 {
 	//(addNewCollectionViewController.pendingAddedCollectedFilesInfo) = (self.);
 }
 
-- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewController:(GLAAddNewCollectionViewController *)addNewCollectionViewController didConfirmCreatingCollection:(GLACollection *)collection inProject:(GLAProject *)project
+- (void)mainContentViewController:(GLAMainContentViewController *)contentViewController addNewCollectionViewController:(GLAAddNewCollectionChooseNameAndColorViewController *)addNewCollectionViewController didConfirmCreatingCollection:(GLACollection *)collection inProject:(GLAProject *)project
 {
 	[(self.mainSectionNavigator) goToCollection:collection];
 }

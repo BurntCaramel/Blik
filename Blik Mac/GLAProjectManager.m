@@ -667,6 +667,10 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	
 	return [store mantleJSONStoreForFilteredFolderCollectionWithUUID:collectionUUID loadCompletionHandler:^{
 		__strong GLAProjectManagerStore *store = weakStore;
+		if (!store) {
+			return;
+		}
+		
 		[store runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
 			[projectManager folderQueryForCollectionWithUUIDDidChange:collectionUUID];
 		}];
@@ -685,6 +689,8 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	GLAMantleObjectJSONStore *JSONStore = [self mantleJSONStoreForFilteredFolderCollectionWithUUID:collectionUUID];
 	
 	(JSONStore.object) = folderQuery;
+	
+	[self folderQueryForCollectionWithUUIDDidChange:collectionUUID];
 }
 
 #pragma mark Highlighted Collected File
@@ -1897,7 +1903,9 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 		NSURL *fileURL = [self folderQueryJSONFileURLForCollectionID:collectionUUID];
 		NSOperationQueue *operationQueue = (self.backgroundOperationQueue);
 		
-		return [[GLAMantleObjectJSONStore alloc] initLoadingFromFileURL:fileURL modelClass:[GLAFolderQuery class] operationQueue:operationQueue loadCompletionHandler:loadCompletionHandler];
+		BOOL isFreshlyMade = [self collectionWithUUIDIsFreshlyCreated:collectionUUID];
+		
+		return [[GLAMantleObjectJSONStore alloc] initWithFileURL:fileURL modelClass:[GLAFolderQuery class] freshlyMade:isFreshlyMade operationQueue:operationQueue loadCompletionHandler:loadCompletionHandler];
 	}];
 	
 	return JSONStore;

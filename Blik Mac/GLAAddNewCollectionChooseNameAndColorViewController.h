@@ -7,6 +7,7 @@
 //
 
 #import "GLAViewController.h"
+#import "GLAMainSectionNavigator.h"
 #import "GLAProject.h"
 #import "GLACollection.h"
 #import "GLACollectionColor.h"
@@ -16,11 +17,11 @@
 #import "GLAColorChoiceView.h"
 
 
-@interface GLAAddNewCollectionViewController : GLAViewController
+@interface GLAAddNewCollectionChooseNameAndColorViewController : GLAViewController
+
+@property(nonatomic) GLAMainSectionNavigator *sectionNavigator;
 
 @property(strong, nonatomic) GLAProject *project;
-
-@property(copy, nonatomic) GLAPendingAddedCollectedFilesInfo *pendingAddedCollectedFilesInfo;
 
 @property(strong, nonatomic) IBOutlet NSTextField *nameLabel;
 @property(strong, nonatomic) IBOutlet GLATextField *nameTextField;

@@ -28,8 +28,8 @@
 		B219DAB2196AD462007900DF /* GLAProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAB0196AD462007900DF /* GLAProjectViewController.m */; };
 		B219DAB3196AD462007900DF /* GLAProjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B219DAB1196AD462007900DF /* GLAProjectViewController.xib */; };
 		B219DAB6196AD698007900DF /* GLAUIStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAB5196AD698007900DF /* GLAUIStyle.m */; };
-		B2214E1819D6848200DE2C71 /* GLAAddNewCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2214E1619D6848200DE2C71 /* GLAAddNewCollectionViewController.m */; };
-		B2214E1919D6848200DE2C71 /* GLAAddNewCollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2214E1719D6848200DE2C71 /* GLAAddNewCollectionViewController.xib */; };
+		B2214E1819D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2214E1619D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.m */; };
+		B2214E1919D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2214E1719D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.xib */; };
 		B226E9591988D00C00D607CC /* GLAFileCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B226E9571988D00C00D607CC /* GLAFileCollectionViewController.m */; };
 		B226E95A1988D00C00D607CC /* GLAFileCollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B226E9581988D00C00D607CC /* GLAFileCollectionViewController.xib */; };
 		B22E80C4198CAE38005C4108 /* GLACollectedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B22E80C3198CAE38005C4108 /* GLACollectedFile.m */; };
@@ -134,6 +134,8 @@
 		B2ED54381A94629400F6B4FA /* GLAAddNewCollectionChooseTypeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2ED54361A94629400F6B4FA /* GLAAddNewCollectionChooseTypeViewController.xib */; };
 		B2ED543C1A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ED543A1A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.m */; };
 		B2ED543D1A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2ED543B1A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.xib */; };
+		B2ED54411A955D0C00F6B4FA /* GLAFilteredFolderCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ED543F1A955D0C00F6B4FA /* GLAFilteredFolderCollectionViewController.m */; };
+		B2ED54421A955D0C00F6B4FA /* GLAFilteredFolderCollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2ED54401A955D0C00F6B4FA /* GLAFilteredFolderCollectionViewController.xib */; };
 		B2F0DBB219923887001AB5EE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2F0DBB119923887001AB5EE /* Foundation.framework */; };
 		B2F0DBB819923887001AB5EE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2F0DBB619923887001AB5EE /* InfoPlist.strings */; };
 		B2F0DBBB19923887001AB5EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B2F0DBBA19923887001AB5EE /* main.m */; };
@@ -199,9 +201,9 @@
 		B219DAB1196AD462007900DF /* GLAProjectViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAProjectViewController.xib; sourceTree = "<group>"; };
 		B219DAB4196AD698007900DF /* GLAUIStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAUIStyle.h; sourceTree = "<group>"; };
 		B219DAB5196AD698007900DF /* GLAUIStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAUIStyle.m; sourceTree = "<group>"; };
-		B2214E1519D6848200DE2C71 /* GLAAddNewCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAAddNewCollectionViewController.h; sourceTree = "<group>"; };
-		B2214E1619D6848200DE2C71 /* GLAAddNewCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = GLAAddNewCollectionViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		B2214E1719D6848200DE2C71 /* GLAAddNewCollectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAAddNewCollectionViewController.xib; sourceTree = "<group>"; };
+		B2214E1519D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAAddNewCollectionChooseNameAndColorViewController.h; sourceTree = "<group>"; };
+		B2214E1619D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = GLAAddNewCollectionChooseNameAndColorViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		B2214E1719D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAAddNewCollectionChooseNameAndColorViewController.xib; sourceTree = "<group>"; };
 		B226E9561988D00C00D607CC /* GLAFileCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAFileCollectionViewController.h; sourceTree = "<group>"; };
 		B226E9571988D00C00D607CC /* GLAFileCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = GLAFileCollectionViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		B226E9581988D00C00D607CC /* GLAFileCollectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAFileCollectionViewController.xib; sourceTree = "<group>"; };
@@ -396,6 +398,9 @@
 		B2ED54391A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAAddNewCollectionFilteredFolderChooseFolderViewController.h; sourceTree = "<group>"; };
 		B2ED543A1A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAAddNewCollectionFilteredFolderChooseFolderViewController.m; sourceTree = "<group>"; };
 		B2ED543B1A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAAddNewCollectionFilteredFolderChooseFolderViewController.xib; sourceTree = "<group>"; };
+		B2ED543E1A955D0C00F6B4FA /* GLAFilteredFolderCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAFilteredFolderCollectionViewController.h; sourceTree = "<group>"; };
+		B2ED543F1A955D0C00F6B4FA /* GLAFilteredFolderCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAFilteredFolderCollectionViewController.m; sourceTree = "<group>"; };
+		B2ED54401A955D0C00F6B4FA /* GLAFilteredFolderCollectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAFilteredFolderCollectionViewController.xib; sourceTree = "<group>"; };
 		B2F0DBB019923887001AB5EE /* com.burntcaramel.Blik.Mac.QuickLook-Preview.xpc */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "com.burntcaramel.Blik.Mac.QuickLook-Preview.xpc"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2F0DBB119923887001AB5EE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B2F0DBB519923887001AB5EE /* QuickLook Preview-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "QuickLook Preview-Info.plist"; sourceTree = "<group>"; };
@@ -508,8 +513,8 @@
 				B2C7F29919739925005780B4 /* Project Related */,
 				B2711F3E1A69D83E001CB4AF /* Project Primary Folders */,
 				B2C7F29A1973993A005780B4 /* Projects List */,
-				B226E9521988CFCA00D607CC /* Collections */,
-				B2CCF8DE1A344B5C00EC7703 /* Collected Files List */,
+				B226E9521988CFCA00D607CC /* Collection Creating */,
+				B2CCF8DE1A344B5C00EC7703 /* Collection Inside */,
 				B2E39B381A8497F4000A9A12 /* Preferences */,
 				B260F85619ADC92D002E3753 /* Status Item */,
 			);
@@ -527,21 +532,22 @@
 			name = "Style (Colours)";
 			sourceTree = "<group>";
 		};
-		B226E9521988CFCA00D607CC /* Collections */ = {
+		B226E9521988CFCA00D607CC /* Collection Creating */ = {
 			isa = PBXGroup;
 			children = (
 				B2ED54341A94629400F6B4FA /* GLAAddNewCollectionChooseTypeViewController.h */,
 				B2ED54351A94629400F6B4FA /* GLAAddNewCollectionChooseTypeViewController.m */,
 				B2ED54361A94629400F6B4FA /* GLAAddNewCollectionChooseTypeViewController.xib */,
-				B2214E1519D6848200DE2C71 /* GLAAddNewCollectionViewController.h */,
-				B2214E1619D6848200DE2C71 /* GLAAddNewCollectionViewController.m */,
-				B2214E1719D6848200DE2C71 /* GLAAddNewCollectionViewController.xib */,
+				B2214E1519D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.h */,
+				B2214E1619D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.m */,
+				B2214E1719D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.xib */,
 				B2ED54391A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.h */,
 				B2ED543A1A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.m */,
 				B2ED543B1A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.xib */,
 				B2CCF8EB1A37133A00EC7703 /* Edit Collection Details */,
+				B2CCF8EC1A37138300EC7703 /* Add Collected Files Choice */,
 			);
-			name = Collections;
+			name = "Collection Creating";
 			sourceTree = "<group>";
 		};
 		B226E95E1988D36300D607CC /* Collected File */ = {
@@ -716,9 +722,9 @@
 				B219DAA4196AB665007900DF /* View Controller */,
 				B2C7F284196FFFC1005780B4 /* View */,
 				B24B3604196D1F4D0094FA1F /* Model */,
+				B289275E1A7255EA007238D6 /* Plucked Items */,
 				E240A3751A0EF3090043AE93 /* File Helpers */,
 				B2C5FD2E1988AB0A00AEFBAF /* Model Controllers */,
-				B289275E1A7255EA007238D6 /* Plucked Items */,
 				B2ADDBD81963DA2E0014EF84 /* Supporting Files */,
 			);
 			path = "Blik Mac";
@@ -848,17 +854,19 @@
 			name = "Projects List";
 			sourceTree = "<group>";
 		};
-		B2CCF8DE1A344B5C00EC7703 /* Collected Files List */ = {
+		B2CCF8DE1A344B5C00EC7703 /* Collection Inside */ = {
 			isa = PBXGroup;
 			children = (
-				B226E9561988D00C00D607CC /* GLAFileCollectionViewController.h */,
-				B226E9571988D00C00D607CC /* GLAFileCollectionViewController.m */,
 				B2ED54311A93EFE000F6B4FA /* GLAQuickLookPreviewHelper.h */,
 				B2ED54321A93EFE000F6B4FA /* GLAQuickLookPreviewHelper.m */,
+				B226E9561988D00C00D607CC /* GLAFileCollectionViewController.h */,
+				B226E9571988D00C00D607CC /* GLAFileCollectionViewController.m */,
 				B226E9581988D00C00D607CC /* GLAFileCollectionViewController.xib */,
-				B2CCF8EC1A37138300EC7703 /* Add Collected Files Choice */,
+				B2ED543E1A955D0C00F6B4FA /* GLAFilteredFolderCollectionViewController.h */,
+				B2ED543F1A955D0C00F6B4FA /* GLAFilteredFolderCollectionViewController.m */,
+				B2ED54401A955D0C00F6B4FA /* GLAFilteredFolderCollectionViewController.xib */,
 			);
-			name = "Collected Files List";
+			name = "Collection Inside";
 			sourceTree = "<group>";
 		};
 		B2CCF8EA1A370C8700EC7703 /* Categories */ = {
@@ -1178,10 +1186,11 @@
 				B2ED543D1A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.xib in Resources */,
 				B2C7F28C197023EF005780B4 /* GLAProjectsListViewController.xib in Resources */,
 				B2ADDBEA1963DA2E0014EF84 /* Images.xcassets in Resources */,
+				B2ED54421A955D0C00F6B4FA /* GLAFilteredFolderCollectionViewController.xib in Resources */,
 				B2ADDBE21963DA2E0014EF84 /* Credits.rtf in Resources */,
 				B219DAA3196AB65D007900DF /* GLAMainWindowController.xib in Resources */,
 				B208E3F219F51551000EF97B /* GLAEditCollectionDetailsViewController.xib in Resources */,
-				B2214E1919D6848200DE2C71 /* GLAAddNewCollectionViewController.xib in Resources */,
+				B2214E1919D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.xib in Resources */,
 				B2ADDBE81963DA2E0014EF84 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1324,6 +1333,7 @@
 				B22E80C7198F654E005C4108 /* GLAArrayEditor.m in Sources */,
 				B22E80C4198CAE38005C4108 /* GLACollectedFile.m in Sources */,
 				B255920119C84E4B0039D2AC /* GLAColorChoiceView.m in Sources */,
+				B2ED54411A955D0C00F6B4FA /* GLAFilteredFolderCollectionViewController.m in Sources */,
 				B2BB85151A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m in Sources */,
 				B23515331973BEAB00883FB3 /* GLAButton.m in Sources */,
 				B2C7F28F19704A2C005780B4 /* GLAProjectOverviewTableCellView.m in Sources */,
@@ -1352,7 +1362,7 @@
 				B2C7F2921970D5D3005780B4 /* GLAMainWindow.m in Sources */,
 				B219DAB2196AD462007900DF /* GLAProjectViewController.m in Sources */,
 				B208E3FA19F8E38F000EF97B /* GLAHighlightedItem.m in Sources */,
-				B2214E1819D6848200DE2C71 /* GLAAddNewCollectionViewController.m in Sources */,
+				B2214E1819D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.m in Sources */,
 				B20362C41A077C87007169C2 /* GLAFileOpenerApplicationCombiner.m in Sources */,
 				B2CCF8E21A36D24D00EC7703 /* GLAAddCollectedFilesChoiceViewController.m in Sources */,
 				B219DAAB196AB8D1007900DF /* GLANavigationButton.m in Sources */,

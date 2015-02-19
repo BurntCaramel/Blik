@@ -291,6 +291,13 @@
 	LSOpenFromURLSpec(&launchURLSpec, NULL);
 }
 
+- (void)openFileURLsUsingDefaultApplications
+{
+	NSArray *fileURLs = (self.fileURLs.allObjects);
+	NSLog(@"FILE URLS %@", fileURLs);
+	[[self class] openFileURLs:fileURLs withApplicationURL:nil useSecurityScope:YES];
+}
+
 @end
 
 NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileURLOpenerApplicationCombinerDidChangeNotification";
@@ -482,6 +489,43 @@ NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileUR
 		
 		[menu addItem:menuItem];
 	}
+}
+
+
+- (NSURL *)openerApplicationURLForMenuItem:(NSMenuItem *)menuItem
+{
+	id representedObject = (menuItem.representedObject);
+	if ((!representedObject) || ![representedObject isKindOfClass:[NSURL class]]) {
+		return nil;
+	}
+	
+	return (NSURL *)representedObject;
+}
+
+- (void)openFileURLsUsingMenuItem:(NSMenuItem *)menuItem
+{
+	NSSet *fileURLsSet = (self.fileURLs);
+	if (fileURLsSet.count == 0) {
+		return;
+	}
+	
+	NSURL *applicationURL = [self openerApplicationURLForMenuItem:menuItem];
+	if (!applicationURL) {
+		return;
+	}
+	
+	NSArray *fileURLsArray = (fileURLsSet.allObjects);
+	[[self class] openFileURLs:fileURLsArray withApplicationURL:applicationURL useSecurityScope:YES];
+}
+
+- (void)openFileURLsUsingChosenOpenerApplicationPopUpButton:(NSPopUpButton *)popUpButton
+{
+	NSMenuItem *selectedItem = (popUpButton.selectedItem);
+	if (!selectedItem) {
+		return;
+	}
+	
+	[self openFileURLsUsingMenuItem:selectedItem];
 }
 
 @end
