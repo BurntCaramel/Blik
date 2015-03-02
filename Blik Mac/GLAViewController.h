@@ -51,9 +51,13 @@ typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint
 + (NSString *)layoutConstraintIdentifierWithBaseIdentifier:(NSString *)baseIdentifier forChildView:(NSView *)innerView;
 - (NSLayoutConstraint *)layoutConstraintWithIdentifier:(NSString *)baseIdentifier forChildView:(NSView *)innerView;
 
-- (void)fillViewWithChildView:(NSView *)innerView;
+
 - (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier priority:(NSLayoutPriority)priority;
+
 - (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier;
+
+- (void)fillViewWithChildView:(NSView *)innerView;
+
 
 - (NSArray *)allLayoutConstraintsUsingChildView:(NSView *)innerView;
 

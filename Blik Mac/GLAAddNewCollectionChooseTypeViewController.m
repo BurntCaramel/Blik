@@ -21,6 +21,7 @@
 	[super prepareView];
 	
 	GLAUIStyle *style = [GLAUIStyle activeStyle];
+	[style prepareInstructionalHeadingLabel:(self.headingLabel)];
 	[style prepareSecondaryInstructionalTextLabel:(self.collectedFilesLabel)];
 	[style prepareSecondaryInstructionalTextLabel:(self.filteredFolderLabel)];
 }

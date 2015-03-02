@@ -258,7 +258,7 @@
 	}
 	
 #if DEBUG
-	NSLog(@"reloadSourceFilesFromResults %@", fileURLsFromResults);
+	//NSLog(@"reloadSourceFilesFromResults %@", fileURLsFromResults);
 #endif
 	
 	if (!fileURLsFromResults) {

@@ -13,6 +13,8 @@
 
 @property(nonatomic) QLPreviewPanel *activeQuickLookPreviewPanel;
 
+@property(readwrite, nonatomic) NSURL *activeURL;
+
 @end
 
 @implementation GLAQuickLookPreviewHelper
@@ -136,6 +138,12 @@
 		URL = selectedURLs[0];
 		[self startObservingPreviewFrameChanges];
 	}
+	
+	NSURL *previouslyActiveURL = (self.activeURL);
+	if ([previouslyActiveURL isEqual:URL]) {
+		return;
+	}
+	(self.activeURL) = URL;
 	
 	QLPreviewView *quickLookPreviewView = (self.quickLookPreviewView);
 	CGFloat alphaValue = (URL != nil) ? 1.0 : 0.0;

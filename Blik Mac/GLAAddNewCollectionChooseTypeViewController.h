@@ -12,6 +12,7 @@
 
 @interface GLAAddNewCollectionChooseTypeViewController : GLAViewController
 
+@property(strong, nonatomic) IBOutlet NSTextField *headingLabel;
 @property(strong, nonatomic) IBOutlet NSTextField *collectedFilesLabel;
 @property(strong, nonatomic) IBOutlet NSTextField *filteredFolderLabel;
 

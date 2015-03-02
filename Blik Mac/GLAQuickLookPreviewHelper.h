@@ -32,6 +32,8 @@
 
 @property(nonatomic) IBOutlet NSTableView *tableView;
 
+@property(readonly, nonatomic) NSURL *activeURL;
+
 - (void)updateQuickLookPreviewAnimating:(BOOL)animate;
 
 - (IBAction)quickLookPreviewItems:(id)sender;

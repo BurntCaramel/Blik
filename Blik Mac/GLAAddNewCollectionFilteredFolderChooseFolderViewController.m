@@ -175,9 +175,17 @@
 
 - (IBAction)chosenTagNameDidChange:(id)sender
 {
+	NSString *chosenTagName = nil;
+	
 	NSInteger chosenTagIndex = (self.chooseTagPopUpButton.indexOfSelectedItem);
-	NSArray *tagNames = (self.sortedAvailableTagNames);
-	(self.chosenTagName) = tagNames[chosenTagIndex];
+	if (chosenTagIndex != -1) {
+		NSArray *tagNames = (self.sortedAvailableTagNames);
+		if (tagNames.count > 0) {
+			chosenTagName = tagNames[chosenTagIndex];
+		}
+	}
+	
+	(self.chosenTagName) = chosenTagName;
 	
 	[self updateUIForCanProgress];
 }

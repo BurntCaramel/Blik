@@ -53,6 +53,8 @@
 		return;
 	}
 	
+	[self stopObservingMDQuery];
+	
 	MDQueryStop(MDQuery);
 	CFRelease(MDQuery);
 	(self.MDQuery) = nil;
@@ -70,6 +72,10 @@
 	_sortingMethod = sortingMethod;
 	
 	[self updateSortingMethodOnMDQuery];
+	
+	if (self.MDQuery) {
+		[self createAndExecuteMDQuery];
+	}
 }
 
 - (void)updateSortingMethodOnMDQuery
@@ -111,7 +117,9 @@
 	MDQueryDisableUpdates(MDQuery);
 	Boolean success = MDQuerySetSortOrder(MDQuery, (__bridge CFArrayRef)allSortingAttributes);
 	MDQueryEnableUpdates(MDQuery);
+#if DEBUG
 	NSLog(@"MDQUERY SET SORT ORDER %@ %@", @(success), allSortingAttributes);
+#endif
 }
 
 - (void)createAndExecuteMDQuery
@@ -189,12 +197,13 @@ void GLAFolderQueryResults_MDQueryDidUpdateNotification(CFNotificationCenterRef 
 - (void)stopObservingMDQuery
 {
 	MDQueryRef MDQuery = (self.MDQuery);
-	//CFNotificationCenterRef localNC = CFNotificationCenterGetLocalCenter();
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	
-	if (MDQuery) {
-		[nc removeObserver:self name:nil object:(__bridge id)MDQuery];
+	if (!MDQuery) {
+		return;
 	}
+	
+	CFNotificationCenterRef localNC = CFNotificationCenterGetLocalCenter();
+	
+	CFNotificationCenterRemoveObserver(localNC, (__bridge const void *)(self), nil, MDQuery);
 }
 
 - (void)results_MDQueryHasProgress

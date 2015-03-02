@@ -137,7 +137,7 @@
                                     <constraints>
                                         <constraint firstAttribute="height" constant="24" id="TdK-LN-SDh"/>
                                     </constraints>
-                                    <popUpButtonCell key="cell" type="roundTextured" title="Date Last Opened" bezelStyle="texturedRounded" alignment="left" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" selectedItem="AWA-3N-CyN" id="e8m-Q5-nav" customClass="GLAPopUpButtonCell">
+                                    <popUpButtonCell key="cell" type="roundTextured" title="Date Last Opened" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" selectedItem="AWA-3N-CyN" id="e8m-Q5-nav" customClass="GLAPopUpButtonCell">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" size="13" name="AvenirNext-Medium"/>
                                         <menu key="menu" id="Uc7-HL-MCn">

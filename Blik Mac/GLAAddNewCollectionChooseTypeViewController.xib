@@ -9,17 +9,18 @@
             <connections>
                 <outlet property="collectedFilesLabel" destination="ajc-me-0hI" id="XTN-eU-E1B"/>
                 <outlet property="filteredFolderLabel" destination="sGJ-EF-9G8" id="3Tp-Lp-cHG"/>
+                <outlet property="headingLabel" destination="rbI-LW-2R5" id="plX-dN-tCK"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="Hz6-mo-xeY">
-            <rect key="frame" x="0.0" y="0.0" width="481" height="264"/>
+            <rect key="frame" x="0.0" y="0.0" width="481" height="303"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button identifier="chooseSection" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="aAo-2v-yNG" customClass="GLAButton">
-                    <rect key="frame" x="181" y="149" width="120" height="27"/>
+                    <rect key="frame" x="181" y="158" width="120" height="27"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="27" id="fJr-ix-svg"/>
                     </constraints>
@@ -47,18 +48,18 @@
                     </connections>
                 </button>
                 <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ajc-me-0hI">
-                    <rect key="frame" x="54" y="184" width="374" height="23"/>
+                    <rect key="frame" x="54" y="195" width="374" height="23"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="370" id="2L9-LJ-xCv"/>
                     </constraints>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="A collection of whichever files you want." id="8zj-wn-NIK">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Whichever files you want." id="8zj-wn-NIK">
                         <font key="font" size="13" name="AvenirNext-MediumItalic"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
                 <button identifier="chooseSection" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="ESc-Px-Uyz" customClass="GLAButton">
-                    <rect key="frame" x="181" y="61" width="120" height="27"/>
+                    <rect key="frame" x="181" y="70" width="120" height="27"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="27" id="6yY-l1-SIv"/>
                     </constraints>
@@ -85,14 +86,22 @@
                         <action selector="createNewFilteredFolderCollection:" target="-2" id="MuW-ie-Ppt"/>
                     </connections>
                 </button>
-                <textField misplaced="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sGJ-EF-9G8">
-                    <rect key="frame" x="54" y="79" width="374" height="46"/>
+                <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sGJ-EF-9G8">
+                    <rect key="frame" x="54" y="105" width="374" height="23"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="370" id="afo-Ch-8z1"/>
                     </constraints>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="A collection of files with a particular tag." id="IJ5-sS-X25">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Files with a particular tag." id="IJ5-sS-X25">
                         <font key="font" size="13" name="AvenirNext-MediumItalic"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rbI-LW-2R5">
+                    <rect key="frame" x="157" y="248" width="170" height="25"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="What type of collection?" id="tgX-jY-6XV">
+                        <font key="font" size="15" name="AvenirNext-MediumItalic"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
@@ -100,11 +109,14 @@
             <constraints>
                 <constraint firstItem="sGJ-EF-9G8" firstAttribute="top" secondItem="aAo-2v-yNG" secondAttribute="bottom" constant="30" id="01u-km-aS9"/>
                 <constraint firstItem="ESc-Px-Uyz" firstAttribute="top" secondItem="sGJ-EF-9G8" secondAttribute="bottom" constant="8" id="5Cn-an-WTR"/>
+                <constraint firstAttribute="centerX" secondItem="rbI-LW-2R5" secondAttribute="centerX" constant="-1" id="69O-qY-6dq"/>
                 <constraint firstAttribute="centerX" secondItem="ESc-Px-Uyz" secondAttribute="centerX" id="6KG-MA-pHd"/>
                 <constraint firstAttribute="centerX" secondItem="aAo-2v-yNG" secondAttribute="centerX" id="NkU-to-Fya"/>
-                <constraint firstAttribute="centerY" secondItem="aAo-2v-yNG" secondAttribute="centerY" constant="30" id="OYO-ni-AG0"/>
+                <constraint firstAttribute="centerY" secondItem="aAo-2v-yNG" secondAttribute="centerY" constant="20" id="OYO-ni-AG0"/>
                 <constraint firstAttribute="centerX" secondItem="ajc-me-0hI" secondAttribute="centerX" id="Pjc-jW-bIP"/>
-                <constraint firstItem="aAo-2v-yNG" firstAttribute="top" secondItem="ajc-me-0hI" secondAttribute="bottom" constant="8" id="XKw-pV-ul7"/>
+                <constraint firstItem="aAo-2v-yNG" firstAttribute="top" secondItem="ajc-me-0hI" secondAttribute="bottom" constant="10" id="XKw-pV-ul7"/>
+                <constraint firstItem="ajc-me-0hI" firstAttribute="top" secondItem="rbI-LW-2R5" secondAttribute="bottom" constant="30" id="icZ-IY-upT"/>
+                <constraint firstItem="rbI-LW-2R5" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="20" symbolic="YES" id="mzD-Xg-T05"/>
                 <constraint firstAttribute="centerX" secondItem="sGJ-EF-9G8" secondAttribute="centerX" id="pV8-3F-IlA"/>
             </constraints>
             <point key="canvasLocation" x="323.5" y="236"/>
