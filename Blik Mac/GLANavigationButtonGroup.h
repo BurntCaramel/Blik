@@ -18,15 +18,23 @@
 @property(weak, nonatomic) GLAViewController *viewController;
 @property(nonatomic) GLAButton *templateButton;
 
+- (void)addLeadingView:(NSView *)childView;
+- (void)addCenterView:(NSView *)childView;
+- (void)addTrailingView:(NSView *)trailingView;
+
 - (GLAButton *)makeLeadingButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier;
 - (GLAButton *)makeCenterButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier;
 - (GLAButton *)makeTrailingButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier;
 
 - (GLAButton *)addButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier;
 
-@property(nonatomic) GLAButton *leadingButton;
-@property(nonatomic) GLAButton *centerButton;
-@property(nonatomic) GLAButton *trailingButton;
+@property(readonly, nonatomic) NSView *leadingView;
+@property(readonly, nonatomic) NSView *centerView;
+@property(readonly, nonatomic) NSView *trailingView;
+
+@property(readonly, nonatomic) GLAButton *leadingButton;
+@property(readonly, nonatomic) GLAButton *centerButton;
+@property(readonly, nonatomic) GLAButton *trailingButton;
 
 @property(nonatomic) NSTimeInterval leadingButtonInDuration;
 @property(nonatomic) NSTimeInterval leadingButtonOutDuration;
@@ -34,6 +42,7 @@
 @property(nonatomic) NSTimeInterval centerButtonOutDuration;
 @property(nonatomic) NSTimeInterval trailingButtonInDuration;
 @property(nonatomic) NSTimeInterval trailingButtonOutDuration;
+@property(nonatomic) NSTimeInterval trailingViewOffset;
 
 - (void)animateButtonsIn;
 - (void)animateButtonsOutWithCompletionHandler:(dispatch_block_t)completionHandler;

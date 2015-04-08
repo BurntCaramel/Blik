@@ -104,23 +104,29 @@
 	return URL;
 }
 
-- (instancetype)initWithBookmarkData:(NSData *)bookmarkData
+- (instancetype)initWithFileURL:(NSURL *)fileURL sourceBookmarkData:(NSData *)bookmarkData
 {
+	NSParameterAssert(fileURL != nil || bookmarkData != nil);
+	
 	self = [super init];
 	if (self) {
-		NSError *error = nil;
-		NSData *recreatedBookmarkData = nil;
-		NSURL *fileURL = [[self class] resolveFileURLFromBookmarkData:bookmarkData error:&error recreatedBookmarkDataIfStale:&recreatedBookmarkData];
-		
-		if (!fileURL) {
-			_errorResolving = error;
-		}
-		
-		if (recreatedBookmarkData) {
-			_sourceBookmarkData = [recreatedBookmarkData copy];
-		}
-		else {
-			_sourceBookmarkData = [bookmarkData copy];
+		if (bookmarkData) {
+			NSData *recreatedBookmarkData = nil;
+			if (!fileURL) {
+				NSError *error = nil;
+				fileURL = [[self class] resolveFileURLFromBookmarkData:bookmarkData error:&error recreatedBookmarkDataIfStale:&recreatedBookmarkData];
+				
+				if (!fileURL) {
+					_errorResolving = error;
+				}
+			}
+			
+			if (recreatedBookmarkData) {
+				_sourceBookmarkData = [recreatedBookmarkData copy];
+			}
+			else {
+				_sourceBookmarkData = [bookmarkData copy];
+			}
 		}
 		
 		_filePathURL = fileURL;
@@ -130,15 +136,24 @@
 	return self;
 }
 
+- (instancetype)initWithBookmarkData:(NSData *)bookmarkData
+{
+	return [self initWithFileURL:nil sourceBookmarkData:bookmarkData];
+}
+
 - (instancetype)initWithFileURL:(NSURL *)fileURL
 {
+#if 1
+	return [self initWithFileURL:fileURL sourceBookmarkData:nil];
+#else
 	NSError *error = nil;
 	NSData *bookmarkData = [[self class] createBookmarkDataForFileURL:fileURL error:&error];
 	if (!bookmarkData) {
 		_errorResolving = error;
 	}
 	
-	return [self initWithBookmarkData:bookmarkData];
+	return [self initWithFileURL:fileURL sourceBookmarkData:bookmarkData];
+#endif
 }
 
 - (void)dealloc
@@ -149,7 +164,9 @@
 - (void)startAccessingSecurityScope
 {
 	NSURL *filePathURL = (self.filePathURL);
-	(self.accessSecurityScopeWasSuccessful) = [filePathURL startAccessingSecurityScopedResource];
+	if (filePathURL) {
+		(self.accessSecurityScopeWasSuccessful) = [filePathURL startAccessingSecurityScopedResource];
+	}
 }
 
 - (void)stopAccessingSecurityScopeIfNeeded
@@ -164,9 +181,12 @@
 
 - (void)resolveFilePathURLAgain
 {
+	NSData *sourceBookmarkData = (self.sourceBookmarkData);
+	NSAssert(sourceBookmarkData != nil, @"Must have source bookmark data to be able to resolve");
+	
 	NSError *error = nil;
 	NSData *recreatedBookmarkData = nil;
-	NSURL *filePathURL = [[self class] resolveFileURLFromBookmarkData:(self.sourceBookmarkData) error:&error recreatedBookmarkDataIfStale:&recreatedBookmarkData];
+	NSURL *filePathURL = [[self class] resolveFileURLFromBookmarkData:sourceBookmarkData error:&error recreatedBookmarkDataIfStale:&recreatedBookmarkData];
 	
 	if (!filePathURL) {
 		_errorResolving = error;

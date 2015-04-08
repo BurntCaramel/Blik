@@ -14,7 +14,7 @@
 
 @implementation NSButton (GLAButtonStyling)
 
-+ (NSColor *)backgroundColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button highlighted:(BOOL)highlighted
++ (NSColor *)backgroundColorForDrawingGLAStyledButton:(NSActionCell<GLAButtonStyling> *)button selected:(BOOL)selected highlighted:(BOOL)highlighted
 {
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	
@@ -24,7 +24,10 @@
 	
 	NSColor *backgroundColor = (button.backgroundColor);
 	if (!backgroundColor) {
-		if (button.hasPrimaryStyle) {
+		if (selected) {
+			backgroundColor = (uiStyle.secondaryButtonTextColor);
+		}
+		else if (button.hasPrimaryStyle) {
 			backgroundColor = (uiStyle.primaryButtonBackgroundColor);
 		}
 		else if (button.hasSecondaryStyle) {
@@ -53,7 +56,7 @@
 	return nil;
 }
 
-+ (NSColor *)textColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button
++ (NSColor *)textColorForDrawingGLAStyledButton:(NSActionCell<GLAButtonStyling> *)button
 {
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	
@@ -84,22 +87,22 @@
 	}
 }
 
-+ (NSRect)insetBoundsForGLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell withBounds:(NSRect)bounds inView:(NSView *)controlView
++ (NSRect)insetBoundsForGLAStyledCell:(NSActionCell<GLAButtonStyling> *)buttonCell withBounds:(NSRect)bounds inView:(NSView *)controlView
 {
 	CGFloat backgroundInsetXAmount = (buttonCell.backgroundInsetXAmount);
 	CGFloat backgroundInsetYAmount = (buttonCell.backgroundInsetYAmount);
 	return CGRectInset(bounds, backgroundInsetXAmount, backgroundInsetYAmount);
 }
 
-+ (void)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView
++ (void)GLAStyledCell:(NSActionCell<GLAButtonStyling> *)buttonCell drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView
 {
 	[self GLAStyledCell:buttonCell drawBezelWithFrame:frame inView:controlView highlighted:NO];
 }
 
-+ (void)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView highlighted:(BOOL)highlighted
++ (void)GLAStyledCell:(NSActionCell<GLAButtonStyling> *)buttonCell drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView highlighted:(BOOL)highlighted
 {
-	//NSLog(@"HIGHGHGH %@", @(buttonCell.isHighlighted));
-	NSColor *backgroundColor = [self backgroundColorForDrawingGLAStyledButton:buttonCell highlighted:highlighted];
+	NSEdgeInsets alignmentRectInsets = controlView.alignmentRectInsets;
+	NSColor *backgroundColor = [self backgroundColorForDrawingGLAStyledButton:buttonCell selected:NO highlighted:highlighted];
 	
 	if (backgroundColor) {
 		CGFloat backgroundInsetXAmount = (buttonCell.backgroundInsetXAmount);
@@ -112,7 +115,7 @@
 	}
 }
 
-+ (NSRect)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell adjustTitleRect:(NSRect)titleRect
++ (NSRect)GLAStyledCell:(NSActionCell<GLAButtonStyling> *)buttonCell adjustTitleRect:(NSRect)titleRect
 {
 #if 0
 	NSRect remainder;
@@ -126,7 +129,7 @@
 	return titleRect;
 }
 
-+ (NSAttributedString *)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell adjustAttributedTitle:(NSAttributedString *)title
++ (NSAttributedString *)GLAStyledCell:(NSActionCell<GLAButtonStyling> *)buttonCell adjustAttributedTitle:(NSAttributedString *)title
 {
 	NSMutableAttributedString *coloredTitle = [NSMutableAttributedString new];
 	[coloredTitle appendAttributedString:title];
@@ -141,7 +144,7 @@
 	return coloredTitle;
 }
 
-+ (NSRect)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawTitle:(NSAttributedString *)title withFrame:(NSRect)frame inView:(NSView *)controlView
++ (NSRect)GLAStyledCell:(NSActionCell<GLAButtonStyling> *)buttonCell drawTitle:(NSAttributedString *)title withFrame:(NSRect)frame inView:(NSView *)controlView
 {
 	NSMutableAttributedString *coloredTitle = [NSMutableAttributedString new];
 	[coloredTitle appendAttributedString:title];
@@ -644,20 +647,7 @@
 
 - (void)drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView
 {
-	//BOOL isHighlighted = [self cellAttribute:NSCellHighlighted];
-	//NSLog(@"b STATE %@ %@ %@", @(self.state), @(isHighlighted), @(self.mouseDownFlags));
-#if 1
 	[NSButton GLAStyledCell:self drawBezelWithFrame:frame inView:controlView];
-#else
-	NSColor *backgroundColor = (self.backgroundColorForDrawing);
-	if (backgroundColor) {
-		[backgroundColor setFill];
-		
-		CGFloat backgroundInsetAmount = (self.backgroundInsetAmount);
-		CGRect backgroundRect = CGRectInset(frame, backgroundInsetAmount, backgroundInsetAmount);
-		[[NSBezierPath bezierPathWithRoundedRect:backgroundRect xRadius:4.0 yRadius:4.0] fill];
-	}
-#endif
 }
 
 - (void)highlight:(BOOL)flag withFrame:(NSRect)cellFrame inView:(NSView *)controlView

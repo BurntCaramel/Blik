@@ -7,10 +7,14 @@
 //
 
 @import Cocoa;
+// VIEW
 #import "GLAViewController.h"
 #import "GLANavigationBar.h"
 #import "GLAButton.h"
 #import "GLANavigationButton.h"
+#import "GLASegmentedControl.h"
+#import "GLANavigationButtonGroup.h"
+// MODEL
 #import "GLAProject.h"
 #import "GLACollection.h"
 #import "GLAMainSection.h"
@@ -62,7 +66,8 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 @property(nonatomic) IBOutlet GLAButton *collectionTitleButton;
 @property(nonatomic) IBOutlet GLAButton *collectionBackButton;
-@property(nonatomic) GLAMainNavigationButtonGroup *collectionButtonGroup;
+@property(nonatomic) IBOutlet GLASegmentedControl *collectionViewModeSegmentedControl;
+@property(nonatomic) GLANavigationButtonGroup *collectionButtonGroup;
 
 @property(nonatomic) GLAMainNavigationButtonGroup *addNewCollectionButtonGroup;
 

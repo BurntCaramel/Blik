@@ -11,16 +11,20 @@
 #import "GLACollectionColor.h"
 
 
-@interface GLACollection () <GLACollectionEditing>
+@interface GLACollection ()
 
 @property(readwrite, copy, nonatomic) NSUUID *projectUUID;
 
 @property(readwrite, copy, nonatomic) NSString *name;
 
-@property(readwrite, nonatomic) NSString *type;
+@property(readwrite, copy, nonatomic) NSString *viewMode;
 
 @property(readwrite, nonatomic) GLACollectionColor *color;
 @property(readwrite, nonatomic) NSString *colorIdentifier;
+
+@end
+
+@interface GLACollection (GLACollectionEditing) <GLACollectionEditing>
 
 @end
 
@@ -44,6 +48,20 @@
 	return [NSValueTransformer valueTransformerForName:GLAUUIDValueTransformerName];
 }
 
++ (NSValueTransformer *)viewModeJSONTransformer
+{
+	NSSet *allowedViewModes = [NSSet setWithObjects:GLACollectionViewModeList, GLACollectionViewModeExpanded, nil];
+	
+	return [MTLValueTransformer reversibleTransformerWithBlock:^ NSString *(NSString *inputViewMode) {
+		if (inputViewMode && [allowedViewModes containsObject:inputViewMode]) {
+			return inputViewMode;
+		}
+		else {
+			return GLACollectionViewModeList;
+		}
+	}];
+}
+
 - (NSString *)colorIdentifier
 {
 	return (self.color.identifier);
@@ -58,7 +76,7 @@
 {
 	self = [super init];
 	if (self) {
-		(self.type) = collectionType;
+		_type = collectionType;
 		editingBlock(self);
 	}
 	return self;
@@ -95,3 +113,6 @@
 
 NSString *GLACollectionTypeFilesList = @"filesList";
 NSString *GLACollectionTypeFilteredFolder = @"filteredFolder";
+
+NSString *GLACollectionViewModeList = @"list";
+NSString *GLACollectionViewModeExpanded = @"expanded";

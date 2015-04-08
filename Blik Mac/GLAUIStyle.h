@@ -21,6 +21,7 @@
 
 @property(nonatomic) NSColor *barBackgroundColor;
 @property(nonatomic) NSColor *contentBackgroundColor;
+@property(nonatomic) NSColor *overlaidBarBackgroundColor;
 
 @property(nonatomic) NSColor *activeBarBackgroundColor;
 @property(nonatomic) NSColor *activeBarTextColor;
@@ -118,6 +119,7 @@
 
 - (void)prepareOutlinedTextField:(NSTextField *)textField;
 - (void)prepareContentTableView:(NSTableView *)tableView;
+- (void)prepareContentStackView:(NSStackView *)stackView;
 
 - (void)prepareCheckButton:(NSButton *)checkButton;
 

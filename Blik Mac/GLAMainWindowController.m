@@ -44,6 +44,9 @@
 	
 	NSWindow *window = (self.window);
 	(window.movableByWindowBackground) = YES;
+	
+	//(window.level) = CGWindowLevelForKey(kCGDesktopIconWindowLevelKey) - 1;
+	
 	//(window.excludedFromWindowsMenu) = NO;
 	[NSApp addWindowsItem:window title:NSLocalizedString(@"Main Window", @"Title for main window as it appears in the Windows menu") filename:NO];
 	

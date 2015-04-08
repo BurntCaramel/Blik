@@ -164,6 +164,11 @@
 			[self hideButtonForEditingProjectPrimaryFolders];
 		}
 		else if (previousSection.isEditCollection) {
+			if (newSection.isEditCollection) {
+				[self updateUIForCurrentCollection];
+				return;
+			}
+			
 			[self hideButtonsForCurrentCollection];
 		}
 		else if (previousSection.isAddNewProject) {
@@ -471,9 +476,12 @@
 	}];
 }
 
+#pragma mark -
+
 - (void)showButtonsForCurrentCollection
 {
-	GLAMainNavigationButtonGroup *buttonGroup = [GLAMainNavigationButtonGroup buttonGroupWithBarController:self];
+	GLANavigationButtonGroup *buttonGroup = [GLANavigationButtonGroup buttonGroupWithViewController:self templateButton:(self.templateButton)];
+	//GLAMainNavigationButtonGroup *buttonGroup = [GLAMainNavigationButtonGroup buttonGroupWithBarController:self];
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	GLACollection *collection = (self.currentCollection);
@@ -489,9 +497,27 @@
 	(titleButton.textHighlightColor) = [uiStyle colorForCollectionColor:(collection.color)];
 	(self.collectionTitleButton) = titleButton;
 	
-
+	// Back
+	GLASegmentedControl *viewModeSegmentedControl = [[GLASegmentedControl alloc] init];
+	(viewModeSegmentedControl.target) = self;
+	(viewModeSegmentedControl.action) = @selector(changeCollectionViewMode:);
+	(viewModeSegmentedControl.segmentCount) = 2;
+	[viewModeSegmentedControl setLabel:NSLocalizedString(@"List", @"Title for collection view mode button for list view") forSegment:0];
+	[viewModeSegmentedControl setLabel:NSLocalizedString(@"Stack", @"Title for collection view mode button for stack view") forSegment:1];
+	(viewModeSegmentedControl.font) = (uiStyle.buttonFont);
+	[viewModeSegmentedControl sizeToFit];
+	(viewModeSegmentedControl.backgroundInsetXAmount) = 0.0;
+	(viewModeSegmentedControl.backgroundInsetYAmount) = 8.0;
+	(viewModeSegmentedControl.cell.verticalOffsetDown) = -1.0;
+	
+	[buttonGroup addTrailingView:viewModeSegmentedControl];
+	(self.collectionViewModeSegmentedControl) = viewModeSegmentedControl;
+	[self updateUIForCurrentCollection];
+	
 	(buttonGroup.centerButtonInDuration) = 2.0 / 12.0;
 	(buttonGroup.leadingButtonInDuration) = 2.4 / 12.0;
+	(buttonGroup.trailingViewOffset) = -8.0;
+	
 	[buttonGroup animateButtonsIn];
 	
 	(self.collectionButtonGroup) = buttonGroup;
@@ -511,6 +537,33 @@
 	
 	[(self.navigationBar) highlightWithColor:nil animate:YES];
 }
+
+- (void)updateUIForCurrentCollection
+{
+	GLAEditCollectionSection *section = (id)(self.currentSection);
+	GLASegmentedControl *viewModeSegmentedControl = (self.collectionViewModeSegmentedControl);
+	
+	NSString *viewMode = (section.viewMode);
+	BOOL viewModeIsList = !viewMode || [viewMode isEqualToString:GLACollectionViewModeList];
+	[viewModeSegmentedControl setSelectedSegment:( viewModeIsList ? 0 : 1 )];
+}
+
+- (IBAction)changeCollectionViewMode:(id)sender
+{
+	GLASegmentedControl *viewModeSegmentedControl = (self.collectionViewModeSegmentedControl);
+	GLAMainSectionNavigator *sectionNavigator = (self.sectionNavigator);
+	
+	switch (viewModeSegmentedControl.selectedSegment) {
+		case 0:
+			[sectionNavigator collectionMakeViewModeList];
+			break;
+		case 1:
+		default:
+			[sectionNavigator collectionMakeViewModeExpanded];
+	}
+}
+
+#pragma mark -
 
 - (void)showButtonsForAddingNewCollection
 {

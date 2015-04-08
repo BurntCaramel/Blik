@@ -46,6 +46,7 @@
 		//(style.contentBackgroundColor) = grayExtraDark;
 		(style.barBackgroundColor) = grayExtraDark;
 		(style.contentBackgroundColor) = grayDark;
+		(style.overlaidBarBackgroundColor) = [grayDark colorWithAlphaComponent:0.8];
 		
 		(style.activeBarBackgroundColor) = activeYellow;
 		(style.activeBarTextColor) = grayDark;
@@ -272,6 +273,13 @@
 	NSColor *backgroundColor = (self.contentBackgroundColor);
 	(tableView.backgroundColor) = backgroundColor;
 	(tableView.enclosingScrollView.backgroundColor) = backgroundColor;
+}
+
+- (void)prepareContentStackView:(NSStackView *)stackView
+{
+	NSColor *backgroundColor = (self.contentBackgroundColor);
+	NSScrollView *scrollView = (stackView.enclosingScrollView);
+	(scrollView.backgroundColor) = backgroundColor;
 }
 
 - (NSAttributedString *)copyAttributedString:(NSAttributedString *)attrString withFont:(NSFont *)font textColor:(NSColor *)color lineHeight:(CGFloat)lineHeight

@@ -178,6 +178,29 @@
 	 ];
 }
 
+- (GLACollection *)collectionMakeViewMode:(NSString *)viewMode
+{
+	GLAEditCollectionSection *currentSection = (id)(self.currentSection);
+	NSAssert([currentSection isKindOfClass:[GLAEditCollectionSection class]], @"Current section must be collection.");
+	
+	GLACollection *collection = (currentSection.collection);
+	GLAProjectManager *pm = (self.projectManager);
+	GLAProject *project = [pm projectWithUUID:(collection.projectUUID)];
+	return [pm editCollection:collection inProject:project usingBlock:^(id<GLACollectionEditing> collectionEditor) {
+		(collectionEditor.viewMode) = viewMode;
+	}];
+}
+
+- (void)collectionMakeViewModeList
+{
+	[self goToCollection:[self collectionMakeViewMode:GLACollectionViewModeList]];
+}
+
+- (void)collectionMakeViewModeExpanded
+{
+	[self goToCollection:[self collectionMakeViewMode:GLACollectionViewModeExpanded]];
+}
+
 - (void)addNewCollectionToProject:(GLAProject *)project
 {
 	[self goToSection:

@@ -18,7 +18,8 @@
 
 @interface GLAAccessedFileInfo : NSObject <GLAFileAccessing>
 
-- (instancetype)initWithBookmarkData:(NSData *)bookmarkData NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithFileURL:(NSURL *)fileURL sourceBookmarkData:(NSData *)bookmarkData NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithBookmarkData:(NSData *)bookmarkData;
 - (instancetype)initWithFileURL:(NSURL *)fileURL;
 
 @property(readonly, copy, nonatomic) NSError *errorResolving;

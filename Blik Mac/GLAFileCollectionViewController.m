@@ -16,13 +16,14 @@
 #import "GLAFileOpenerApplicationCombiner.h"
 #import "GLAArrayTableDraggingHelper.h"
 #import "GLAPluckedCollectedFilesMenuController.h"
+#import "GLACollectedFolderStackItemViewController.h"
 #import <objc/runtime.h>
 
 
 #define EXTRA_ROW_COUNT 0
 
 
-@interface GLAFileCollectionViewController () <GLAArrayTableDraggingHelperDelegate, GLAQuickLookPreviewHelperDelegate>
+@interface GLAFileCollectionViewController () <GLAArrayTableDraggingHelperDelegate, GLAQuickLookPreviewHelperDelegate, GLACollectedFolderStackItemViewControllerDelegate>
 
 @property(copy, nonatomic) NSArray *collectedFiles;
 
@@ -38,6 +39,8 @@
 @property(nonatomic) GLAQuickLookPreviewHelper *quickLookPreviewHelper;
 
 @property(nonatomic) GLAArrayTableDraggingHelper *tableDraggingHelper;
+
+@property(nonatomic) NSMutableDictionary *collectedFileUUIDsToStackItemViewControllers;
 
 @property(nonatomic) NSSharingServicePicker *sharingServicePicker;
 
@@ -57,6 +60,7 @@
 - (void)dealloc
 {
 	[self stopCollectionObserving];
+	[self stopObservingFileHelpers];
 	[self stopAccessingAllSecurityScopedFileURLs];
 	[self stopWatchingProjectPrimaryFolders];
 }
@@ -68,37 +72,70 @@
 
 - (void)prepareView
 {
+	NSLog(@"FCVC prepareView");
 	[super prepareView];
-	
-	NSView *view = (self.view);
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	
-	NSTableView *tableView = (self.sourceFilesListTableView);
-	(tableView.dataSource) = self;
-	(tableView.delegate) = self;
-	(tableView.identifier) = @"filesCollectionViewController.sourceFilesListTableView";
-	(tableView.menu) = (self.sourceFilesListContextualMenu);
-	(tableView.doubleAction) = @selector(openSelectedFiles:);
-	[uiStyle prepareContentTableView:tableView];
-	
-	[tableView registerForDraggedTypes:@[[GLACollectedFile objectJSONPasteboardType], (__bridge NSString *)kUTTypeFileURL]];
-	
+#if 1
+	NSView *view = (self.view);
 	// Add this view controller to the responder chain pre-Yosemite.
-	// Allows self to handle keyDown: events
+	// Allows self to handle keyDown: events, and also work with a QLPreviewPanel
 	if ((view.nextResponder) != self) {
 		(self.nextResponder) = (view.nextResponder);
 		(view.nextResponder) = self;
 	}
+#endif
 	
-	(self.tableDraggingHelper) = [[GLAArrayTableDraggingHelper alloc] initWithDelegate:self];
+	NSTableView *tableView = (self.sourceFilesListTableView);
+	if (tableView) {
+		(tableView.dataSource) = self;
+		(tableView.delegate) = self;
+		(tableView.identifier) = @"filesCollectionViewController.sourceFilesListTableView";
+		(tableView.menu) = (self.sourceFilesListContextualMenu);
+		(tableView.doubleAction) = @selector(openSelectedFiles:);
+		[uiStyle prepareContentTableView:tableView];
+		
+		[tableView registerForDraggedTypes:@[[GLACollectedFile objectJSONPasteboardType], (__bridge NSString *)kUTTypeFileURL]];
+		
+		(self.tableDraggingHelper) = [[GLAArrayTableDraggingHelper alloc] initWithDelegate:self];
+	}
+	
+	NSStackView *sourceFilesStackView = (self.sourceFilesStackView);
+	if (sourceFilesStackView) {
+		[sourceFilesStackView setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
+		
+		(sourceFilesStackView.alignment) = NSLayoutAttributeCenterX;
+		
+		NSScrollView *stackScrollView = (sourceFilesStackView.enclosingScrollView);
+		//(stackScrollView.flipped) = YES;
+		
+		// Make stack view fit width of scroll view.
+		NSView *sourceFilesClipView = (sourceFilesStackView.superview);
+		NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:sourceFilesStackView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:sourceFilesClipView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0.0];
+		(leadingConstraint.priority) = NSLayoutPriorityDefaultLow;
+		
+		NSLayoutConstraint *trailingConstraint = [NSLayoutConstraint constraintWithItem:sourceFilesStackView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:sourceFilesClipView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0];
+		(trailingConstraint.priority) = NSLayoutPriorityDefaultLow;
+		
+		[stackScrollView addConstraints:
+		 @[
+		   leadingConstraint,
+		   trailingConstraint
+		   ]
+		 ];
+		
+		[uiStyle prepareContentStackView:sourceFilesStackView];
+	}
 	
 	
 	(self.openerApplicationsPopUpButton.menu.delegate) = self;
 	
 	[(self.shareButton) sendActionOn:NSLeftMouseDownMask];
-	
-	
+}
+
+- (void)didPrepareView
+{
 	[self updateSelectedFilesUIVisibilityAnimating:NO];
 	[self updateQuickLookPreviewAnimating:NO];
 	
@@ -181,7 +218,13 @@
 	GLACollectedFilesSetting *collectedFilesSetting = [GLACollectedFilesSetting new];
 	[nc addObserver:self selector:@selector(watchedDirectoriesDidChangeNotification:) name:GLACollectedFilesSettingDirectoriesDidChangeNotification object:collectedFilesSetting];
 	[nc addObserver:self selector:@selector(collectedFilesSettingLoadedFileInfoDidChangeNotification:) name:GLACollectedFilesSettingLoadedFileInfoDidChangeNotification object:collectedFilesSetting];
-	[collectedFilesSetting addToDefaultURLResourceKeysToRequest:@[NSURLLocalizedNameKey, NSURLEffectiveIconKey]];
+	[collectedFilesSetting addToDefaultURLResourceKeysToRequest:
+  @[
+	NSURLIsRegularFileKey,
+	NSURLIsPackageKey,
+	NSURLLocalizedNameKey,
+	NSURLEffectiveIconKey
+	]];
 	(self.collectedFilesSetting) = collectedFilesSetting;
 	
 	
@@ -192,6 +235,15 @@
 	
 	[nc addObserver:self selector:@selector(openerApplicationCombinerDidChangeNotification:) name:GLAFileURLOpenerApplicationCombinerDidChangeNotification object:openerApplicationCombiner];
 }
+
+- (void)stopObservingFileHelpers
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	[nc removeObserver:self name:nil object:(self.collectedFilesSetting)];
+	[nc removeObserver:self name:nil object:(self.openerApplicationCombiner)];
+}
+
 
 @synthesize filesListCollection = _filesListCollection;
 
@@ -214,8 +266,63 @@
 	[self reloadSourceFiles];
 }
 
-- (void)reloadSourceFiles
+- (NSView *)createOrUpdateStackItemViewForIndex:(NSUInteger)fileIndex
 {
+	NSMutableDictionary *collectedFileUUIDsToStackItemViewControllers = (self.collectedFileUUIDsToStackItemViewControllers);
+	if (!collectedFileUUIDsToStackItemViewControllers) {
+		(self.collectedFileUUIDsToStackItemViewControllers) = collectedFileUUIDsToStackItemViewControllers = [NSMutableDictionary new];
+	}
+	
+	GLACollectedFile *collectedFile = [self collectedFileForRow:fileIndex];
+	
+	GLACollectedFolderStackItemViewController *folderItemVC = collectedFileUUIDsToStackItemViewControllers[(collectedFile.UUID)];
+	
+	if (!folderItemVC) {
+		folderItemVC = [[GLACollectedFolderStackItemViewController alloc] initWithNibName:NSStringFromClass([GLACollectedFolderStackItemViewController class]) bundle:nil];
+		
+		(folderItemVC.delegate) = self;
+		
+		NSView *folderItemView = (folderItemVC.view);
+		(folderItemView.translatesAutoresizingMaskIntoConstraints) = NO;
+		
+		collectedFileUUIDsToStackItemViewControllers[(collectedFile.UUID)] = folderItemVC;
+	}
+	
+	NSString *displayName = nil;
+	NSImage *iconImage = nil;
+	NSNumber *isRegularFileValue = nil;
+	NSNumber *isPackageValue = nil;
+	
+	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+	[collectedFilesSetting startAccessingCollectedFile:collectedFile];
+	
+	displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+	iconImage = [collectedFilesSetting copyValueForURLResourceKey:NSURLEffectiveIconKey forCollectedFile:collectedFile];
+	isRegularFileValue = [collectedFilesSetting copyValueForURLResourceKey:NSURLIsRegularFileKey forCollectedFile:collectedFile];
+	isPackageValue = [collectedFilesSetting copyValueForURLResourceKey:NSURLIsPackageKey forCollectedFile:collectedFile];
+	
+	(folderItemVC.nameLabel.stringValue) = displayName ?: @"Loading…";
+	(folderItemVC.iconImageView.image) = iconImage;
+	
+	NSURL *filePathURL = [collectedFilesSetting filePathURLForCollectedFile:collectedFile];
+	
+	if (filePathURL != nil && isRegularFileValue != nil && isPackageValue != nil) {
+		BOOL isRegularFile = [isRegularFileValue isEqual:@YES];
+		BOOL isPackage = [isPackageValue isEqual:@YES];
+		BOOL treatAsFile = (isRegularFile || isPackage);
+		if (treatAsFile) {
+			[folderItemVC updateContentWithFileURL:filePathURL];
+		}
+		else {
+			[folderItemVC updateContentWithDirectoryURL:filePathURL];
+		}
+	}
+	
+	return (folderItemVC.view);
+}
+
+- (void)reloadSourceFiles
+{NSLog(@"reloadSourceFiles %@", @(self.hasPreparedViews));
 	NSArray *collectedFiles = nil;
 	
 	GLACollection *filesListCollection = (self.filesListCollection);
@@ -247,13 +354,29 @@
 		NSArray *selectedURLs = (self.selectedURLs) ?: @[];
 		
 		NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
-		[sourceFilesListTableView reloadData];
-		
-		NSIndexSet *rowIndexesForSelectedURLs = [self rowIndexesForURLs:[NSSet setWithArray:selectedURLs]];
+		if (sourceFilesListTableView) {
+			NSLog(@"SETTING UP TABLE VIEW");
+			[sourceFilesListTableView reloadData];
+			
+			NSIndexSet *rowIndexesForSelectedURLs = [self rowIndexesForURLs:[NSSet setWithArray:selectedURLs]];
 #if DEBUG
-		NSLog(@"rowIndexesForSelectedURLs %@", rowIndexesForSelectedURLs);
+			NSLog(@"rowIndexesForSelectedURLs %@", rowIndexesForSelectedURLs);
 #endif
-		[sourceFilesListTableView selectRowIndexes:rowIndexesForSelectedURLs byExtendingSelection:NO];
+			[sourceFilesListTableView selectRowIndexes:rowIndexesForSelectedURLs byExtendingSelection:NO];
+		}
+		
+		NSStackView *sourceFilesStackView = (self.sourceFilesStackView);
+		if (sourceFilesStackView) {
+			NSLog(@"SETTING UP STACK VIEW");
+			NSMutableArray *stackItemViews = [NSMutableArray new];
+			
+			NSUInteger fileCount = (collectedFiles.count);
+			for (NSUInteger fileIndex = 0; fileIndex < fileCount; fileIndex++) {
+				[stackItemViews addObject:[self createOrUpdateStackItemViewForIndex:fileIndex]];
+			}
+			
+			[sourceFilesStackView setViews:stackItemViews inGravity:NSStackViewGravityTop];
+		}
 		
 		//[self updateSelectedFilesUIVisibilityAnimating:YES];
 		[self updateSelectedURLs];
@@ -294,7 +417,7 @@
 	GLAProjectManager *pm = (self.projectManager);
 	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
 #if DEBUG
-	NSLog(@"watchProjectPrimaryFolders %@", collectedFilesSetting);
+	//NSLog(@"watchProjectPrimaryFolders %@", collectedFilesSetting);
 #endif
 	NSArray *projectFolders = [pm copyPrimaryFoldersForProject:project];
 	NSMutableSet *directoryURLs = [NSMutableSet new];
@@ -308,6 +431,7 @@
 
 - (void)watchedDirectoriesDidChangeNotification:(NSNotification *)note
 {
+	[(self.collectedFilesSetting) invalidateAllAccessedFiles];
 	[(self.fileInfoRetriever) clearCacheForAllURLs];
 	[self reloadSourceFiles];
 }
@@ -320,11 +444,6 @@
 
 #pragma mark -
 
-- (void)addUsedURLForCollectedFile:(GLACollectedFile *)collectedFile
-{
-	[(self.collectedFilesSetting) startAccessingCollectedFile:collectedFile];
-}
-
 - (void)stopAccessingAllSecurityScopedFileURLs
 {
 	[(self.collectedFilesSetting) stopAccessingAllCollectedFilesWaitingUntilDone];
@@ -333,7 +452,9 @@
 - (void)makeSourceFilesListFirstResponder
 {
 	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
-	[(sourceFilesListTableView.window) makeFirstResponder:sourceFilesListTableView];
+	if (sourceFilesListTableView) {
+		[(sourceFilesListTableView.window) makeFirstResponder:sourceFilesListTableView];
+	}
 }
 
 - (void)viewWillTransitionIn
@@ -365,6 +486,10 @@
 - (NSIndexSet *)rowIndexesForActionFrom:(id)sender
 {
 	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
+	if (!sourceFilesListTableView) {
+		return [NSIndexSet indexSet];
+	}
+	
 	NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
 	
 	BOOL isContextual = ((sender != nil) && [sender isKindOfClass:[NSMenuItem class]]);
@@ -418,6 +543,10 @@
 
 - (NSArray *)URLsForRowIndexes:(NSIndexSet *)indexes
 {
+	if (!indexes) {
+		return @[];
+	}
+	
 	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
 	NSArray *collectedFiles = [self collectedFilesForRowIndexes:indexes];
 	
@@ -464,9 +593,11 @@
 - (void)updateSelectedURLs
 {
 	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
-	NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
 	
-	(self.selectedURLs) = [self URLsForRowIndexes:selectedIndexes];
+	if (sourceFilesListTableView) {
+		NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
+		(self.selectedURLs) = [self URLsForRowIndexes:selectedIndexes];
+	}
 	
 	//NSArray *selectedCollectedFiles = [self collectedFilesForRowIndexes:selectedIndexes];
 	//[(self.collectedFilesSetting) startAccessingCollectedFilesRemovingRemainders:selectedCollectedFiles];
@@ -883,6 +1014,9 @@
 
 - (BOOL)acceptsPreviewPanelControl:(QLPreviewPanel *)panel
 {
+#if DEBUG
+	NSLog(@"gg acceptsPreviewPanelControl");
+#endif
 	return YES;
 }
 
@@ -929,7 +1063,12 @@
 		return nil;
 	}
 #endif
-	return (self.collectedFiles)[row - EXTRA_ROW_COUNT];
+	
+	GLACollectedFile *collectedFile = (self.collectedFiles)[row - EXTRA_ROW_COUNT];
+	
+	[(self.collectedFilesSetting) startAccessingCollectedFile:collectedFile];
+	
+	return collectedFile;
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
@@ -944,11 +1083,7 @@
 		return @"Collected";
 	}
 #endif
-	GLACollectedFile *collectedFile = [self collectedFileForRow:row];
-	
-	[self addUsedURLForCollectedFile:collectedFile];
-	
-	return collectedFile;
+	return [self collectedFileForRow:row];
 }
 
 - (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row
@@ -1060,9 +1195,9 @@
 	}
 #endif
 	
-	cellView = [tableView makeViewWithIdentifier:@"collectedFile" owner:nil];
-	
 	GLACollectedFile *collectedFile = [self collectedFileForRow:row];
+	
+	cellView = [tableView makeViewWithIdentifier:@"collectedFile" owner:nil];
 	(cellView.objectValue) = collectedFile;
 	
 	NSString *displayName = nil;
@@ -1092,13 +1227,26 @@
 	NSLog(@"collectedFilesSettingLoadedFileInfoDidChangeNotification");
 #endif
 	
-	[(self.sourceFilesListTableView) reloadData];
+	GLACollectedFile *collectedFile = (note.userInfo)[GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedFile];
+	
+	NSUInteger index = [(self.collectedFiles) indexOfObject:collectedFile];
+	
+	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
+	if (sourceFilesListTableView) {
+		[sourceFilesListTableView reloadData];
+	}
+	
+	NSStackView *sourceFilesStackView = (self.sourceFilesStackView);
+	if (sourceFilesStackView) {
+		[self createOrUpdateStackItemViewForIndex:index];
+	}
 }
 
 #pragma mark File Info Retriever Delegate
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didLoadResourceValuesForURL:(NSURL *)fileURL
 {
+	NSLog(@"didLoadResourceValuesForURL");
 	if (self.doNotUpdateViews) {
 		return;
 	}
@@ -1112,7 +1260,17 @@
 	
 	NSIndexSet *rowIndexesToUpdate = [self rowIndexesForCollectedFilesIndexes:indexesToUpdate];
 	
-	[(self.sourceFilesListTableView) reloadDataForRowIndexes:rowIndexesToUpdate columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
+	if (sourceFilesListTableView) {
+		[sourceFilesListTableView reloadDataForRowIndexes:rowIndexesToUpdate columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+	}
+	
+	NSStackView *sourceFilesStackView = (self.sourceFilesStackView);
+	if (sourceFilesStackView) {
+		[indexesToUpdate enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+			[self createOrUpdateStackItemViewForIndex:idx];
+		}];
+	}
 }
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didFailWithError:(NSError *)error loadingResourceValuesForURL:(NSURL *)URL
@@ -1120,6 +1278,28 @@
 	if (self.doNotUpdateViews) {
 		return;
 	}
+}
+
+#pragma mark GLACollectedFolderStackItemViewControllerDelegate
+
+- (void)didClickViewForItemViewController:(GLACollectedFolderStackItemViewController *)viewController
+{
+	NSURL *fileURL = (viewController.fileURL);
+	if (!fileURL) {
+		return;
+	}
+	
+	(self.selectedURLs) = @[fileURL];
+	
+	//[self updateQuickLookPreviewAnimating:YES];
+	
+	GLAQuickLookPreviewHelper *quickLookPreviewHelper = [self setUpQuickLookPreviewHelperIfNeeded];
+	[quickLookPreviewHelper showQuickLookPanel:YES];
+	[quickLookPreviewHelper updateQuickLookPreviewAnimating:YES];
+	
+#if DEBUG
+	NSLog(@"didClickViewForItemViewController %@", quickLookPreviewHelper);
+#endif
 }
 
 #pragma mark Plucked Collected Files

@@ -48,9 +48,16 @@
 	[self prepareView];
 	
 	(self.hasPreparedViews) = YES;
+	
+	[self didPrepareView];
 }
 
 - (void)prepareView
+{
+	// For subclasses.
+}
+
+- (void)didPrepareView
 {
 	// For subclasses.
 }

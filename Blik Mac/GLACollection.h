@@ -14,6 +14,9 @@
 extern NSString *GLACollectionTypeFilesList;
 extern NSString *GLACollectionTypeFilteredFolder;
 
+extern NSString *GLACollectionViewModeList;
+extern NSString *GLACollectionViewModeExpanded;
+
 
 @protocol GLACollectedItem <NSObject>
 
@@ -30,6 +33,7 @@ extern NSString *GLACollectionTypeFilteredFolder;
 
 @property(readwrite, copy, nonatomic) NSString *name;
 @property(readwrite, nonatomic) GLACollectionColor *color;
+@property(readwrite, copy, nonatomic) NSString *viewMode;
 
 @end
 
@@ -42,6 +46,7 @@ extern NSString *GLACollectionTypeFilteredFolder;
 
 @property(readonly, copy, nonatomic) NSString *name;
 @property(readonly, nonatomic) GLACollectionColor *color;
+@property(readonly, copy, nonatomic) NSString *viewMode;
 
 - (instancetype)initWithType:(NSString *)collectionType creatingFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock;
 

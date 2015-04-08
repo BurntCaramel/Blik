@@ -22,6 +22,7 @@
 @property(nonatomic) GLAModelUUIDMap *collectedFileUUIDMap;
 
 @property(nonatomic) NSMutableDictionary *collectedFileUUIDsToAccessedFileInfos;
+@property(nonatomic) NSMutableDictionary *retrievedURLsToCollectedFileUUIDs;
 @property(nonatomic) NSOperationQueue *backgroundOperationQueue;
 
 @property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
@@ -41,6 +42,7 @@
 		_collectedFileUUIDsUsingURLs = [NSMutableSet new];
 		_collectedFileUUIDMap = [GLAModelUUIDMap new];
 		_collectedFileUUIDsToAccessedFileInfos = [NSMutableDictionary new];
+		_retrievedURLsToCollectedFileUUIDs = [NSMutableDictionary new];
 		
 		_inputDispatchQueue = dispatch_queue_create("com.burntcaramel.GLACollectedFilesSetting.input", DISPATCH_QUEUE_SERIAL);
 		
@@ -175,6 +177,10 @@
 				
 				NSMutableDictionary *collectedFileUUIDsToAccessedFileInfos = (self.collectedFileUUIDsToAccessedFileInfos);
 				collectedFileUUIDsToAccessedFileInfos[collectedFileUUID] = accessedFileInfo;
+				
+				if (filePathURL) {
+					(self.retrievedURLsToCollectedFileUUIDs)[filePathURL] = collectedFileUUID;
+				}
 			}];
 		}];
 	}
@@ -187,6 +193,14 @@
 	NSUUID *collectedFileUUID = (collectedFile.UUID);
 	
 	if ([collectedFileUUIDsUsingURLs containsObject:collectedFileUUID]) {
+		GLAAccessedFileInfo *accessedFileInfo = [self input_accessedFileInfoForCollectedFileUUID:collectedFileUUID];
+		if (accessedFileInfo) {
+			NSURL *filePathURL = (accessedFileInfo.filePathURL);
+			if (filePathURL) {
+				[(self.retrievedURLsToCollectedFileUUIDs) removeObjectForKey:filePathURL];
+			}
+		}
+		
 		[collectedFileUUIDsUsingURLs removeObject:collectedFileUUID];
 		[(self.collectedFileUUIDMap) removeObjects:@[collectedFile]];
 		
@@ -220,6 +234,7 @@
 		[collectedFileUUIDsUsingURLs removeAllObjects];
 		[(self.collectedFileUUIDMap) removeAllObjects];
 		[(self.collectedFileUUIDsToAccessedFileInfos) removeAllObjects];
+		[(self.retrievedURLsToCollectedFileUUIDs) removeAllObjects];
 	});
 }
 
@@ -325,29 +340,41 @@
 	}];
 }
 
-- (GLAAccessedFileInfo *)accessedFileInfoForCollectedFile:(GLACollectedFile *)collectedFile
+- (GLAAccessedFileInfo *)input_accessedFileInfoForCollectedFileUUID:(NSUUID *)collectedFileUUID
 {
-	__block GLAAccessedFileInfo *accessFileInfo = nil;
-	dispatch_sync((self.inputDispatchQueue), ^{
-		NSMutableDictionary *collectedFileUUIDsToAccessedFileInfos = (self.collectedFileUUIDsToAccessedFileInfos);
-		accessFileInfo = collectedFileUUIDsToAccessedFileInfos[(collectedFile.UUID)];
-	});
-	
-	return accessFileInfo;
+	NSMutableDictionary *collectedFileUUIDsToAccessedFileInfos = (self.collectedFileUUIDsToAccessedFileInfos);
+	return collectedFileUUIDsToAccessedFileInfos[collectedFileUUID];
 }
 
-- (NSURL *)copyFileURLForCollectedFileWithUUID:(NSUUID *)collectedFileUUID
+- (GLACollectedFile *)collectedFileForFilePathURL:(NSURL *)filePathURL
 {
-	__block NSURL *filePathURL = nil;
+	NSUUID *collectedFileUUID = (self.retrievedURLsToCollectedFileUUIDs)[filePathURL];
+	if (!collectedFileUUID) {
+		return nil;
+	}
+	
+	GLAModelUUIDMap *collectedFileUUIDMap = (self.collectedFileUUIDMap);
+	return collectedFileUUIDMap[collectedFileUUID];
+}
+
+- (GLAAccessedFileInfo *)accessedFileInfoForCollectedFile:(GLACollectedFile *)collectedFile
+{
+	__block GLAAccessedFileInfo *accessedFileInfo = nil;
 	dispatch_sync((self.inputDispatchQueue), ^{
-		NSMutableDictionary *collectedFileUUIDsToAccessedFileInfos = (self.collectedFileUUIDsToAccessedFileInfos);
-		GLAAccessedFileInfo *accessFileInfo = collectedFileUUIDsToAccessedFileInfos[collectedFileUUID];
-		if (accessFileInfo) {
-			filePathURL = (accessFileInfo.filePathURL);
-		}
+		accessedFileInfo = [self input_accessedFileInfoForCollectedFileUUID:(collectedFile.UUID)];
 	});
 	
-	return filePathURL;
+	return accessedFileInfo;
+}
+
+- (NSURL *)filePathURLForCollectedFile:(GLACollectedFile *)collectedFile
+{
+	GLAAccessedFileInfo *accessedFileInfo = [self accessedFileInfoForCollectedFile:collectedFile];
+	if (!accessedFileInfo) {
+		return nil;
+	}
+	
+	return (accessedFileInfo.filePathURL);
 }
 
 - (id)copyValueUsingRetrieverBlock:(GLACollectedFilesSettingFileInfoRetriever)retrieverBlock infoIdentifier:(NSString *)infoIdentifier forCollectedFile:(GLACollectedFile *)collectedFile
@@ -368,14 +395,17 @@
 		}
 		
 		// Get accessed file.
-		NSMutableDictionary *collectedFileUUIDsToAccessedFileInfos = (self.collectedFileUUIDsToAccessedFileInfos);
-		GLAAccessedFileInfo *accessedFileInfo = collectedFileUUIDsToAccessedFileInfos[collectedFileUUID];
+		GLAAccessedFileInfo *accessedFileInfo = [self input_accessedFileInfoForCollectedFileUUID:collectedFileUUID];
 		if (!accessedFileInfo) {
 			return;
 		}
 		
 		GLAFileInfoRetriever *fileInfoRetriever = (self.fileInfoRetriever);
 		NSURL *fileURL = (accessedFileInfo.filePathURL);
+		if (!fileURL) {
+			return;
+		}
+		NSAssert(fileURL != nil, @"Accessed file must have a URL");
 		
 		valueToReturn = retrieverBlockToUse(fileInfoRetriever, fileURL);
 		
@@ -413,9 +443,19 @@
 	return [self copyValueUsingRetrieverBlock:nil infoIdentifier:infoIdentifier forCollectedFile:collectedFile];
 }
 
-- (void)notifyLoadedFileInfoDidChange
+- (void)notifyLoadedFileInfoDidChangeForFilePathURL:(NSURL *)filePathURL
 {
-	NSNotification *note = [NSNotification notificationWithName:GLACollectedFilesSettingLoadedFileInfoDidChangeNotification object:self];
+	GLACollectedFile *collectedFile = [self collectedFileForFilePathURL:filePathURL];
+	if (!collectedFile) {
+		return;
+	}
+	
+	NSDictionary *userInfo =
+	@{
+	  GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedFile: collectedFile
+	  };
+	
+	NSNotification *note = [NSNotification notificationWithName:GLACollectedFilesSettingLoadedFileInfoDidChangeNotification object:self userInfo:userInfo];
 	[[NSNotificationQueue defaultQueue] enqueueNotification:note postingStyle:NSPostASAP coalesceMask:(NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender) forModes:@[NSRunLoopCommonModes]];
 }
 
@@ -426,7 +466,7 @@
 #if 0 && DEBUG
 	NSLog(@"didLoadResourceValuesForURL %@", URL);
 #endif
-	[self notifyLoadedFileInfoDidChange];
+	[self notifyLoadedFileInfoDidChangeForFilePathURL:URL];
 }
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didFailWithError:(NSError *)error loadingResourceValuesForURL:(NSURL *)URL
@@ -438,3 +478,4 @@
 
 NSString *GLACollectedFilesSettingDirectoriesDidChangeNotification = @"GLACollectedFilesSettingDirectoriesDidChangeNotification";
 NSString *GLACollectedFilesSettingLoadedFileInfoDidChangeNotification = @"GLACollectedFilesSettingLoadedFileInfoDidChangeNotification";
+NSString *GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedFile = @"GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedFile";

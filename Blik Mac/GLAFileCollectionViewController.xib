@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6751"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAFileCollectionViewController">
@@ -26,7 +26,8 @@
                 <splitView dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Hs-az-1x2" customClass="GLASplitView">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
                     <subviews>
-                        <customView misplaced="YES" placeholderIntrinsicWidth="180" placeholderIntrinsicHeight="272" id="5CS-nQ-aL8">
+                        <customView placeholderIntrinsicWidth="180" placeholderIntrinsicHeight="272" id="5CS-nQ-aL8">
+                            <rect key="frame" x="0.0" y="0.0" width="180" height="272"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <subviews>
                                 <scrollView verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="G7e-U8-1HC">
@@ -170,8 +171,8 @@
                                 <constraint firstItem="hPc-Yl-sIY" firstAttribute="top" secondItem="G7e-U8-1HC" secondAttribute="bottom" id="onK-Ti-AqS"/>
                             </constraints>
                         </customView>
-                        <customView misplaced="YES" id="Tix-1S-YGD">
-                            <rect key="frame" x="1" y="0.0" width="479" height="272"/>
+                        <customView id="Tix-1S-YGD">
+                            <rect key="frame" x="181" y="0.0" width="299" height="272"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <subviews>
                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="qn1-n0-gYl">

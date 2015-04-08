@@ -21,6 +21,7 @@ typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint
 // Subclass these, no super call required:
 
 - (void)prepareView; // Like 10.10's -viewDidLoad method.
+- (void)didPrepareView; // Set up that requires hasPreparedViews to be set.
 
 #pragma mark Transitioning
 

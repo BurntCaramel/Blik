@@ -445,10 +445,20 @@
 	
 	NSString *collectionType = (collection.type);
 	if ([collectionType isEqualToString:GLACollectionTypeFilesList]) {
-		GLAFileCollectionViewController *fileCollectionViewController = [[GLAFileCollectionViewController alloc] initWithNibName:NSStringFromClass([GLAFileCollectionViewController class]) bundle:nil];
-		(fileCollectionViewController.filesListCollection) = collection;
+		NSString *viewMode = (collection.viewMode);
 		
-		controller = fileCollectionViewController;
+		if (!viewMode || [viewMode isEqualToString:GLACollectionViewModeList]) {
+			GLAFileCollectionViewController *fileCollectionViewController = [[GLAFileCollectionViewController alloc] initWithNibName:NSStringFromClass([GLAFileCollectionViewController class]) bundle:nil];
+			(fileCollectionViewController.filesListCollection) = collection;
+			
+			controller = fileCollectionViewController;
+		}
+		else {
+			GLAFileCollectionViewController *fileCollectionStackedViewController = [[GLAFileCollectionViewController alloc] initWithNibName:@"GLAFileCollectionStackedViewController" bundle:nil];
+			(fileCollectionStackedViewController.filesListCollection) = collection;
+			
+			controller = fileCollectionStackedViewController;
+		}
 	}
 	else if ([collectionType isEqualToString:GLACollectionTypeFilteredFolder]) {
 		GLAFilteredFolderCollectionViewController *filteredFolderCollectionViewController = [[GLAFilteredFolderCollectionViewController alloc] initWithNibName:NSStringFromClass([GLAFilteredFolderCollectionViewController class]) bundle:nil];
@@ -464,15 +474,28 @@
 {
 	// Remove old view
 	GLAViewController *oldCollectionViewController = (self.activeCollectionViewController);
-	[oldCollectionViewController viewWillTransitionOut];
-	[(oldCollectionViewController.view) removeFromSuperview];
-	[oldCollectionViewController viewDidTransitionOut];
+	//NSLayoutConstraint *keepWidthConstraint = nil;
+	if (oldCollectionViewController) {
+		[oldCollectionViewController viewWillTransitionOut];
+	}
 	
 	// Set up new view
 	GLAViewController *collectionViewController = [self createViewControllerForCollection:(section.collection)];
-	(collectionViewController.view.identifier) = @"activeCollection";
+	NSView *newView = (collectionViewController.view);
+	(newView.identifier) = @"activeCollection";
 	
-	[self fillViewWithChildView:(collectionViewController.view)];
+	if (oldCollectionViewController) {
+		NSView *oldView = (oldCollectionViewController.view);
+		//keepWidthConstraint = [NSLayoutConstraint constraintWithItem:newView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:NSWidth(oldView.frame)];
+		//NSLog(@"keepWidthConstraint %@", keepWidthConstraint);
+		
+		(newView.frame) = (oldView.frame);
+		
+		[(oldCollectionViewController.view) removeFromSuperview];
+		[oldCollectionViewController viewDidTransitionOut];
+	}
+	
+	[self fillViewWithChildView:newView];
 	
 	(self.activeCollectionViewController) = collectionViewController;
 }
@@ -647,14 +670,25 @@
 	}
 	
 	// HIDE OUT
-	if (outViewController && !isnan(outLeading)) {
-		[self didBeginTransitioningOutViewController:outViewController];
-		[self hideChildViewController:outViewController movingLeadingTo:outLeading animate:animate associatedSection:outSection];
+	if (outViewController) {
+		if (!isnan(outLeading)) {
+			[self didBeginTransitioningOutViewController:outViewController];
+			[self hideChildViewController:outViewController movingLeadingTo:outLeading animate:animate associatedSection:outSection];
+		}
+		else {
+			[outViewController viewWillTransitionOut];
+			[outViewController viewDidTransitionOut];
+		}
 	}
+	
 	// SHOW IN
 	if (!isnan(inLeading)) {
 		[self showChildViewController:inViewController movingLeadingFrom:inLeading animate:animate associatedSection:newSection];
 		[self didBeginTransitioningInViewController:inViewController];
+	}
+	else {
+		[inViewController viewWillTransitionIn];
+		[inViewController viewDidTransitionIn];
 	}
 }
 

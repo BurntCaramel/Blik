@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6751"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="GLACollectedFolderStackItemViewController">
+            <connections>
+                <outlet property="bottomBarView" destination="GcD-eU-Wtb" id="oMR-zH-sax"/>
+                <outlet property="contentHolderHeightConstraint" destination="M9F-wG-JAp" id="PUW-mT-6Ms"/>
+                <outlet property="contentHolderView" destination="mzD-n5-IlL" id="ZcT-hs-U9R"/>
+                <outlet property="iconImageView" destination="Qol-Zr-N3n" id="ah0-dc-jnG"/>
+                <outlet property="nameLabel" destination="Zcb-u2-P3X" id="YOv-py-LfM"/>
+                <outlet property="topBarView" destination="ysM-AR-GRG" id="jVK-NE-D8C"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY" customClass="GLACollectedFolderStackItemView">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="175"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="mzD-n5-IlL" customClass="GLACollectedItemContentHolderView">
+                    <rect key="frame" x="0.0" y="20" width="480" height="155"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="750" id="M9F-wG-JAp"/>
+                    </constraints>
+                </customView>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="GcD-eU-Wtb" customClass="GLAOverlaidBarView">
+                    <rect key="frame" x="0.0" y="20" width="480" height="40"/>
+                    <subviews>
+                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="6kY-Oc-dBE">
+                            <rect key="frame" x="90" y="0.0" width="300" height="40"/>
+                            <subviews>
+                                <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="2iv-5m-YHK" customClass="GLAPopUpButton">
+                                    <rect key="frame" x="8" y="8" width="100" height="24"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="100" id="B0B-VG-KUH"/>
+                                        <constraint firstAttribute="height" constant="24" id="nhn-c1-gX4"/>
+                                    </constraints>
+                                    <popUpButtonCell key="cell" type="roundTextured" title="Open in" bezelStyle="texturedRounded" alignment="left" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="lKL-pf-x1P" id="nNb-tf-bid" customClass="GLAPopUpButtonCell">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                                        <menu key="menu" id="PN4-DC-any">
+                                            <items>
+                                                <menuItem title="Open in" state="on" hidden="YES" id="lKL-pf-x1P"/>
+                                                <menuItem title="Item 2" id="pSp-b3-0yA"/>
+                                                <menuItem title="Item 3" id="7XW-1u-a07"/>
+                                            </items>
+                                        </menu>
+                                    </popUpButtonCell>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                                            <integer key="value" value="4"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                                            <integer key="value" value="-1"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                                            <integer key="value" value="4"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </popUpButton>
+                                <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Aq-md-70W" customClass="GLAButton">
+                                    <rect key="frame" x="183" y="0.0" width="116" height="40"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="40" id="RKv-xz-8vG"/>
+                                    </constraints>
+                                    <buttonCell key="cell" type="square" title="Add to Highlights" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="uMF-Tx-P22" customClass="GLAButtonCell">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                                    </buttonCell>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                                            <integer key="value" value="-1"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                                            <integer key="value" value="8"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetYAmount">
+                                            <integer key="value" value="8"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                                            <integer key="value" value="16"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                                            <integer key="value" value="16"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </button>
+                                <button translatesAutoresizingMaskIntoConstraints="NO" id="Itw-E6-O9e" customClass="GLAButton">
+                                    <rect key="frame" x="108" y="0.0" width="17" height="40"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="40" id="ciJ-Ok-mc0"/>
+                                    </constraints>
+                                    <buttonCell key="cell" type="square" title="Share" bezelStyle="shadowlessSquare" image="NSShareTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GCY-P1-avq" customClass="GLAButtonCell">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                                    </buttonCell>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                                            <integer key="value" value="0"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                                            <integer key="value" value="4"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetYAmount">
+                                            <integer key="value" value="8"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                                            <integer key="value" value="13"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                                            <integer key="value" value="13"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </button>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="Itw-E6-O9e" firstAttribute="top" secondItem="6kY-Oc-dBE" secondAttribute="top" id="2Vp-M0-bkX"/>
+                                <constraint firstAttribute="bottom" secondItem="Itw-E6-O9e" secondAttribute="bottom" id="CQX-uJ-kT8"/>
+                                <constraint firstAttribute="centerY" secondItem="2iv-5m-YHK" secondAttribute="centerY" id="Fak-W4-r09"/>
+                                <constraint firstAttribute="width" constant="300" id="OPi-2K-z1p"/>
+                                <constraint firstItem="Itw-E6-O9e" firstAttribute="leading" secondItem="2iv-5m-YHK" secondAttribute="trailing" id="UqD-eR-LSR"/>
+                                <constraint firstItem="4Aq-md-70W" firstAttribute="top" secondItem="6kY-Oc-dBE" secondAttribute="top" id="ZgH-ZF-lUr"/>
+                                <constraint firstItem="2iv-5m-YHK" firstAttribute="leading" secondItem="6kY-Oc-dBE" secondAttribute="leading" constant="8" id="aao-xA-g70"/>
+                                <constraint firstAttribute="height" constant="40" id="eXT-Lx-Saq"/>
+                                <constraint firstAttribute="trailing" secondItem="4Aq-md-70W" secondAttribute="trailing" id="qxu-gt-hle"/>
+                                <constraint firstItem="4Aq-md-70W" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Itw-E6-O9e" secondAttribute="trailing" id="ryI-qT-Fqe"/>
+                            </constraints>
+                        </customView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="6kY-Oc-dBE" firstAttribute="top" secondItem="GcD-eU-Wtb" secondAttribute="top" id="3dC-Zm-Bcx"/>
+                        <constraint firstAttribute="centerX" secondItem="6kY-Oc-dBE" secondAttribute="centerX" id="VBP-zc-imP"/>
+                        <constraint firstAttribute="height" constant="40" id="mZq-V8-boh"/>
+                        <constraint firstAttribute="bottom" secondItem="6kY-Oc-dBE" secondAttribute="bottom" id="wLV-53-kmS"/>
+                    </constraints>
+                </customView>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="ysM-AR-GRG" customClass="GLAOverlaidBarView">
+                    <rect key="frame" x="0.0" y="135" width="480" height="40"/>
+                    <subviews>
+                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Zcb-u2-P3X">
+                            <rect key="frame" x="205" y="11" width="95" height="23"/>
+                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Z3f-oe-dVE">
+                                <font key="font" size="13" name="AvenirNext-Medium"/>
+                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qol-Zr-N3n">
+                            <rect key="frame" x="183" y="12" width="16" height="16"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="16" id="WTY-2r-azF"/>
+                                <constraint firstAttribute="width" constant="16" id="YoD-Ug-UqY"/>
+                            </constraints>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="84X-oB-ln1"/>
+                        </imageView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="SNe-4J-B42"/>
+                        <constraint firstItem="Qol-Zr-N3n" firstAttribute="top" secondItem="ysM-AR-GRG" secondAttribute="top" constant="12" id="XnN-lK-vEu"/>
+                        <constraint firstItem="Zcb-u2-P3X" firstAttribute="leading" secondItem="Qol-Zr-N3n" secondAttribute="trailing" constant="8" id="Y9T-sE-YKV"/>
+                        <constraint firstItem="Zcb-u2-P3X" firstAttribute="centerY" secondItem="Qol-Zr-N3n" secondAttribute="centerY" constant="-2" id="aA0-ki-WWz"/>
+                        <constraint firstAttribute="centerX" secondItem="Zcb-u2-P3X" secondAttribute="centerX" constant="-12" id="xVm-RB-QZc"/>
+                    </constraints>
+                </customView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="ysM-AR-GRG" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="4gI-Ig-oNX"/>
+                <constraint firstItem="mzD-n5-IlL" firstAttribute="leading" secondItem="GcD-eU-Wtb" secondAttribute="leading" id="CMo-6w-sKz"/>
+                <constraint firstAttribute="trailing" secondItem="mzD-n5-IlL" secondAttribute="trailing" id="CfF-RF-Neq"/>
+                <constraint firstItem="mzD-n5-IlL" firstAttribute="trailing" secondItem="GcD-eU-Wtb" secondAttribute="trailing" id="IOG-Uc-mUF"/>
+                <constraint firstAttribute="bottom" secondItem="mzD-n5-IlL" secondAttribute="bottom" constant="20" id="Qnq-dG-dMc"/>
+                <constraint firstAttribute="trailing" secondItem="ysM-AR-GRG" secondAttribute="trailing" id="Rb6-EE-XO3"/>
+                <constraint firstItem="mzD-n5-IlL" firstAttribute="bottom" secondItem="GcD-eU-Wtb" secondAttribute="bottom" id="iac-Pt-bE8"/>
+                <constraint firstAttribute="centerX" secondItem="GcD-eU-Wtb" secondAttribute="centerX" id="mgP-eG-AQT"/>
+                <constraint firstItem="mzD-n5-IlL" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="qO7-iW-Unl"/>
+                <constraint firstItem="ysM-AR-GRG" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="u0q-f4-JEO"/>
+                <constraint firstItem="mzD-n5-IlL" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="z2J-TB-RUV"/>
+            </constraints>
+            <point key="canvasLocation" x="462" y="294.5"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="NSShareTemplate" width="11" height="16"/>
+    </resources>
+</document>

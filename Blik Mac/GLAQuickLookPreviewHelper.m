@@ -31,6 +31,11 @@
 			[activeQuickLookPreviewPanel orderOut:nil];
 		}
 	}
+	
+	QLPreviewView *quickLookPreviewView = (self.quickLookPreviewView);
+	if (quickLookPreviewView && (quickLookPreviewView.previewItem) != nil) {
+		[quickLookPreviewView close];
+	}
 }
 
 - (void)dealloc
@@ -112,26 +117,36 @@
 
 - (void)updateQuickLookPreviewAnimating:(BOOL)animate
 {
+#if DEBUG
+	NSLog(@"updateQuickLookPreviewAnimating %@", (self.activeQuickLookPreviewPanel));
+#endif
+	// PANEL
 	if (self.activeQuickLookPreviewPanel) {
 		[(self.activeQuickLookPreviewPanel) reloadData];
 	}
 	
+	// PREVIEW
 	if (!(self.quickLookPreviewView)) {
 		GLAViewController *previewHolderViewController = [[GLAViewController alloc] init];
 		NSView *holderView = (self.previewHolderView);
-		(holderView.wantsLayer) = YES;
-		(holderView.canDrawSubviewsIntoLayer) = YES;
-		(previewHolderViewController.view) = holderView;
-		
-		(self.previewHolderViewController) = previewHolderViewController;
-		
-		QLPreviewView *quickLookPreviewView = [[QLPreviewView alloc] initWithFrame:NSZeroRect style:QLPreviewViewStyleNormal];
-		(quickLookPreviewView.wantsLayer) = YES;
-		[previewHolderViewController fillViewWithChildView:quickLookPreviewView];
-		(self.quickLookPreviewView) = quickLookPreviewView;
+		if (holderView) {
+			(holderView.wantsLayer) = YES;
+			(holderView.canDrawSubviewsIntoLayer) = YES;
+			(previewHolderViewController.view) = holderView;
+			
+			(self.previewHolderViewController) = previewHolderViewController;
+			
+			QLPreviewView *quickLookPreviewView = [[QLPreviewView alloc] initWithFrame:NSZeroRect style:QLPreviewViewStyleNormal];
+			(quickLookPreviewView.wantsLayer) = YES;
+			[previewHolderViewController fillViewWithChildView:quickLookPreviewView];
+			(self.quickLookPreviewView) = quickLookPreviewView;
+		}
 	}
 	
 	NSArray *selectedURLs = (self.selectedURLs);
+#if DEBUG
+	NSLog(@"selectedURLs %@", selectedURLs);
+#endif
 	NSURL *URL = nil;
 	
 	if ((selectedURLs.count) == 1) {
@@ -145,36 +160,39 @@
 	}
 	(self.activeURL) = URL;
 	
+	// Animate preview
 	QLPreviewView *quickLookPreviewView = (self.quickLookPreviewView);
-	CGFloat alphaValue = (URL != nil) ? 1.0 : 0.0;
-	
-	@try {
-		if (animate) {
-			[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-				(context.duration) = 2.0 / 16.0;
-				(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-				
-				if (URL) {
-					(quickLookPreviewView.previewItem) = URL;
-				}
-				
-				quickLookPreviewView.animator.alphaValue = alphaValue;
-			} completionHandler:^{
-				if (!URL) {
-					(quickLookPreviewView.previewItem) = nil;
-				}
-			}];
-		}
-		else {
-			(quickLookPreviewView.alphaValue) = alphaValue;
-			(quickLookPreviewView.previewItem) = URL;
-		}
-	}
-	@catch (NSException *exception) {
-		NSLog(@"Quick Look exception %@", exception);
-	}
-	@finally {
+	if (quickLookPreviewView) {
+		CGFloat alphaValue = (URL != nil) ? 1.0 : 0.0;
 		
+		@try {
+			if (animate) {
+				[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+					(context.duration) = 2.0 / 16.0;
+					(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+					
+					if (URL) {
+						(quickLookPreviewView.previewItem) = URL;
+					}
+					
+					quickLookPreviewView.animator.alphaValue = alphaValue;
+				} completionHandler:^{
+					if (!URL) {
+						(quickLookPreviewView.previewItem) = nil;
+					}
+				}];
+			}
+			else {
+				(quickLookPreviewView.alphaValue) = alphaValue;
+				(quickLookPreviewView.previewItem) = URL;
+			}
+		}
+		@catch (NSException *exception) {
+			NSLog(@"Quick Look exception %@", exception);
+		}
+		@finally {
+			
+		}
 	}
 }
 
@@ -189,6 +207,9 @@
 
 - (void)beginPreviewPanelControl:(QLPreviewPanel *)panel
 {
+#if DEBUG
+	NSLog(@"beginPreviewPanelControl");
+#endif
 	(panel.delegate) = self;
 	(panel.dataSource) = self;
 	
@@ -201,6 +222,28 @@
 	(panel.dataSource) = nil;
 	
 	(self.activeQuickLookPreviewPanel) = nil;
+}
+
+- (void)showQuickLookPanel:(BOOL)show
+{
+	QLPreviewPanel *qlPanel = [QLPreviewPanel sharedPreviewPanel];
+	
+	BOOL isCurrentlyShowing = (qlPanel.isVisible);
+	if (isCurrentlyShowing == show) {
+		return;
+	}
+	
+	if (show) {
+		// Only show if there is something selected to show.
+		if ((self.selectedURLs.count) == 0) {
+			return;
+		}
+		
+		[qlPanel makeKeyAndOrderFront:nil];
+	}
+	else {
+		[qlPanel orderOut:nil];
+	}
 }
 
 - (IBAction)quickLookPreviewItems:(id)sender

@@ -12,6 +12,10 @@
 
 @interface GLANavigationButtonGroup ()
 
+@property(readwrite, nonatomic) NSView *leadingView;
+@property(readwrite, nonatomic) NSView *centerView;
+@property(readwrite, nonatomic) NSView *trailingView;
+
 @property(nonatomic) NSUInteger animatingCounter;
 
 @end
@@ -43,27 +47,101 @@
 	return buttonGroup;
 }
 
+#pragma mark -
+
+- (void)addChildView:(NSView *)childView
+{
+	GLAViewController *vc = (self.viewController);
+	NSView *view = (vc.view);
+	[view addSubview:childView];
+	
+	(childView.translatesAutoresizingMaskIntoConstraints) = NO;
+	
+	[vc addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:childView identifier:@"top"];
+	[vc addLayoutConstraintToMatchAttribute:NSLayoutAttributeHeight withChildView:childView identifier:@"height"];
+}
+
+- (void)addLeadingView:(NSView *)childView
+{
+	[self addChildView:childView];
+	(self.leadingView) = childView;
+	
+	GLAViewController *vc = (self.viewController);
+	[vc addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:childView identifier:@"leading"];
+}
+
+- (void)addCenterView:(NSView *)childView
+{
+	[self addChildView:childView];
+	(self.centerView) = childView;
+	
+	GLAViewController *vc = (self.viewController);
+	[vc addLayoutConstraintToMatchAttribute:NSLayoutAttributeCenterX withChildView:childView identifier:@"centerX"];
+}
+
+- (void)addTrailingView:(NSView *)childView
+{
+	[self addChildView:childView];
+	(self.trailingView) = childView;
+	
+	GLAViewController *vc = (self.viewController);
+	[vc addLayoutConstraintToMatchAttribute:NSLayoutAttributeTrailing withChildView:childView identifier:@"trailing"];
+}
+
+#pragma mark -
+
 - (GLAButton *)addButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier
 {
 	GLAViewController *vc = (self.viewController);
 	
 	GLAButton *button = [GLAButton new];
 	(button.cell) = [(self.templateButton.cell) copy];
+	//GLAButton *button = [(self.templateButton) copy];
 	(button.identifier) = identifier;
 	(button.title) = title;
 	if (action) {
 		(button.target) = vc;
 		(button.action) = action;
 	}
-	(button.translatesAutoresizingMaskIntoConstraints) = NO;
-	
-	NSView *view = (vc.view);
-	[view addSubview:button];
-	
-	[vc addLayoutConstraintToMatchAttribute:NSLayoutAttributeTop withChildView:button identifier:@"top"];
-	[vc addLayoutConstraintToMatchAttribute:NSLayoutAttributeHeight withChildView:button identifier:@"height"];
+	else {
+		(button.target) = nil;
+		(button.action) = nil;
+	}
 	
 	return button;
+}
+
+- (GLAButton *)leadingButton
+{
+	NSView *leadingView = (self.leadingView);
+	if (leadingView && [leadingView isKindOfClass:[GLAButton class]]) {
+		return (GLAButton *)leadingView;
+	}
+	else {
+		return nil;
+	}
+}
+
+- (GLAButton *)centerButton
+{
+	NSView *centerView = (self.centerView);
+	if (centerView && [centerView isKindOfClass:[GLAButton class]]) {
+		return (GLAButton *)centerView;
+	}
+	else {
+		return nil;
+	}
+}
+
+- (GLAButton *)trailingButton
+{
+	NSView *trailingView = (self.trailingView);
+	if (trailingView && [trailingView isKindOfClass:[GLAButton class]]) {
+		return (GLAButton *)trailingView;
+	}
+	else {
+		return nil;
+	}
 }
 
 - (GLAButton *)makeLeadingButtonWithTitle:(NSString *)title action:(SEL)action identifier:(NSString *)identifier
@@ -72,10 +150,7 @@
 	
 	(button.hasSecondaryStyle) = YES;
 	
-	GLAViewController *vc = (self.viewController);
-	[vc addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:button identifier:@"leading"];
-	
-	(self.leadingButton) = button;
+	[self addLeadingView:button];
 	
 	return button;
 }
@@ -87,10 +162,7 @@
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	(button.font) = (uiStyle.labelFont);
 	
-	GLAViewController *vc = (self.viewController);
-	[vc addLayoutConstraintToMatchAttribute:NSLayoutAttributeCenterX withChildView:button identifier:@"centerX"];
-	
-	(self.centerButton) = button;
+	[self addCenterView:button];
 	
 	return button;
 }
@@ -101,10 +173,7 @@
 	
 	(button.hasSecondaryStyle) = YES;
 	
-	GLAViewController *vc = (self.viewController);
-	[vc addLayoutConstraintToMatchAttribute:NSLayoutAttributeLeading withChildView:button identifier:@"trailing"];
-	
-	(self.leadingButton) = button;
+	[self addTrailingView:button];
 	
 	return button;
 }
@@ -120,7 +189,7 @@
 	(self.animatingCounter)--;
 }
 
-- (void)animateInButton:(GLAButton *)button duration:(NSTimeInterval)duration constraintIdentifier:(NSString *)constraintIdentifier constraintStartValue:(CGFloat)constraintStartValue
+- (void)animateInView:(NSView *)view duration:(NSTimeInterval)duration constraintIdentifier:(NSString *)constraintIdentifier constraintStartValue:(CGFloat)constraintStartValue constraintEndValue:(CGFloat)constraintEndValue
 {
 	GLAViewController *vc = (self.viewController);
 	
@@ -129,19 +198,19 @@
 		(context.duration) = duration;
 		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
 		
-		NSLayoutConstraint *constraint = [vc layoutConstraintWithIdentifier:constraintIdentifier forChildView:button];
+		NSLayoutConstraint *constraint = [vc layoutConstraintWithIdentifier:constraintIdentifier forChildView:view];
 		
-		(button.alphaValue) = 0.0;
-		(button.animator.alphaValue) = 1.0;
+		(view.alphaValue) = 0.0;
+		(view.animator.alphaValue) = 1.0;
 		
 		(constraint.constant) = constraintStartValue;
-		(constraint.animator.constant) = 0.0;
+		(constraint.animator.constant) = constraintEndValue;
 	} completionHandler:^ {
 		[self didEndAnimating];
 	}];
 }
 
-- (void)animateOutButton:(GLAButton *)button duration:(NSTimeInterval)duration constraintIdentifier:(NSString *)constraintIdentifier constraintEndValue:(CGFloat)constraintEndValue completionHandler:(dispatch_block_t)completionHandler
+- (void)animateOutView:(NSView *)view duration:(NSTimeInterval)duration constraintIdentifier:(NSString *)constraintIdentifier constraintEndValue:(CGFloat)constraintEndValue completionHandler:(dispatch_block_t)completionHandler
 {
 	GLAViewController *vc = (self.viewController);
 	
@@ -150,13 +219,13 @@
 		(context.duration) = duration;
 		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
 		
-		NSLayoutConstraint *constraint = [vc layoutConstraintWithIdentifier:constraintIdentifier forChildView:button];
+		NSLayoutConstraint *constraint = [vc layoutConstraintWithIdentifier:constraintIdentifier forChildView:view];
 		
-		(button.animator.alphaValue) = 0.0;
+		(view.animator.alphaValue) = 0.0;
 		
 		(constraint.animator.constant) = constraintEndValue;
 	} completionHandler:^ {
-		[button removeFromSuperview];
+		[view removeFromSuperview];
 		
 		completionHandler();
 		
@@ -166,28 +235,28 @@
 
 - (void)animateButtonsIn
 {
-	GLAButton *leadingButton = (self.leadingButton);
-	GLAButton *centerButton = (self.centerButton);
-	GLAButton *trailingButton = (self.trailingButton);
+	NSView *leadingView = (self.leadingView);
+	NSView *centerView = (self.centerView);
+	NSView *trailingView = (self.trailingView);
 	
-	if (leadingButton) {
-		[self animateInButton:leadingButton duration:(self.leadingButtonInDuration) constraintIdentifier:@"leading" constraintStartValue:-250.0];
+	if (leadingView) {
+		[self animateInView:leadingView duration:(self.leadingButtonInDuration) constraintIdentifier:@"leading" constraintStartValue:-250.0 constraintEndValue:0.0];
 	}
 	
-	if (centerButton) {
-		[self animateInButton:centerButton duration:(self.centerButtonInDuration) constraintIdentifier:@"top" constraintStartValue:50.0];
+	if (centerView) {
+		[self animateInView:centerView duration:(self.centerButtonInDuration) constraintIdentifier:@"top" constraintStartValue:50.0 constraintEndValue:0.0];
 	}
 	
-	if (trailingButton) {
-		[self animateInButton:trailingButton duration:(self.trailingButtonInDuration) constraintIdentifier:@"trailing" constraintStartValue:250.0];
+	if (trailingView) {
+		[self animateInView:trailingView duration:(self.trailingButtonInDuration) constraintIdentifier:@"trailing" constraintStartValue:250.0 constraintEndValue:(self.trailingViewOffset)];
 	}
 }
 
 - (void)animateButtonsOutWithCompletionHandler:(dispatch_block_t)completionHandler
 {
-	GLAButton *leadingButton = (self.leadingButton);
-	GLAButton *centerButton = (self.centerButton);
-	GLAButton *trailingButton = (self.trailingButton);
+	NSView *leadingView = (self.leadingView);
+	NSView *centerButton = (self.centerView);
+	NSView *trailingButton = (self.trailingView);
 	__block NSUInteger buttonsAnimating = 0;
 	
 	dispatch_block_t individualButtonCompletionHandler = ^{
@@ -197,19 +266,19 @@
 		}
 	};
 	
-	if (leadingButton) {
+	if (leadingView) {
 		buttonsAnimating++;
-		[self animateOutButton:leadingButton duration:(self.leadingButtonInDuration) constraintIdentifier:@"leading" constraintEndValue:-250.0 completionHandler:individualButtonCompletionHandler];
+		[self animateOutView:leadingView duration:(self.leadingButtonInDuration) constraintIdentifier:@"leading" constraintEndValue:-250.0 completionHandler:individualButtonCompletionHandler];
 	}
 	
 	if (centerButton) {
 		buttonsAnimating++;
-		[self animateOutButton:centerButton duration:(self.centerButtonInDuration) constraintIdentifier:@"top" constraintEndValue:50.0 completionHandler:individualButtonCompletionHandler];
+		[self animateOutView:centerButton duration:(self.centerButtonInDuration) constraintIdentifier:@"top" constraintEndValue:50.0 completionHandler:individualButtonCompletionHandler];
 	}
 	
 	if (trailingButton) {
 		buttonsAnimating++;
-		[self animateOutButton:trailingButton duration:(self.trailingButtonInDuration) constraintIdentifier:@"trailing" constraintEndValue:250.0 completionHandler:individualButtonCompletionHandler];
+		[self animateOutView:trailingButton duration:(self.trailingButtonInDuration) constraintIdentifier:@"trailing" constraintEndValue:250.0 completionHandler:individualButtonCompletionHandler];
 	}
 	
 	if (buttonsAnimating == 0) {

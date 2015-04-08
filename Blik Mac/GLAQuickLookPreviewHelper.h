@@ -36,6 +36,7 @@
 
 - (void)updateQuickLookPreviewAnimating:(BOOL)animate;
 
+- (void)showQuickLookPanel:(BOOL)show;
 - (IBAction)quickLookPreviewItems:(id)sender;
 
 - (void)deactivate;

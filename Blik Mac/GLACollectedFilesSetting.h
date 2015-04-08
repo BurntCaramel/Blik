@@ -31,6 +31,7 @@ typedef id (^ GLACollectedFilesSettingFileInfoRetriever)(GLAFileInfoRetriever *f
 
 // Must call -startAccessing first. Can be nil.
 - (GLAAccessedFileInfo *)accessedFileInfoForCollectedFile:(GLACollectedFile *)collectedFile;
+- (NSURL *)filePathURLForCollectedFile:(GLACollectedFile *)collectedFile;
 
 - (void)invalidateAllAccessedFiles;
 
@@ -49,3 +50,4 @@ typedef id (^ GLACollectedFilesSettingFileInfoRetriever)(GLAFileInfoRetriever *f
 
 extern NSString *GLACollectedFilesSettingDirectoriesDidChangeNotification;
 extern NSString *GLACollectedFilesSettingLoadedFileInfoDidChangeNotification;
+extern NSString *GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedFile;

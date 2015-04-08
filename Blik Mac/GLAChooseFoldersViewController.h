@@ -12,6 +12,7 @@
 #import "GLAInstructionsViewController.h"
 
 
+// For project primary folders, permitted application folders, etc.
 @interface GLAChooseFoldersViewController : GLAViewController <NSTableViewDataSource, NSTableViewDelegate, GLACollectedFileListHelperDelegate, GLAArrayTableDraggingHelperDelegate>
 
 @property(nonatomic) IBOutlet GLAViewController *mainHolderViewController;

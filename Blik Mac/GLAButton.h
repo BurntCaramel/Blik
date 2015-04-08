@@ -37,15 +37,15 @@
 
 @interface NSButton (GLAButtonStyling)
 
-+ (NSColor *)backgroundColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button highlighted:(BOOL)highlighted;
-+ (NSColor *)textColorForDrawingGLAStyledButton:(NSButtonCell<GLAButtonStyling> *)button;
-+ (NSRect)insetBoundsForGLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell withBounds:(NSRect)bounds inView:(NSView *)controlView;
++ (NSColor *)backgroundColorForDrawingGLAStyledButton:(NSActionCell<GLAButtonStyling> *)button selected:(BOOL)selected highlighted:(BOOL)highlighted;
++ (NSColor *)textColorForDrawingGLAStyledButton:(NSActionCell<GLAButtonStyling> *)button;
++ (NSRect)insetBoundsForGLAStyledCell:(NSActionCell<GLAButtonStyling> *)buttonCell withBounds:(NSRect)bounds inView:(NSView *)controlView;
 
-+ (void)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView;
++ (void)GLAStyledCell:(NSActionCell<GLAButtonStyling> *)buttonCell drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView;
 
-+ (NSRect)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell adjustTitleRect:(NSRect)titleRect;
-+ (NSAttributedString *)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell adjustAttributedTitle:(NSAttributedString *)title;
-+ (NSRect)GLAStyledCell:(NSButtonCell<GLAButtonStyling> *)buttonCell drawTitle:(NSAttributedString *)title withFrame:(NSRect)frame inView:(NSView *)controlView;
++ (NSRect)GLAStyledCell:(NSActionCell<GLAButtonStyling> *)buttonCell adjustTitleRect:(NSRect)titleRect;
++ (NSAttributedString *)GLAStyledCell:(NSActionCell<GLAButtonStyling> *)buttonCell adjustAttributedTitle:(NSAttributedString *)title;
++ (NSRect)GLAStyledCell:(NSActionCell<GLAButtonStyling> *)buttonCell drawTitle:(NSAttributedString *)title withFrame:(NSRect)frame inView:(NSView *)controlView;
 
 - (void)gla_animateHighlightForHovered:(BOOL)hovered;
 - (void)gla_animateHighlightForPressed:(BOOL)pressed;

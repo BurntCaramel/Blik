@@ -9,6 +9,9 @@
 #import "GLAButton.h"
 
 
+// Round reminder style button
+
+
 @interface GLAToggleButtonCell : GLAButtonCell
 
 @end

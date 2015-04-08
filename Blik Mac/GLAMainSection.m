@@ -122,18 +122,24 @@
 
 @implementation GLAEditCollectionSection
 
-- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainSection *)previousSection collection:(GLACollection *)collection
+- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainSection *)previousSection collection:(GLACollection *)collection viewMode:(NSString *)viewMode
 {
 	self = [super initWithBaseIdentifier:baseIdentifier previousSection:previousSection];
 	if (self) {
 		_collection = collection;
+		_viewMode = [viewMode copy];
 	}
 	return self;
 }
 
++ (instancetype)editCollectionSectionWithCollection:(GLACollection *)collection viewMode:(NSString *)viewMode previousSection:(GLAMainSection *)previousSection
+{
+	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierEditCollection previousSection:previousSection collection:collection viewMode:viewMode];
+}
+
 + (instancetype)editCollectionSectionWithCollection:(GLACollection *)collection previousSection:(GLAMainSection *)previousSection
 {
-	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierEditCollection previousSection:previousSection collection:collection];
+	return [self editCollectionSectionWithCollection:collection viewMode:(collection.viewMode) previousSection:previousSection];
 }
 
 #pragma mark JSON

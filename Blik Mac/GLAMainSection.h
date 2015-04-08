@@ -62,10 +62,12 @@
 @interface GLAEditCollectionSection : GLAMainSection
 
 // Designated init:
-- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainSection *)previousSection collection:(GLACollection *)collection;
+- (instancetype)initWithBaseIdentifier:(NSString *)baseIdentifier previousSection:(GLAMainSection *)previousSection collection:(GLACollection *)collection viewMode:(NSString *)viewMode;
 
 @property(readonly, nonatomic) GLACollection *collection;
+@property(readonly, copy, nonatomic) NSString *viewMode;
 
++ (instancetype)editCollectionSectionWithCollection:(GLACollection *)collection viewMode:(NSString *)viewMode previousSection:(GLAMainSection *)previousSection;
 + (instancetype)editCollectionSectionWithCollection:(GLACollection *)collection previousSection:(GLAMainSection *)previousSection;
 
 @end

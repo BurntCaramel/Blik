@@ -12,6 +12,7 @@
 #import "GLAQuickLookPreviewHelper.h"
 // Model
 #import "GLACollection.h"
+#import "GLAProject.h"
 #import "GLACollectedFilesSetting.h"
 #import "GLAFileInfoRetriever.h"
 #import "GLAFileOpenerApplicationCombiner.h"
@@ -22,6 +23,8 @@
 @property(nonatomic) IBOutlet NSTableView *sourceFilesListTableView;
 @property(strong, nonatomic) IBOutlet NSMenu *sourceFilesListContextualMenu;
 @property(strong, nonatomic) IBOutlet NSMenuItem *addToHighlightsMenuItem;
+
+@property(nonatomic) IBOutlet NSStackView *sourceFilesStackView;
 
 @property(strong, nonatomic) IBOutlet GLAPopUpButton *openerApplicationsPopUpButton;
 @property(strong, nonatomic) IBOutlet GLAButton *shareButton;

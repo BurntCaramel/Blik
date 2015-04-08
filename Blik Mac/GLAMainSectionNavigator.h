@@ -39,6 +39,8 @@
 - (void)addNewProject;
 
 - (void)goToCollection:(GLACollection *)collection;
+- (void)collectionMakeViewModeList;
+- (void)collectionMakeViewModeExpanded;
 
 - (void)addNewCollectionToProject:(GLAProject *)project;
 - (void)addNewCollectionGoToCollectedFilesSection;
