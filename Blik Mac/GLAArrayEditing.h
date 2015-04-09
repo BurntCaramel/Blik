@@ -54,8 +54,6 @@ typedef id (^ GLAArrayChildVisitorBlock)(id child);
 
 @protocol GLALoadableArrayUsing <NSObject>
 
-@property(nonatomic) id representedObject;
-
 //@property(copy, nonatomic) dispatch_block_t loadCompletionBlock;
 @property(copy, nonatomic) GLAArrayInspectingBlock changeCompletionBlock;
 
@@ -64,5 +62,7 @@ typedef id (^ GLAArrayChildVisitorBlock)(id child);
 - (NSArray *)copyChildrenLoadingIfNeeded;
 - (id<GLAArrayInspecting>)inspectLoadingIfNeeded;
 - (void)editChildrenUsingBlock:(GLAArrayEditingBlock)block;
+
+@property(nonatomic) id representedObject;
 
 @end

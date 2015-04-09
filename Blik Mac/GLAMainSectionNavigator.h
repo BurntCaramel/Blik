@@ -23,6 +23,8 @@
 
 - (instancetype)initWithProjectManager:(GLAProjectManager *)projectManager NS_DESIGNATED_INITIALIZER;
 
++ (instancetype)sharedMainSectionNavigator;
+
 @property(nonatomic) GLAProjectManager *projectManager;
 
 - (void)goToSection:(GLAMainSection *)newSection;

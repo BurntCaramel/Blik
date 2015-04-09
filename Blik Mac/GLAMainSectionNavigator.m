@@ -50,6 +50,16 @@
 	[self unregisterForNotificationsForCurrentSection];
 }
 
++ (instancetype)sharedMainSectionNavigator
+{
+	static GLAMainSectionNavigator *sharedInstance;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		sharedInstance = [[GLAMainSectionNavigator alloc] initWithProjectManager:[GLAProjectManager sharedProjectManager]];
+	});
+	return sharedInstance;
+}
+
 #pragma mark -
 
 - (void)goToSection:(GLAMainSection *)newSection

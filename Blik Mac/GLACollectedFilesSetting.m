@@ -108,21 +108,10 @@
 	directoryURLsToWatch = [directoryURLsToWatch copy];
 	_directoryURLsToWatch = directoryURLsToWatch;
 	(_directoryWatcher.directoryURLsToWatch) = directoryURLsToWatch;
-	
-#if 0 && DEBUG
-	if (directoryURLsToWatch && (directoryURLsToWatch.count > 0)) {
-		NSURL *directoryURL = [directoryURLsToWatch anyObject];
-		NSSet *tagNames = [GLAFolderQuery availableTagNamesInsideFolderURL:directoryURL];
-		NSLog(@"TAG NAMES INSIDE %@: %@", directoryURL, tagNames);
-	}
-#endif
 }
 
 - (void)directoryWatcherDirectoriesDidChangeNotification:(NSNotification *)note
 {
-#if 0 && DEBUG
-	NSLog(@"directoryWatcherDirectoriesDidChangeNotification");
-#endif
 	[self invalidateAllAccessedFiles];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLACollectedFilesSettingDirectoriesDidChangeNotification object:self];
@@ -479,3 +468,49 @@
 NSString *GLACollectedFilesSettingDirectoriesDidChangeNotification = @"GLACollectedFilesSettingDirectoriesDidChangeNotification";
 NSString *GLACollectedFilesSettingLoadedFileInfoDidChangeNotification = @"GLACollectedFilesSettingLoadedFileInfoDidChangeNotification";
 NSString *GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedFile = @"GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedFile";
+
+
+@implementation GLACollectedFilesSetting (UIConvenience)
+
+- (void)setUpTableCellView:(NSTableCellView *)cellView forTableColumn:(NSTableColumn *)tableColumn collectedFile:(GLACollectedFile *)collectedFile
+{
+	NSString *displayName = nil;
+	NSImage *iconImage = nil;
+	BOOL hasImageView = (cellView.imageView != nil);
+	
+	if (collectedFile) {
+		displayName = [self copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+		if (hasImageView) {
+			iconImage = [self copyValueForURLResourceKey:NSURLEffectiveIconKey forCollectedFile:collectedFile];
+		}
+	}
+	
+	(cellView.textField.stringValue) = displayName ?: @"Loading…";
+	if (hasImageView) {
+		(cellView.imageView.image) = iconImage;
+	}
+}
+
+- (void)setUpMenuItem:(NSMenuItem *)menuItem forOptionalCollectedFile:(GLACollectedFile *)collectedFile wantsIcon:(BOOL)wantsIcon
+{
+	NSString *displayName = nil;
+	NSImage *iconImage = nil;
+	
+	if (collectedFile) {
+		displayName = [self copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+		if (wantsIcon) {
+			iconImage = [self copyValueForURLResourceKey:NSURLEffectiveIconKey forCollectedFile:collectedFile];
+			if (iconImage) {
+				iconImage = [iconImage copy];
+				[iconImage setSize:NSMakeSize(16.0, 16.0)];
+			}
+		}
+	}
+	
+	(menuItem.title) = displayName ?: @"Loading…";
+	if (wantsIcon) {
+		(menuItem.image) = iconImage;
+	}
+}
+
+@end

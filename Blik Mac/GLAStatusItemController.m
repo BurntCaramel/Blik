@@ -7,6 +7,7 @@
 //
 
 #import "GLAStatusItemController.h"
+#import "GLAProjectsListMenuController.h"
 
 
 NSString *GLAStatusItemShowsItem = @"statusItem.showsItem";
@@ -15,6 +16,8 @@ NSString *GLAStatusItemShowsItem = @"statusItem.showsItem";
 @interface GLAStatusItemController ()
 
 @property(readwrite, nonatomic) BOOL showsItem;
+
+@property(nonatomic) GLAProjectsListMenuController *menuController;
 
 @end
 
@@ -90,6 +93,10 @@ NSString *GLAStatusItemShowsItem = @"statusItem.showsItem";
 	(statusItem.target) = self;
 	(statusItem.action) = @selector(toggleAppIsActive:);
 	[statusItem sendActionOn:NSLeftMouseUpMask];
+	
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Projects"];
+	_menuController = [[GLAProjectsListMenuController alloc] initWithMenu:menu];
+	(statusItem.menu) = menu;
 	
 	(self.statusItem) = statusItem;
 }

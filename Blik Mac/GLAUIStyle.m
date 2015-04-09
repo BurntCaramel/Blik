@@ -132,6 +132,8 @@
 		(style.projectTitleFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:17.0];
 		//(style.projectTitleFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:17.0];
 		
+		(style.collectionFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:16.0];
+		
 #if 0
 		(style.smallReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
 		(style.smallReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextRegular size:13.0];
@@ -147,6 +149,8 @@
 		
 		(style.buttonFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
 		(style.labelFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:13.0];
+		
+		(style.menuFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:14.0];
 #else
 		(style.smallReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
 		(style.smallReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:13.0];

@@ -51,3 +51,12 @@ typedef id (^ GLACollectedFilesSettingFileInfoRetriever)(GLAFileInfoRetriever *f
 extern NSString *GLACollectedFilesSettingDirectoriesDidChangeNotification;
 extern NSString *GLACollectedFilesSettingLoadedFileInfoDidChangeNotification;
 extern NSString *GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedFile;
+
+
+@interface GLACollectedFilesSetting (UIConvenience)
+
+- (void)setUpTableCellView:(NSTableCellView *)cellView forTableColumn:(NSTableColumn *)tableColumn collectedFile:(GLACollectedFile *)collectedFile;
+
+- (void)setUpMenuItem:(NSMenuItem *)menuItem forOptionalCollectedFile:(GLACollectedFile *)collectedFile wantsIcon:(BOOL)wantsIcon;
+
+@end

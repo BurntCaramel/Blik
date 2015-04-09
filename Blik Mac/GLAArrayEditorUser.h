@@ -21,4 +21,6 @@ typedef void (^ GLAArrayEditorUserEditBlock)(GLAArrayEditingBlock editingBlock);
 - (void)makeObserverOfOwnerForLoadNotificationWithName:(NSString *)loadNotificationName changeNotificationWithName:(NSString *)changeNotificationName;
 - (void)makeObserverOfObject:(id)notifier forLoadNotificationWithName:(NSString *)loadNotificationName changeNotificationWithName:(NSString *)changeNotificationName;
 
+- (void)didChangeNotification:(NSNotification *)note;
+
 @end

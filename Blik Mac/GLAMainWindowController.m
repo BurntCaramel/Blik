@@ -50,7 +50,7 @@
 	//(window.excludedFromWindowsMenu) = NO;
 	[NSApp addWindowsItem:window title:NSLocalizedString(@"Main Window", @"Title for main window as it appears in the Windows menu") filename:NO];
 	
-	(self.mainSectionNavigator) = [[GLAMainSectionNavigator alloc] initWithProjectManager:[GLAProjectManager sharedProjectManager]];
+	(self.mainSectionNavigator) = [GLAMainSectionNavigator sharedMainSectionNavigator];
 	
 	[self setUpNotifications];
 	[self setUpBaseUI];

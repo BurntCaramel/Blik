@@ -163,22 +163,12 @@
 	return [(self.collectedFilesSetting) accessedFileInfoForCollectedFile:collectedFile];
 }
 
+#pragma mark -
+
 - (void)setUpTableCellView:(NSTableCellView *)cellView forTableColumn:(NSTableColumn *)tableColumn collectedFile:(GLACollectedFile *)collectedFile
 {
-	NSString *displayName = nil;
-	NSImage *iconImage = nil;
-	BOOL hasImageView = (cellView.imageView != nil);
-	
 	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
-	displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
-	if (hasImageView) {
-		iconImage = [collectedFilesSetting copyValueForURLResourceKey:NSURLEffectiveIconKey forCollectedFile:collectedFile];
-	}
-	
-	(cellView.textField.stringValue) = displayName ?: @"";
-	if (hasImageView) {
-		(cellView.imageView.image) = iconImage;
-	}
+	[collectedFilesSetting setUpTableCellView:cellView forTableColumn:tableColumn collectedFile:collectedFile];
 }
 
 #if 0

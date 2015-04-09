@@ -104,6 +104,8 @@
 @property(nonatomic) NSFont *buttonFont;
 @property(nonatomic) NSFont *labelFont;
 
+@property(nonatomic) NSFont *menuFont;
+
 
 #pragma mark Preparing Views
 

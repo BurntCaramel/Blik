@@ -258,10 +258,12 @@
 	
 	_filesListCollection = filesListCollection;
 	
-	[self setUpFileHelpersIfNeeded];
-	
-	[self startCollectionObserving];
-	[self watchProjectPrimaryFolders];
+	if (filesListCollection) {
+		[self setUpFileHelpersIfNeeded];
+		
+		[self startCollectionObserving];
+		[self watchProjectPrimaryFolders];
+	}
 	
 	[self reloadSourceFiles];
 }

@@ -30,6 +30,8 @@
 
 - (id<GLAFileAccessing>)accessFileForCollectedFile:(GLACollectedFile *)collectedFile;
 
+#pragma mark -
+
 - (void)setUpTableCellView:(NSTableCellView *)cellView forTableColumn:(NSTableColumn *)tableColumn collectedFile:(GLACollectedFile *)collectedFile;
 
 @end

@@ -58,46 +58,6 @@
 
 #pragma mark -
 
-#if 0
-
-@interface GLAHighlightedCollection () <GLAHighlightedCollectionEditing>
-
-@property(readwrite, nonatomic) GLACollection *collection;
-
-@end
-
-@implementation GLAHighlightedCollection
-
-+ (NSString *)objectJSONPasteboardType
-{
-	return @"com.burntcaramel.GLAHighlightedCollection.JSONPasteboardType";
-}
-
-+ (NSValueTransformer *)collectionJSONTransformer
-{
-	return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:[GLACollection class]];
-}
-
-- (instancetype)initByEditing:(void(^)(id<GLAHighlightedCollectionEditing> editor))editingBlock
-{
-	return [super initByEditing:editingBlock];
-}
-
-- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedCollectionEditing>editor))editingBlock
-{
-	GLAHighlightedCollection *copy = [self copy];
-	editingBlock(copy);
-	
-	return copy;
-}
-
-@end
-
-#endif
-
-
-#pragma mark -
-
 @interface GLAHighlightedCollectedFile ()
 
 @property(readwrite, nonatomic) NSUUID *holdingCollectionUUID;

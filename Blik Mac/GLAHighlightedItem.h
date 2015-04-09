@@ -43,25 +43,6 @@
 
 
 
-#if 0
-@protocol GLAHighlightedCollectionEditing <GLAHighlightedItemEditing>
-
-@property(readwrite, nonatomic) GLACollection *collection;
-
-@end
-
-@interface GLAHighlightedCollection : GLAHighlightedItem
-
-@property(readonly, nonatomic) GLACollection *collection;
-
-- (instancetype)initByEditing:(void(^)(id<GLAHighlightedCollectionEditing> editor))editingBlock;
-
-- (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedCollectionEditing>editor))editingBlock;
-
-@end
-#endif
-
-
 @protocol GLAHighlightedCollectedFileEditing <GLAHighlightedCollectedItemEditing>
 
 @property(readwrite, nonatomic) NSUUID *collectedFileUUID;

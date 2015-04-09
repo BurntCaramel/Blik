@@ -60,7 +60,7 @@
 - (void)collectionWasDeletedNotification:(NSNotification *)note
 {
 	NSDictionary *userInfo = (note.userInfo);
-	GLACollection *collection = userInfo[GLACollectionNotificationUserInfoCollectionKey];
+	GLACollection *collection = userInfo[GLANotificationUserInfoCollectionKey];
 	[self removeFromPluckListAllCollectedFilesInCollectionsWithUUIDs:[NSSet setWithObject:(collection.UUID)]];
 }
 

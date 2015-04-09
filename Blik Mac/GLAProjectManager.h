@@ -39,6 +39,8 @@
 
 - (BOOL)editAllProjectsUsingBlock:(void (^)(id<GLAArrayEditing> allProjectsEditor))block;
 
+- (id<GLALoadableArrayUsing>)useAllProjects;
+
 - (GLAProject *)createNewProjectWithName:(NSString *)name;
 
 - (GLAProject *)renameProject:(GLAProject *)project toName:(NSString *)name;
@@ -64,6 +66,8 @@
 
 #pragma mark Collections
 
+- (id<GLALoadableArrayUsing>)useCollectionsForProject:(GLAProject *)project;
+
 - (BOOL)hasLoadedCollectionsForProject:(GLAProject *)project;
 - (void)loadCollectionsForProjectIfNeeded:(GLAProject *)project;
 - (NSArray *)copyCollectionsForProject:(GLAProject *)project;
@@ -82,6 +86,8 @@
 - (void)permanentlyDeleteCollection:(GLACollection *)collection;
 
 #pragma mark Highlights
+
+- (id<GLALoadableArrayUsing>)useHighlightsForProject:(GLAProject *)project;
 
 - (BOOL)hasLoadedHighlightsForProject:(GLAProject *)project;
 - (void)loadHighlightsForProjectIfNeeded:(GLAProject *)project;
@@ -149,13 +155,16 @@ extern NSString *GLAProjectWasDeletedNotification;
 extern NSString *GLAProjectPrimaryFoldersDidChangeNotification;
 extern NSString *GLAProjectCollectionsDidChangeNotification;
 extern NSString *GLAProjectHighlightsDidChangeNotification;
+extern NSString *GLAProjectAnyCollectionFilesListDidChangeNotification; // Has GLANotificationUserInfoCollectionKey
 
 // Object is notificationObjectForCollection: GLACollection
 extern NSString *GLACollectionWasDeletedNotification;
 extern NSString *GLACollectionDidChangeNotification;
 extern NSString *GLACollectionFilesListDidChangeNotification;
 extern NSString *GLACollectionFolderQueryDidChangeNotification;
-extern NSString *GLACollectionNotificationUserInfoCollectionKey;
+
+// Keys
+extern NSString *GLANotificationUserInfoCollectionKey;
 
 //extern NSString *GLAProjectManagerProjectRemindersDidChangeNotification;
 

@@ -17,7 +17,6 @@
 @property(copy, nonatomic) GLAArrayEditorUserEditBlock sourceEditBlock;
 
 - (void)didLoadNotification:(NSNotification *)note;
-- (void)didChangeNotification:(NSNotification *)note;
 
 @end
 
@@ -111,8 +110,14 @@
 
 - (void)didChangeNotification:(NSNotification *)note
 {
-	GLAArrayEditor *arrayEditor = [self arrayEditorCreatingIfNeeded:YES LoadingIfNeeded:YES];
-	(self.changeCompletionBlock)(arrayEditor);
+#if DEBUG
+	NSLog(@"didChangeNotification %@", note.name);
+#endif
+	GLAArrayInspectingBlock changeCompletionBlock = (self.changeCompletionBlock);
+	if (changeCompletionBlock) {
+		GLAArrayEditor *arrayEditor = [self arrayEditorCreatingIfNeeded:YES LoadingIfNeeded:YES];
+		changeCompletionBlock(arrayEditor);
+	}
 }
 
 @end
