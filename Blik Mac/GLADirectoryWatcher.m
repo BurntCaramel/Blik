@@ -128,7 +128,7 @@ NSString *GLADirectoryWatcherArchiverKey_FSEventStreamEventId = @"FSEventStreamE
 		return;
 	}
 	
-#if DEBUG
+#if DEBUG && 0
 	NSLog(@"WATCHING directoryURLs %@", directoryURLs);
 #endif
 	

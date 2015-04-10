@@ -54,8 +54,7 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 
 @property(nonatomic) IBOutlet NSArray *allVisibleButtons;
 
-@property(nonatomic) IBOutlet GLAButton *editingProjectBackButton;
-@property(nonatomic) IBOutlet GLAButton *editingProjectWorkOnNowButton;
+@property(nonatomic) GLANavigationButtonGroup *viewProjectButtonGroup;
 
 @property(nonatomic) GLAMainNavigationButtonGroup *editingProjectPrimaryFoldersButtonGroup;
 @property(nonatomic) IBOutlet GLAButton *editingProjectPrimaryFoldersBackButton;
@@ -64,8 +63,6 @@ typedef NS_ENUM(NSInteger, GLAMainNavigationSection) {
 @property(nonatomic) IBOutlet GLAButton *addingNewProjectConfirmButton;
 @property(nonatomic) GLAMainNavigationButtonGroup *addingNewProjectButtonGroup;
 
-@property(nonatomic) IBOutlet GLAButton *collectionTitleButton;
-@property(nonatomic) IBOutlet GLAButton *collectionBackButton;
 @property(nonatomic) IBOutlet GLASegmentedControl *collectionViewModeSegmentedControl;
 @property(nonatomic) GLANavigationButtonGroup *collectionButtonGroup;
 

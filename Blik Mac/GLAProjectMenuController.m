@@ -152,6 +152,11 @@
 
 #pragma mark Actions
 
+- (void)activateApplication
+{
+	[[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+}
+
 - (IBAction)openHighlightedItem:(NSMenuItem *)sender
 {
 	GLAHighlightedItem *highlightedItem = (sender.representedObject);
@@ -170,20 +175,28 @@
 	
 	GLAMainSectionNavigator *navigator = (self.mainSectionNavigator);
 	[navigator goToCollection:collection];
+	
+	[self activateApplication];
 }
 
 - (IBAction)createNewCollection:(id)sender
 {
 	GLAMainSectionNavigator *navigator = (self.mainSectionNavigator);
 	[navigator addNewCollectionToProject:(self.project)];
+	
+	[self activateApplication];
+}
+
+- (IBAction)makeNowProject:(NSMenuItem *)sender
+{
+	GLAProjectManager *pm = (self.projectManager);
+	[pm changeNowProject:(self.project)];
 }
 
 #pragma mark Menu Delegate
 
 - (void)addMenuItemsForHighlightsToMenu:(NSMenu *)menu
 {
-	NSMenuItem *item = nil;
-	
 	id<GLAArrayInspecting> highlightsInspector = [self inspectHighlights];
 	GLAProjectManager *pm = (self.projectManager);
 	GLACollectedFileListHelper *collectedFileListHelper = (self.collectedFileListHelper);
@@ -216,7 +229,7 @@
 						[collectedFilesSetting startAccessingCollectedFile:collectedFile];
 					}
 					
-					[collectedFilesSetting setUpMenuItem:item forOptionalCollectedFile:collectedFile wantsIcon:NO];
+					[collectedFilesSetting setUpMenuItem:item forOptionalCollectedFile:collectedFile wantsIcon:YES];
 				}
 				else {
 					// No other highlighted item types currently.
@@ -303,7 +316,7 @@
 	// Work On Now
 	[menu addItem:[NSMenuItem separatorItem]];
 	
-	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Work On Now…", @"Status item menu item for working on a project now" ) action:@selector(createNewCollection:) keyEquivalent:@""];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Work On Now…", @"Status item menu item for working on a project now" ) action:@selector(makeNowProject:) keyEquivalent:@""];
 	(item.target) = self;
 	[menu addItem:item];
 	

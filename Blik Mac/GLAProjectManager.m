@@ -930,9 +930,6 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (void)collectionListForProjectDidChange:(GLAProject *)project
 {
-#if DEBUG
-	NSLog(@"collectionListForProjectDidChange");
-#endif
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectCollectionsDidChangeNotification object:[self notificationObjectForProject:project]];
 }
 

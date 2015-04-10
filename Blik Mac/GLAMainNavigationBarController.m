@@ -342,13 +342,14 @@
 
 - (void)showButtonsForEditingExistingProject
 {
+	GLANavigationButtonGroup *buttonGroup = [GLANavigationButtonGroup buttonGroupWithViewController:self templateButton:(self.templateButton)];
+	
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 	GLAProject *nowProject = (pm.nowProject);
 	GLAProject *currentProject = (self.currentProject);
 	
 	NSString *backTitle = (self.titleForEditingProjectBackButton);
-	GLAButton *backButton = [self addLeadingButtonWithTitle:backTitle action:@selector(exitEditedProject:) identifier:@"back-editingProject"];
-	(self.editingProjectBackButton) = backButton;
+	[buttonGroup makeLeadingButtonWithTitle:backTitle action:@selector(exitEditedProject:) identifier:@"back-editingProject"];
 	
 	NSString *workOnNowTitle = nil;
 	if ((nowProject != nil) && [(nowProject.UUID) isEqual:(currentProject.UUID)]) {
@@ -358,43 +359,22 @@
 		workOnNowTitle = NSLocalizedString(@"Work on Now", @"Title for Work on Now button in an edited project");
 	}
 	
-	GLAButton *workOnNowButton = [self addTrailingButtonWithTitle:workOnNowTitle action:@selector(workOnCurrentProjectNow:) identifier:@"workOnNow-editingProject"];
+	GLAButton *workOnNowButton = [buttonGroup makeTrailingButtonWithTitle:workOnNowTitle action:@selector(workOnCurrentProjectNow:) identifier:@"workOnNow-editingProject"];
 	(workOnNowButton.hasSecondaryStyle) = NO;
 	(workOnNowButton.hasPrimaryStyle) = YES;
-	(self.editingProjectWorkOnNowButton) = workOnNowButton;
 	
-	NSLayoutConstraint *backLeadingConstraint = [self layoutConstraintWithIdentifier:@"leading" forChildView:backButton];
 	
-	NSLayoutConstraint *workOnNowTrailingConstraint = [self layoutConstraintWithIdentifier:@"trailing" forChildView:workOnNowButton];
+	(buttonGroup.leadingButtonInDuration) = 4.0 / 12.0;
+	(buttonGroup.trailingButtonInDuration) = 4.0 / 12.0;
+	[buttonGroup animateButtonsIn];
 	
-	(self.animatingCounter)++;
-	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-		(context.duration) = 4.0 / 12.0;
-		(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-		
-		// Back button
-		(backButton.alphaValue) = 0.0;
-		(backButton.animator.alphaValue) = 1.0;
-		// Constraint
-		(backLeadingConstraint.constant) = -250.0;
-		(backLeadingConstraint.animator.constant) = 0.0;
-		
-		// Work on now button
-		(workOnNowButton.alphaValue) = 0.0;
-		(workOnNowButton.animator.alphaValue) = 1.0;
-		// Constraint
-		(workOnNowTrailingConstraint.constant) = 250.0;
-		(workOnNowTrailingConstraint.animator.constant) = 0.0;
-	} completionHandler:^ {
-		(self.animatingCounter)--;
-	}];
+	(self.viewProjectButtonGroup) = buttonGroup;
 }
 
 - (void)hideButtonsForEditingExistingProject
 {
-	[self hideLeadingButton:(self.editingProjectBackButton) trailingButton:(self.editingProjectWorkOnNowButton) centerButton:nil completionHandler:^{
-		(self.editingProjectBackButton) = nil;
-		(self.editingProjectWorkOnNowButton) = nil;
+	GLANavigationButtonGroup *buttonGroup = (self.viewProjectButtonGroup);
+	[buttonGroup animateButtonsOutWithCompletionHandler:^{
 	}];
 }
 
@@ -481,21 +461,19 @@
 - (void)showButtonsForCurrentCollection
 {
 	GLANavigationButtonGroup *buttonGroup = [GLANavigationButtonGroup buttonGroupWithViewController:self templateButton:(self.templateButton)];
-	//GLAMainNavigationButtonGroup *buttonGroup = [GLAMainNavigationButtonGroup buttonGroupWithBarController:self];
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	GLACollection *collection = (self.currentCollection);
 	
 	// Back
 	NSString *backTitle = NSLocalizedString(@"Back", @"Title for collection back button to go back");
-	(self.collectionBackButton) = [buttonGroup makeLeadingButtonWithTitle:backTitle action:@selector(exitEditedCollection:) identifier:@"back-collection"];
+	[buttonGroup makeLeadingButtonWithTitle:backTitle action:@selector(exitEditedCollection:) identifier:@"back-collection"];
 	
 	// Collection title
 	NSString *collectionTitle = (collection.name);
 	GLAButton *titleButton = [buttonGroup makeCenterButtonWithTitle:collectionTitle action:@selector(editCollectionDetails:) identifier:@"collectionTitle"];
 	(titleButton.hasSecondaryStyle) = NO;
 	(titleButton.textHighlightColor) = [uiStyle colorForCollectionColor:(collection.color)];
-	(self.collectionTitleButton) = titleButton;
 	
 	// Back
 	GLASegmentedControl *viewModeSegmentedControl = [[GLASegmentedControl alloc] init];
@@ -530,9 +508,7 @@
 - (void)hideButtonsForCurrentCollection
 {
 	[(self.collectionButtonGroup) animateButtonsOutWithCompletionHandler:^{
-		(self.collectionBackButton) = nil;
-		(self.collectionTitleButton) = nil;
-		(self.collectionButtonGroup) = nil;
+		
 	}];
 	
 	[(self.navigationBar) highlightWithColor:nil animate:YES];

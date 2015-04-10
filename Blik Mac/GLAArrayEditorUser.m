@@ -110,9 +110,6 @@
 
 - (void)didChangeNotification:(NSNotification *)note
 {
-#if DEBUG
-	NSLog(@"didChangeNotification %@", note.name);
-#endif
 	GLAArrayInspectingBlock changeCompletionBlock = (self.changeCompletionBlock);
 	if (changeCompletionBlock) {
 		GLAArrayEditor *arrayEditor = [self arrayEditorCreatingIfNeeded:YES LoadingIfNeeded:YES];

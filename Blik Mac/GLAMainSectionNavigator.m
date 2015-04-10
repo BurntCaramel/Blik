@@ -130,10 +130,15 @@
 {
 	NSParameterAssert(project != nil);
 	
+#if 0
+	GLAMainSection *currentSection = (self.currentSection);
 	GLAMainSection *previousSection = (self.currentSection);
 	if (previousSection.isAddNewProject) {
 		previousSection = nil;
 	}
+#else
+	GLAMainSection *previousSection = nil;
+#endif
 	
 	[self goToSection:[GLAEditProjectSection editProjectSectionWithProject:project previousSection:previousSection]];
 }
@@ -164,27 +169,34 @@
 {
 	NSParameterAssert(collection != nil);
 	
-	GLAEditProjectSection *editProjectSection;
+	NSUUID *projectUUIDForCollection = (collection.projectUUID);
+	
+	GLAEditProjectSection *previousProjectSection = nil;
 	GLAMainSection *currentSection = (self.currentSection);
+	// Use current section if it has the same project.
 	if ((currentSection.isEditProject) || (currentSection.isNow)) {
-		editProjectSection = (GLAEditProjectSection *)currentSection;
+		GLAEditProjectSection *currentProjectSection = (GLAEditProjectSection *)currentSection;
+		if ([(currentProjectSection.project.UUID) isEqual:projectUUIDForCollection]) {
+			previousProjectSection = currentProjectSection;
+		}
 	}
-	else {
+	
+	// Otherwise make a new section with the project.
+	if (previousProjectSection == nil) {
 		GLAProjectManager *projectManager = (self.projectManager);
-		NSUUID *projectUUID = (collection.projectUUID);
-		GLAProject *project = [projectManager projectWithUUID:projectUUID];
+		GLAProject *project = [projectManager projectWithUUID:projectUUIDForCollection];
 		GLAProject *nowProject = (projectManager.nowProject);
 		
-		if ((projectManager.nowProject) && [(nowProject.UUID) isEqual:projectUUID]) {
-			editProjectSection = [GLAEditProjectSection nowProjectSectionWithProject:project];
+		if ((projectManager.nowProject) && [(nowProject.UUID) isEqual:projectUUIDForCollection]) {
+			previousProjectSection = [GLAEditProjectSection nowProjectSectionWithProject:project];
 		}
 		else {
-			editProjectSection = [GLAEditProjectSection editProjectSectionWithProject:project previousSection:nil];
+			previousProjectSection = [GLAEditProjectSection editProjectSectionWithProject:project previousSection:nil];
 		}
 	}
 	
 	[self goToSection:
-	 [GLAEditCollectionSection editCollectionSectionWithCollection:collection previousSection:editProjectSection]
+	 [GLAEditCollectionSection editCollectionSectionWithCollection:collection previousSection:previousProjectSection]
 	 ];
 }
 

@@ -113,7 +113,7 @@
 {
 	GLAProjectManager *pm = (self.projectManager);
 	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
-#if DEBUG
+#if DEBUG && 0
 	NSLog(@"updateWatchedProjectPrimaryFolders %@", collectedFilesSetting);
 #endif
 	NSArray *projectFolders = [pm copyPrimaryFoldersForProject:(self.project)];
