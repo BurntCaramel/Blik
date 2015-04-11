@@ -11,11 +11,14 @@
 #import "GLACollectedFolderStackItemViewController.h"
 #import "GLAUIStyle.h"
 #import "GLACollectedFilePreviewView.h"
+#import "GLACollectedFolderContentsViewController.h"
 
 
 @interface GLACollectedFolderStackItemViewController () <GLACollectedItemContentHolderViewDelegate>
 
 @property(nonatomic) GLACollectedFilePreviewView *filePreviewView;
+
+@property(nonatomic) GLACollectedFolderContentsViewController *folderContentsViewController;
 
 @end
 
@@ -30,6 +33,7 @@
 	
 	GLACollectedItemContentHolderView *contentHolderView = (self.contentHolderView);
 	(contentHolderView.delegate) = self;
+	(self.contentHolderView) = contentHolderView;
 	
 	GLAViewController *contentHolderViewController = [GLAViewController new];
 	(contentHolderViewController.view) = contentHolderView;
@@ -44,7 +48,7 @@
 
 - (void)makeContentSquare
 {
-	NSView *contentHolderView = (self.contentHolderViewController.view);
+	GLACollectedItemContentHolderView *contentHolderView = (self.contentHolderView);
 	
 	// Make square: width = height
 	[(contentHolderView.superview) addConstraint:[NSLayoutConstraint constraintWithItem:contentHolderView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:contentHolderView attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0]];
@@ -75,14 +79,20 @@
 		[(self.contentHolderViewController) fillViewWithChildView:filePreviewView];
 	}
 	
-	NSLog(@"filePreviewView %@", fileURL);
 	(filePreviewView.fileURL) = fileURL;
 #endif
 }
 
-- (void)updateContentWithDirectoryURL:(NSURL *)fileURL
+- (void)updateContentWithDirectoryURL:(NSURL *)directoryURL
 {
-	NSLog(@"updateContentWithDirectoryURL");
+	GLACollectedFolderContentsViewController *folderContentsViewController = [GLACollectedFolderContentsViewController new];
+	(folderContentsViewController.sourceDirectoryURL) = directoryURL;
+	(self.folderContentsViewController) = folderContentsViewController;
+	
+	[(self.contentHolderViewController) fillViewWithChildView:(folderContentsViewController.view)];
+	
+	GLACollectedItemContentHolderView *contentHolderView = (self.contentHolderView);
+	(contentHolderView.minimumHeight) = 300.0;
 	
 }
 

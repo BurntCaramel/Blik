@@ -305,9 +305,6 @@
 	NSTextField *textField = (cellView.textField);
 	//(textField.preferredMaxLayoutWidth) = (tableColumn.width);
 	(textField.preferredMaxLayoutWidth) = NSWidth(textField.bounds);
-#if 0
-	NSLog(@"textField.intrinsicContentSize %@ %f %f", [textField valueForKey:@"intrinsicContentSize"], (textField.preferredMaxLayoutWidth), (tableColumn.width));
-#endif
 	
 	CGFloat extraPadding = 8.0;
 	

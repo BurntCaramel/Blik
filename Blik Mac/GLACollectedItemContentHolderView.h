@@ -24,4 +24,6 @@
 
 @property(weak, nonatomic) id<GLACollectedItemContentHolderViewDelegate> delegate;
 
+@property(nonatomic) CGFloat minimumHeight;
+
 @end

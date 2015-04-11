@@ -42,7 +42,13 @@
 - (NSArray *)applicationsURLsToOpenURL:(NSURL *)URL;
 - (NSURL *)defaultApplicationURLToOpenURL:(NSURL *)URL;
 
-#pragma mark -
+#pragma mark Directory Contents
+
+- (void)requestChildrenOfDirectoryWithURL:(NSURL *)directoryURL;
+- (NSArray *)childURLsOfDirectoryWithURL:(NSURL *)directoryURL requestIfNeeded:(BOOL)requestIfNeeded;
+- (NSError *)errorRetrievingChildURLsOfDirectoryWithURL:(NSURL *)directoryURL;
+
+#pragma mark Clearing Cache
 
 - (void)clearCacheForURLs:(NSArray *)URLs;
 - (void)clearCacheForAllURLs;
@@ -62,4 +68,20 @@
 
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didRetrieveApplicationURLsToOpenURL:(NSURL *)URL;
 
+- (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didRetrieveContentsOfDirectoryURL:(NSURL *)URL;
+- (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didFailWithError:(NSError *)error retrievingContentsOfDirectoryURL:(NSURL *)URL;
+
 @end
+
+
+@interface GLAFileInfoRetriever (NotificationObserving)
+
+- (id<NSObject>)addObserver:(id<NSObject>)owner forDidRetrieveContentsOfDirectory:(void (^)(id<NSObject> owner, GLAFileInfoRetriever *fileInfoRetriever, NSURL *directoryURL))block;
+
+- (void)removeObserverWithToken:(id<NSObject>)observerToken;
+
+@end
+
+extern NSString *GLAFileInfoRetrieverDidRetrieveContentsOfDirectoryNotification;
+extern NSString *GLAFileInfoRetrieverNotificationInfoDirectoryURL;
+

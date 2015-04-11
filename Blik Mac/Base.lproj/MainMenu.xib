@@ -382,7 +382,7 @@ DQ
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="jzY-mI-7mm"/>
-                            <menuItem title="Add File from Clipboard" keyEquivalent="I" id="MpW-K2-aFF"/>
+                            <menuItem title="Make File from Clipboard" keyEquivalent="I" id="MpW-K2-aFF"/>
                             <menuItem title="Change Designated File Destinations…" id="myY-lt-LeI">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>

@@ -22,6 +22,17 @@
 	return YES;
 }
 
+- (NSSize)intrinsicContentSize
+{
+	CGFloat minimumHeight = (self.minimumHeight);
+	if (minimumHeight == 0.0) {
+		return [super intrinsicContentSize];
+	}
+	else {
+		return NSMakeSize(NSViewNoInstrinsicMetric, minimumHeight);
+	}
+}
+
 - (void)updateTrackingAreas
 {
 	NSTrackingArea *mainTrackingArea = (self.mainTrackingArea);

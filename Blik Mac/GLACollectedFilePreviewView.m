@@ -133,11 +133,9 @@
 		imageSize.width /= contentImageBackingScale;
 		imageSize.height /= contentImageBackingScale;
 		
-		NSLog(@"intrinsicContentSize use iamge size");
 		contentSize = imageSize;
 	}
 	else {
-		NSLog(@"intrinsicContentSize use no size");
 		contentSize = NSMakeSize(maxSize.width, 50.0);
 		//return NSMakeSize(NSViewNoInstrinsicMetric, NSViewNoInstrinsicMetric);
 	}
@@ -214,7 +212,7 @@
 		   (id)kQLThumbnailOptionScaleFactorKey: @(backingScaleFactor)
 		   }
 		 );
-		//NSLog(@"CREATED IMAGE %@", image);
+		
 		[[NSOperationQueue mainQueue] addOperationWithBlock:^{
 			__strong GLACollectedFilePreviewView *strongSelf = weakSelf;
 			if (!strongSelf) {

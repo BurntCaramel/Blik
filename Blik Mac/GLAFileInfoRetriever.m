@@ -14,6 +14,8 @@
 @property(readonly, nonatomic) NSOperationQueue *backgroundOperationQueue;
 @property(readonly, nonatomic) dispatch_queue_t inputDispatchQueue;
 
+@property(readonly, nonatomic) NSFileManager *fileManager;
+
 @property(readonly, nonatomic) NSMutableDictionary *URLsToMutableSetOfRequestedResourceKeys;
 @property(readonly, nonatomic) NSMutableDictionary *URLsToMutableSetOfLoadingResourceKeys;
 @property(readonly, nonatomic) NSMutableDictionary *URLsToLoadingErrors;
@@ -23,6 +25,9 @@
 @property(readonly, nonatomic) NSMutableSet *URLsHavingApplicationURLsLoaded;
 @property(readonly, nonatomic) NSCache *cacheOfURLsToApplicationURLs;
 @property(readonly, nonatomic) NSCache *cacheOfURLsToDefaultApplicationURLs;
+
+@property(readonly, nonatomic) NSMutableSet *directoryURLsHavingContentsLoaded;
+@property(readonly, nonatomic) NSCache *cacheOfDirectoryURLsToContentsURLs;
 
 @end
 
@@ -49,6 +54,9 @@
 		_URLsHavingApplicationURLsLoaded = [NSMutableSet new];
 		_cacheOfURLsToApplicationURLs = [NSCache new];
 		_cacheOfURLsToDefaultApplicationURLs = [NSCache new];
+		
+		_directoryURLsHavingContentsLoaded = [NSMutableSet new];
+		_cacheOfDirectoryURLsToContentsURLs = [NSCache new];
 	}
 	return self;
 }
@@ -118,6 +126,11 @@
 
 #pragma mark -
 
+- (NSFileManager *)fileManager
+{
+	return [NSFileManager defaultManager];
+}
+
 @synthesize delegate = _delegate;
 
 - (void)setDelegate:(id<GLAFileInfoRetrieverDelegate>)delegate
@@ -145,12 +158,17 @@
 
 @synthesize defaultResourceKeysToRequest = _input_defaultResourceKeysToRequest;
 
+- (NSArray *)input_defaultResourceKeysToRequest
+{
+	return _input_defaultResourceKeysToRequest;
+}
+
 - (NSArray *)defaultResourceKeysToRequest
 {
 	__block NSArray *defaultResourceKeysToRequest;
 	
 	dispatch_sync((self.inputDispatchQueue), ^{
-		defaultResourceKeysToRequest = self->_input_defaultResourceKeysToRequest;
+		defaultResourceKeysToRequest = (self.input_defaultResourceKeysToRequest);
 	});
 	
 	return defaultResourceKeysToRequest;
@@ -174,8 +192,7 @@
 	[self runAsyncOnInputQueue:^(GLAFileInfoRetriever *self) {
 		NSMutableSet *set = (self.URLsToMutableSetOfRequestedResourceKeys)[URL];
 		if (!set) {
-			set = [NSMutableSet new];
-			(self.URLsToMutableSetOfRequestedResourceKeys)[URL] = set;
+			(self.URLsToMutableSetOfRequestedResourceKeys)[URL] = set = [NSMutableSet new];
 		}
 		
 		[set addObjectsFromArray:resourceKeys];
@@ -421,7 +438,148 @@
 	return defaultApplicationURL;
 }
 
-#pragma mark -
+#pragma mark Directory Contents
+
+- (void)requestChildrenOfDirectoryWithURL:(NSURL *)directoryURL
+{
+	NSParameterAssert(directoryURL != nil);
+	
+	[self runAsyncOnInputQueue:^(GLAFileInfoRetriever *retriever) {
+		NSMutableSet *directoryURLsHavingContentsLoaded = (retriever.directoryURLsHavingContentsLoaded);
+		if ([directoryURLsHavingContentsLoaded containsObject:directoryURL]) {
+			return;
+		}
+		
+		[directoryURLsHavingContentsLoaded addObject:directoryURL];
+		
+		NSArray *defaultResourceKeysToRequest = (self.input_defaultResourceKeysToRequest);
+		
+		[retriever runAsyncInBackground:^(GLAFileInfoRetriever *retriever) {
+			NSFileManager *fm = (retriever.fileManager);
+			
+			NSError *error = nil;
+			NSArray *contentsURLs = [fm contentsOfDirectoryAtURL:directoryURL includingPropertiesForKeys:defaultResourceKeysToRequest options:0 error:&error];
+			// FIXME: report error
+			
+			if (contentsURLs) {
+				NSMutableDictionary *childURLToResourceValues = [NSMutableDictionary new];
+				NSMutableDictionary *childURLToErrors = [NSMutableDictionary new];
+				NSError *error = nil;
+				
+				for (NSURL *childURL in contentsURLs) {
+					// Resource values should have been cached by the includingPropertiesForKeys: above.
+					// But just in case the cache has been cleared, this is also 
+					NSDictionary *childResourceValues = [childURL resourceValuesForKeys:defaultResourceKeysToRequest error:&error];
+					if (childResourceValues) {
+						childURLToResourceValues[childURL] = childResourceValues;
+					}
+					else {
+						childURLToErrors[childURL] = error;
+					}
+				}
+				
+				[self runAsyncOnInputQueue:^(GLAFileInfoRetriever *self) {
+					for (NSURL *childURL in contentsURLs) {
+						NSDictionary *childResourceValues = childURLToResourceValues[childURL];
+						NSError *error = childURLToErrors[childURL];
+						
+						// Store loaded resource values for child in caches.
+						[retriever input_processLoadedResourceValues:childResourceValues error:error forURL:childURL];
+					}
+					
+					// Process child URLs for -childURLsOfDirectoryURL to be able to use later.
+					[retriever input_processContentsURLs:contentsURLs forDirectoryWithURL:directoryURL];
+				}];
+			}
+			else {
+				[self runAsyncOnInputQueue:^(GLAFileInfoRetriever *self) {
+					[self input_didEncounterError:error loadingContentsForDirectoryWithURL:directoryURL];
+				}];
+			}
+		}];
+	}];
+}
+
+- (void)input_processContentsURLs:(NSArray *)contentsURLs forDirectoryWithURL:(NSURL *)directoryURL
+{
+	NSMutableSet *directoryURLsHavingContentsLoaded = (self.directoryURLsHavingContentsLoaded);
+	[directoryURLsHavingContentsLoaded removeObject:directoryURL];
+	
+	NSCache *cacheOfDirectoryURLsToContentsURLs = (self.cacheOfDirectoryURLsToContentsURLs);
+	[cacheOfDirectoryURLsToContentsURLs setObject:contentsURLs forKey:directoryURL];
+	
+	[self useDelegateOnMainQueue:^(GLAFileInfoRetriever *retriever, id<GLAFileInfoRetrieverDelegate> delegate) {
+		if ([delegate respondsToSelector:@selector(fileInfoRetriever:didRetrieveContentsOfDirectoryURL:)]) {
+			[delegate fileInfoRetriever:self didRetrieveContentsOfDirectoryURL:directoryURL];
+		}
+		
+		NSDictionary *noteInfo =
+		@{
+		  GLAFileInfoRetrieverNotificationInfoDirectoryURL: directoryURL
+		  };
+		[[NSNotificationCenter defaultCenter] postNotificationName:GLAFileInfoRetrieverDidRetrieveContentsOfDirectoryNotification object:self userInfo:noteInfo];
+	}];
+}
+
+- (void)input_didEncounterError:(NSError *)error loadingContentsForDirectoryWithURL:(NSURL *)directoryURL
+{
+	NSMutableSet *directoryURLsHavingContentsLoaded = (self.directoryURLsHavingContentsLoaded);
+	[directoryURLsHavingContentsLoaded removeObject:directoryURL];
+	
+	NSCache *cacheOfDirectoryURLsToContentsURLs = (self.cacheOfDirectoryURLsToContentsURLs);
+	[cacheOfDirectoryURLsToContentsURLs setObject:error forKey:directoryURL];
+	
+	[self useDelegateOnMainQueue:^(GLAFileInfoRetriever *retriever, id<GLAFileInfoRetrieverDelegate> delegate) {
+		if ([delegate respondsToSelector:@selector(fileInfoRetriever:didFailWithError:retrievingContentsOfDirectoryURL:)]) {
+			[delegate fileInfoRetriever:self didFailWithError:error retrievingContentsOfDirectoryURL:directoryURL];
+		}
+	}];
+}
+
+- (NSArray *)childURLsOfDirectoryWithURL:(NSURL *)directoryURL requestIfNeeded:(BOOL)requestIfNeeded
+{
+	NSParameterAssert(directoryURL != nil);
+	
+	__block NSArray *childURLs = nil;
+	__block BOOL hasNoResult = NO;
+	
+	dispatch_sync((self.inputDispatchQueue), ^{
+		NSCache *cacheOfDirectoryURLsToContentsURLs = (self.cacheOfDirectoryURLsToContentsURLs);
+		
+		id object = [cacheOfDirectoryURLsToContentsURLs objectForKey:directoryURL];
+		if ([object isKindOfClass:[NSArray class]]) {
+			childURLs = object;
+		}
+		// If no error
+		else if (!object) {
+			hasNoResult = YES;
+		}
+	});
+	
+	if (requestIfNeeded && hasNoResult) {
+		[self requestChildrenOfDirectoryWithURL:directoryURL];
+	}
+	
+	return childURLs;
+}
+
+- (NSError *)errorRetrievingChildURLsOfDirectoryWithURL:(NSURL *)directoryURL
+{
+	__block NSError *error = nil;
+	
+	dispatch_sync((self.inputDispatchQueue), ^{
+		NSCache *cacheOfDirectoryURLsToContentsURLs = (self.cacheOfDirectoryURLsToContentsURLs);
+		
+		id object = [cacheOfDirectoryURLsToContentsURLs objectForKey:directoryURL];
+		if ([object isKindOfClass:[NSError class]]) {
+			error = object;
+		}
+	});
+	
+	return error;
+}
+
+#pragma mark Clearing Cache
 
 - (void)clearCacheForURLs:(NSArray *)URLs
 {
@@ -455,3 +613,29 @@
 }
 
 @end
+
+
+@implementation GLAFileInfoRetriever (NotificationObserving)
+
+- (id<NSObject>)addObserver:(id<NSObject>)owner forDidRetrieveContentsOfDirectory:(void (^)(id<NSObject> owner, GLAFileInfoRetriever *fileInfoRetriever, NSURL *directoryURL))block
+{
+	__weak id<NSObject> weakOwner = owner;
+	
+	return [[NSNotificationCenter defaultCenter] addObserverForName:GLAFileInfoRetrieverDidRetrieveContentsOfDirectoryNotification object:self queue:nil usingBlock:^(NSNotification *note) {
+		__strong id<NSObject> strongOwner = weakOwner;
+		NSDictionary *noteInfo = (note.userInfo);
+		NSURL *directoryURL = noteInfo[GLAFileInfoRetrieverNotificationInfoDirectoryURL];
+		block(strongOwner, self, directoryURL);
+	}];
+}
+
+- (void)removeObserverWithToken:(id<NSObject>)observerToken
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:observerToken];
+}
+
+@end
+
+
+NSString *GLAFileInfoRetrieverDidRetrieveContentsOfDirectoryNotification = @"GLAFileInfoRetrieverDidRetrieveContentsOfDirectoryNotification";
+NSString *GLAFileInfoRetrieverNotificationInfoDirectoryURL = @"GLAFileInfoRetrieverNotificationInfoDirectoryURL";

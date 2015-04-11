@@ -120,6 +120,7 @@
 #if DEBUG
 	NSLog(@"updateQuickLookPreviewAnimating %@", (self.activeQuickLookPreviewPanel));
 #endif
+	
 	// PANEL
 	if (self.activeQuickLookPreviewPanel) {
 		[(self.activeQuickLookPreviewPanel) reloadData];
@@ -130,23 +131,20 @@
 		GLAViewController *previewHolderViewController = [[GLAViewController alloc] init];
 		NSView *holderView = (self.previewHolderView);
 		if (holderView) {
-			(holderView.wantsLayer) = YES;
-			(holderView.canDrawSubviewsIntoLayer) = YES;
+			//(holderView.wantsLayer) = YES;
+			//(holderView.canDrawSubviewsIntoLayer) = YES;
 			(previewHolderViewController.view) = holderView;
 			
 			(self.previewHolderViewController) = previewHolderViewController;
 			
 			QLPreviewView *quickLookPreviewView = [[QLPreviewView alloc] initWithFrame:NSZeroRect style:QLPreviewViewStyleNormal];
-			(quickLookPreviewView.wantsLayer) = YES;
+			//(quickLookPreviewView.wantsLayer) = YES;
 			[previewHolderViewController fillViewWithChildView:quickLookPreviewView];
 			(self.quickLookPreviewView) = quickLookPreviewView;
 		}
 	}
 	
 	NSArray *selectedURLs = (self.selectedURLs);
-#if DEBUG
-	NSLog(@"selectedURLs %@", selectedURLs);
-#endif
 	NSURL *URL = nil;
 	
 	if ((selectedURLs.count) == 1) {
@@ -155,7 +153,7 @@
 	}
 	
 	NSURL *previouslyActiveURL = (self.activeURL);
-	if ([previouslyActiveURL isEqual:URL]) {
+	if ([URL isEqual:previouslyActiveURL]) {
 		return;
 	}
 	(self.activeURL) = URL;
@@ -263,7 +261,7 @@
 	}
 }
 
-#pragma QLPreviewPanel Data Source
+#pragma mark QLPreviewPanel Data Source
 
 - (NSInteger)numberOfPreviewItemsInPreviewPanel:(QLPreviewPanel *)panel
 {

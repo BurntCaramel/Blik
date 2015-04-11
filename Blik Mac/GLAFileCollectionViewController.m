@@ -290,23 +290,18 @@
 		collectedFileUUIDsToStackItemViewControllers[(collectedFile.UUID)] = folderItemVC;
 	}
 	
-	NSString *displayName = nil;
-	NSImage *iconImage = nil;
-	NSNumber *isRegularFileValue = nil;
-	NSNumber *isPackageValue = nil;
-	
 	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
 	[collectedFilesSetting startAccessingCollectedFile:collectedFile];
 	
-	displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
-	iconImage = [collectedFilesSetting copyValueForURLResourceKey:NSURLEffectiveIconKey forCollectedFile:collectedFile];
-	isRegularFileValue = [collectedFilesSetting copyValueForURLResourceKey:NSURLIsRegularFileKey forCollectedFile:collectedFile];
-	isPackageValue = [collectedFilesSetting copyValueForURLResourceKey:NSURLIsPackageKey forCollectedFile:collectedFile];
+	NSString *displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+	NSImage *iconImage = [collectedFilesSetting copyValueForURLResourceKey:NSURLEffectiveIconKey forCollectedFile:collectedFile];
 	
 	(folderItemVC.nameLabel.stringValue) = displayName ?: @"Loading…";
 	(folderItemVC.iconImageView.image) = iconImage;
 	
 	NSURL *filePathURL = [collectedFilesSetting filePathURLForCollectedFile:collectedFile];
+	NSNumber *isRegularFileValue = [collectedFilesSetting copyValueForURLResourceKey:NSURLIsRegularFileKey forCollectedFile:collectedFile];
+	NSNumber *isPackageValue = [collectedFilesSetting copyValueForURLResourceKey:NSURLIsPackageKey forCollectedFile:collectedFile];
 	
 	if (filePathURL != nil && isRegularFileValue != nil && isPackageValue != nil) {
 		BOOL isRegularFile = [isRegularFileValue isEqual:@YES];
@@ -324,7 +319,7 @@
 }
 
 - (void)reloadSourceFiles
-{NSLog(@"reloadSourceFiles %@", @(self.hasPreparedViews));
+{
 	NSArray *collectedFiles = nil;
 	
 	GLACollection *filesListCollection = (self.filesListCollection);
@@ -1225,17 +1220,14 @@
 
 - (void)collectedFilesSettingLoadedFileInfoDidChangeNotification:(NSNotification *)note
 {
-#if DEBUG
-	NSLog(@"collectedFilesSettingLoadedFileInfoDidChangeNotification");
-#endif
-	
 	GLACollectedFile *collectedFile = (note.userInfo)[GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedFile];
 	
 	NSUInteger index = [(self.collectedFiles) indexOfObject:collectedFile];
 	
 	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
 	if (sourceFilesListTableView) {
-		[sourceFilesListTableView reloadData];
+		NSIndexSet *rowIndexes = [self rowIndexesForCollectedFilesIndexes:[NSIndexSet indexSetWithIndex:index]];
+		[sourceFilesListTableView reloadDataForRowIndexes:rowIndexes columnIndexes:[NSIndexSet indexSetWithIndex:0]];
 	}
 	
 	NSStackView *sourceFilesStackView = (self.sourceFilesStackView);
