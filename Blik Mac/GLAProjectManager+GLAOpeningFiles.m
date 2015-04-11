@@ -23,6 +23,30 @@
 	// So (accessedFileInfo.filePathURL) is used below, to have a reference.
 	GLAAccessedFileInfo *accessedFileInfo = [collectedFile accessFile];
 	
+	NSEventModifierFlags modifierFlags = [NSEvent modifierFlags];
+	// Command shows the file in the Finder
+	if (modifierFlags & NSCommandKeyMask) {
+		[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[(accessedFileInfo.filePathURL)]];
+		return YES;
+	}
+	
+	if ((modifierFlags & NSAlternateKeyMask) == 0) {
+		// Check for Automator applets.
+		NSBundle *bundle = [NSBundle bundleWithURL:(accessedFileInfo.filePathURL)];
+		if (bundle) {
+			NSDictionary *infoDictionary = (bundle.infoDictionary);
+			
+			BOOL isApplication = [@"APPL" isEqual:infoDictionary[@"CFBundlePackageType"]];
+			//BOOL isAutomatorApplet = [@YES isEqual:infoDictionary[@"AMIsApplet"]];
+			// if (isAutomatorApplet) {
+			if (isApplication) {
+				[[NSWorkspace sharedWorkspace] openURL:(accessedFileInfo.filePathURL)];
+				return YES;
+			}
+		}
+	}
+	
+	
 	NSURL *applicationURL = nil;
 	GLACollectedFile *applicationToOpenFileCollected = (highlightedCollectedFile.applicationToOpenFile);
 	if (applicationToOpenFileCollected) {
