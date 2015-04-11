@@ -149,7 +149,7 @@
 		[self editPermittedApplicationFoldersUsingBlock:editingBlock];
 	}];
 	
-	[arrayEditorUser makeObserverOfOwnerForLoadNotificationWithName:nil changeNotificationWithName:GLAApplicationSettingsManagerPermittedApplicationFoldersDidChangeNotification];
+	[arrayEditorUser makeObserverOfObject:self forChangeNotificationWithName:GLAApplicationSettingsManagerPermittedApplicationFoldersDidChangeNotification];
 	
 	return arrayEditorUser;
 }

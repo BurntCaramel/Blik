@@ -23,6 +23,8 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 @interface GLAProjectCollectionsViewController () <GLAArrayTableDraggingHelperDelegate>
 
+@property(nonatomic) id<GLALoadableArrayUsing> collectionsUser;
+
 @property(nonatomic) GLAArrayTableDraggingHelper *tableDraggingHelper;
 
 - (IBAction)tableViewWasClicked:(id)sender;
@@ -40,7 +42,6 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 - (void)dealloc
 {
-	[self stopProjectObserving];
 }
 
 - (void)prepareView
@@ -82,16 +83,9 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	
 	BOOL isSameProject = (_project != nil) && [(_project.UUID) isEqual:(project.UUID)];
 	
-	[self stopProjectObserving];
-	
 	_project = project;
-	
-	[self startProjectObserving];
 		
 	if (!isSameProject) {
-		GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-		[projectManager loadCollectionsForProjectIfNeeded:project];
-		
 		[self reloadCollections];
 	}
 }
@@ -106,34 +100,6 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	(scrollView.identifier) = @"tableScrollView";
 	
 	[self fillViewWithChildView:scrollView];
-}
-
-- (void)startProjectObserving
-{
-	GLAProject *project = (self.project);
-	if (!project) {
-		return;
-	}
-	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	
-	// Project Collection List
-	[nc addObserver:self selector:@selector(projectCollectionsDidChangeNotification:) name:GLAProjectCollectionsDidChangeNotification object:[pm notificationObjectForProject:project]];
-}
-
-- (void)stopProjectObserving
-{
-	GLAProject *project = (self.project);
-	if (!project) {
-		return;
-	}
-	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	
-	// Stop observing any notifications on the project manager.
-	[nc removeObserver:self name:nil object:[pm notificationObjectForProject:project]];
 }
 
 - (void)showInstructions
@@ -172,6 +138,25 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	GLAProject *project = (self.project);
 	
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	
+#if 1
+	id<GLALoadableArrayUsing> collectionsUser = (self.collectionsUser);
+	if (!collectionsUser) {
+		collectionsUser = [projectManager useCollectionsForProject:project];
+		
+		__weak GLAProjectCollectionsViewController *weakSelf = self;
+		(collectionsUser.changeCompletionBlock) = ^(id<GLAArrayInspecting> collectionsInspector) {
+			__strong GLAProjectCollectionsViewController *self = weakSelf;
+			if (self) {
+				[self reloadCollections];
+			}
+		};
+		
+		(self.collectionsUser) = collectionsUser;
+	}
+	
+	NSArray *collections = [collectionsUser copyChildrenLoadingIfNeeded];
+#else
 	BOOL hasLoadedPrimaryFolders = [projectManager hasLoadedPrimaryFoldersForProject:project];
 	
 	NSArray *collections = nil;
@@ -181,6 +166,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	else {
 		[projectManager loadPrimaryFoldersForProjectIfNeeded:project];
 	}
+#endif
 	
 	if (!collections) {
 		collections = @[];
@@ -377,13 +363,6 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 		// Show underneath.
 		[colorPickerPopover showRelativeToRect:rowRect ofView:tableView preferredEdge:NSMaxYEdge];
 	}
-}
-
-#pragma mark Notifications
-
-- (void)projectCollectionsDidChangeNotification:(NSNotification *)note
-{
-	[self reloadCollections];
 }
 
 #pragma mark Actions

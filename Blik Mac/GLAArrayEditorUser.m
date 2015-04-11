@@ -41,23 +41,10 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:nil];
 }
 
-- (void)makeObserverOfObject:(id)notifier forLoadNotificationWithName:(NSString *)loadNotificationName changeNotificationWithName:(NSString *)changeNotificationName
+- (void)makeObserverOfObject:(id)notifier forChangeNotificationWithName:(NSString *)changeNotificationName
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	
-	if (loadNotificationName) {
-		[nc addObserver:self selector:@selector(didLoadNotification:) name:loadNotificationName object:notifier];
-	}
-	
-	if (changeNotificationName) {
-		[nc addObserver:self selector:@selector(didChangeNotification:) name:changeNotificationName object:notifier];
-	}
-}
-
-- (void)makeObserverOfOwnerForLoadNotificationWithName:(NSString *)loadNotificationName changeNotificationWithName:(NSString *)changeNotificationName
-{
-	id owner = (self.owner);
-	[self makeObserverOfObject:owner forLoadNotificationWithName:loadNotificationName changeNotificationWithName:changeNotificationName];
+	[nc addObserver:self selector:@selector(didChangeNotification:) name:changeNotificationName object:notifier];
 }
 
 - (GLAArrayEditor *)arrayEditorCreatingIfNeeded:(BOOL)createIfNeeded LoadingIfNeeded:(BOOL)loadIfNeeded
@@ -75,10 +62,24 @@
 	return (arrayEditor.finishedLoadingFromStore);
 }
 
+- (GLAArrayEditor *)loadArrayEditor
+{
+	if (! (self.dependenciesAreFulfilled) ) {
+		return nil;
+	}
+	
+	GLAArrayEditor *arrayEditor = [self arrayEditorCreatingIfNeeded:YES LoadingIfNeeded:YES];
+	if (! arrayEditor.finishedLoadingFromStore ) {
+		return nil;
+	}
+	
+	return arrayEditor;
+}
+
 - (NSArray *)copyChildrenLoadingIfNeeded
 {
-	GLAArrayEditor *arrayEditor = [self arrayEditorCreatingIfNeeded:YES LoadingIfNeeded:YES];
-	if (!arrayEditor.finishedLoadingFromStore) {
+	GLAArrayEditor *arrayEditor = [self loadArrayEditor];
+	if (!arrayEditor) {
 		return nil;
 	}
 	
@@ -87,8 +88,8 @@
 
 - (id<GLAArrayInspecting>)inspectLoadingIfNeeded
 {
-	GLAArrayEditor *arrayEditor = [self arrayEditorCreatingIfNeeded:YES LoadingIfNeeded:YES];
-	if (!arrayEditor.finishedLoadingFromStore) {
+	GLAArrayEditor *arrayEditor = [self loadArrayEditor];
+	if (!arrayEditor) {
 		return nil;
 	}
 	
@@ -114,6 +115,29 @@
 	if (changeCompletionBlock) {
 		GLAArrayEditor *arrayEditor = [self arrayEditorCreatingIfNeeded:YES LoadingIfNeeded:YES];
 		changeCompletionBlock(arrayEditor);
+	}
+}
+
+- (BOOL)dependenciesAreFulfilled
+{
+	GLAArrayEditorUserBooleanResultBlock dependenciesAreFulfilledBlock = (self.dependenciesAreFulfilledBlock);
+	if (!dependenciesAreFulfilledBlock) {
+		return YES;
+	}
+	
+	return dependenciesAreFulfilledBlock();
+}
+
+- (void)makeObserverOfObject:(id)notifier forDependencyFulfilledNotificationWithName:(NSString *)dependencyFulfilledNotificationName
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver:self selector:@selector(dependencyFulfilledNotification:) name:dependencyFulfilledNotificationName object:notifier];
+}
+
+- (void)dependencyFulfilledNotification:(NSNotification *)note
+{
+	if ((self.dependenciesAreFulfilled)) {
+		[self inspectLoadingIfNeeded];
 	}
 }
 

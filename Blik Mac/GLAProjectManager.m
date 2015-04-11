@@ -240,7 +240,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 		[self editAllProjectsUsingBlock:editingBlock];
 	}];
 	
-	[arrayEditorUser makeObserverOfOwnerForLoadNotificationWithName:nil changeNotificationWithName:GLAProjectManagerAllProjectsDidChangeNotification];
+	[arrayEditorUser makeObserverOfObject:self forChangeNotificationWithName:GLAProjectManagerAllProjectsDidChangeNotification];
 	
 	return arrayEditorUser;
 }
@@ -347,7 +347,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	}];
 	
 	id projectNotifier = [self notificationObjectForProject:project];
-	[arrayEditorUser makeObserverOfObject:projectNotifier forLoadNotificationWithName:nil changeNotificationWithName:GLAProjectPrimaryFoldersDidChangeNotification];
+	[arrayEditorUser makeObserverOfObject:projectNotifier forChangeNotificationWithName:GLAProjectPrimaryFoldersDidChangeNotification];
 	
 	return arrayEditorUser;
 }
@@ -404,6 +404,8 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (id<GLALoadableArrayUsing>)useCollectionsForProject:(GLAProject *)project
 {
+	NSParameterAssert(project != nil);
+	
 	GLAArrayEditorUser *arrayEditorUser = [[GLAArrayEditorUser alloc] initWithOwner:self accessingBlock:^GLAArrayEditor *(BOOL createIfNeeded, BOOL loadIfNeeded) {
 		GLAProjectManagerStore *store = (self.store);
 		GLAArrayEditor *arrayEditor = [store collectionsArrayEditorForProjectWithUUID:(project.UUID) createIfNeeded:createIfNeeded];
@@ -417,7 +419,19 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 		[self editCollectionsOfProject:project usingBlock:editingBlock];
 	}];
 	
-	[arrayEditorUser makeObserverOfObject:[self notificationObjectForProject:project] forLoadNotificationWithName:nil changeNotificationWithName:GLAProjectCollectionsDidChangeNotification];
+	(arrayEditorUser.dependenciesAreFulfilledBlock) = ^{
+		return [self hasLoadedPrimaryFoldersForProject:project];
+	};
+	
+	id projectNotifier = [self notificationObjectForProject:project];
+	
+	// Dependency on primary folders
+	[arrayEditorUser makeObserverOfObject:projectNotifier forDependencyFulfilledNotificationWithName:GLAProjectPrimaryFoldersDidChangeNotification];
+	
+	// Change notification
+	[arrayEditorUser makeObserverOfObject:projectNotifier forChangeNotificationWithName:GLAProjectCollectionsDidChangeNotification];
+	
+	[self loadPrimaryFoldersForProjectIfNeeded:project];
 	
 	return arrayEditorUser;
 }
@@ -514,7 +528,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 		[self editHighlightsOfProject:project usingBlock:editingBlock];
 	}];
 	
-	[arrayEditorUser makeObserverOfObject:[self notificationObjectForProject:project] forLoadNotificationWithName:nil changeNotificationWithName:GLAProjectHighlightsDidChangeNotification];
+	[arrayEditorUser makeObserverOfObject:[self notificationObjectForProject:project] forChangeNotificationWithName:GLAProjectHighlightsDidChangeNotification];
 	
 	return arrayEditorUser;
 }
@@ -925,6 +939,9 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (void)primaryFoldersForProjectDidChange:(GLAProject *)project
 {
+#if DEBUG
+	NSLog(@"primaryFoldersForProjectDidChange");
+#endif
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectPrimaryFoldersDidChangeNotification object:[self notificationObjectForProject:project]];
 }
 
