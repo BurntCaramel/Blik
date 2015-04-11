@@ -10,15 +10,17 @@
 #import "GLAFileInfoRetriever.h"
 #import "GLAArrangedDirectoryChildren.h"
 #import "GLAUIStyle.h"
+#import "GLAQuickLookPreviewHelper.h"
 
 
-@interface GLACollectedFolderContentsViewController () <GLAFileInfoRetrieverDelegate, GLAArrangedDirectoryChildrenDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate>
+@interface GLACollectedFolderContentsViewController () <GLAFileInfoRetrieverDelegate, GLAArrangedDirectoryChildrenDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, GLAQuickLookPreviewHelperDelegate>
 
 @property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
-
 @property(nonatomic) NSMutableDictionary *directoryURLToArrangedChildren;
 
 @property(nonatomic) NSDateFormatter *dateFormatter;
+
+@property(nonatomic) GLAQuickLookPreviewHelper *quickLookPreviewHelper;
 
 @end
 
@@ -31,6 +33,8 @@
 
 - (void)prepareView
 {
+	[self insertIntoResponderChain];
+	
 	NSArray *defaultResourceKeys =
 	@[
 	  NSURLIsDirectoryKey,
@@ -78,6 +82,10 @@
 	_dateFormatter = dateFormatter;
 	
 	[self reloadContentsOfFolder];
+	
+	_quickLookPreviewHelper = [GLAQuickLookPreviewHelper new];
+	(_quickLookPreviewHelper.delegate) = self;
+	(_quickLookPreviewHelper.tableView) = folderContentOutlineView;
 }
 
 - (void)dealloc
@@ -293,6 +301,81 @@
 	}
 	
 	return cellView;
+}
+
+#pragma mark GLAQuickLookPreviewHelper
+
+- (NSArray *)selectedURLsForQuickLookPreviewHelper:(GLAQuickLookPreviewHelper *)helper
+{
+	NSOutlineView *folderContentOutlineView = (self.folderContentOutlineView);
+	
+	NSIndexSet *selectedRowIndexes = (folderContentOutlineView.selectedRowIndexes);
+	NSMutableArray *selectedURLs = [NSMutableArray new];
+	[selectedRowIndexes enumerateIndexesUsingBlock:^(NSUInteger rowIndex, BOOL *stop) {
+		NSURL *fileURL = [folderContentOutlineView itemAtRow:rowIndex];
+		[selectedURLs addObject:fileURL];
+	}];
+	
+	return selectedURLs;
+}
+
+- (NSInteger)quickLookPreviewHelper:(GLAQuickLookPreviewHelper *)helper tableRowForSelectedURL:(NSURL *)fileURL
+{
+	NSOutlineView *folderContentOutlineView = (self.folderContentOutlineView);
+	
+	return [folderContentOutlineView rowForItem:fileURL];
+}
+
+- (BOOL)acceptsPreviewPanelControl:(QLPreviewPanel *)panel
+{
+#if DEBUG
+	NSLog(@"gg acceptsPreviewPanelControl");
+#endif
+	return YES;
+}
+
+- (void)beginPreviewPanelControl:(QLPreviewPanel *)panel
+{
+	GLAQuickLookPreviewHelper *quickLookPreviewHelper = (self.quickLookPreviewHelper);
+	
+	[quickLookPreviewHelper beginPreviewPanelControl:panel];
+}
+
+- (void)endPreviewPanelControl:(QLPreviewPanel *)panel
+{
+	GLAQuickLookPreviewHelper *quickLookPreviewHelper = (self.quickLookPreviewHelper);
+	
+	[quickLookPreviewHelper endPreviewPanelControl:panel];
+}
+
+- (void)quickLookPreviewItems:(id)sender
+{
+	GLAQuickLookPreviewHelper *quickLookPreviewHelper = (self.quickLookPreviewHelper);
+	
+	[quickLookPreviewHelper quickLookPreviewItems:sender];
+}
+
+#pragma mark Events
+
+- (void)keyDown:(NSEvent *)theEvent
+{
+	unichar u = [(theEvent.charactersIgnoringModifiers) characterAtIndex:0];
+	//NSEventModifierFlags modifierFlags = (theEvent.modifierFlags);
+	NSUInteger modifierFlags = (theEvent.modifierFlags);
+	
+	if (u == NSCarriageReturnCharacter || u == NSEnterCharacter) {
+#if 0
+		if (modifierFlags & NSCommandKeyMask) {
+			[self revealSelectedFilesInFinder:self];
+		}
+		else {
+			[self openSelectedFiles:self];
+		}
+#endif
+	}
+	else if (u == ' ') {
+		[self quickLookPreviewItems:self];
+	}
 }
 
 @end

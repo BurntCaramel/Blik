@@ -62,6 +62,17 @@
 	// For subclasses.
 }
 
+- (void)insertIntoResponderChain
+{
+	NSView *view = (self.view);
+	// Add this view controller to the responder chain pre-Yosemite.
+	// Allows self to handle keyDown: events, and also work with a QLPreviewPanel
+	if ((view.nextResponder) != self) {
+		(self.nextResponder) = (view.nextResponder);
+		(view.nextResponder) = self;
+	}
+}
+
 - (void)viewWillTransitionIn
 {
 	// For subclasses.

@@ -44,7 +44,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView id="KmG-h0-IRp">
-                                                <rect key="frame" x="1" y="1" width="255" height="20"/>
+                                                <rect key="frame" x="1" y="1" width="255.5" height="20"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z2d-Zc-EPR">
@@ -76,6 +76,10 @@
                                                     <outlet property="textField" destination="mZS-uU-fOe" id="L9p-Xa-ufL"/>
                                                 </connections>
                                             </tableCellView>
+                                            <customView identifier="NSTableViewRowViewKey" id="Bkr-c2-OPd" customClass="GLATableContentRowView">
+                                                <rect key="frame" x="1" y="23" width="255.5" height="39"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            </customView>
                                         </prototypeCellViews>
                                     </tableColumn>
                                     <tableColumn identifier="dateModified" width="218.5" minWidth="40" maxWidth="1000" id="OY6-AG-WZy">
@@ -92,7 +96,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView id="O3p-KI-ntD">
-                                                <rect key="frame" x="259.5" y="1" width="218" height="20"/>
+                                                <rect key="frame" x="259.5" y="1" width="218.5" height="20"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="paj-wf-a57">

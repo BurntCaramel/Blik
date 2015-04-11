@@ -8,6 +8,7 @@
 
 #import "GLATableView.h"
 
+
 @implementation GLATableView
 
 @end

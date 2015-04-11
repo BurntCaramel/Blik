@@ -75,17 +75,11 @@
 	NSLog(@"FCVC prepareView");
 	[super prepareView];
 	
-	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
-	
 #if 1
-	NSView *view = (self.view);
-	// Add this view controller to the responder chain pre-Yosemite.
-	// Allows self to handle keyDown: events, and also work with a QLPreviewPanel
-	if ((view.nextResponder) != self) {
-		(self.nextResponder) = (view.nextResponder);
-		(view.nextResponder) = self;
-	}
+	[self insertIntoResponderChain];
 #endif
+	
+	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	
 	NSTableView *tableView = (self.sourceFilesListTableView);
 	if (tableView) {

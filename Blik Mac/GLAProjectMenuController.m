@@ -163,7 +163,7 @@
 	
 	if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
 		GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
-	
+		
 		GLAProjectManager *pm = (self.projectManager);
 		[pm openHighlightedCollectedFile:highlightedCollectedFile];
 	}

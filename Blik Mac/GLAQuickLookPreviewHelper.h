@@ -27,7 +27,6 @@
 
 @property(nonatomic) IBOutlet GLAViewController *previewHolderViewController;
 @property(nonatomic) IBOutlet NSView *previewHolderView;
-
 @property(nonatomic) IBOutlet QLPreviewView *quickLookPreviewView;
 
 @property(nonatomic) IBOutlet NSTableView *tableView;
