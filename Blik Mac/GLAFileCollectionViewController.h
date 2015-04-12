@@ -15,7 +15,7 @@
 #import "GLAProject.h"
 #import "GLACollectedFilesSetting.h"
 #import "GLAFileInfoRetriever.h"
-#import "GLAFileOpenerApplicationCombiner.h"
+#import "GLAFileOpenerApplicationFinder.h"
 
 
 @interface GLAFileCollectionViewController : GLAViewController <NSTableViewDataSource, NSTableViewDelegate, NSMenuDelegate, GLAFileInfoRetrieverDelegate>

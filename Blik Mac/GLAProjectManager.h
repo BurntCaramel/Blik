@@ -58,6 +58,8 @@
 
 #pragma mark Project Primary Folders
 
+- (id<GLALoadableArrayUsing>)usePrimaryFoldersForProject:(GLAProject *)project;
+
 - (BOOL)hasLoadedPrimaryFoldersForProject:(GLAProject *)project;
 - (void)loadPrimaryFoldersForProjectIfNeeded:(GLAProject *)project;
 - (NSArray /* GLACollectedFile */ *)copyPrimaryFoldersForProject:(GLAProject *)project;
@@ -108,8 +110,6 @@
 - (void)loadFilesListForCollectionIfNeeded:(GLACollection *)filesListCollection;
 
 - (NSArray *)copyFilesListForCollection:(GLACollection *)filesListCollection;
-- (id<GLAArrayInspecting>)inspectFilesListForCollectionWithUUID:(NSUUID *)filesListCollectionUUID;
-- (GLACollectedFile *)collectedFileWithUUID:(NSUUID *)collectionUUID insideCollection:(GLACollection *)filesListCollection;
 
 - (BOOL)editFilesListOfCollection:(GLACollection *)filesListCollection usingBlock:(void (^)(id<GLAArrayEditing> filesListEditor))block;
 - (void)editFilesListOfCollection:(GLACollection *)filesListCollection insertingCollectedFiles:(NSArray *)collectedFiles atOptionalIndex:(NSUInteger)index;

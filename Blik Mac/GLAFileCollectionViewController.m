@@ -13,7 +13,7 @@
 #import "GLACollectedFile.h"
 #import "GLAFileInfoRetriever.h"
 #import "GLACollectedFilesSetting.h"
-#import "GLAFileOpenerApplicationCombiner.h"
+#import "GLAFileOpenerApplicationFinder.h"
 #import "GLAArrayTableDraggingHelper.h"
 #import "GLAPluckedCollectedFilesMenuController.h"
 #import "GLACollectedFolderStackItemViewController.h"
@@ -31,7 +31,7 @@
 
 @property(nonatomic) GLACollectedFilesSetting *collectedFilesSetting;
 @property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
-@property(nonatomic) GLAFileOpenerApplicationCombiner *openerApplicationCombiner;
+@property(nonatomic) GLAFileOpenerApplicationFinder *openerApplicationCombiner;
 @property(nonatomic) BOOL openerApplicationsPopUpButtonNeedsUpdate;
 
 @property(nonatomic) NSArray *selectedURLs;
@@ -224,7 +224,7 @@
 	
 	(self.fileInfoRetriever) = [[GLAFileInfoRetriever alloc] initWithDelegate:self defaultResourceKeysToRequest:@[NSURLLocalizedNameKey, NSURLEffectiveIconKey]];
 	
-	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = [GLAFileOpenerApplicationCombiner new];
+	GLAFileOpenerApplicationFinder *openerApplicationCombiner = [GLAFileOpenerApplicationFinder new];
 	(self.openerApplicationCombiner) = openerApplicationCombiner;
 	
 	[nc addObserver:self selector:@selector(openerApplicationCombinerDidChangeNotification:) name:GLAFileURLOpenerApplicationCombinerDidChangeNotification object:openerApplicationCombiner];
@@ -740,7 +740,7 @@
 {
 	NSMenu *menu = (self.openerApplicationsPopUpButton.menu);
 	
-	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
+	GLAFileOpenerApplicationFinder *openerApplicationCombiner = (self.openerApplicationCombiner);
 	[openerApplicationCombiner updateOpenerApplicationsMenu:menu target:self action:@selector(openWithChosenApplication:) preferredApplicationURL:nil forPopUpMenu:YES];
 }
 
@@ -762,7 +762,7 @@
 
 - (void)retrieveApplicationsToOpenSelection
 {
-	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
+	GLAFileOpenerApplicationFinder *openerApplicationCombiner = (self.openerApplicationCombiner);
 	(openerApplicationCombiner.fileURLs) = [NSSet setWithArray:(self.selectedURLs)];
 }
 
@@ -813,7 +813,7 @@
 
 - (IBAction)openSelectedFiles:(id)sender
 {
-	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
+	GLAFileOpenerApplicationFinder *openerApplicationCombiner = (self.openerApplicationCombiner);
 	
 	[openerApplicationCombiner openFileURLsUsingDefaultApplications];
 	//[openerApplicationCombiner openFileURLsUsingChosenOpenerApplicationPopUpButton:(self.openerApplicationsPopUpButton)];
@@ -821,7 +821,7 @@
 
 - (IBAction)openWithChosenApplication:(NSMenuItem *)menuItem
 {
-	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
+	GLAFileOpenerApplicationFinder *openerApplicationCombiner = (self.openerApplicationCombiner);
 	
 	[openerApplicationCombiner openFileURLsUsingMenuItem:menuItem];
 }

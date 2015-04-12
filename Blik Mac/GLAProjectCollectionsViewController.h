@@ -45,7 +45,6 @@
 @property(nonatomic) IBOutlet GLAButton *makeNewCollectionButton;
 
 @property(nonatomic) GLAProject *project;
-@property(copy, nonatomic) NSArray *collections;
 
 @property(nonatomic) BOOL editing;
 

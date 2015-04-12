@@ -15,8 +15,9 @@
 #import "GLAArrayTableDraggingHelper.h"
 // MODEL
 #import "GLAProjectManager.h"
+#import "GLAProjectManager+GLAOpeningFiles.h"
 #import "GLACollectedFileListHelper.h"
-#import "GLAFileOpenerApplicationCombiner.h"
+#import "GLAFileOpenerApplicationFinder.h"
 
 
 @interface GLAProjectHighlightsViewController () <GLACollectedFileListHelperDelegate, GLAArrayTableDraggingHelperDelegate>
@@ -24,6 +25,12 @@
 @property(nonatomic) BOOL doNotUpdateViews;
 
 @property(nonatomic) GLACollectedFileListHelper *fileListHelper;
+
+@property(nonatomic) id<GLALoadableArrayUsing> highlightedItemsUser;
+@property(nonatomic) NSArray *highlightedItems;
+
+@property(nonatomic) id<GLALoadableArrayUsing> primaryFoldersUser;
+@property(nonatomic) NSArray *primaryFolders;
 
 @property(nonatomic) GLAHighlightsTableCellView *measuringTableCellView;
 
@@ -87,14 +94,18 @@
 	
 	(self.fileListHelper) = [[GLACollectedFileListHelper alloc] initWithDelegate:self];
 	
-	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = [GLAFileOpenerApplicationCombiner new];
+	GLAFileOpenerApplicationFinder *openerApplicationCombiner = [GLAFileOpenerApplicationFinder new];
 	[nc addObserver:self selector:@selector(openerApplicationCombinerDidChangeNotification:) name:GLAFileURLOpenerApplicationCombinerDidChangeNotification object:openerApplicationCombiner];
 	(self.openerApplicationCombiner) = openerApplicationCombiner;
 }
 
 - (void)dealloc
 {
-	[self stopProjectObserving];
+}
+
+- (GLAProjectManager *)projectManager
+{
+	return [GLAProjectManager sharedProjectManager];
 }
 
 @synthesize project = _project;
@@ -107,59 +118,22 @@
 	
 	BOOL isSameProject = (_project != nil) && (project != nil) && [(_project.UUID) isEqual:(project.UUID)];
 	
-	[self stopProjectObserving];
-	
 	_project = project;
-	
-	[self startProjectObserving];
 	
 	[self setUpFileHelpersIfNeeded];
 	(self.fileListHelper.project) = project;
 	
 	if (!isSameProject) {
-		GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-		[projectManager loadCollectionsForProjectIfNeeded:project];
-		[projectManager loadHighlightsForProjectIfNeeded:project];
+		(self.highlightedItemsUser) = nil;
+		(self.primaryFoldersUser) = nil;
 		
 		[self reloadHighlightedItems];
 	}
 }
 
-- (void)startProjectObserving
-{
-	GLAProject *project = (self.project);
-	if (!project) {
-		return;
-	}
-	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	
-	id projectNotifier = [pm notificationObjectForProject:project];
-	
-	// Project Collection List
-	[nc addObserver:self selector:@selector(projectHighlightsDidChangeNotification:) name:GLAProjectHighlightsDidChangeNotification object:projectNotifier];
-	
-	[nc addObserver:self selector:@selector(projectPrimaryFoldersDidChangeNotification:) name:GLAProjectPrimaryFoldersDidChangeNotification object:projectNotifier];
-}
-
-- (void)stopProjectObserving
-{
-	GLAProject *project = (self.project);
-	if (!project) {
-		return;
-	}
-	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	
-	// Stop observing any notifications on the project manager.
-	[nc removeObserver:self name:nil object:[pm notificationObjectForProject:project]];
-}
-
 - (void)startCollectionObserving
 {
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
 	for (GLAHighlightedItem *highlightedItem in (self.highlightedItems)) {
@@ -228,21 +202,53 @@
 		return;
 	}
 	
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	BOOL hasLoadedPrimaryFolders = [projectManager hasLoadedPrimaryFoldersForProject:project];
+	GLAProjectManager *projectManager = (self.projectManager);
 	
-	NSArray *highlightedItems = nil;
-	if (hasLoadedPrimaryFolders) {
-		highlightedItems = [projectManager copyHighlightsForProject:project];
+	id<GLALoadableArrayUsing> highlightedItemsUser = (self.highlightedItemsUser);
+	if (!highlightedItemsUser) {
+		highlightedItemsUser = [projectManager useHighlightsForProject:project];
+		
+		__weak GLAProjectHighlightsViewController *weakSelf = self;
+		(highlightedItemsUser.changeCompletionBlock) = ^(id<GLAArrayInspecting> collectionsInspector) {
+			__strong GLAProjectHighlightsViewController *self = weakSelf;
+			if (self) {
+				[self reloadHighlightedItems];
+			}
+		};
+		
+		(self.highlightedItemsUser) = highlightedItemsUser;
 	}
-	else {
-		[projectManager loadPrimaryFoldersForProjectIfNeeded:project];
+	
+	NSArray *highlightedItems = [highlightedItemsUser copyChildrenLoadingIfNeeded];
+	
+	
+	id<GLALoadableArrayUsing> primaryFoldersUser = (self.primaryFoldersUser);
+	if (!primaryFoldersUser) {
+		primaryFoldersUser = [projectManager usePrimaryFoldersForProject:project];
+		
+		__weak GLAProjectHighlightsViewController *weakSelf = self;
+		(primaryFoldersUser.changeCompletionBlock) = ^(id<GLAArrayInspecting> collectionsInspector) {
+			__strong GLAProjectHighlightsViewController *self = weakSelf;
+			if (self) {
+				[self reloadHighlightedItems];
+			}
+		};
+		
+		(self.primaryFoldersUser) = primaryFoldersUser;
 	}
+	
+	NSArray *primaryFolders = [primaryFoldersUser copyChildrenLoadingIfNeeded];
+	
 	
 	if (!highlightedItems) {
 		highlightedItems = @[];
 	}
 	(self.highlightedItems) = highlightedItems;
+	
+	if (!primaryFolders) {
+		primaryFolders = @[];
+	}
+	(self.primaryFolders) = primaryFolders;
 	
 	[self stopCollectionObserving];
 	[self startCollectionObserving];
@@ -258,6 +264,9 @@
 				[collectedFiles addObject:collectedFile];
 			}
 		}
+		
+		[collectedFiles addObjectsFromArray:primaryFolders];
+		
 		(self.fileListHelper.collectedFiles) = collectedFiles;
 		
 		[(self.tableView) reloadData];
@@ -274,16 +283,6 @@
 
 #pragma mark -
 
-- (void)projectHighlightsDidChangeNotification:(NSNotification *)note
-{
-	[self reloadHighlightedItems];
-}
-
-- (void)projectPrimaryFoldersDidChangeNotification:(NSNotification *)note
-{
-	[self reloadHighlightedItems];
-}
-
 - (void)collectionDidChangeNotification:(NSNotification *)note
 {
 	[self reloadHighlightedItems];
@@ -296,7 +295,6 @@
 	(self.doNotUpdateViews) = NO;
 	
 	[self reloadHighlightedItems];
-	[self startProjectObserving];
 }
 
 - (void)viewWillTransitionOut
@@ -305,11 +303,31 @@
 	
 	(self.doNotUpdateViews) = YES;
 	
-	[self stopProjectObserving];
 	[self stopCollectionObserving];
 }
 
 #pragma mark -
+
+- (id<NSObject>)objectAtRow:(NSInteger)row
+{
+	if (row == -1) {
+		return nil;
+	}
+	
+	NSArray *highlightedItems = (self.highlightedItems);
+	if (row < (highlightedItems.count)) {
+		return highlightedItems[row];
+	}
+	else {
+		NSArray *primaryFolders = (self.primaryFolders);
+		return primaryFolders[row - (highlightedItems.count)];
+	}
+}
+
+- (id<NSObject>)clickedObject
+{
+	return [self objectAtRow:(self.tableView.clickedRow)];
+}
 
 - (GLAHighlightedItem *)clickedHighlightedItem
 {
@@ -319,7 +337,30 @@
 		return nil;
 	}
 	
-	return (self.highlightedItems)[clickedRow];
+	NSArray *highlightedItems = (self.highlightedItems);
+	if (clickedRow < (highlightedItems.count)) {
+		return highlightedItems[clickedRow];
+	}
+	else {
+		return nil;
+	}
+}
+
+- (GLACollectedFile *)clickedCollectedPrimaryFolder
+{
+	NSTableView *tableView = (self.tableView);
+	NSInteger clickedRow = (tableView.clickedRow);
+	if (clickedRow == -1) {
+		return nil;
+	}
+	
+	NSArray *highlightedItems = (self.highlightedItems);
+	if (clickedRow < (highlightedItems.count)) {
+		return highlightedItems[clickedRow];
+	}
+	else {
+		return nil;
+	}
 }
 
 - (GLACollectedFile *)collectedFileForHighlightedItem:(GLAHighlightedItem *)highlightedItem
@@ -330,10 +371,34 @@
 	
 	GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	GLACollectedFile *collectedFile = [pm collectedFileForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
 	
 	return collectedFile;
+}
+
+- (NSURL *)fileURLForObject:(id<NSObject>)object
+{
+	GLACollectedFile *collectedFile = nil;
+	
+	if ([object isKindOfClass:[GLAHighlightedItem class]]) {
+		collectedFile = [self collectedFileForHighlightedItem:(GLAHighlightedItem *)object];
+	}
+	else if ([object isKindOfClass:[GLACollectedFile class]]) {
+		collectedFile = (GLACollectedFile *)object;
+	}
+	
+	if (!collectedFile) {
+		return nil;
+	}
+	
+	GLACollectedFileListHelper *fileListHelper = (self.fileListHelper);
+	id<GLAFileAccessing> accessedFile = [fileListHelper accessFileForCollectedFile:collectedFile];
+	if (!accessedFile) {
+		return nil;
+	}
+	
+	return (accessedFile.filePathURL);
 }
 
 - (NSURL *)fileURLForHighlightedItem:(GLAHighlightedItem *)highlightedItem
@@ -355,16 +420,18 @@
 
 - (void)updateOpenerApplicationsUIMenu
 {
-	GLAFileOpenerApplicationCombiner *openerApplicationCombiner = (self.openerApplicationCombiner);
+	GLAFileOpenerApplicationFinder *openerApplicationCombiner = (self.openerApplicationCombiner);
 	
-	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
-	if (![highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
-		return;
+	id<NSObject> object = (self.clickedObject);
+	
+	GLAHighlightedCollectedFile *highlightedCollectedFile = nil;
+	if ([object isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+		highlightedCollectedFile = (GLAHighlightedCollectedFile *)object;
 	}
-	GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 	
 	
-	NSURL *fileURL = [self fileURLForHighlightedItem:highlightedItem];
+	//NSURL *fileURL = [self fileURLForHighlightedItem:highlightedItem];
+	NSURL *fileURL = [self fileURLForObject:object];
 	if (fileURL) {
 		(openerApplicationCombiner.fileURLs) = [NSSet setWithObject:fileURL];
 	}
@@ -372,19 +439,37 @@
 		(openerApplicationCombiner.fileURLs) = nil;
 	}
 	
+	
+	
 	NSURL *preferredApplicationURL = nil;
-	GLACollectedFile *collectedFileForPreferredApplication = (highlightedCollectedFile.applicationToOpenFile);
-	if (collectedFileForPreferredApplication) {
-		GLAAccessedFileInfo *preferredApplicationAccessedFile = [collectedFileForPreferredApplication accessFile];
-		preferredApplicationURL = (preferredApplicationAccessedFile.filePathURL);
+	
+	if (highlightedCollectedFile) {
+		GLACollectedFile *collectedFileForPreferredApplication = (highlightedCollectedFile.applicationToOpenFile);
+		if (collectedFileForPreferredApplication) {
+			GLAAccessedFileInfo *preferredApplicationAccessedFile = [collectedFileForPreferredApplication accessFile];
+			preferredApplicationURL = (preferredApplicationAccessedFile.filePathURL);
+		}
 	}
+	
+	NSMenu *contextualMenu = (self.contextualMenu);
 
 	NSMenu *openerApplicationMenu = (self.openerApplicationMenu);
 	[openerApplicationCombiner updateOpenerApplicationsMenu:openerApplicationMenu target:self action:@selector(openWithChosenApplication:) preferredApplicationURL:preferredApplicationURL];
 	
 	
 	NSMenu *preferredOpenerApplicationMenu = (self.preferredOpenerApplicationMenu);
-	[openerApplicationCombiner updatePreferredOpenerApplicationsChoiceMenu:preferredOpenerApplicationMenu target:self action:@selector(changePreferredOpenerApplication:) chosenPreferredApplicationURL:preferredApplicationURL];
+	NSMenuItem *preferredOpenerApplicationMenuItem = [contextualMenu itemAtIndex:[contextualMenu indexOfItemWithSubmenu:preferredOpenerApplicationMenu]];
+	
+	if (highlightedCollectedFile) {
+		(preferredOpenerApplicationMenuItem.enabled) = YES;
+		[openerApplicationCombiner updatePreferredOpenerApplicationsChoiceMenu:preferredOpenerApplicationMenu target:self action:@selector(changePreferredOpenerApplication:) chosenPreferredApplicationURL:preferredApplicationURL];
+	}
+	else {
+		(preferredOpenerApplicationMenuItem.enabled) = NO;
+		[preferredOpenerApplicationMenu removeAllItems];
+	}
+	
+	[contextualMenu update];
 }
 
 #pragma mark Actions
@@ -397,7 +482,7 @@
 		return;
 	}
 	
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *projectManager = (self.projectManager);
 	
 	[projectManager editHighlightsOfProject:(self.project) usingBlock:^(id<GLAArrayEditing> highlightsEditor) {
 		[highlightsEditor removeChildrenAtIndexes:[NSIndexSet indexSetWithIndex:clickedRow]];
@@ -409,75 +494,38 @@
 	NSBeep();
 }
 
-- (void)openHighlightedItem:(GLAHighlightedItem *)highlightedItem
+- (void)openObject:(id<NSObject>)object behaviour:(GLAOpenBehaviour)behaviour
 {
-	if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
-		GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
-		[self openHighlightedCollectedFile:highlightedCollectedFile];
+	GLAProjectManager *pm = (self.projectManager);
+	
+	if ([object isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+		GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)object;
+		[pm openHighlightedCollectedFile:highlightedCollectedFile behaviour:behaviour];
+	}
+	else if ([object isKindOfClass:[GLACollectedFile class]]) {
+		GLACollectedFile *collectedFile = (GLACollectedFile *)object;
+		[pm openCollectedFile:collectedFile behaviour:behaviour];
 	}
 }
 
-- (void)showHighlightedItemInFinder:(GLAHighlightedItem *)highlightedItem
+- (void)openObject:(id<NSObject>)object
 {
-	NSURL *fileURL = [self fileURLForHighlightedItem:highlightedItem];
-	if (!fileURL) {
-		return;
-	}
+	GLAProjectManager *pm = (self.projectManager);
 	
-	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[fileURL]];
-}
-
-- (void)openHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile
-{
-	NSURL *fileURL = [self fileURLForHighlightedItem:highlightedCollectedFile];
-	if (!fileURL) {
-		return;
-	}
-	
-	NSURL *applicationURL = nil;
-	GLACollectedFile *applicationToOpenFileCollected = (highlightedCollectedFile.applicationToOpenFile);
-	if (applicationToOpenFileCollected) {
-		GLAAccessedFileInfo *preferredApplicationAccessedFile = [applicationToOpenFileCollected accessFile];
-		applicationURL = (preferredApplicationAccessedFile.filePathURL);
-	}
-	
-	if (!applicationURL) {
-		NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
-		applicationURL = [workspace URLForApplicationToOpenURL:fileURL];
-	}
-	
-#if DEBUG
-	NSLog(@"OPENING COLLECTED FILE %@", fileURL);
-#endif
-	
-	[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL useSecurityScope:YES];
+	[self openObject:object behaviour:[pm openBehaviourForModifierFlags:[NSEvent modifierFlags]]];
 }
 
 - (IBAction)openClickedItem:(id)sender
 {
-	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
-	if (!highlightedItem) {
-		return;
-	}
+	id<NSObject> object = (self.clickedObject);
 	
-	BOOL showInFinder = NO;
-	NSEventModifierFlags modifierFlags = [NSEvent modifierFlags];
-	if ((modifierFlags & NSCommandKeyMask) == NSCommandKeyMask) {
-		showInFinder = YES;
-	}
-	
-	if (showInFinder) {
-		[self showHighlightedItemInFinder:highlightedItem];
-	}
-	else {
-		[self openHighlightedItem:highlightedItem];
-	}
+	[self openObject:object];
 }
 
 - (IBAction)openAllItems:(id)sender
 {
 	for (GLAHighlightedItem *highlightedItem in (self.highlightedItems)) {
-		[self openHighlightedItem:highlightedItem];
+		[self openObject:highlightedItem];
 	}
 }
 
@@ -490,14 +538,13 @@
 	
 	NSURL *applicationURL = representedObject;
 	
-	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
-	
-	NSURL *fileURL = [self fileURLForHighlightedItem:highlightedItem];
+	id<NSObject> object = (self.clickedObject);
+	NSURL *fileURL = [self fileURLForObject:object];
 	if (!fileURL) {
 		return;
 	}
 	
-	[GLAFileOpenerApplicationCombiner openFileURLs:@[fileURL] withApplicationURL:applicationURL useSecurityScope:YES];
+	[GLAFileOpenerApplicationFinder openFileURLs:@[fileURL] withApplicationURL:applicationURL useSecurityScope:YES];
 }
 
 - (IBAction)changePreferredOpenerApplication:(NSMenuItem *)menuItem
@@ -509,12 +556,12 @@
 	NSURL *applicationURL = representedObject;
 	
 	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
-	if (![highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+	if (highlightedItem == nil || ![highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
 		return;
 	}
 	GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAProjectManager *pm = (self.projectManager);
 	[pm editHighlightedCollectedFile:highlightedCollectedFile usingBlock:^(id<GLAHighlightedCollectedFileEditing> editor) {
 		if (applicationURL) {
 			(editor.applicationToOpenFile) = [[GLACollectedFile alloc] initWithFileURL:applicationURL];
@@ -527,12 +574,9 @@
 
 - (IBAction)showItemInFinder:(id)sender
 {
-	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
-	if (!highlightedItem) {
-		return;
-	}
+	id<NSObject> object = (self.clickedObject);
 	
-	[self showHighlightedItemInFinder:highlightedItem];
+	[self openObject:object behaviour:GLAOpenBehaviourShowInFinder];
 }
 
 #pragma mark Notifications
@@ -566,6 +610,13 @@
 		return [collectedFileUUIDs containsObject:collectedFileUUID];
 	}];
 	
+	NSArray *primaryFolders = (self.primaryFolders);
+	if (indexesToUpdate.count == 0) {
+		indexesToUpdate = [primaryFolders indexesOfObjectsPassingTest:^BOOL(GLACollectedFile *collectedFolder, NSUInteger idx, BOOL *stop) {
+			return [collectedFileUUIDs containsObject:(collectedFolder.UUID)];
+		}];
+	}
+	
 	[(self.tableView) reloadDataForRowIndexes:indexesToUpdate columnIndexes:[NSIndexSet indexSetWithIndex:0]];
 }
 
@@ -578,27 +629,47 @@
 
 - (void)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
 {
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	[projectManager editHighlightsOfProject:(self.project) usingBlock:editBlock];
+	[(self.highlightedItemsUser) editChildrenUsingBlock:editBlock];
 }
 
 #pragma mark Table View Data Source
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	return (self.highlightedItems.count);
+	NSUInteger count = 0;
+	
+	count += (self.highlightedItems.count);
+	count += (self.primaryFolders.count);
+	
+	return count;
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	GLAHighlightedItem *highlightedItem = (self.highlightedItems)[row];
-	return highlightedItem;
+	NSArray *highlightedItems = (self.highlightedItems);
+	NSArray *primaryFolders = (self.primaryFolders);
+	
+	if (row < (highlightedItems.count)) {
+		GLAHighlightedItem *highlightedItem = highlightedItems[row];
+		return highlightedItem;
+	}
+	else {
+		GLACollectedFile *collectedFolder = primaryFolders[row - (highlightedItems.count)];
+		return collectedFolder;
+	}
 }
 
 - (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row
 {
-	GLAHighlightedItem *highlightedItem = (self.highlightedItems)[row];
-	return highlightedItem;
+	NSArray *highlightedItems = (self.highlightedItems);
+	
+	if (row < (highlightedItems.count)) {
+		GLAHighlightedItem *highlightedItem = highlightedItems[row];
+		return highlightedItem;
+	}
+	else {
+		return nil;
+	}
 }
 
 - (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forRowIndexes:(NSIndexSet *)rowIndexes
@@ -613,7 +684,15 @@
 
 - (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
 {
-	return [(self.tableDraggingHelper) tableView:tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
+	NSArray *highlightedItems = (self.highlightedItems);
+	
+	// <= Less than or equal to allow dragging to bottom of highlighted items.
+	if (row <= (highlightedItems.count)) {
+		return [(self.tableDraggingHelper) tableView:tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
+	}
+	else {
+		return NSDragOperationNone;
+	}
 }
 
 - (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation
@@ -630,41 +709,52 @@
 
 - (void)setUpTableCellView:(GLAHighlightsTableCellView *)cellView forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
+	GLAProjectManager *pm = (self.projectManager);
+	NSArray *highlightedItems = (self.highlightedItems);
+	NSArray *primaryFolders = (self.primaryFolders);
+	GLACollectedFileListHelper *fileListHelper = (self.fileListHelper);
+	GLACollectedFilesSetting *collectedFilesSetting = (fileListHelper.collectedFilesSetting);
+	
+	NSString *name = @"Loading…";
+	
 	(cellView.backgroundStyle) = NSBackgroundStyleDark;
-	
-	NSTextField *textField = (cellView.textField);
-	
 	(cellView.canDrawSubviewsIntoLayer) = YES;
 	(cellView.alphaValue) = 1.0;
 	
-	GLAHighlightedItem *highlightedItem = (self.highlightedItems)[row];
-	(cellView.objectValue) = highlightedItem;
-	
-	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-	NSString *name = @"Loading…";
-	
-	if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
-		GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
+	if (row < (highlightedItems.count)) {
+		GLAHighlightedItem *highlightedItem = highlightedItems[row];
+		(cellView.objectValue) = highlightedItem;
 		
-		GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
-		if (collectedFile) {
-			GLACollectedFileListHelper *fileListHelper = (self.fileListHelper);
-			GLACollectedFilesSetting *collectedFilesSetting = (fileListHelper.collectedFilesSetting);
+		if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+			GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 			
-			NSString *displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
-			if (displayName) {
-				name = displayName;
+			GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
+			if (collectedFile) {
+				NSString *displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+				if (displayName) {
+					name = displayName;
+				}
 			}
+			
+			GLACollection *holdingCollection = [pm collectionForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
+			
+			GLACollectionIndicationButton *collectionIndicationButton = (cellView.collectionIndicationButton);
+			(collectionIndicationButton.collection) = holdingCollection;
 		}
-		
-		GLACollection *holdingCollection = [pm collectionForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
-		
-		GLACollectionIndicationButton *collectionIndicationButton = (cellView.collectionIndicationButton);
-		(collectionIndicationButton.collection) = holdingCollection;
+		else {
+			NSAssert(NO, @"highlightedItem not a valid class.");
+		}
 	}
 	else {
-		NSAssert(NO, @"highlightedItem not a valid class.");
+		GLACollectedFile *collectedFolder = primaryFolders[row - (highlightedItems.count)];
+		(cellView.objectValue) = collectedFolder;
+		
+		NSString *displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFolder];
+		if (displayName) {
+			name = displayName;
+		}
 	}
+	
 	
 	//name = [NSString stringWithFormat:@"%@ %@ %@", name, name, name];
 	
@@ -687,7 +777,7 @@
 	
 	NSAttributedString *wholeAttrString = [[NSAttributedString alloc] initWithString:name attributes:titleAttributes];
 	
-	(textField.attributedStringValue) = wholeAttrString;
+	(cellView.textField.attributedStringValue) = wholeAttrString;
 	
 	(cellView.needsLayout) = YES;
 	//(textField.preferredMaxLayoutWidth) = (tableColumn.width);
@@ -699,6 +789,7 @@
 	@autoreleasepool {
 		GLAHighlightsTableCellView *cellView = (self.measuringTableCellView);
 		[cellView removeFromSuperview];
+		
 		[self setUpTableCellView:cellView forTableColumn:nil row:row];
 		
 		NSTableColumn *tableColumn = (tableView.tableColumns)[0];

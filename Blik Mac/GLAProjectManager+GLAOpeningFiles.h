@@ -9,8 +9,21 @@
 #import "GLAProjectManager.h"
 
 
+typedef NS_ENUM(NSUInteger, GLAOpenBehaviour) {
+	GLAOpenBehaviourDefault = 0,
+	GLAOpenBehaviourShowInFinder = 1,
+	GLAOpenBehaviourAllowEditingApplications = 2
+};
+
+
 @interface GLAProjectManager (GLAOpeningFiles)
 
-- (BOOL)openHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile;
+- (void)openCollectedFile:(GLACollectedFile *)collectedFile behaviour:(GLAOpenBehaviour)behaviour;
+- (void)openCollectedFile:(GLACollectedFile *)collectedFile modifierFlags:(NSEventModifierFlags)modifierFlags;
+
+- (BOOL)openHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile behaviour:(GLAOpenBehaviour)behaviour;
+- (BOOL)openHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile modifierFlags:(NSEventModifierFlags)modifierFlags;
+
+- (GLAOpenBehaviour)openBehaviourForModifierFlags:(NSEventModifierFlags)modifierFlags;
 
 @end

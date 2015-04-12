@@ -205,6 +205,7 @@
 	}
 	
 	return (self.lightTextColor);
+	//return [NSColor blackColor];
 }
 
 

@@ -24,6 +24,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 @interface GLAProjectCollectionsViewController () <GLAArrayTableDraggingHelperDelegate>
 
 @property(nonatomic) id<GLALoadableArrayUsing> collectionsUser;
+@property(copy, nonatomic) NSArray *collections;
 
 @property(nonatomic) GLAArrayTableDraggingHelper *tableDraggingHelper;
 
@@ -86,6 +87,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	_project = project;
 		
 	if (!isSameProject) {
+		(self.collectionsUser) = nil;
 		[self reloadCollections];
 	}
 }
@@ -436,8 +438,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 - (void)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
 {
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	[projectManager editCollectionsOfProject:(self.project) usingBlock:editBlock];
+	[(self.collectionsUser) editChildrenUsingBlock:editBlock];
 }
 
 #pragma mark Table View Data Source

@@ -143,9 +143,9 @@
 
 - (id<GLALoadableArrayUsing>)usePermittedApplicationFolders
 {
-	GLAArrayEditorUser *arrayEditorUser = [[GLAArrayEditorUser alloc] initWithOwner:self accessingBlock:^GLAArrayEditor *(BOOL createIfNeeded, BOOL loadIfNeeded) {
-		return [self permittedApplicationFoldersArrayEditorCreateIfNeeded:createIfNeeded loadIfNeeded:loadIfNeeded];
-	} editBlock:^(GLAArrayEditingBlock editingBlock) {
+	GLAArrayEditorUser *arrayEditorUser = [[GLAArrayEditorUser alloc] initWithLoadingBlock:^GLAArrayEditor *(BOOL createAndLoadIfNeeded) {
+		return [self permittedApplicationFoldersArrayEditorCreateIfNeeded:createAndLoadIfNeeded loadIfNeeded:createAndLoadIfNeeded];
+	} makeEditsBlock:^(GLAArrayEditingBlock editingBlock) {
 		[self editPermittedApplicationFoldersUsingBlock:editingBlock];
 	}];
 	

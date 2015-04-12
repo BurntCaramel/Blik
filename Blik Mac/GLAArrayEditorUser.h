@@ -9,15 +9,14 @@
 #import "GLAArrayEditor.h"
 
 
-typedef GLAArrayEditor *(^ GLAArrayEditorUserAccessingBlock)(BOOL createIfNeeded, BOOL loadIfNeeded);
-typedef void (^ GLAArrayEditorUserLoadingBlock)(GLAArrayEditor *arrayEditor, dispatch_block_t callWhenLoaded);
-typedef void (^ GLAArrayEditorUserEditBlock)(GLAArrayEditingBlock editingBlock);
+typedef GLAArrayEditor *(^ GLAArrayEditorUserLoadingBlock)(BOOL createAndLoadIfNeeded);
+typedef void (^ GLAArrayEditorUserMakeEditsBlock)(GLAArrayEditingBlock editingBlock);
 typedef BOOL (^ GLAArrayEditorUserBooleanResultBlock)();
 
 
 @interface GLAArrayEditorUser : NSObject <GLALoadableArrayUsing>
 
-- (instancetype)initWithOwner:(id)owner accessingBlock:(GLAArrayEditorUserAccessingBlock)accessingBlock editBlock:(GLAArrayEditorUserEditBlock)editBlock;
+- (instancetype)initWithLoadingBlock:(GLAArrayEditorUserLoadingBlock)loadingBlock makeEditsBlock:(GLAArrayEditorUserMakeEditsBlock)makeEditsBlock NS_DESIGNATED_INITIALIZER;
 
 
 // Change notification, add those particular to your object.

@@ -9,7 +9,7 @@
 @import Cocoa;
 
 
-@interface GLAFileOpenerApplicationCombiner : NSObject
+@interface GLAFileOpenerApplicationFinder : NSObject
 
 - (void)addFileURLs:(NSSet *)fileURLsSet;
 - (void)removeFileURLs:(NSSet *)fileURLsSet;
@@ -33,7 +33,7 @@
 extern NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification;
 
 
-@interface GLAFileOpenerApplicationCombiner (MenuAdditions)
+@interface GLAFileOpenerApplicationFinder (MenuAdditions)
 
 - (void)updateOpenerApplicationsMenu:(NSMenu *)menu target:(id)target action:(SEL)action preferredApplicationURL:(NSURL *)preferredApplicationURL forPopUpMenu:(BOOL)forPopUpMenu;
 - (void)updateOpenerApplicationsMenu:(NSMenu *)menu target:(id)target action:(SEL)action preferredApplicationURL:(NSURL *)preferredApplicationURL;

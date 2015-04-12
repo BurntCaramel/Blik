@@ -76,7 +76,7 @@
 
 - (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation
 {
-	// Does not work for some reason.
+	// Does not work for some reason, should be when items are dragged to the trash I think.
 	if (operation == NSDragOperationDelete) {
 		NSIndexSet *sourceRowIndexes = (self.draggedRowIndexes);
 		(self.draggedRowIndexes) = nil;

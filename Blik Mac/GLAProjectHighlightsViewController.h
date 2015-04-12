@@ -10,7 +10,7 @@
 #import "GLAInstructionsViewController.h"
 #import "GLAProject.h"
 #import "GLAHighlightedItem.h"
-#import "GLAFileOpenerApplicationCombiner.h"
+#import "GLAFileOpenerApplicationFinder.h"
 #import "GLAButton.h"
 
 @class GLAProjectViewController;
@@ -32,9 +32,8 @@
 @property(strong, nonatomic) IBOutlet GLAInstructionsViewController *instructionsViewController;
 
 @property(nonatomic) GLAProject *project;
-@property(nonatomic) NSArray *highlightedItems;
 
-@property(nonatomic) GLAFileOpenerApplicationCombiner *openerApplicationCombiner;
+@property(nonatomic) GLAFileOpenerApplicationFinder *openerApplicationCombiner;
 
 - (IBAction)removedClickedItem:(id)sender;
 

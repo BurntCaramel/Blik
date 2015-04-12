@@ -11,12 +11,8 @@
 
 @interface GLAArrayEditorUser ()
 
-@property(nonatomic) id owner;
-
-@property(copy, nonatomic) GLAArrayEditorUserAccessingBlock sourceAccessingBlock;
-@property(copy, nonatomic) GLAArrayEditorUserEditBlock sourceEditBlock;
-
-- (void)didLoadNotification:(NSNotification *)note;
+@property(copy, nonatomic) GLAArrayEditorUserLoadingBlock sourceLoadingBlock;
+@property(copy, nonatomic) GLAArrayEditorUserMakeEditsBlock sourceMakeEditsBlock;
 
 @end
 
@@ -25,13 +21,12 @@
 @synthesize representedObject = _representedObject;
 @synthesize changeCompletionBlock = _changeCompletionBlock;
 
-- (instancetype)initWithOwner:(id)owner accessingBlock:(GLAArrayEditorUserAccessingBlock)accessingBlock editBlock:(GLAArrayEditorUserEditBlock)editBlock
+- (instancetype)initWithLoadingBlock:(GLAArrayEditorUserLoadingBlock)loadingBlock makeEditsBlock:(GLAArrayEditorUserMakeEditsBlock)makeEditsBlock
 {
 	self = [super init];
 	if (self) {
-		_owner = owner;
-		_sourceAccessingBlock = [accessingBlock copy];
-		_sourceEditBlock = [editBlock copy];
+		_sourceLoadingBlock = [loadingBlock copy];
+		_sourceMakeEditsBlock = [makeEditsBlock copy];
 	}
 	return self;
 }
@@ -47,14 +42,14 @@
 	[nc addObserver:self selector:@selector(didChangeNotification:) name:changeNotificationName object:notifier];
 }
 
-- (GLAArrayEditor *)arrayEditorCreatingIfNeeded:(BOOL)createIfNeeded LoadingIfNeeded:(BOOL)loadIfNeeded
+- (GLAArrayEditor *)arrayEditorCreatingAndLoadingIfNeeded:(BOOL)createAndLoadIfNeeded
 {
-	return (self.sourceAccessingBlock)(createIfNeeded, loadIfNeeded);
+	return (self.sourceLoadingBlock)(createAndLoadIfNeeded);
 }
 
 - (BOOL)finishedLoading
 {
-	GLAArrayEditor *arrayEditor = [self arrayEditorCreatingIfNeeded:NO LoadingIfNeeded:NO];
+	GLAArrayEditor *arrayEditor = [self arrayEditorCreatingAndLoadingIfNeeded:NO];
 	if (!arrayEditor) {
 		return NO;
 	}
@@ -68,7 +63,7 @@
 		return nil;
 	}
 	
-	GLAArrayEditor *arrayEditor = [self arrayEditorCreatingIfNeeded:YES LoadingIfNeeded:YES];
+	GLAArrayEditor *arrayEditor = [self arrayEditorCreatingAndLoadingIfNeeded:YES];
 	if (! arrayEditor.finishedLoadingFromStore ) {
 		return nil;
 	}
@@ -98,22 +93,17 @@
 
 - (void)editChildrenUsingBlock:(void (^)(id<GLAArrayEditing>))block
 {
-	GLAArrayEditor *arrayEditor = [self arrayEditorCreatingIfNeeded:NO LoadingIfNeeded:NO];
+	GLAArrayEditor *arrayEditor = [self arrayEditorCreatingAndLoadingIfNeeded:NO];
 	NSAssert(arrayEditor != nil && (arrayEditor.finishedLoadingFromStore), @"Array editor must be loaded before editing");
 	
-	(self.sourceEditBlock)(block);
-}
-
-- (void)didLoadNotification:(NSNotification *)note
-{
-	//(self.loadCompletionBlock)();
+	(self.sourceMakeEditsBlock)(block);
 }
 
 - (void)didChangeNotification:(NSNotification *)note
 {
 	GLAArrayInspectingBlock changeCompletionBlock = (self.changeCompletionBlock);
 	if (changeCompletionBlock) {
-		GLAArrayEditor *arrayEditor = [self arrayEditorCreatingIfNeeded:YES LoadingIfNeeded:YES];
+		GLAArrayEditor *arrayEditor = [self arrayEditorCreatingAndLoadingIfNeeded:YES];
 		changeCompletionBlock(arrayEditor);
 	}
 }

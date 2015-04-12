@@ -61,8 +61,6 @@
 
 @property(readonly, copy, nonatomic) NSArray *constrainers;
 
-@property(nonatomic) NSMutableArray *operationsToCallWhenLoaded;
-
 @property(nonatomic) GLAArrayEditorChanges *currentChanges;
 
 - (void)notifyObserversArrayWasCreated;
@@ -290,15 +288,6 @@
 	
 	[self notifyObserversDidLoad];
 	
-	NSMutableArray *operationsToCallWhenLoaded = (self.operationsToCallWhenLoaded);
-	if (operationsToCallWhenLoaded) {
-		for (NSOperation *operation in operationsToCallWhenLoaded) {
-			[operation start];
-		}
-		
-		(self.operationsToCallWhenLoaded) = nil;
-	}
-	
 	_readyForEditing = YES;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAArrayEditorWithStoreIsReadyForEditingNotification object:self];
@@ -320,34 +309,6 @@
 	(self.currentChanges) = nil;
 	
 	return changes;
-}
-
-- (NSOperation *)makeChangesInBlockOrQueueOperationIfNeedsLoading:(GLAArrayEditingBlock)editorBlock
-{
-	if (self.needsLoadingFromStore) {
-		// Cannot use a queue as there is no way of guaranteeing of running
-		// it on the main queue, which edit blocks must do.
-		NSMutableArray *operationsToCallWhenLoaded = (self.operationsToCallWhenLoaded);
-		if (!operationsToCallWhenLoaded) {
-			(self.operationsToCallWhenLoaded) = operationsToCallWhenLoaded = [NSMutableArray new];
-		}
-		
-		__weak GLAArrayEditor *weakSelf = self;
-		NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-			__strong GLAArrayEditor *strongSelf = weakSelf;
-			if (strongSelf) {
-				(void)[strongSelf changesMadeInBlock:editorBlock];
-			}
-		}];
-		
-		[operationsToCallWhenLoaded addObject:operation];
-		
-		return operation;
-	}
-	else {
-		[self changesMadeInBlock:editorBlock];
-		return nil;
-	}
 }
 
 - (BOOL)needsLoadingFromStore

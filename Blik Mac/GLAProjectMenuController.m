@@ -18,6 +18,7 @@
 @interface GLAProjectMenuController () <GLACollectedFileListHelperDelegate>
 
 @property(nonatomic) id<GLALoadableArrayUsing> highlightsUser;
+@property(nonatomic) id<GLALoadableArrayUsing> primaryFoldersUser;
 @property(nonatomic) id<GLALoadableArrayUsing> collectionsUser;
 
 @property(nonatomic) GLACollectedFileListHelper *collectedFileListHelper;
@@ -104,6 +105,33 @@
 	return [[self useHighlights] inspectLoadingIfNeeded];
 }
 
+- (id<GLALoadableArrayUsing>)usePrimaryFolders
+{
+	id<GLALoadableArrayUsing> primaryFoldersUser = (self.primaryFoldersUser);
+	if (!primaryFoldersUser) {
+		GLAProjectManager *pm = (self.projectManager);
+		(self.primaryFoldersUser) = primaryFoldersUser = [pm usePrimaryFoldersForProject:(self.project)];
+		
+		__weak GLAProjectMenuController *weakSelf = self;
+		
+		(primaryFoldersUser.changeCompletionBlock) = ^(id<GLAArrayInspecting>array) {
+			__strong GLAProjectMenuController *self = weakSelf;
+			if (!self) {
+				return;
+			}
+			
+			[self updateMenu];
+		};
+	}
+	
+	return primaryFoldersUser;
+}
+
+- (id<GLAArrayInspecting>)inspectPrimaryFolders
+{
+	return [[self usePrimaryFolders] inspectLoadingIfNeeded];
+}
+
 - (id<GLALoadableArrayUsing>)useCollections
 {
 	id<GLALoadableArrayUsing> collectionsUser = (self.collectionsUser);
@@ -165,8 +193,16 @@
 		GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 		
 		GLAProjectManager *pm = (self.projectManager);
-		[pm openHighlightedCollectedFile:highlightedCollectedFile];
+		[pm openHighlightedCollectedFile:highlightedCollectedFile modifierFlags:[NSEvent modifierFlags]];
 	}
+}
+
+- (IBAction)openPrimaryFolderItem:(NSMenuItem *)sender
+{
+	GLACollectedFile *collectedFolder = (sender.representedObject);
+	
+	GLAProjectManager *pm = (self.projectManager);
+	[pm openCollectedFile:collectedFolder modifierFlags:[NSEvent modifierFlags]];
 }
 
 - (IBAction)openCollection:(NSMenuItem *)sender
@@ -244,6 +280,45 @@
 	}
 }
 
+- (void)addMenuItemsForPrimaryFoldersToMenu:(NSMenu *)menu
+{
+	id<GLAArrayInspecting> primaryFoldersInspector = [self inspectPrimaryFolders];
+	GLACollectedFileListHelper *collectedFileListHelper = (self.collectedFileListHelper);
+	GLACollectedFilesSetting *collectedFilesSetting = (collectedFileListHelper.collectedFilesSetting);
+	//GLAUIStyle *style = [GLAUIStyle activeStyle];
+	
+	if (primaryFoldersInspector) {
+		NSUInteger primaryFolderCount = (primaryFoldersInspector.childrenCount);
+		SEL primaryFolderAction = @selector(openPrimaryFolderItem:);
+		
+		//collectionCount = 0;
+		
+		if (primaryFolderCount == 0) {
+			[menu gla_addDescriptiveMenuItemWithTitle:NSLocalizedString( @"No Primary Folders Yet", @"Menu item for status item menu project menu when there are no primary folders" )];
+		}
+		else {
+			[menu gla_addDescriptiveMenuItemWithTitle:NSLocalizedString( @"Primary Folders", @"Status item menu item for grouping primary folders" )];
+			
+			for (NSUInteger primaryFolderIndex = 0; primaryFolderIndex < primaryFolderCount; primaryFolderIndex++) {
+				GLACollectedFile *collectedFolder = [primaryFoldersInspector childAtIndex:primaryFolderIndex];
+				
+				NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:@"" action:primaryFolderAction keyEquivalent:@""];
+				(item.representedObject) = collectedFolder;
+				(item.target) = self;
+				
+				[collectedFilesSetting startAccessingCollectedFile:collectedFolder];
+				
+				[collectedFilesSetting setUpMenuItem:item forOptionalCollectedFile:collectedFolder wantsIcon:YES];
+				
+				[menu addItem:item];
+			}
+		}
+	}
+	else {
+		[menu gla_addDescriptiveMenuItemWithTitle:NSLocalizedString(@"Loading Primary Folders…", @"Loading menu item for primary folders inside a project menu")];
+	}
+}
+
 - (void)addMenuItemsForCollectionsToMenu:(NSMenu *)menu
 {
 	id<GLAArrayInspecting> collectionsInspector = [self inspectCollections];
@@ -299,6 +374,10 @@
 	NSMenuItem *item = nil;
 	
 	[self addMenuItemsForHighlightsToMenu:menu];
+	
+	[menu addItem:[NSMenuItem separatorItem]];
+	
+	[self addMenuItemsForPrimaryFoldersToMenu:menu];
 	
 	[menu addItem:[NSMenuItem separatorItem]];
 	

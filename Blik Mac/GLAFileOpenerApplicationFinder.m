@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-#import "GLAFileOpenerApplicationCombiner.h"
+#import "GLAFileOpenerApplicationFinder.h"
 #import "GLAFileInfoRetriever.h"
 
 
-@interface GLAFileOpenerApplicationCombiner () <GLAFileInfoRetrieverDelegate>
+@interface GLAFileOpenerApplicationFinder () <GLAFileInfoRetrieverDelegate>
 
 @property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
 
@@ -27,7 +27,7 @@
 
 @end
 
-@implementation GLAFileOpenerApplicationCombiner
+@implementation GLAFileOpenerApplicationFinder
 
 - (instancetype)init
 {
@@ -294,7 +294,6 @@
 - (void)openFileURLsUsingDefaultApplications
 {
 	NSArray *fileURLs = (self.fileURLs.allObjects);
-	NSLog(@"FILE URLS %@", fileURLs);
 	[[self class] openFileURLs:fileURLs withApplicationURL:nil useSecurityScope:YES];
 }
 
@@ -303,7 +302,7 @@
 NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileURLOpenerApplicationCombinerDidChangeNotification";
 
 
-@implementation GLAFileOpenerApplicationCombiner (MenuAdditions)
+@implementation GLAFileOpenerApplicationFinder (MenuAdditions)
 
 - (NSMenuItem *)newMenuItemForApplicationURL:(NSURL *)applicationURL target:(id)target action:(SEL)action
 {

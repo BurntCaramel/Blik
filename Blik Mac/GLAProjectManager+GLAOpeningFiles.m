@@ -7,12 +7,52 @@
 //
 
 #import "GLAProjectManager+GLAOpeningFiles.h"
-#import "GLAFileOpenerApplicationCombiner.h"
+#import "GLAFileOpenerApplicationFinder.h"
 
 
 @implementation GLAProjectManager (GLAOpeningFiles)
 
-- (BOOL)openHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile
+- (void)openCollectedFile:(GLACollectedFile *)collectedFile behaviour:(GLAOpenBehaviour)behaviour
+{
+	// Stays accessed as long as this exists.
+	// So (accessedFileInfo.filePathURL) is used below, to have a reference.
+	GLAAccessedFileInfo *accessedFileInfo = [collectedFile accessFile];
+	
+	// Command shows the file in the Finder
+	if (behaviour == GLAOpenBehaviourShowInFinder) {
+		[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[(accessedFileInfo.filePathURL)]];
+		return;
+	}
+	
+	if (behaviour == GLAOpenBehaviourDefault) {
+		// Check for Automator applets.
+		NSBundle *bundle = [NSBundle bundleWithURL:(accessedFileInfo.filePathURL)];
+		if (bundle) {
+			NSDictionary *infoDictionary = (bundle.infoDictionary);
+			
+			BOOL isApplication = [@"APPL" isEqual:infoDictionary[@"CFBundlePackageType"]];
+			//BOOL isAutomatorApplet = [@YES isEqual:infoDictionary[@"AMIsApplet"]];
+			// if (isAutomatorApplet) {
+			if (isApplication) {
+				[[NSWorkspace sharedWorkspace] openURL:(accessedFileInfo.filePathURL)];
+				return;
+			}
+		}
+	}
+	
+	// GLAOpenBehaviourDefault or GLAOpenBehaviourAllowEditingApplications
+	[GLAFileOpenerApplicationFinder openFileURLs:@[(accessedFileInfo.filePathURL)] withApplicationURL:nil useSecurityScope:YES];
+}
+
+- (void)openCollectedFile:(GLACollectedFile *)collectedFile modifierFlags:(NSEventModifierFlags)modifierFlags
+{
+	GLAOpenBehaviour behaviour = [self openBehaviourForModifierFlags:modifierFlags];
+	
+	[self openCollectedFile:collectedFile behaviour:behaviour];
+}
+
+
+- (BOOL)openHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile behaviour:(GLAOpenBehaviour)behaviour
 {
 	GLACollectedFile *collectedFile = [self collectedFileForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:NO];
 	if (!collectedFile) {
@@ -23,14 +63,14 @@
 	// So (accessedFileInfo.filePathURL) is used below, to have a reference.
 	GLAAccessedFileInfo *accessedFileInfo = [collectedFile accessFile];
 	
-	NSEventModifierFlags modifierFlags = [NSEvent modifierFlags];
 	// Command shows the file in the Finder
-	if (modifierFlags & NSCommandKeyMask) {
+	if (behaviour == GLAOpenBehaviourShowInFinder) {
 		[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[(accessedFileInfo.filePathURL)]];
 		return YES;
 	}
 	
-	if ((modifierFlags & NSAlternateKeyMask) == 0) {
+	// Option key will open with editor, no option key will open using default.
+	if (behaviour == GLAOpenBehaviourDefault) {
 		// Check for Automator applets.
 		NSBundle *bundle = [NSBundle bundleWithURL:(accessedFileInfo.filePathURL)];
 		if (bundle) {
@@ -59,9 +99,31 @@
 		applicationURL = [workspace URLForApplicationToOpenURL:(accessedFileInfo.filePathURL)];
 	}
 	
-	[GLAFileOpenerApplicationCombiner openFileURLs:@[(accessedFileInfo.filePathURL)] withApplicationURL:applicationURL useSecurityScope:YES];
+	[GLAFileOpenerApplicationFinder openFileURLs:@[(accessedFileInfo.filePathURL)] withApplicationURL:applicationURL useSecurityScope:YES];
 	
 	return YES;
+}
+
+- (BOOL)openHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile modifierFlags:(NSEventModifierFlags)modifierFlags
+{
+	GLAOpenBehaviour behaviour = [self openBehaviourForModifierFlags:modifierFlags];
+	
+	return [self openHighlightedCollectedFile:highlightedCollectedFile behaviour:behaviour];
+}
+
+
+- (GLAOpenBehaviour)openBehaviourForModifierFlags:(NSEventModifierFlags)modifierFlags
+{
+	GLAOpenBehaviour behaviour = GLAOpenBehaviourDefault;
+	
+	if (modifierFlags & NSCommandKeyMask) {
+		behaviour = GLAOpenBehaviourShowInFinder;
+	}
+	else if (modifierFlags & NSAlternateKeyMask) {
+		behaviour = GLAOpenBehaviourAllowEditingApplications;
+	}
+	
+	return behaviour;
 }
 
 @end

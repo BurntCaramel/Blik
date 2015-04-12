@@ -67,18 +67,27 @@
 
 #pragma mark Actions
 
+- (void)activateApplication
+{
+	[[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+}
+
 - (IBAction)openProject:(NSMenuItem *)sender
 {
 	GLAProject *project = (sender.representedObject);
 	
 	GLAMainSectionNavigator *navigator = (self.mainSectionNavigator);
 	[navigator goToProject:project];
+	
+	[self activateApplication];
 }
 
 - (IBAction)createNewProject:(id)sender
 {
 	GLAMainSectionNavigator *navigator = (self.mainSectionNavigator);
 	[navigator addNewProject];
+	
+	[self activateApplication];
 }
 
 #pragma mark Menu Delegate
