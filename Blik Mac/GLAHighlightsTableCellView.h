@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Burnt Caramel. All rights reserved.
 //
 
-@import Cocoa;
+#import "GLATableCellView.h"
 #import "GLACollectionIndicationButton.h"
 
 
-@interface GLAHighlightsTableCellView : NSTableCellView
+@interface GLAHighlightsTableCellView : GLATableCellView
 
 @property(nonatomic) IBOutlet GLACollectionIndicationButton *collectionIndicationButton;
 

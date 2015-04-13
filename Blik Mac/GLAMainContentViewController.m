@@ -18,6 +18,8 @@
 #import "GLAAddCollectedFilesChoiceActions.h"
 #import "GLAPendingAddedCollectedFilesInfo.h"
 
+#import "GLAEnabledFeatures.h"
+
 
 @interface GLAMainContentViewController ()
 
@@ -444,8 +446,13 @@
 	GLAViewController *controller = nil;
 	
 	NSString *collectionType = (collection.type);
+	
 	if ([collectionType isEqualToString:GLACollectionTypeFilesList]) {
+#if GLA_ENABLE_COLLECTIONS_STACK_VIEW
 		NSString *viewMode = (collection.viewMode);
+#else
+		NSString *viewMode = GLACollectionViewModeList;
+#endif
 		
 		if (!viewMode || [viewMode isEqualToString:GLACollectionViewModeList]) {
 			GLAFileCollectionViewController *fileCollectionViewController = [[GLAFileCollectionViewController alloc] initWithNibName:NSStringFromClass([GLAFileCollectionViewController class]) bundle:nil];

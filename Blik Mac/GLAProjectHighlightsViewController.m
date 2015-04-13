@@ -144,6 +144,10 @@
 			collectionUUID = (highlightedCollectedFile.holdingCollectionUUID);
 		}
 		
+#if DEBUG
+		NSLog(@"startCollectionObserving collectionUUID %@", collectionUUID);
+#endif
+		
 		if (!collectionUUID) {
 			continue;
 		}
@@ -220,6 +224,9 @@
 	}
 	
 	NSArray *highlightedItems = [highlightedItemsUser copyChildrenLoadingIfNeeded];
+#if DEBUG && 0
+	NSLog(@"highlightedItems %@", highlightedItems);
+#endif
 	
 	
 	id<GLALoadableArrayUsing> primaryFoldersUser = (self.primaryFoldersUser);
@@ -285,6 +292,9 @@
 
 - (void)collectionDidChangeNotification:(NSNotification *)note
 {
+#if DEBUG
+	NSLog(@"collectionDidChangeNotification");
+#endif
 	[self reloadHighlightedItems];
 }
 
@@ -617,6 +627,10 @@
 		}];
 	}
 	
+#if DEBUG
+	NSLog(@"didLoadInfoForCollectedFiles %@ indexes %@", collectedFiles, indexesToUpdate);
+#endif
+	
 	[(self.tableView) reloadDataForRowIndexes:indexesToUpdate columnIndexes:[NSIndexSet indexSetWithIndex:0]];
 }
 
@@ -729,6 +743,9 @@
 			GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 			
 			GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
+#if DEBUG
+			NSLog(@"collectedFileForHighlightedItem %@", collectedFile);
+#endif
 			if (collectedFile) {
 				NSString *displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
 				if (displayName) {
@@ -812,6 +829,8 @@
 {
 	GLAHighlightsTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	[self setUpTableCellView:cellView forTableColumn:tableColumn row:row];
+	
+	//(cellView.menu) = (self.contextualMenu);
 	
 	return cellView;
 }

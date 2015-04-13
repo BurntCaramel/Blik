@@ -8,6 +8,7 @@
 
 #import "GLAMainSectionNavigator.h"
 #import "GLAProjectManager.h"
+#import "GLAEnabledFeatures.h"
 
 
 @interface GLAMainSectionNavigator ()
@@ -225,9 +226,13 @@
 
 - (void)addNewCollectionToProject:(GLAProject *)project
 {
+#if GLA_ENABLE_CREATE_FILTERED_COLLECTION
 	[self goToSection:
 	 [GLAAddNewCollectionSection addNewCollectionSectionToProject:project previousSection:(self.currentSection)]
 	 ];
+#else
+	[self addNewCollectedFilesCollectionToProject:project];
+#endif
 }
 
 - (void)addNewCollectionGoToCollectedFilesSection

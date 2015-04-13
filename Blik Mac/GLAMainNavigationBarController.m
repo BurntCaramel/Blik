@@ -13,6 +13,8 @@
 #import "GLAProjectManager.h"
 #import "GLAEditCollectionDetailsPopover.h"
 
+#import "GLAEnabledFeatures.h"
+
 
 @interface GLAMainNavigationButtonGroup : NSObject
 
@@ -475,7 +477,8 @@
 	(titleButton.hasSecondaryStyle) = NO;
 	(titleButton.textHighlightColor) = [uiStyle colorForCollectionColor:(collection.color)];
 	
-	// Back
+#if GLA_ENABLE_COLLECTIONS_STACK_VIEW
+	// View mode
 	GLASegmentedControl *viewModeSegmentedControl = [[GLASegmentedControl alloc] init];
 	(viewModeSegmentedControl.target) = self;
 	(viewModeSegmentedControl.action) = @selector(changeCollectionViewMode:);
@@ -491,6 +494,7 @@
 	[buttonGroup addTrailingView:viewModeSegmentedControl];
 	(self.collectionViewModeSegmentedControl) = viewModeSegmentedControl;
 	[self updateUIForCurrentCollection];
+#endif
 	
 	(buttonGroup.centerButtonInDuration) = 2.0 / 12.0;
 	(buttonGroup.leadingButtonInDuration) = 2.4 / 12.0;
@@ -516,12 +520,14 @@
 
 - (void)updateUIForCurrentCollection
 {
+#if GLA_ENABLE_COLLECTIONS_STACK_VIEW
 	GLAEditCollectionSection *section = (id)(self.currentSection);
 	GLASegmentedControl *viewModeSegmentedControl = (self.collectionViewModeSegmentedControl);
 	
 	NSString *viewMode = (section.viewMode);
 	BOOL viewModeIsList = !viewMode || [viewMode isEqualToString:GLACollectionViewModeList];
 	[viewModeSegmentedControl setSelectedSegment:( viewModeIsList ? 0 : 1 )];
+#endif
 }
 
 - (IBAction)changeCollectionViewMode:(id)sender

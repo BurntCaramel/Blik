@@ -256,7 +256,8 @@
 			loadedChildren = @[];
 		}
 		
-		[store useStateAsync:^(id<GLAArrayMantleJSONStoreInternalProperties> internalProperties) {
+		// Sync not async so we know this is set.
+		[store useStateSync:^(id<GLAArrayMantleJSONStoreInternalProperties> internalProperties) {
 			(internalProperties.internal_loadState) = GLAArrayStoringLoadStateFinishedLoading;
 		}];
 		

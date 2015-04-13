@@ -370,7 +370,7 @@ DQ
                                     <action selector="addNewCollectedFilesCollection:" target="-1" id="F8x-c0-ljy"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="New Filtered Folder Collection…" keyEquivalent="n" id="G63-i9-Bhj">
+                            <menuItem title="New Filtered Folder Collection…" hidden="YES" keyEquivalent="n" id="G63-i9-Bhj">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="addNewFilteredFolderCollection:" target="-1" id="FIi-u1-m8k"/>
@@ -381,13 +381,13 @@ DQ
                             <menuItem title="Change Preferred Applications…" hidden="YES" id="mBU-GE-fzv">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="jzY-mI-7mm"/>
-                            <menuItem title="Make File from Clipboard" keyEquivalent="I" id="MpW-K2-aFF"/>
-                            <menuItem title="Change Designated File Destinations…" id="myY-lt-LeI">
+                            <menuItem isSeparatorItem="YES" hidden="YES" id="jzY-mI-7mm"/>
+                            <menuItem title="Make File from Clipboard" hidden="YES" keyEquivalent="I" id="MpW-K2-aFF"/>
+                            <menuItem title="Change Designated File Destinations…" hidden="YES" id="myY-lt-LeI">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="Z4w-d3-1aP"/>
-                            <menuItem title="Move from Desktop" id="Q9N-nI-JmS">
+                            <menuItem isSeparatorItem="YES" hidden="YES" id="Z4w-d3-1aP"/>
+                            <menuItem title="Move from Desktop" hidden="YES" id="Q9N-nI-JmS">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Move from Desktop" id="Uye-sn-0EI">
                                     <items>
@@ -397,7 +397,7 @@ DQ
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Move from Downloads" id="e9f-I9-nCD">
+                            <menuItem title="Move from Downloads" hidden="YES" id="e9f-I9-nCD">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Move from Downloads" id="kqW-nT-fFP">
                                     <items>

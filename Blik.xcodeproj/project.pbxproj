@@ -59,6 +59,7 @@
 		B255920119C84E4B0039D2AC /* GLAColorChoiceView.m in Sources */ = {isa = PBXBuildFile; fileRef = B255920019C84E4B0039D2AC /* GLAColorChoiceView.m */; };
 		B255920419C8508C0039D2AC /* GLACollectionViewColorChoiceItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B255920319C8508C0039D2AC /* GLACollectionViewColorChoiceItem.m */; };
 		B260F85519ADC91A002E3753 /* GLAStatusItemController.m in Sources */ = {isa = PBXBuildFile; fileRef = B260F85419ADC91A002E3753 /* GLAStatusItemController.m */; };
+		B26158111ADB9EFE0082067E /* GLATableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = B26158101ADB9EFE0082067E /* GLATableCellView.m */; };
 		B26659EB199C60D7003C4EA4 /* GLAAddNewProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B26659E9199C60D7003C4EA4 /* GLAAddNewProjectViewController.m */; };
 		B26659EC199C60D7003C4EA4 /* GLAAddNewProjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B26659EA199C60D7003C4EA4 /* GLAAddNewProjectViewController.xib */; };
 		B26659EF19A37C3C003C4EA4 /* NSColor+GLAExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = B26659EE19A37C3C003C4EA4 /* NSColor+GLAExtras.m */; };
@@ -272,6 +273,9 @@
 		B255920319C8508C0039D2AC /* GLACollectionViewColorChoiceItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLACollectionViewColorChoiceItem.m; sourceTree = "<group>"; };
 		B260F85319ADC91A002E3753 /* GLAStatusItemController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAStatusItemController.h; sourceTree = "<group>"; };
 		B260F85419ADC91A002E3753 /* GLAStatusItemController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAStatusItemController.m; sourceTree = "<group>"; };
+		B261580F1ADB9EFE0082067E /* GLATableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLATableCellView.h; sourceTree = "<group>"; };
+		B26158101ADB9EFE0082067E /* GLATableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLATableCellView.m; sourceTree = "<group>"; };
+		B26158121ADC75AA0082067E /* GLAEnabledFeatures.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLAEnabledFeatures.h; sourceTree = "<group>"; };
 		B26659E8199C60D7003C4EA4 /* GLAAddNewProjectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAAddNewProjectViewController.h; sourceTree = "<group>"; };
 		B26659E9199C60D7003C4EA4 /* GLAAddNewProjectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = GLAAddNewProjectViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		B26659EA199C60D7003C4EA4 /* GLAAddNewProjectViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAAddNewProjectViewController.xib; sourceTree = "<group>"; };
@@ -762,6 +766,7 @@
 		B2ADDBD71963DA2E0014EF84 /* Blik Mac */ = {
 			isa = PBXGroup;
 			children = (
+				B26158121ADC75AA0082067E /* GLAEnabledFeatures.h */,
 				B2ADDBE31963DA2E0014EF84 /* GLAAppDelegate.h */,
 				B2ADDBE41963DA2E0014EF84 /* GLAAppDelegate.m */,
 				B2CCF8EA1A370C8700EC7703 /* Categories */,
@@ -860,6 +865,8 @@
 				B28D21811977D6E600A12C6D /* GLATableProjectRowView.m */,
 				B25591F019C284040039D2AC /* GLATableContentRowView.h */,
 				B25591F119C284040039D2AC /* GLATableContentRowView.m */,
+				B261580F1ADB9EFE0082067E /* GLATableCellView.h */,
+				B26158101ADB9EFE0082067E /* GLATableCellView.m */,
 				B2D0331A19FFA69000C396FB /* GLAHighlightsTableCellView.h */,
 				B2D0331B19FFA69000C396FB /* GLAHighlightsTableCellView.m */,
 				B268C2541990EACC000BF39B /* GLASplitView.h */,
@@ -1387,6 +1394,7 @@
 				B2174F7C19BEDBDF00BAE041 /* GLAModelErrors.m in Sources */,
 				B2ED542F1A930ACB00F6B4FA /* GLAMantleObjectJSONStore.m in Sources */,
 				B22B7D821AC555D00026AEDB /* GLACollectedFilePreviewView.m in Sources */,
+				B26158111ADB9EFE0082067E /* GLATableCellView.m in Sources */,
 				B289276A1A730F43007238D6 /* GLAPluckedCollectedFilesMenuController.m in Sources */,
 				B2BB85181A3F095B00BF186C /* GLAMainContentManners.m in Sources */,
 				B23966DE1ACB983B00C6A420 /* GLASegmentedControl.m in Sources */,

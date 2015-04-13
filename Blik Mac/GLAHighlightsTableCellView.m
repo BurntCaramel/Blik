@@ -11,4 +11,14 @@
 
 @implementation GLAHighlightsTableCellView
 
+#if 0
+- (void)rightMouseDown:(NSEvent *)theEvent
+{
+#if DEBUG
+	NSLog(@"rightMouseDown");
+#endif
+	[self menuForEvent:theEvent];
+}
+#endif
+
 @end
