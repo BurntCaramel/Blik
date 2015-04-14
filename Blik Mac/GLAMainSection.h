@@ -45,7 +45,7 @@
 @property(readonly, nonatomic) GLAProject *project;
 @property(readonly, nonatomic) BOOL isNow;
 
-+ (instancetype)editProjectSectionWithProject:(GLAProject *)project previousSection:(GLAMainSection *)previousSection;
++ (instancetype)editProjectSectionWithProject:(GLAProject *)project previousSection:(GLAMainSection *)previousSection isCurrentlyNow:(BOOL)isNow;
 
 + (instancetype)nowProjectSectionWithProject:(GLAProject *)project;
 

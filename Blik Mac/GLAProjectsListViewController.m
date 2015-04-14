@@ -92,8 +92,11 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	GLAProjectManager *pm = (self.projectManager);
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
-	// Project Collection List
+	// All Projects
 	[nc addObserver:self selector:@selector(allProjectsDidChangeNotification:) name:GLAProjectManagerAllProjectsDidChangeNotification object:pm];
+	
+	// Now Project
+	[nc addObserver:self selector:@selector(nowProjectDidChangeNotification:) name:GLAProjectManagerNowProjectDidChangeNotification object:pm];
 }
 
 - (void)stopProjectManagingObserving
@@ -106,6 +109,11 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 }
 
 - (void)allProjectsDidChangeNotification:(NSNotification *)note
+{
+	[self reloadAllProjects];
+}
+
+- (void)nowProjectDidChangeNotification:(NSNotification *)note
 {
 	[self reloadAllProjects];
 }

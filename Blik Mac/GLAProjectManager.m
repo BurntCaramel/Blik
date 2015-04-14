@@ -100,7 +100,7 @@
 - (GLAArrayEditor *)filesListArrayEditorForCollectionWithUUID:(NSUUID *)filesListCollectionUUID;
 
 - (NSArray *)copyFilesListForCollection:(GLACollection *)filesListCollection;
-- (GLACollectedFile *)collectedFileWithUUID:(NSUUID *)collectionUUID insideCollection:(GLACollection *)filesListCollection;
+- (GLACollectedFile *)collectedFileWithUUID:(NSUUID *)collectionUUID insideCollection:(GLACollection *)filesListCollection loadIfNeeded:(BOOL)load;
 
 #pragma mark Filtered Folders
 
@@ -797,16 +797,10 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	GLACollection *holdingCollection = [self collectionForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:load];
 	
 	if (holdingCollection) {
-		if ([self hasLoadedFilesForCollection:holdingCollection]) {
-			NSUUID *collectedFileUUID = (highlightedCollectedFile.collectedFileUUID);
-			GLACollectedFile *collectedFile = [(self.store) collectedFileWithUUID:collectedFileUUID insideCollection:holdingCollection];
-			
-			return collectedFile;
-		}
+		NSUUID *collectedFileUUID = (highlightedCollectedFile.collectedFileUUID);
+		GLACollectedFile *collectedFile = [(self.store) collectedFileWithUUID:collectedFileUUID insideCollection:holdingCollection loadIfNeeded:load];
 		
-		if (load) {
-			[self loadFilesListForCollectionIfNeeded:holdingCollection];
-		}
+		return collectedFile;
 	}
 	
 	return nil;
@@ -936,9 +930,6 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (void)primaryFoldersForProjectDidChange:(GLAProject *)project
 {
-#if DEBUG
-	NSLog(@"primaryFoldersForProjectDidChange");
-#endif
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectPrimaryFoldersDidChangeNotification object:[self notificationObjectForProject:project]];
 }
 
@@ -976,9 +967,9 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 - (void)filesListForCollectionDidChange:(GLACollection *)collection didLoad:(BOOL)didLoad
 {
 	if (didLoad) {
-		NSUUID *collectionUUID = (collection.UUID);
 		NSMutableDictionary *collectionUUIDsToPendingAddedCollectedFiles = (self.collectionUUIDsToPendingAddedCollectedFiles);
 		if (collectionUUIDsToPendingAddedCollectedFiles) {
+			NSUUID *collectionUUID = (collection.UUID);
 			NSArray *pendingAddedCollectedFiles = collectionUUIDsToPendingAddedCollectedFiles[collectionUUID];
 			
 			if (pendingAddedCollectedFiles) {
@@ -1965,10 +1956,12 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	}
 }
 
-- (GLACollectedFile *)collectedFileWithUUID:(NSUUID *)collectedFileUUID insideCollection:(GLACollection *)filesListCollection
+- (GLACollectedFile *)collectedFileWithUUID:(NSUUID *)collectedFileUUID insideCollection:(GLACollection *)filesListCollection loadIfNeeded:(BOOL)load
 {
 	NSAssert(collectedFileUUID != nil, @"Collected file UUID must not be nil.");
 	NSAssert(filesListCollection != nil, @"Collection must not be nil.");
+	
+	[self loadFilesListForCollectionIfNeeded:filesListCollection];
 	
 	GLAArrayEditor *filesListArrayEditor = [self filesListArrayEditorForCollectionWithUUID:(filesListCollection.UUID)];
 	

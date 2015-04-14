@@ -101,9 +101,6 @@
 
 - (void)didChangeNotification:(NSNotification *)note
 {
-#if DEBUG
-	NSLog(@"didChangeNotification");
-#endif
 	GLAArrayInspectingBlock changeCompletionBlock = (self.changeCompletionBlock);
 	if (changeCompletionBlock) {
 		GLAArrayEditor *arrayEditor = [self arrayEditorCreatingAndLoadingIfNeeded:YES];
@@ -130,9 +127,6 @@
 
 - (void)dependencyFulfilledNotification:(NSNotification *)note
 {
-#if DEBUG
-	NSLog(@"dependencyFulfilledNotification %@", @(self.dependenciesAreFulfilled));
-#endif
 	if ((self.dependenciesAreFulfilled)) {
 		[self inspectLoadingIfNeeded];
 	}

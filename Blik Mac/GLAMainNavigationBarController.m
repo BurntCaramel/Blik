@@ -126,6 +126,9 @@
 
 - (void)sectionNavigatorDidChangeCurrentSection:(NSNotification *)note
 {
+#if DEBUG
+	NSLog(@"sectionNavigatorDidChangeCurrentSection");
+#endif
 	GLAMainSectionNavigator *sectionNavigator = (self.sectionNavigator);
 	GLAMainSection *newSection = (sectionNavigator.currentSection);
 	GLAMainSection *previousSection = nil;

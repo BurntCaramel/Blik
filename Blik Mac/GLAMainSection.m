@@ -87,9 +87,9 @@
 	return self;
 }
 
-+ (instancetype)editProjectSectionWithProject:(GLAProject *)project previousSection:(GLAMainSection *)previousSection
++ (instancetype)editProjectSectionWithProject:(GLAProject *)project previousSection:(GLAMainSection *)previousSection isCurrentlyNow:(BOOL)isNow
 {
-	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierEditProject previousSection:previousSection project:project isNow:NO];
+	return [[self alloc] initWithBaseIdentifier:GLAMainContentSectionBaseIdentifierEditProject previousSection:previousSection project:project isNow:isNow];
 }
 
 + (instancetype)nowProjectSectionWithProject:(GLAProject *)project

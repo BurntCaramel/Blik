@@ -136,6 +136,8 @@
 	GLAProjectManager *pm = (self.projectManager);
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
+	NSMutableSet *collectionUUIDs = [NSMutableSet new];
+	
 	for (GLAHighlightedItem *highlightedItem in (self.highlightedItems)) {
 		NSUUID *collectionUUID = nil;
 		
@@ -144,17 +146,19 @@
 			collectionUUID = (highlightedCollectedFile.holdingCollectionUUID);
 		}
 		
-#if DEBUG
-		NSLog(@"startCollectionObserving collectionUUID %@", collectionUUID);
-#endif
-		
 		if (!collectionUUID) {
 			continue;
 		}
 		
-		[nc addObserver:self selector:@selector(collectionDidChangeNotification:) name:GLACollectionDidChangeNotification object:[pm notificationObjectForCollectionUUID:collectionUUID]];
-		[nc addObserver:self selector:@selector(collectionDidChangeNotification:) name:GLACollectionFilesListDidChangeNotification object:[pm notificationObjectForCollectionUUID:collectionUUID]];
+		[collectionUUIDs addObject:collectionUUID];
 	}
+	
+	for (NSUUID *collectionUUID in collectionUUIDs) {
+		[nc addObserver:self selector:@selector(collectionOrCollectionsListDidChangeNotification:) name:GLACollectionDidChangeNotification object:[pm notificationObjectForCollectionUUID:collectionUUID]];
+		[nc addObserver:self selector:@selector(collectionOrCollectionsListDidChangeNotification:) name:GLACollectionFilesListDidChangeNotification object:[pm notificationObjectForCollectionUUID:collectionUUID]];
+	}
+	
+	[nc addObserver:self selector:@selector(collectionOrCollectionsListDidChangeNotification:) name:GLAProjectCollectionsDidChangeNotification object:[pm notificationObjectForProjectUUID:(self.project.UUID)]];
 }
 
 - (void)stopCollectionObserving
@@ -162,6 +166,7 @@
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc removeObserver:self name:GLACollectionDidChangeNotification object:nil];
 	[nc removeObserver:self name:GLACollectionFilesListDidChangeNotification object:nil];
+	[nc removeObserver:self name:GLAProjectCollectionsDidChangeNotification object:nil];
 }
 
 #pragma mark -
@@ -224,9 +229,6 @@
 	}
 	
 	NSArray *highlightedItems = [highlightedItemsUser copyChildrenLoadingIfNeeded];
-#if DEBUG && 0
-	NSLog(@"highlightedItems %@", highlightedItems);
-#endif
 	
 	
 	id<GLALoadableArrayUsing> primaryFoldersUser = (self.primaryFoldersUser);
@@ -290,11 +292,8 @@
 
 #pragma mark -
 
-- (void)collectionDidChangeNotification:(NSNotification *)note
+- (void)collectionOrCollectionsListDidChangeNotification:(NSNotification *)note
 {
-#if DEBUG
-	NSLog(@"collectionDidChangeNotification");
-#endif
 	[self reloadHighlightedItems];
 }
 
@@ -627,10 +626,6 @@
 		}];
 	}
 	
-#if DEBUG
-	NSLog(@"didLoadInfoForCollectedFiles %@ indexes %@", collectedFiles, indexesToUpdate);
-#endif
-	
 	[(self.tableView) reloadDataForRowIndexes:indexesToUpdate columnIndexes:[NSIndexSet indexSetWithIndex:0]];
 }
 
@@ -743,9 +738,7 @@
 			GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 			
 			GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
-#if DEBUG
-			NSLog(@"collectedFileForHighlightedItem %@", collectedFile);
-#endif
+
 			if (collectedFile) {
 				NSString *displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
 				if (displayName) {

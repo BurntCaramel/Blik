@@ -66,7 +66,14 @@
 - (void)goToSection:(GLAMainSection *)newSection
 {
 	GLAMainSection *previousSection = (self.currentSection);
-	if ([newSection isEqual:previousSection]) {
+	BOOL sameAsPreviousSection = [newSection isEqual:previousSection];
+	NSSet *propertyKeys = [newSection.class propertyKeys];
+#if DEBUG
+	if (newSection.isEditProject && previousSection.isEditProject) {
+		NSLog(@"sameAsPreviousSection %@ | %@ = %@ KEYS %@", @(sameAsPreviousSection), [previousSection dictionaryWithValuesForKeys:propertyKeys.allObjects], [newSection dictionaryWithValuesForKeys:propertyKeys.allObjects], [newSection.class propertyKeys]);
+	}
+#endif
+	if (sameAsPreviousSection) {
 		return;
 	}
 	
@@ -141,7 +148,16 @@
 	GLAMainSection *previousSection = nil;
 #endif
 	
-	[self goToSection:[GLAEditProjectSection editProjectSectionWithProject:project previousSection:previousSection]];
+	GLAProjectManager *projectManager = (self.projectManager);
+	GLAProject *nowProject = (projectManager.nowProject);
+	
+	BOOL isNow = (nowProject != nil) && [(nowProject.UUID) isEqual:(project.UUID)];
+	if (isNow) {
+		[self goToNowProject];
+		return;
+	}
+	
+	[self goToSection:[GLAEditProjectSection editProjectSectionWithProject:project previousSection:previousSection isCurrentlyNow:isNow]];
 }
 
 - (void)editPrimaryFoldersOfProject:(GLAProject *)project
@@ -188,11 +204,11 @@
 		GLAProject *project = [projectManager projectWithUUID:projectUUIDForCollection];
 		GLAProject *nowProject = (projectManager.nowProject);
 		
-		if ((projectManager.nowProject) && [(nowProject.UUID) isEqual:projectUUIDForCollection]) {
+		if (nowProject && [(nowProject.UUID) isEqual:projectUUIDForCollection]) {
 			previousProjectSection = [GLAEditProjectSection nowProjectSectionWithProject:project];
 		}
 		else {
-			previousProjectSection = [GLAEditProjectSection editProjectSectionWithProject:project previousSection:nil];
+			previousProjectSection = [GLAEditProjectSection editProjectSectionWithProject:project previousSection:nil isCurrentlyNow:NO];
 		}
 	}
 	
@@ -304,8 +320,15 @@
 
 - (void)projectManagerNowProjectDidChangeNotification:(NSNotification *)note
 {
+#if DEBUG
+	NSLog(@"projectManagerNowProjectDidChangeNotification");
+#endif
 	if (self.currentSection.isNow) {
 		[self goToNowProject];
+	}
+	else if (self.currentSection.isEditProject) {
+		GLAEditProjectSection *editProjectSection = (GLAEditProjectSection *)(self.currentSection);
+		[self goToProject:(editProjectSection.project)];
 	}
 }
 
