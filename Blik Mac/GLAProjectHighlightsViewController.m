@@ -839,6 +839,7 @@
 {
 	if (menu == (self.contextualMenu)) {
 		GLACollectedFileMenuCreator *collectedFileMenuCreator = (self.collectedFileMenuCreator);
+		(collectedFileMenuCreator.context) = GLACollectedFileMenuContextInHighlights;
 		(collectedFileMenuCreator.target) = self;
 		(collectedFileMenuCreator.openInApplicationAction) = @selector(openWithChosenApplication:);
 		(collectedFileMenuCreator.changePreferredOpenerApplicationAction) = @selector(changePreferredOpenerApplication:);

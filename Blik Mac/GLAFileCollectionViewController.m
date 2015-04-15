@@ -652,7 +652,7 @@
 - (BOOL)collectedFilesAreAllHighlightedForActionFrom:(id)sender
 {
 	GLAProjectManager *pm = (self.projectManager);
-	NSArray *selectedCollectedFiles = [self collectedFilesForRowIndexes:[self rowIndexesForActionFrom:nil]];
+	NSArray *selectedCollectedFiles = [self collectedFilesForRowIndexes:[self rowIndexesForActionFrom:sender]];
 	BOOL isAllHighlighted = NO;
 	
 	if ((selectedCollectedFiles.count) > 0) {

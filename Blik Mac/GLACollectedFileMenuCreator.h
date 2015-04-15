@@ -12,13 +12,21 @@
 #import "GLAFileOpenerApplicationFinder.h"
 
 
+typedef NS_ENUM(NSUInteger, GLACollectedFileMenuContext) {
+	GLACollectedFileMenuContextUnknown = 0,
+	GLACollectedFileMenuContextInHighlights,
+	GLACollectedFileMenuContextInCollection
+};
+
+
 @interface GLACollectedFileMenuCreator : NSObject
 
 @property(nonatomic) NSURL *fileURL;
 
 @property(nonatomic) GLACollectedFile *collectedFile;
 @property(nonatomic) GLAHighlightedCollectedFile *highlightedCollectedFile;
-//@property(nonatomic) GLACollectedFile *collectedFileForPreferredApplication;
+
+@property(nonatomic) GLACollectedFileMenuContext context;
 
 @property(weak, nonatomic) id target;
 @property(nonatomic) SEL openInApplicationAction;

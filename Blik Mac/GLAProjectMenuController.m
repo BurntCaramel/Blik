@@ -322,13 +322,14 @@
 - (void)addMenuItemsForCollectionsToMenu:(NSMenu *)menu
 {
 	id<GLAArrayInspecting> collectionsInspector = [self inspectCollections];
-	//GLAUIStyle *style = [GLAUIStyle activeStyle];
 	
 	if (collectionsInspector) {
 		NSUInteger collectionCount = (collectionsInspector.childrenCount);
 		SEL collectionAction = @selector(openCollection:);
 		
+		// For testing:
 		//collectionCount = 0;
+		
 		if (collectionCount == 0) {
 			[menu gla_addDescriptiveMenuItemWithTitle:NSLocalizedString( @"No Collections Yet", @"Menu item for status item menu project menu when there are no collections" )];
 		}

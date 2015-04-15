@@ -146,6 +146,7 @@
 {
 	[menu removeAllItems];
 	
+	GLACollectedFileMenuContext context = (self.context);
 	GLAHighlightedCollectedFile *highlightedCollectedFile = (self.highlightedCollectedFile);
 	id target = (self.target);
 	
@@ -159,6 +160,17 @@
 		}
 	}
 	
+#if 0
+	if (context == GLACollectedFileMenuContextInCollection) {
+		SEL removeFromHighlightsAction = (self.removeFromHighlightsAction);
+		
+		NSMenuItem *changeInHighlightsMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove from Highlights", @"Remove highlighted file from highlights menu title") action:removeFromHighlightsAction keyEquivalent:@""];
+		(changeInHighlightsMenuItem.target) = target;
+		[menu addItem:changeInHighlightsMenuItem];
+		
+		[menu addItem:[NSMenuItem separatorItem]];
+	}
+#endif
 	
 	// Open With
 	[self addMenuItemsForOpeningInApplicationToMenu:menu chosenPreferredApplicationURL:preferredApplicationURL];
@@ -170,15 +182,26 @@
 	
 	[self addMenuItemsForShowInFinderToMenu:menu];
 
-	// Remove from Highlights
-	if (highlightedCollectedFile) {
+	if (context == GLACollectedFileMenuContextInCollection) {
 		[menu addItem:[NSMenuItem separatorItem]];
 		
 		SEL removeFromHighlightsAction = (self.removeFromHighlightsAction);
 		
-		NSMenuItem *removeFromHighlightsMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove from Highlights", @"'Open With' menu title for collected files") action:removeFromHighlightsAction keyEquivalent:@""];
+		NSMenuItem *removeFromHighlightsMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove from Collection", @"Remove collected file from collection menu title for collected files") action:removeFromHighlightsAction keyEquivalent:@""];
 		(removeFromHighlightsMenuItem.target) = target;
 		[menu addItem:removeFromHighlightsMenuItem];
+	}
+	else if (context == GLACollectedFileMenuContextInHighlights) {
+		// Remove from Highlights
+		if (highlightedCollectedFile) {
+			[menu addItem:[NSMenuItem separatorItem]];
+			
+			SEL removeFromHighlightsAction = (self.removeFromHighlightsAction);
+			
+			NSMenuItem *removeFromHighlightsMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove from Highlights", @"Remove highlighted file from highlights menu title") action:removeFromHighlightsAction keyEquivalent:@""];
+			(removeFromHighlightsMenuItem.target) = target;
+			[menu addItem:removeFromHighlightsMenuItem];
+		}
 	}
 }
 
