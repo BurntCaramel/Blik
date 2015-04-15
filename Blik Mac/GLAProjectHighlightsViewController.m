@@ -18,6 +18,7 @@
 #import "GLAProjectManager+GLAOpeningFiles.h"
 #import "GLACollectedFileListHelper.h"
 #import "GLAFileOpenerApplicationFinder.h"
+#import "GLACollectedFileMenuCreator.h"
 
 
 @interface GLAProjectHighlightsViewController () <GLACollectedFileListHelperDelegate, GLAArrayTableDraggingHelperDelegate>
@@ -36,6 +37,8 @@
 
 @property(nonatomic) GLAArrayTableDraggingHelper *tableDraggingHelper;
 
+@property(nonatomic) GLACollectedFileMenuCreator *collectedFileMenuCreator;
+
 @end
 
 @implementation GLAProjectHighlightsViewController
@@ -47,8 +50,12 @@
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	
 	NSTableView *tableView = (self.tableView);
-	(tableView.menu) = (self.contextualMenu);
 	[uiStyle prepareContentTableView:tableView];
+	
+	NSMenu *contextualMenu = [NSMenu new];
+	(contextualMenu.delegate) = self;
+	(self.contextualMenu) = contextualMenu;
+	(tableView.menu) = contextualMenu;
 	
 	[tableView registerForDraggedTypes:@[[GLAHighlightedCollectedFile objectJSONPasteboardType]]];
 	
@@ -94,9 +101,15 @@
 	
 	(self.fileListHelper) = [[GLACollectedFileListHelper alloc] initWithDelegate:self];
 	
+	GLACollectedFileMenuCreator *collectedFileMenuCreator = [GLACollectedFileMenuCreator new];
+	[nc addObserver:self selector:@selector(collectedFileMenuCreatorNeedsUpdateNotification:) name:GLACollectedFileMenuCreatorNeedsUpdateNotification object:collectedFileMenuCreator];
+	_collectedFileMenuCreator = collectedFileMenuCreator;
+	
+#if 0
 	GLAFileOpenerApplicationFinder *openerApplicationCombiner = [GLAFileOpenerApplicationFinder new];
 	[nc addObserver:self selector:@selector(openerApplicationCombinerDidChangeNotification:) name:GLAFileURLOpenerApplicationCombinerDidChangeNotification object:openerApplicationCombiner];
 	(self.openerApplicationCombiner) = openerApplicationCombiner;
+#endif
 }
 
 - (void)dealloc
@@ -410,23 +423,6 @@
 	return (accessedFile.filePathURL);
 }
 
-- (NSURL *)fileURLForHighlightedItem:(GLAHighlightedItem *)highlightedItem
-{
-	GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
-	if (!collectedFile) {
-		return nil;
-	}
-	
-	GLACollectedFileListHelper *fileListHelper = (self.fileListHelper);
-	id<GLAFileAccessing> accessedFile = [fileListHelper accessFileForCollectedFile:collectedFile];
-	if (!accessedFile) {
-		return nil;
-	}
-	//NSAssert(accessedFile != nil, @"accessedFile must not be nil");
-	
-	return (accessedFile.filePathURL);
-}
-
 - (void)updateOpenerApplicationsUIMenu
 {
 	GLAFileOpenerApplicationFinder *openerApplicationCombiner = (self.openerApplicationCombiner);
@@ -439,7 +435,6 @@
 	}
 	
 	
-	//NSURL *fileURL = [self fileURLForHighlightedItem:highlightedItem];
 	NSURL *fileURL = [self fileURLForObject:object];
 	if (fileURL) {
 		(openerApplicationCombiner.fileURLs) = [NSSet setWithObject:fileURL];
@@ -491,11 +486,14 @@
 		return;
 	}
 	
-	GLAProjectManager *projectManager = (self.projectManager);
-	
-	[projectManager editHighlightsOfProject:(self.project) usingBlock:^(id<GLAArrayEditing> highlightsEditor) {
-		[highlightsEditor removeChildrenAtIndexes:[NSIndexSet indexSetWithIndex:clickedRow]];
-	}];
+	GLAHighlightedItem *clickedItem = (self.clickedHighlightedItem);
+	if (clickedItem) {
+		GLAProjectManager *projectManager = (self.projectManager);
+		
+		[projectManager editHighlightsOfProject:(self.project) usingBlock:^(id<GLAArrayEditing> highlightsEditor) {
+			[highlightsEditor removeChildrenAtIndexes:[NSIndexSet indexSetWithIndex:clickedRow]];
+		}];
+	}
 }
 
 - (void)fileAppearsToBeMissing
@@ -593,6 +591,11 @@
 - (void)openerApplicationCombinerDidChangeNotification:(NSNotification *)note
 {
 	[self updateOpenerApplicationsUIMenu];
+}
+
+- (void)collectedFileMenuCreatorNeedsUpdateNotification:(NSNotification *)note
+{
+	[self menuNeedsUpdate:(self.contextualMenu)];
 }
 
 #pragma mark -
@@ -763,6 +766,8 @@
 		if (displayName) {
 			name = displayName;
 		}
+		
+		(cellView.collectionIndicationButton.collection) = nil;
 	}
 	
 	
@@ -832,6 +837,29 @@
 
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
+	if (menu == (self.contextualMenu)) {
+		GLACollectedFileMenuCreator *collectedFileMenuCreator = (self.collectedFileMenuCreator);
+		(collectedFileMenuCreator.target) = self;
+		(collectedFileMenuCreator.openInApplicationAction) = @selector(openWithChosenApplication:);
+		(collectedFileMenuCreator.changePreferredOpenerApplicationAction) = @selector(changePreferredOpenerApplication:);
+		(collectedFileMenuCreator.showInFinderAction) = @selector(showItemInFinder:);
+		(collectedFileMenuCreator.removeFromHighlightsAction) = @selector(removedClickedItem:);
+		
+		id<NSObject> object = (self.clickedObject);
+		
+		GLAHighlightedCollectedFile *highlightedCollectedFile = nil;
+		if ([object isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+			highlightedCollectedFile = (GLAHighlightedCollectedFile *)object;
+		}
+		(collectedFileMenuCreator.highlightedCollectedFile) = highlightedCollectedFile;
+		
+		
+		NSURL *fileURL = [self fileURLForObject:object];
+		(collectedFileMenuCreator.fileURL) = fileURL;
+		
+		[collectedFileMenuCreator updateMenu:menu];
+	}
+	
 	if ((menu == (self.openerApplicationMenu)) || (menu == (self.preferredOpenerApplicationMenu))) {
 		[self updateOpenerApplicationsUIMenu];
 	}

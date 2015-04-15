@@ -109,6 +109,7 @@
 		NSUInteger projectCount = (arrayInspector.childrenCount);
 		SEL projectAction = @selector(openProject:);
 		
+		// For testing:
 		//projectCount = 0;
 		
 		for (NSUInteger projectIndex = 0; projectIndex < projectCount; projectIndex++) {
@@ -121,6 +122,7 @@
 			NSCache *projectMenuControllerCache = (self.projectMenuControllerCache);
 			GLAProjectMenuController *projectMenuController = [projectMenuControllerCache objectForKey:projectUUID];
 			
+			// Menus for projects are cached.
 			if (projectMenuController) {
 				(item.submenu) = (projectMenuController.menu);
 			}
@@ -132,12 +134,13 @@
 		}
 		
 		if (projectCount == 0) {
-			[menu addItemWithTitle:NSLocalizedString( @"(No Projects Yet)", @"Menu item for status item menu projects list when there are no projects" ) action:nil keyEquivalent:@""];
+			NSMenuItem *noProjectsItem = [menu addItemWithTitle:NSLocalizedString( @"No Projects Yet", @"Menu item for status item menu projects list when there are no projects" ) action:nil keyEquivalent:@""];
+			(noProjectsItem.enabled) = NO;
 		}
 	}
 	else {
 		[menu removeAllItems];
-		[menu addItemWithTitle:NSLocalizedString(@"Loading…", @"Loading menu item for projects list") action:nil keyEquivalent:@""];
+		[menu addItemWithTitle:NSLocalizedString(@"Loading Projects…", @"Loading menu item for projects list") action:nil keyEquivalent:@""];
 	}
 	
 	
