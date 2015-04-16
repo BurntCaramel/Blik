@@ -16,6 +16,8 @@
 
 @property(copy, nonatomic) NSString *name;
 
+@property(nonatomic) BOOL hideFromLauncherMenu;
+
 @end
 
 
@@ -26,6 +28,8 @@
 
 @property(readonly, nonatomic) NSDate *dateCreated;
 @property(readonly, copy, nonatomic) NSString *name;
+
+@property(readonly, nonatomic) BOOL hideFromLauncherMenu;
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAProjectEditing> editor))editingBlock;
 

@@ -44,6 +44,7 @@
 - (GLAProject *)createNewProjectWithName:(NSString *)name;
 
 - (GLAProject *)renameProject:(GLAProject *)project toName:(NSString *)name;
+- (GLAProject *)setProject:(GLAProject *)project hidesFromLauncherMenu:(BOOL)hidesInLauncherMenu;
 
 - (void)permanentlyDeleteProject:(GLAProject *)project;
 

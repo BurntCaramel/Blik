@@ -18,11 +18,13 @@
 @property(nonatomic) IBOutlet NSTableView *tableView;
 
 @property(nonatomic) IBOutlet NSMenu *contextualMenu;
+@property(nonatomic) IBOutlet NSMenuItem *hideFromLauncherMenuItem;
 
 
 - (IBAction)tableViewClicked:(id)sender;
 
 - (IBAction)permanentlyDeleteClickedProject:(id)sender;
+- (IBAction)hideClickedProjectFromLauncherMenu:(id)sender;
 
 @end
 

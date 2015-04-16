@@ -20,7 +20,7 @@ NSString *GLAProjectsListViewControllerDidChooseProjectNotification = @"GLA.proj
 NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = @"GLA.projectListViewController.didPerformWorkOnProjectNow";
 
 
-@interface GLAProjectsListViewController () <GLAArrayTableDraggingHelperDelegate>
+@interface GLAProjectsListViewController () <GLAArrayTableDraggingHelperDelegate, NSMenuDelegate>
 
 @property(copy, nonatomic) NSArray *projects;
 
@@ -44,7 +44,10 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	NSTableView *tableView = (self.tableView);
 	(tableView.backgroundColor) = (uiStyle.contentBackgroundColor);
 	(tableView.enclosingScrollView.backgroundColor) = (uiStyle.contentBackgroundColor);
-	(tableView.menu) = (self.contextualMenu);
+	
+	NSMenu *contextualMenu = (self.contextualMenu);
+	(contextualMenu.delegate) = self;
+	(tableView.menu) = contextualMenu;
 	
 	[tableView registerForDraggedTypes:@[[GLAProject objectJSONPasteboardType]]];
 	
@@ -192,6 +195,31 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	[manners askToPermanentlyDeleteProject:project fromView:(self.view)];
 }
 
+- (IBAction)hideClickedProjectFromLauncherMenu:(NSMenuItem *)sender
+{
+	GLAProject *project = (self.clickedProject);
+	if (!project) {
+		return;
+	}
+	
+	BOOL currentHidesFromLauncherMenu = (project.hideFromLauncherMenu);
+	BOOL newHidesFromLauncherMenu = !currentHidesFromLauncherMenu;
+	
+	GLAProjectManager *pm = (self.projectManager);
+	[pm setProject:project hidesFromLauncherMenu:newHidesFromLauncherMenu];
+}
+
+- (void)updateContextualMenu
+{
+	GLAProject *project = (self.clickedProject);
+	if (!project) {
+		return;
+	}
+	
+	BOOL currentHidesInLauncherMenu = (project.hideFromLauncherMenu);
+	(self.hideFromLauncherMenuItem.state) = currentHidesInLauncherMenu ? NSOnState : NSOffState;
+}
+
 - (IBAction)workOnProjectNowClicked:(NSButton *)senderButton
 {
 	NSInteger projectIndex = (senderButton.tag);
@@ -290,6 +318,15 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	}
 	
 	return cellView;
+}
+
+#pragma mark NSMenuDelegate
+
+- (void)menuNeedsUpdate:(NSMenu *)menu
+{
+	if (menu == (self.contextualMenu)) {
+		[self updateContextualMenu];
+	}
 }
 
 @end

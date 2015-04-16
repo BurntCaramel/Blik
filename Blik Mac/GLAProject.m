@@ -16,6 +16,8 @@
 @property(readwrite, copy, nonatomic) NSString *name;
 @property(readwrite, nonatomic) NSDate *dateCreated;
 
+@property(readwrite, nonatomic) BOOL hideFromLauncherMenu;
+
 @end
 
 @interface GLAProject (GLAProjectEditing) <GLAProjectEditing>

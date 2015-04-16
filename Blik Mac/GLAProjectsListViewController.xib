@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAProjectsListViewController">
             <connections>
                 <outlet property="contextualMenu" destination="twI-F8-TmJ" id="ptn-ea-Olj"/>
                 <outlet property="hasContentView" destination="Hz6-mo-xeY" id="4e7-B5-dh5"/>
+                <outlet property="hideFromLauncherMenuItem" destination="T4w-NY-d9D" id="q0x-6E-Ojv"/>
                 <outlet property="tableView" destination="GZN-Pm-4Iy" id="BGr-Fc-fHq"/>
                 <outlet property="view" destination="agp-xA-26G" id="Db5-mf-cQ0"/>
             </connections>
@@ -25,6 +26,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="none" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="41" rowSizeStyle="automatic" viewBased="YES" id="GZN-Pm-4Iy">
+                                <rect key="frame" x="0.0" y="0.0" width="500" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -140,6 +142,13 @@
         </customView>
         <menu title="Collection Menu" id="twI-F8-TmJ">
             <items>
+                <menuItem title="Hide From Launcher Menu" id="T4w-NY-d9D">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="hideClickedProjectFromLauncherMenu:" target="-2" id="TfK-rx-IxX"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="Uaw-nK-PdI"/>
                 <menuItem title="Delete Project…" id="V9R-46-JFh">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
@@ -147,12 +156,12 @@
                     </connections>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="81.5" y="401.5"/>
+            <point key="canvasLocation" x="57.5" y="397.5"/>
         </menu>
         <customView id="agp-xA-26G" customClass="GLAProjectView">
             <rect key="frame" x="0.0" y="0.0" width="163" height="96"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <point key="canvasLocation" x="447.5" y="100"/>
+            <point key="canvasLocation" x="383.5" y="12"/>
         </customView>
     </objects>
 </document>

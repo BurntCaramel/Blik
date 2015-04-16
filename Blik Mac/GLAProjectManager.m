@@ -261,8 +261,26 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	return project;
 }
 
+- (GLAProject *)editProject:(GLAProject *)project withBlock:( void( ^ )(id<GLAProjectEditing> projectEditor) )editingBlock
+{
+	__block GLAProject *changedProject = nil;
+	
+	[self editAllProjectsUsingBlock:^(id<GLAArrayEditing> allProjectsEditor) {
+		changedProject = [allProjectsEditor replaceFirstChildWhoseKey:@"UUID" hasValue:(project.UUID) usingChangeBlock: ^GLAProject *(GLAProject *originalProject) {
+			return [originalProject copyWithChangesFromEditing:editingBlock];
+		}];
+	}];
+	
+	return changedProject;
+}
+
 - (GLAProject *)renameProject:(GLAProject *)project toName:(NSString *)name
 {
+#if 1
+	return [self editProject:project withBlock:^(id<GLAProjectEditing> projectEditor) {
+		(projectEditor.name) = name;
+	}];
+#else
 	__block GLAProject *changedProject = nil;
 	
 	GLAProject *(^ projectReplacer)(GLAProject *project) = ^GLAProject *(GLAProject *originalProject) {
@@ -276,6 +294,14 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	}];
 	
 	return changedProject;
+#endif
+}
+
+- (GLAProject *)setProject:(GLAProject *)project hidesFromLauncherMenu:(BOOL)hidesFromLauncherMenu
+{
+	return [self editProject:project withBlock:^(id<GLAProjectEditing> projectEditor) {
+		(projectEditor.hideFromLauncherMenu) = hidesFromLauncherMenu;
+	}];
 }
 
 - (void)permanentlyDeleteProject:(GLAProject *)project

@@ -114,6 +114,11 @@
 		
 		for (NSUInteger projectIndex = 0; projectIndex < projectCount; projectIndex++) {
 			GLAProject *project = [arrayInspector childAtIndex:projectIndex];
+			
+			if (project.hideFromLauncherMenu) {
+				continue;
+			}
+			
 			NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:(project.name) action:projectAction keyEquivalent:@""];
 			(item.representedObject) = project;
 			(item.target) = self;
