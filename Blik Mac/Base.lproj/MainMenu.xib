@@ -36,7 +36,7 @@
                                     <action selector="showAppPreferences:" target="Voe-Tx-rLC" id="Hjx-Mg-ZIk"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Status Menu Item" id="ZUB-Aa-pTP">
+                            <menuItem title="Show Launcher in Status Bar" id="ZUB-Aa-pTP">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleShowingStatusItem:" target="Voe-Tx-rLC" id="Xo5-0D-ois"/>
