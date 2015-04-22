@@ -1195,7 +1195,7 @@
 	NSString *displayName = nil;
 	NSImage *iconImage = nil;
 	
-	if (collectedFile.isEmpty) {
+	if (collectedFile.empty) {
 		displayName = NSLocalizedString(@"(Missing)", @"Display name for empty collected file");
 	}
 	else {

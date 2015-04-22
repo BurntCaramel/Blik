@@ -743,7 +743,7 @@
 			GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
 
 			if (collectedFile) {
-				if (collectedFile.isEmpty) {
+				if (collectedFile.empty) {
 					name = NSLocalizedString(@"(Missing)", @"Display name for empty collected file");
 				}
 				else {

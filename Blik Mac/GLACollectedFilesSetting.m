@@ -204,7 +204,7 @@
 
 - (void)startAccessingCollectedFile:(GLACollectedFile *)collectedFile invalidate:(BOOL)invalidate
 {
-	if (collectedFile.isEmpty) {
+	if (collectedFile.empty) {
 		return;
 	}
 	//NSAssert(![collectedFile isEmpty], @"Collected file must have something");
@@ -484,7 +484,7 @@ NSString *GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedF
 	BOOL hasImageView = (cellView.imageView != nil);
 	
 	if (collectedFile) {
-		if (collectedFile.isEmpty) {
+		if (collectedFile.empty) {
 			displayName = NSLocalizedString(@"(Gone)", @"Display Name for empty collected file");
 		}
 		else {
@@ -507,7 +507,7 @@ NSString *GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedF
 	NSImage *iconImage = nil;
 	
 	if (collectedFile) {
-		if (collectedFile.isEmpty) {
+		if (collectedFile.empty) {
 			displayName = NSLocalizedString(@"(Gone)", @"Display Name for empty collected file");
 		}
 		else {

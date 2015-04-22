@@ -81,7 +81,7 @@
 
 #pragma mark -
 
-- (BOOL)isEmpty
+- (BOOL)empty
 {
 	return (self.sourceBookmarkData) == nil && (self.sourceFilePathURL) == nil;
 }
