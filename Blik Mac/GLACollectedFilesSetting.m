@@ -137,6 +137,10 @@
 
 - (void)input_startAccessingCollectedFile:(GLACollectedFile *)collectedFile invalidate:(BOOL)invalidate
 {
+	if (collectedFile.empty) {
+		return;
+	}
+	
 	NSMutableSet *collectedFileUUIDsUsingURLs = (self.collectedFileUUIDsUsingURLs);
 	
 	NSUUID *collectedFileUUID = (collectedFile.UUID);
@@ -204,9 +208,6 @@
 
 - (void)startAccessingCollectedFile:(GLACollectedFile *)collectedFile invalidate:(BOOL)invalidate
 {
-	if (collectedFile.empty) {
-		return;
-	}
 	//NSAssert(![collectedFile isEmpty], @"Collected file must have something");
 	
 	[self runAsyncOnInputQueue:^(GLACollectedFilesSetting *self) {
