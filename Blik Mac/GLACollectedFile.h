@@ -21,6 +21,9 @@
 
 + (NSArray *)filteredCollectedFiles:(NSArray *)collectedFiles notAlreadyPresentInArrayInspector:(id<GLAArrayInspecting>)inspectableArray;
 
+
+@property(readonly, nonatomic) BOOL empty;
+
 // Retain this if you want this to be cached.
 - (GLAAccessedFileInfo *)accessFile;
 

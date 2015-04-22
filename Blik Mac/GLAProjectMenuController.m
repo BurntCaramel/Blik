@@ -261,7 +261,7 @@
 				if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
 					GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 					GLACollectedFile *collectedFile = [pm collectedFileForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
-					if (collectedFile) {
+					if (collectedFile && !(collectedFile.isEmpty)) {
 						[collectedFilesSetting startAccessingCollectedFile:collectedFile];
 					}
 					

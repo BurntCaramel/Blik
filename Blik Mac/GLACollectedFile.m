@@ -81,6 +81,11 @@
 
 #pragma mark -
 
+- (BOOL)isEmpty
+{
+	return (self.sourceBookmarkData) == nil && (self.sourceFilePathURL) == nil;
+}
+
 #define TIME_ACCESS_FILE 0
 
 - (GLAAccessedFileInfo *)accessFile
@@ -95,7 +100,9 @@
 		accessedFileInfo = [[GLAAccessedFileInfo alloc] initWithBookmarkData:bookmarkData];
 	}
 	else {
-		accessedFileInfo = [[GLAAccessedFileInfo alloc] initWithFileURL:(self.sourceFilePathURL)];
+		NSURL *sourceFilePathURL = (self.sourceFilePathURL);
+		NSAssert(sourceFilePathURL != nil, @"Collected file must have a source file path URL");
+		accessedFileInfo = [[GLAAccessedFileInfo alloc] initWithFileURL:sourceFilePathURL];
 	}
 	
 #if TIME_ACCESS_FILE && DEBUG

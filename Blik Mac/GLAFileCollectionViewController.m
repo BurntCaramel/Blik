@@ -829,8 +829,9 @@
 - (IBAction)revealSelectedFilesInFinder:(id)sender
 {
 	NSArray *URLs = (self.selectedURLs);
-	
-	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:URLs];
+	if (URLs && URLs.count > 0) {
+		[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:URLs];
+	}
 }
 
 - (IBAction)removeSelectedFilesFromList:(id)sender
@@ -1194,10 +1195,15 @@
 	NSString *displayName = nil;
 	NSImage *iconImage = nil;
 	
-	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
-	[collectedFilesSetting startAccessingCollectedFile:collectedFile];
-	displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
-	iconImage = [collectedFilesSetting copyValueForURLResourceKey:NSURLEffectiveIconKey forCollectedFile:collectedFile];
+	if (collectedFile.isEmpty) {
+		displayName = NSLocalizedString(@"(Missing)", @"Display name for empty collected file");
+	}
+	else {
+		GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
+		[collectedFilesSetting startAccessingCollectedFile:collectedFile];
+		displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+		iconImage = [collectedFilesSetting copyValueForURLResourceKey:NSURLEffectiveIconKey forCollectedFile:collectedFile];
+	}
 	
 	(cellView.textField.stringValue) = displayName ?: @"Loading…";
 	(cellView.imageView.image) = iconImage;

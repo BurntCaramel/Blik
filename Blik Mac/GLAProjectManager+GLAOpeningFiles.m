@@ -55,7 +55,7 @@
 - (BOOL)openHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile behaviour:(GLAOpenBehaviour)behaviour
 {
 	GLACollectedFile *collectedFile = [self collectedFileForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:NO];
-	if (!collectedFile) {
+	if (!collectedFile || (collectedFile.isEmpty)) {
 		return NO;
 	}
 	

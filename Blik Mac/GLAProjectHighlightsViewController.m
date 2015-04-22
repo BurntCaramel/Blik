@@ -743,9 +743,14 @@
 			GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
 
 			if (collectedFile) {
-				NSString *displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
-				if (displayName) {
-					name = displayName;
+				if (collectedFile.isEmpty) {
+					name = NSLocalizedString(@"(Missing)", @"Display name for empty collected file");
+				}
+				else {
+					NSString *displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+					if (displayName) {
+						name = displayName;
+					}
 				}
 			}
 			

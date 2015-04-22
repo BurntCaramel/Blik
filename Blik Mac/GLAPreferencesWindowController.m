@@ -34,9 +34,14 @@
 	NSWindow *window = (self.window);
 	(window.preservesContentDuringLiveResize) = NO;
 	
+#if 0
+	// TODO: check if this will run on 10.9 ok.
+	// Dark title bar
+	(window.appearance) = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
+	
 	//GLAUIStyle *style = [GLAUIStyle activeStyle];
 	//(window.backgroundColor) = (style.contentBackgroundColor);
-	
+#endif
 	
 	GLAPreferencesSectionNavigator *sectionNavigator = [GLAPreferencesSectionNavigator new];
 	

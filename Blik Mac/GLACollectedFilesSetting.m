@@ -204,6 +204,11 @@
 
 - (void)startAccessingCollectedFile:(GLACollectedFile *)collectedFile invalidate:(BOOL)invalidate
 {
+	if (collectedFile.isEmpty) {
+		return;
+	}
+	//NSAssert(![collectedFile isEmpty], @"Collected file must have something");
+	
 	[self runAsyncOnInputQueue:^(GLACollectedFilesSetting *self) {
 		[self input_startAccessingCollectedFile:collectedFile invalidate:invalidate];
 	}];
@@ -479,9 +484,14 @@ NSString *GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedF
 	BOOL hasImageView = (cellView.imageView != nil);
 	
 	if (collectedFile) {
-		displayName = [self copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
-		if (hasImageView) {
-			iconImage = [self copyValueForURLResourceKey:NSURLEffectiveIconKey forCollectedFile:collectedFile];
+		if (collectedFile.isEmpty) {
+			displayName = NSLocalizedString(@"(Gone)", @"Display Name for empty collected file");
+		}
+		else {
+			displayName = [self copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+			if (hasImageView) {
+				iconImage = [self copyValueForURLResourceKey:NSURLEffectiveIconKey forCollectedFile:collectedFile];
+			}
 		}
 	}
 	
@@ -497,12 +507,17 @@ NSString *GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedF
 	NSImage *iconImage = nil;
 	
 	if (collectedFile) {
-		displayName = [self copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
-		if (wantsIcon) {
-			iconImage = [self copyValueForURLResourceKey:NSURLEffectiveIconKey forCollectedFile:collectedFile];
-			if (iconImage) {
-				iconImage = [iconImage copy];
-				[iconImage setSize:NSMakeSize(16.0, 16.0)];
+		if (collectedFile.isEmpty) {
+			displayName = NSLocalizedString(@"(Gone)", @"Display Name for empty collected file");
+		}
+		else {
+			displayName = [self copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+			if (wantsIcon) {
+				iconImage = [self copyValueForURLResourceKey:NSURLEffectiveIconKey forCollectedFile:collectedFile];
+				if (iconImage) {
+					iconImage = [iconImage copy];
+					[iconImage setSize:NSMakeSize(16.0, 16.0)];
+				}
 			}
 		}
 	}
