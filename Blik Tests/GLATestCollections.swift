@@ -56,7 +56,7 @@ class GLATestCollections: XCTestCase {
 		
 		let modelClass = GLACollection.self
 		var error: NSError?
-		let collectionFromJSON: GLACollection = MTLJSONAdapter.modelOfClass(modelClass, fromJSONDictionary: JSONDictionary, error: &error) as GLACollection
+		let collectionFromJSON: GLACollection = MTLJSONAdapter.modelOfClass(modelClass, fromJSONDictionary: JSONDictionary, error: &error) as! GLACollection
 		
 		XCTAssertNotNil(collectionFromJSON, "Created collection from JSON")
 		XCTAssertEqual(collection.UUID, collectionFromJSON.UUID, "Have same UUID")
@@ -101,7 +101,7 @@ class GLATestCollections: XCTestCase {
 		
 		let modelClass = GLAHighlightedCollectedFile.self
 		var error: NSError?
-		let highlightedItemFromJSON: GLAHighlightedCollectedFile = MTLJSONAdapter.modelOfClass(modelClass, fromJSONDictionary: JSONDictionary, error: &error) as GLAHighlightedCollectedFile
+		let highlightedItemFromJSON: GLAHighlightedCollectedFile = MTLJSONAdapter.modelOfClass(modelClass, fromJSONDictionary: JSONDictionary, error: &error) as! GLAHighlightedCollectedFile
 		
 		XCTAssertNotNil(highlightedItemFromJSON, "Created highlighted item from JSON")
 		XCTAssertEqual(highlightedItem.UUID, highlightedItemFromJSON.UUID, "Have same UUID")

@@ -50,7 +50,7 @@
 
 - (void)addNewCollectedFilesCollectionToProject:(GLAProject *)project;
 - (void)addNewCollectedFilesCollectionToProject:(GLAProject *)project pendingCollectedFilesInfo:(GLAPendingAddedCollectedFilesInfo *)pendingCollectedFilesInfo;
-- (void)addNewCollectedFilesCollectionGoToChooseNameAndColor;
+//- (void)addNewCollectedFilesCollectionGoToChooseNameAndColor;
 
 - (void)addNewFilteredFolderCollectionToProject:(GLAProject *)project;
 - (void)addNewFilteredFolderCollectionGoToChooseNameAndColorWithChosenFolder:(NSURL *)folderURL chosenTagName:(NSString *)tagName;

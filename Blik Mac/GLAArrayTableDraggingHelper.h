@@ -17,6 +17,7 @@
 - (instancetype)initWithDelegate:(id<GLAArrayTableDraggingHelperDelegate>)delegate;
 
 @property(readonly, weak, nonatomic) id<GLAArrayTableDraggingHelperDelegate> delegate;
+@property(nonatomic) BOOL animates;
 
 @property(readonly, copy, nonatomic) NSIndexSet *draggedRowIndexes;
 

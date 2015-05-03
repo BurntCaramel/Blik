@@ -63,7 +63,7 @@
 	return self;
 }
 
-- (instancetype)init
+- (instancetype)init __unavailable
 {
 	return nil;
 }

@@ -360,8 +360,6 @@
 - (void)keyDown:(NSEvent *)theEvent
 {
 	unichar u = [(theEvent.charactersIgnoringModifiers) characterAtIndex:0];
-	//NSEventModifierFlags modifierFlags = (theEvent.modifierFlags);
-	NSUInteger modifierFlags = (theEvent.modifierFlags);
 	
 	if (u == NSCarriageReturnCharacter || u == NSEnterCharacter) {
 #if 0

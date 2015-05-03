@@ -226,6 +226,9 @@
 		}];
 		[projectManager setFolderQuery:folderQuery forFilteredFolderCollectionWithUUID:(collection.UUID)];
 	}
+	else {
+		return;
+	}
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAAddNewCollectionViewControllerDidConfirmCreatingNotification object:self userInfo:@{@"collection": collection, @"project": project}];
 }

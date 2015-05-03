@@ -21,8 +21,6 @@
 	GLAProject *_project;
 }
 
-@property(nonatomic) BOOL hasPreparedViews;
-
 @property(nonatomic) BOOL private_editing;
 
 @property(nonatomic) NSTableCellView *measuringTableCellView;

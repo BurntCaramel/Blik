@@ -1196,7 +1196,7 @@
 	NSImage *iconImage = nil;
 	
 	if (collectedFile.empty) {
-		displayName = NSLocalizedString(@"(Missing)", @"Display name for empty collected file");
+		displayName = NSLocalizedString(@"(Gone)", @"Display name for empty collected file");
 	}
 	else {
 		GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);

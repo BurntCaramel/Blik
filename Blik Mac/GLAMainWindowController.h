@@ -57,8 +57,6 @@
 
 - (void)editProject:(GLAProject *)project;
 
-- (void)showAddNewCollectionToProject:(GLAProject *)project;
-
 #pragma mark Actions
 
 - (IBAction)goToAll:(id)sender;

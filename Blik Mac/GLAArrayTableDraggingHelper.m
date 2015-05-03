@@ -24,6 +24,7 @@
 	self = [super init];
 	if (self) {
 		_delegate = delegate;
+		_animates = YES;
 	}
 	return self;
 }
@@ -141,12 +142,15 @@
 	
 	__block BOOL acceptDrop = YES;
 	
+	//[tableView beginUpdates];
+	
 	[self makeChangesUsingEditingBlock:^(id<GLAArrayEditing> arrayEditor) {
 		NSDragOperation sourceOperation = (info.draggingSourceOperationMask);
 		if (sourceOperation & NSDragOperationMove) {
 			// The row index is the final destination, so reduce it by the number of rows being moved before it.
 			NSInteger adjustedRow = row - [sourceRowIndexes countOfIndexesInRange:NSMakeRange(0, row)];
 			
+			//[tableView moveRowAtIndex:[sourceRowIndexes firstIndex] toIndex:adjustedRow];
 			[arrayEditor moveChildrenAtIndexes:sourceRowIndexes toIndex:adjustedRow];
 		}
 		else if (sourceOperation & NSDragOperationCopy) {
@@ -166,6 +170,8 @@
 			acceptDrop = NO;
 		}
 	}];
+	
+	//[tableView endUpdates];
 	
 	return acceptDrop;
 }

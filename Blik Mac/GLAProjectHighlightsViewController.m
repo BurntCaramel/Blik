@@ -744,7 +744,7 @@
 
 			if (collectedFile) {
 				if (collectedFile.empty) {
-					name = NSLocalizedString(@"(Missing)", @"Display name for empty collected file");
+					name = NSLocalizedString(@"(Gone)", @"Display name for empty collected file");
 				}
 				else {
 					NSString *displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];

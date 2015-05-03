@@ -219,7 +219,9 @@
 	
 	BOOL canAccess = [URL startAccessingSecurityScopedResource];
 	if (!canAccess) {
-		*outError = [GLAModelErrors errorForCannotAccessSecurityScopedURL:URL];
+		if (outError) {
+			*outError = [GLAModelErrors errorForCannotAccessSecurityScopedURL:URL];
+		}
 		//return nil;
 	}
 	

@@ -44,6 +44,7 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	NSTableView *tableView = (self.tableView);
 	(tableView.backgroundColor) = (uiStyle.contentBackgroundColor);
 	(tableView.enclosingScrollView.backgroundColor) = (uiStyle.contentBackgroundColor);
+	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
 	
 	NSMenu *contextualMenu = (self.contextualMenu);
 	(contextualMenu.delegate) = self;
