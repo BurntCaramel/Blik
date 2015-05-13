@@ -25,7 +25,7 @@
 
 @end
 
-#define GLA_USE_REFERENCE_URLS 1
+#define GLA_USE_REFERENCE_URLS 0
 
 @implementation GLACollectedFile
 
@@ -120,22 +120,17 @@
 	if (fileReferenceURL) {
 		BOOL accessing = [fileReferenceURL startAccessingSecurityScopedResource];
 		NSURL *resolvedFilePathURL = [fileReferenceURL filePathURL];
-		NSAssert(resolvedFilePathURL != nil, @"resolvedFilePathURL must be something");
 		if (accessing) {
 			[fileReferenceURL stopAccessingSecurityScopedResource];
 		}
-		//return resolvedFilePathURL;
 		
-		//NSLog(@"\n %@ \n %@ \n %@", resolvedFilePathURL, (self.sourceFilePathURL), @([resolvedFilePathURL isEqual:(self.sourceFilePathURL)]));
-		
-		return (self.sourceFilePathURL);
+		if (resolvedFilePathURL) {
+			return resolvedFilePathURL;
+		}
 	}
-	else {
-		return (self.sourceFilePathURL);
-	}
-#else
-	return (self.sourceFilePathURL);
 #endif
+	
+	return (self.sourceFilePathURL);
 }
 
 - (NSUInteger)hash
