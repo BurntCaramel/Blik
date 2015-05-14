@@ -39,6 +39,7 @@
 		NSColor *deleteRed = [NSColor colorWithCalibratedHue:0.059 saturation:1 brightness:0.983 alpha:1];
 		
 		NSColor *whiteAlmost30 = [whiteAlmost colorWithAlphaComponent:0.3];
+		NSColor *whiteAlmost30Inactive = [whiteAlmost colorWithAlphaComponent:0.22];
 		//NSColor *whiteAlmost46 = [whiteAlmost colorWithAlphaComponent:0.46];
 		
 		
@@ -95,6 +96,9 @@
 		
 		//(style.contentTableSelectionColor) = activeYellow;
 		(style.contentTableSelectionColor) = whiteAlmost30;
+		(style.contentTableSelectionInactiveColor) = whiteAlmost30Inactive;
+		
+		(style.contentTableHeaderBackgroundColor) = [grayDark blendedColorWithFraction:0.08 ofColor:whiteAlmost];
 		
 		(style.splitViewDividerColor) = [whiteAlmost colorWithAlphaComponent:0.057];
 		(style.mainDividerColor) = [whiteAlmost colorWithAlphaComponent:0.46];
@@ -122,6 +126,10 @@
 		
 		// FONTS
 		
+		NSFontDescriptor *mediumFontDescriptor = [NSFontDescriptor fontDescriptorWithFontAttributes:@{NSFontFamilyAttribute: @"Avenir Next", NSFontFaceAttribute: @"Medium"}];
+		NSFontDescriptor *mediumItalicFontDescriptor = [mediumFontDescriptor fontDescriptorWithFace:@"Medium Italic"];
+		
+		
 		NSString *fontNameAvenirNextRegular = @"AvenirNext-Regular";
 		NSString *fontNameAvenirNextMedium = @"AvenirNext-Medium";
 		NSString *fontNameAvenirNextMediumItalic = @"AvenirNext-MediumItalic";
@@ -132,15 +140,10 @@
 		(style.projectTitleFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:17.0];
 		//(style.projectTitleFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:17.0];
 		
+		(style.projectTitleFont) = [NSFont fontWithDescriptor:mediumItalicFontDescriptor size:17.0];
+		
 		(style.collectionFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:16.0];
 		
-#if 0
-		(style.smallReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
-		(style.smallReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextRegular size:13.0];
-		
-		(style.highlightedReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:16.0];
-		(style.highlightedReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextRegular size:16.0];
-#elif 1
 		(style.smallReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
 		(style.smallReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:11.0];
 		
@@ -150,17 +153,32 @@
 		(style.buttonFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
 		(style.labelFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:13.0];
 		
-		(style.menuFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:14.0];
+#if 1
+		(style.tableHeaderFont) = [NSFont fontWithDescriptor:mediumFontDescriptor size:11.0];
 #else
-		(style.smallReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
-		(style.smallReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:13.0];
-		
-		(style.highlightedReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:16.0];
-		(style.highlightedReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextMediumItalic size:16.0];
+		NSAffineTransform *offsetBaselineTransform = [NSAffineTransform new];
+		NSAffineTransform *offsetBaselineTransform11Points = [offsetBaselineTransform copy];
+		[offsetBaselineTransform11Points scaleBy:11.0];
+		[offsetBaselineTransform11Points translateXBy:50.0 yBy:-3.0];
+		[offsetBaselineTransform11Points rotateByDegrees:20.0];
+		(style.tableHeaderFont) = [NSFont fontWithDescriptor:mediumFontDescriptor textTransform:offsetBaselineTransform11Points];
 #endif
+		//(style.tableHeaderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:11.0];
+		
+		(style.menuFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:14.0];
 	});
 	
 	return style;
+}
+
+- (CGFloat)verticalOffsetDownForFontWithKey:(NSString *)fontKey
+{
+	if ([fontKey isEqualToString:@"tableHeaderFont"]) {
+		return -2.0;
+	}
+	else {
+		return -1.0;
+	}
 }
 
 

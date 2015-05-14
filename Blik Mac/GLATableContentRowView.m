@@ -20,6 +20,14 @@
 {
 	GLAUIStyle *activeStyle = [GLAUIStyle activeStyle];
 	NSColor *selectionColor = (activeStyle.contentTableSelectionColor);
+	
+	NSView *firstResponder = (self.window.firstResponder);
+	if ([firstResponder isKindOfClass:[NSView class]]) {
+		if (![self isDescendantOf:firstResponder]) {
+			selectionColor = (activeStyle.contentTableSelectionInactiveColor);
+		}
+	}
+	
 	[selectionColor setFill];
 	NSRectFill(dirtyRect);
 }

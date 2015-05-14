@@ -14,10 +14,72 @@
 @property(nonatomic) QLPreviewPanel *activeQuickLookPreviewPanel;
 
 @property(readwrite, nonatomic) NSURL *activeURL;
+@property(nonatomic) BOOL previewingDirectory;
+
+@property(nonatomic) NSResponder *previousFirstResponder;
 
 @end
 
 @implementation GLAQuickLookPreviewHelper
+
+- (void)setPreviewHolderView:(NSView *)previewHolderView
+{
+	NSParameterAssert(previewHolderView != nil);
+	
+	_previewHolderView = previewHolderView;
+	
+	GLAViewController *previewHolderViewController = [[GLAViewController alloc] initWithNibName:nil bundle:nil];
+	(previewHolderViewController.view) = previewHolderView;
+	
+	(self.previewHolderViewController) = previewHolderViewController;
+}
+
+- (void)setTableView:(NSTableView *)tableView
+{
+	_tableView = tableView;
+	
+	[self startObservingWindowOfTable];
+}
+
+- (void)startObservingWindowOfTable
+{
+	NSTableView *tableView = (self.tableView);
+	if (!tableView) {
+		return;
+	}
+	
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	NSWindow *window = (tableView.window);
+	[nc addObserver:self selector:@selector(windowDidUpdate:) name:NSWindowDidUpdateNotification object:window];
+}
+
+- (void)stopObservingWindowOfTable
+{
+	NSTableView *tableView = (self.tableView);
+	if (!tableView) {
+		return;
+	}
+	
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	NSWindow *window = (tableView.window);
+	[nc removeObserver:self name:nil object:window];
+}
+
+- (void)windowDidUpdate:(NSNotification *)notification
+{
+	QLPreviewPanel *activeQuickLookPreviewPanel = (self.activeQuickLookPreviewPanel);
+	if (activeQuickLookPreviewPanel) {
+		NSWindow *window = (notification.object);
+		NSResponder *firstResponder = (window.firstResponder);
+		if ((self.previousFirstResponder) == firstResponder) {
+			return;
+		}
+		
+		(self.previousFirstResponder) = firstResponder;
+		
+		[activeQuickLookPreviewPanel updateController];
+	}
+}
 
 - (void)deactivate
 {
@@ -36,6 +98,8 @@
 	if (quickLookPreviewView && (quickLookPreviewView.previewItem) != nil) {
 		[quickLookPreviewView close];
 	}
+	
+	[self stopObservingWindowOfTable];
 }
 
 - (void)dealloc
@@ -115,17 +179,151 @@
 	return [delegate quickLookPreviewHelper:self tableRowForSelectedURL:fileURL];
 }
 
-- (void)updateQuickLookPreviewAnimating:(BOOL)animate
+- (NSURL *)activeURLForDirectoryPreviewing
+{
+	if (self.previewingDirectory) {
+		return (self.activeURL);
+	}
+	else {
+		return nil;
+	}
+}
+
+- (NSURL *)activeURLForFilePreviewing
+{
+	if (! self.previewingDirectory) {
+		return (self.activeURL);
+	}
+	else {
+		return nil;
+	}
+}
+
+- (void)fadePreviewView:(NSView *)view fadeIn:(BOOL)fadeInNotOut animating:(BOOL)animate updateBlock:(dispatch_block_t)updateBlock
+{
+	if (!(view.superview)) {
+		[(self.previewHolderViewController) fillViewWithChildView:view];
+	}
+	
+	CGFloat alphaValue = fadeInNotOut ? 1.0 : 0.0;
+	
+	if (animate) {
+		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+			(context.duration) = 2.0 / 16.0;
+			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+			
+			if (fadeInNotOut) {
+				updateBlock();
+			}
+			
+			view.animator.alphaValue = alphaValue;
+		} completionHandler:^{
+			// If fading out, only update once the animation is over.
+			if (!fadeInNotOut) {
+				updateBlock();
+				
+				[view removeFromSuperview];
+			}
+		}];
+	}
+	else {
+		(view.alphaValue) = alphaValue;
+		
+		updateBlock();
+		
+		if (!fadeInNotOut) {
+			[view removeFromSuperview];
+		}
+	}
+}
+
+- (void)updateQuickLookPreviewViewAnimating:(BOOL)animate
+{
+	NSURL *URL = (self.activeURLForFilePreviewing);
+	
+	QLPreviewView *quickLookPreviewView = (self.quickLookPreviewView);
+	if (!quickLookPreviewView) {
+		if (!URL) {
+			return;
+		}
+		
+		quickLookPreviewView = [[QLPreviewView alloc] initWithFrame:NSZeroRect style:QLPreviewViewStyleNormal];
+		(self.quickLookPreviewView) = quickLookPreviewView;
+	}
+	
+#if 1
+	[self fadePreviewView:quickLookPreviewView fadeIn:(URL != nil) animating:animate updateBlock:^{
+		@try {
+			(quickLookPreviewView.previewItem) = URL;
+		}
+		@catch (NSException *exception) {
+			NSLog(@"Quick Look exception %@", exception);
+		}
+	}];
+#else
+	CGFloat alphaValue = (URL != nil) ? 1.0 : 0.0;
+	
+	@try {
+		if (animate) {
+			[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+				(context.duration) = 2.0 / 16.0;
+				(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+				
+				if (URL) {
+					(quickLookPreviewView.previewItem) = URL;
+				}
+				
+				quickLookPreviewView.animator.alphaValue = alphaValue;
+			} completionHandler:^{
+				if (!URL) {
+					(quickLookPreviewView.previewItem) = nil;
+				}
+			}];
+		}
+		else {
+			(quickLookPreviewView.alphaValue) = alphaValue;
+			(quickLookPreviewView.previewItem) = URL;
+		}
+	}
+	@catch (NSException *exception) {
+		NSLog(@"Quick Look exception %@", exception);
+	}
+#endif
+}
+
+- (void)updateFolderContentsViewAnimation:(BOOL)animate
+{
+	NSURL *URL = (self.activeURLForDirectoryPreviewing);
+	
+	GLACollectedFolderContentsViewController *folderContentsViewController = (self.folderContentsViewController);
+	if (!folderContentsViewController) {
+		if (!URL) {
+			return;
+		}
+		
+		folderContentsViewController = [[GLACollectedFolderContentsViewController alloc] initWithNibName:nil bundle:nil];
+		(self.folderContentsViewController) = folderContentsViewController;
+	}
+	
+	[self fadePreviewView:(folderContentsViewController.view) fadeIn:(URL != nil) animating:animate updateBlock:^{
+		(folderContentsViewController.sourceDirectoryURL) = URL;
+	}];
+}
+
+- (void)updatePreviewAnimating:(BOOL)animate
 {
 #if DEBUG
-	NSLog(@"updateQuickLookPreviewAnimating %@", (self.activeQuickLookPreviewPanel));
+	//NSLog(@"updateQuickLookPreviewAnimating %@", (self.activeQuickLookPreviewPanel));
 #endif
 	
 	// PANEL
 	if (self.activeQuickLookPreviewPanel) {
-		[(self.activeQuickLookPreviewPanel) reloadData];
+		QLPreviewPanel *panel = (self.activeQuickLookPreviewPanel);
+		//[panel updateController];
+		[panel reloadData];
 	}
 	
+#if 0
 	// PREVIEW
 	if (!(self.quickLookPreviewView)) {
 		GLAViewController *previewHolderViewController = [[GLAViewController alloc] init];
@@ -143,54 +341,59 @@
 			(self.quickLookPreviewView) = quickLookPreviewView;
 		}
 	}
+#endif
 	
 	NSArray *selectedURLs = (self.selectedURLs);
 	NSURL *URL = nil;
 	
 	if ((selectedURLs.count) == 1) {
 		URL = selectedURLs[0];
-		[self startObservingPreviewFrameChanges];
 	}
 	
-	NSURL *previouslyActiveURL = (self.activeURL);
-	if ([URL isEqual:previouslyActiveURL]) {
-		return;
+	if (URL) {
+		NSURL *previouslyActiveURL = (self.activeURL);
+		if ([URL isEqual:previouslyActiveURL]) {
+			return;
+		}
+		
+		[self startObservingPreviewFrameChanges];
 	}
 	(self.activeURL) = URL;
 	
-	// Animate preview
-	QLPreviewView *quickLookPreviewView = (self.quickLookPreviewView);
-	if (quickLookPreviewView) {
-		CGFloat alphaValue = (URL != nil) ? 1.0 : 0.0;
-		
-		@try {
-			if (animate) {
-				[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-					(context.duration) = 2.0 / 16.0;
-					(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-					
-					if (URL) {
-						(quickLookPreviewView.previewItem) = URL;
+	if (URL) {
+		__weak GLAQuickLookPreviewHelper *weakSelf = self;
+		dispatch_queue_t backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+		dispatch_async(backgroundQueue, ^{
+			NSError *error = nil;
+			NSDictionary *values = [URL resourceValuesForKeys:@[NSURLIsDirectoryKey, NSURLIsPackageKey] error:&error];
+			
+			if (values) {
+				BOOL isDirectory = [@YES isEqual:values[NSURLIsDirectoryKey]];
+				BOOL isPackage = [@YES isEqual:values[NSURLIsPackageKey]];
+				
+				[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+					__strong GLAQuickLookPreviewHelper *self = weakSelf;
+					if (!self) {
+						return;
 					}
 					
-					quickLookPreviewView.animator.alphaValue = alphaValue;
-				} completionHandler:^{
-					if (!URL) {
-						(quickLookPreviewView.previewItem) = nil;
-					}
+					BOOL previewingDirectory = (isDirectory && !isPackage);
+					(self.previewingDirectory) = previewingDirectory;
+					
+					[self updateFolderContentsViewAnimation:animate];
+					[self updateQuickLookPreviewViewAnimating:animate];
 				}];
 			}
 			else {
-				(quickLookPreviewView.alphaValue) = alphaValue;
-				(quickLookPreviewView.previewItem) = URL;
+				(self.activeURL) = nil;
+				[self updateQuickLookPreviewViewAnimating:animate];
+				[self updateFolderContentsViewAnimation:animate];
 			}
-		}
-		@catch (NSException *exception) {
-			NSLog(@"Quick Look exception %@", exception);
-		}
-		@finally {
-			
-		}
+		});
+	}
+	else {
+		[self updateQuickLookPreviewViewAnimating:animate];
+		[self updateFolderContentsViewAnimation:animate];
 	}
 }
 

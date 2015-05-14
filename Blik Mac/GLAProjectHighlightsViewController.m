@@ -275,7 +275,7 @@
 	[self stopCollectionObserving];
 	[self startCollectionObserving];
 	
-	if ((highlightedItems.count) > 0) {
+	if ((highlightedItems.count) > 0 || (primaryFolders.count) > 0) {
 		[self showTable];
 		[self hideInstructions];
 		
@@ -741,7 +741,8 @@
 			GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 			
 			GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
-
+			BOOL isFolder = NO;
+			
 			if (collectedFile) {
 				if (collectedFile.empty) {
 					name = NSLocalizedString(@"(Gone)", @"Display name for empty collected file");
@@ -751,6 +752,13 @@
 					if (displayName) {
 						name = displayName;
 					}
+					
+					NSNumber *isDirectoryValue = [collectedFilesSetting copyValueForURLResourceKey:NSURLIsDirectoryKey forCollectedFile:collectedFile];
+					NSNumber *isPackageValue = [collectedFilesSetting copyValueForURLResourceKey:NSURLIsPackageKey forCollectedFile:collectedFile];
+					
+					if (isDirectoryValue && isPackageValue) {
+						isFolder = [@YES isEqual:isDirectoryValue] && [@NO isEqual:isPackageValue];
+					}
 				}
 			}
 			
@@ -758,6 +766,8 @@
 			
 			GLACollectionIndicationButton *collectionIndicationButton = (cellView.collectionIndicationButton);
 			(collectionIndicationButton.collection) = holdingCollection;
+			(collectionIndicationButton.isFolder) = isFolder;
+			//(collectionIndicationButton.isFolder) = YES;
 		}
 		else {
 			NSAssert(NO, @"highlightedItem not a valid class.");
@@ -772,7 +782,9 @@
 			name = displayName;
 		}
 		
-		(cellView.collectionIndicationButton.collection) = nil;
+		GLACollectionIndicationButton *collectionIndicationButton = (cellView.collectionIndicationButton);
+		(collectionIndicationButton.collection) = nil;
+		(collectionIndicationButton.isFolder) = YES;
 	}
 	
 	

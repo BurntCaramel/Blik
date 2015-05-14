@@ -606,7 +606,7 @@
 - (void)updateQuickLookPreviewAnimating:(BOOL)animate
 {
 	GLAQuickLookPreviewHelper *quickLookPreviewHelper = [self setUpQuickLookPreviewHelperIfNeeded];
-	[quickLookPreviewHelper updateQuickLookPreviewAnimating:animate];
+	[quickLookPreviewHelper updatePreviewAnimating:animate];
 }
 
 - (GLAQuickLookPreviewHelper *)setUpQuickLookPreviewHelperIfNeeded

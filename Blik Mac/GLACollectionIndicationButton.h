@@ -16,8 +16,8 @@
 
 @property(nonatomic) CGFloat diameter;
 @property(nonatomic) CGFloat verticalOffsetDown;
+@property(nonatomic) BOOL isFolder;
 
-@property(nonatomic) CALayer *dotLayer;
 @property(readonly, nonatomic) NSColor *colorForDrawing;
 
 @end

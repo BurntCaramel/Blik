@@ -62,6 +62,9 @@
 @property(nonatomic) NSColor *deleteProjectButtonColor;
 
 @property(nonatomic) NSColor *contentTableSelectionColor;
+@property(nonatomic) NSColor *contentTableSelectionInactiveColor;
+
+@property(nonatomic) NSColor *contentTableHeaderBackgroundColor;
 
 @property(nonatomic) NSColor *splitViewDividerColor;
 @property(nonatomic) NSColor *mainDividerColor;
@@ -105,6 +108,10 @@
 @property(nonatomic) NSFont *labelFont;
 
 @property(nonatomic) NSFont *menuFont;
+
+@property(nonatomic) NSFont *tableHeaderFont;
+
+- (CGFloat)verticalOffsetDownForFontWithKey:(NSString *)fontKey;
 
 
 #pragma mark Preparing Views

@@ -51,6 +51,8 @@
 		B24B3607196D1F720094FA1F /* GLAReminder.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3606196D1F720094FA1F /* GLAReminder.m */; };
 		B24B360B196E336E0094FA1F /* GLAMainNavigationBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */; };
 		B24B360C196E336E0094FA1F /* GLAMainNavigationBarController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B24B360A196E336E0094FA1F /* GLAMainNavigationBarController.xib */; };
+		B250206B1B02F3CC00ABAE96 /* GLATableHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B250206A1B02F3CC00ABAE96 /* GLATableHeaderCell.m */; };
+		B250206E1B03207200ABAE96 /* GLASimpleBezierPath.m in Sources */ = {isa = PBXBuildFile; fileRef = B250206D1B03207200ABAE96 /* GLASimpleBezierPath.m */; };
 		B25591F219C284040039D2AC /* GLATableContentRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = B25591F119C284040039D2AC /* GLATableContentRowView.m */; };
 		B25591F519C3CD0D0039D2AC /* GLATableActionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B25591F419C3CD0D0039D2AC /* GLATableActionsViewController.m */; };
 		B25591FA19C845900039D2AC /* GLACollectionColorPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B25591F819C845900039D2AC /* GLACollectionColorPickerViewController.m */; };
@@ -259,6 +261,10 @@
 		B24B3608196E336E0094FA1F /* GLAMainNavigationBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainNavigationBarController.h; sourceTree = "<group>"; };
 		B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainNavigationBarController.m; sourceTree = "<group>"; };
 		B24B360A196E336E0094FA1F /* GLAMainNavigationBarController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAMainNavigationBarController.xib; sourceTree = "<group>"; };
+		B25020691B02F3CC00ABAE96 /* GLATableHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLATableHeaderCell.h; sourceTree = "<group>"; };
+		B250206A1B02F3CC00ABAE96 /* GLATableHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLATableHeaderCell.m; sourceTree = "<group>"; };
+		B250206C1B03207200ABAE96 /* GLASimpleBezierPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLASimpleBezierPath.h; sourceTree = "<group>"; };
+		B250206D1B03207200ABAE96 /* GLASimpleBezierPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLASimpleBezierPath.m; sourceTree = "<group>"; };
 		B25591F019C284040039D2AC /* GLATableContentRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLATableContentRowView.h; sourceTree = "<group>"; };
 		B25591F119C284040039D2AC /* GLATableContentRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLATableContentRowView.m; sourceTree = "<group>"; };
 		B25591F319C3CD0C0039D2AC /* GLATableActionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLATableActionsViewController.h; sourceTree = "<group>"; };
@@ -882,12 +888,16 @@
 				B26158101ADB9EFE0082067E /* GLATableCellView.m */,
 				B2D0331A19FFA69000C396FB /* GLAHighlightsTableCellView.h */,
 				B2D0331B19FFA69000C396FB /* GLAHighlightsTableCellView.m */,
+				B25020691B02F3CC00ABAE96 /* GLATableHeaderCell.h */,
+				B250206A1B02F3CC00ABAE96 /* GLATableHeaderCell.m */,
 				B268C2541990EACC000BF39B /* GLASplitView.h */,
 				B268C2551990EACC000BF39B /* GLASplitView.m */,
 				B26B6F4E19EBE3C800D17ECD /* GLATableView.h */,
 				B26B6F4F19EBE3C800D17ECD /* GLATableView.m */,
 				B2D0331719FFA3E600C396FB /* GLACollectionIndicationButton.h */,
 				B2D0331819FFA3E600C396FB /* GLACollectionIndicationButton.m */,
+				B250206C1B03207200ABAE96 /* GLASimpleBezierPath.h */,
+				B250206D1B03207200ABAE96 /* GLASimpleBezierPath.m */,
 				B28927581A6BDCDB007238D6 /* GLADividerView.h */,
 				B28927591A6BDCDB007238D6 /* GLADividerView.m */,
 				B2D9EE591AD3B0B400F5F34E /* GLAOverlaidBarView.h */,
@@ -1428,6 +1438,7 @@
 				B292F4711AD6546E0041E7A1 /* NSMenu+GLAMenuItemConvenience.m in Sources */,
 				B2E39B361A7C60EC000A9A12 /* GLADirectoryWatcher.m in Sources */,
 				B219DAAE196ACE8D007900DF /* GLAProjectView.m in Sources */,
+				B250206B1B02F3CC00ABAE96 /* GLATableHeaderCell.m in Sources */,
 				B24ADB2B1AD784E0007214C2 /* GLACollectedFolderContentsViewController.m in Sources */,
 				B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */,
 				B2E39B5E1A89AF56000A9A12 /* GLANavigationButtonGroup.m in Sources */,
@@ -1477,6 +1488,7 @@
 				B2C7F2921970D5D3005780B4 /* GLAMainWindow.m in Sources */,
 				B219DAB2196AD462007900DF /* GLAProjectViewController.m in Sources */,
 				B208E3FA19F8E38F000EF97B /* GLAHighlightedItem.m in Sources */,
+				B250206E1B03207200ABAE96 /* GLASimpleBezierPath.m in Sources */,
 				B2214E1819D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.m in Sources */,
 				B20362C41A077C87007169C2 /* GLAFileOpenerApplicationFinder.m in Sources */,
 				B2CCF8E21A36D24D00EC7703 /* GLAAddCollectedFilesChoiceViewController.m in Sources */,

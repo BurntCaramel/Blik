@@ -11,6 +11,7 @@
 #import "GLAArrangedDirectoryChildren.h"
 #import "GLAUIStyle.h"
 #import "GLAQuickLookPreviewHelper.h"
+#import "GLATableHeaderCell.h"
 
 
 @interface GLACollectedFolderContentsViewController () <GLAFileInfoRetrieverDelegate, GLAArrangedDirectoryChildrenDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, GLAQuickLookPreviewHelperDelegate>
@@ -60,14 +61,21 @@
 	
 	NSSortDescriptor *nameSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:NSURLLocalizedNameKey ascending:YES];
 	NSSortDescriptor *dateModifiedSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:NSURLContentModificationDateKey ascending:NO];
-	[[folderContentOutlineView tableColumnWithIdentifier:@"displayNameAndIcon"] setSortDescriptorPrototype:nameSortDescriptor];
-	[[folderContentOutlineView tableColumnWithIdentifier:@"dateModified"] setSortDescriptorPrototype:dateModifiedSortDescriptor];
+	
+	NSTableColumn *displayNameTableColumn = [folderContentOutlineView tableColumnWithIdentifier:@"displayNameAndIcon"];
+	[displayNameTableColumn setSortDescriptorPrototype:nameSortDescriptor];
+	
+	NSTableColumn *dateModifiedTableColumn = [folderContentOutlineView tableColumnWithIdentifier:@"dateModified"];
+	[dateModifiedTableColumn setSortDescriptorPrototype:dateModifiedSortDescriptor];
+	
+	[style prepareContentTableColumn:displayNameTableColumn];
+	[style prepareContentTableColumn:dateModifiedTableColumn];
+	
 	(folderContentOutlineView.sortDescriptors) = @[nameSortDescriptor];
 	
 	// Individually autosaves each folder by URL.
 	(folderContentOutlineView.autosaveTableColumns) = YES;
-	(folderContentOutlineView.autosaveExpandedItems) = YES;
-	(folderContentOutlineView.autosaveName) = [NSString stringWithFormat:@"collectedFolderContentsOutlineView-%@", (self.sourceDirectoryURL.path)];
+	//(folderContentOutlineView.autosaveExpandedItems) = YES;
 	
 	[self updateSortingFromOutlineView];
 	
@@ -101,6 +109,13 @@
 		sourceDirectoryURL = [sourceDirectoryURL copy];
 	}
 	_sourceDirectoryURL = sourceDirectoryURL;
+	
+	[self view];
+	
+	if (sourceDirectoryURL) {
+		NSOutlineView *folderContentOutlineView = (self.folderContentOutlineView);
+		(folderContentOutlineView.autosaveName) = [NSString stringWithFormat:@"collectedFolderContentsOutlineView-%@", (sourceDirectoryURL.path)];
+	}
 	
 	[self reloadContentsOfFolder];
 	
@@ -303,9 +318,12 @@
 	return cellView;
 }
 
-#pragma mark GLAQuickLookPreviewHelper
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
+{
+	[(self.quickLookPreviewHelper) updatePreviewAnimating:YES];
+}
 
-- (NSArray *)selectedURLsForQuickLookPreviewHelper:(GLAQuickLookPreviewHelper *)helper
+- (NSArray *)selectedURLs
 {
 	NSOutlineView *folderContentOutlineView = (self.folderContentOutlineView);
 	
@@ -317,6 +335,13 @@
 	}];
 	
 	return selectedURLs;
+}
+
+#pragma mark GLAQuickLookPreviewHelper
+
+- (NSArray *)selectedURLsForQuickLookPreviewHelper:(GLAQuickLookPreviewHelper *)helper
+{
+	return (self.selectedURLs);
 }
 
 - (NSInteger)quickLookPreviewHelper:(GLAQuickLookPreviewHelper *)helper tableRowForSelectedURL:(NSURL *)fileURL

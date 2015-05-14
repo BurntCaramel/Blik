@@ -49,7 +49,7 @@
                     </constraints>
                 </customView>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="NA8-Ro-OD1">
-                    <rect key="frame" x="277.5" y="38" width="392" height="174"/>
+                    <rect key="frame" x="277.5" y="38" width="391.5" height="174"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="290" id="zC6-7U-5ej"/>
                     </constraints>
@@ -61,7 +61,7 @@
                 <constraint firstAttribute="trailing" secondItem="NA8-Ro-OD1" secondAttribute="trailing" id="6yW-nm-WOC"/>
                 <constraint firstItem="uUN-fG-dyR" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" id="Jtf-4x-qzc"/>
                 <constraint firstAttribute="trailing" secondItem="uUN-fG-dyR" secondAttribute="trailing" constant="20" id="KXo-l8-01e"/>
-                <constraint firstItem="yM7-GZ-JQa" firstAttribute="width" secondItem="Hz6-mo-xeY" secondAttribute="width" multiplier="0.4" priority="250" id="MUs-Tv-63S"/>
+                <constraint firstItem="yM7-GZ-JQa" firstAttribute="width" secondItem="Hz6-mo-xeY" secondAttribute="width" multiplier="0.4" priority="251" id="MUs-Tv-63S"/>
                 <constraint firstItem="yM7-GZ-JQa" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="SdN-BY-sLg"/>
                 <constraint firstItem="NA8-Ro-OD1" firstAttribute="leading" secondItem="yM7-GZ-JQa" secondAttribute="trailing" constant="10" id="TSH-RS-7kg"/>
                 <constraint firstItem="8vi-0s-ZAk" firstAttribute="top" secondItem="yM7-GZ-JQa" secondAttribute="bottom" constant="8" id="U1g-Rk-SCq"/>

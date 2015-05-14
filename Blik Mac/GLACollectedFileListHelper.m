@@ -21,7 +21,9 @@
 	return
   @[
 	NSURLLocalizedNameKey,
-	NSURLEffectiveIconKey
+	NSURLEffectiveIconKey,
+	NSURLIsDirectoryKey,
+	NSURLIsPackageKey
 	];
 }
 

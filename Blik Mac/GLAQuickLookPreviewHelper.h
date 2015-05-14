@@ -9,6 +9,7 @@
 @import Cocoa;
 @import Quartz;
 #import "GLAViewController.h"
+#import "GLACollectedFolderContentsViewController.h"
 
 
 @class GLAQuickLookPreviewHelper;
@@ -27,13 +28,15 @@
 
 @property(nonatomic) IBOutlet GLAViewController *previewHolderViewController;
 @property(nonatomic) IBOutlet NSView *previewHolderView;
+
 @property(nonatomic) IBOutlet QLPreviewView *quickLookPreviewView;
+@property(nonatomic) GLACollectedFolderContentsViewController *folderContentsViewController;
 
 @property(nonatomic) IBOutlet NSTableView *tableView;
 
 @property(readonly, nonatomic) NSURL *activeURL;
 
-- (void)updateQuickLookPreviewAnimating:(BOOL)animate;
+- (void)updatePreviewAnimating:(BOOL)animate;
 
 - (void)showQuickLookPanel:(BOOL)show;
 - (IBAction)quickLookPreviewItems:(id)sender;

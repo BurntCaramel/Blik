@@ -987,7 +987,7 @@
 - (void)updateQuickLookPreviewAnimating:(BOOL)animate
 {
 	GLAQuickLookPreviewHelper *quickLookPreviewHelper = [self setUpQuickLookPreviewHelperIfNeeded];
-	[quickLookPreviewHelper updateQuickLookPreviewAnimating:animate];
+	[quickLookPreviewHelper updatePreviewAnimating:animate];
 }
 
 - (GLAQuickLookPreviewHelper *)setUpQuickLookPreviewHelperIfNeeded
@@ -1289,7 +1289,7 @@
 	
 	GLAQuickLookPreviewHelper *quickLookPreviewHelper = [self setUpQuickLookPreviewHelperIfNeeded];
 	[quickLookPreviewHelper showQuickLookPanel:YES];
-	[quickLookPreviewHelper updateQuickLookPreviewAnimating:YES];
+	[quickLookPreviewHelper updatePreviewAnimating:YES];
 	
 #if DEBUG
 	NSLog(@"didClickViewForItemViewController %@", quickLookPreviewHelper);
