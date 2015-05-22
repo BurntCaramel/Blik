@@ -16,6 +16,7 @@
 #import "GLACollectedFilesSetting.h"
 #import "GLAFileInfoRetriever.h"
 #import "GLAFileOpenerApplicationFinder.h"
+#import "Blik-Swift.h"
 
 
 @interface GLAFileCollectionViewController : GLAViewController <NSTableViewDataSource, NSTableViewDelegate, NSMenuDelegate, GLAFileInfoRetrieverDelegate>
@@ -25,6 +26,9 @@
 @property(strong, nonatomic) IBOutlet NSMenuItem *addToHighlightsMenuItem;
 
 @property(nonatomic) IBOutlet NSStackView *sourceFilesStackView;
+
+@property(nonatomic) IBOutlet NSView *barHolderView;
+@property(nonatomic) IBOutlet FileCollectionBarViewController *barViewController;
 
 @property(strong, nonatomic) IBOutlet GLAPopUpButton *openerApplicationsPopUpButton;
 @property(strong, nonatomic) IBOutlet GLAButton *shareButton;

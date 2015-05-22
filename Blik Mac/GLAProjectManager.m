@@ -86,6 +86,8 @@
 
 #pragma mark Highlights
 
+- (GLAArrayEditor *)highlightsArrayEditorForProjectWithUUID:(NSUUID *)projectUUID createIfNeeded:(BOOL)create;
+
 - (BOOL)hasLoadedHighlightsForProject:(GLAProject *)project;
 - (void)loadHighlightsForProjectIfNeeded:(GLAProject *)project;
 - (GLAArrayEditor *)highlightsArrayEditorForProject:(GLAProject *)project createIfNeeded:(BOOL)create;
@@ -132,7 +134,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 - (void)nowProjectDidChange;
 
 - (void)collectionListForProjectDidChange:(GLAProject *)project;
-- (void)highlightsListForProjectDidChange:(GLAProject *)project;
+- (void)highlightsListForProjectWithUUIDDidChange:(NSUUID *)projectUUID;
 
 @end
 
@@ -620,15 +622,20 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	return (indexes.count) > 0;
 }
 
-- (void)editHighlightsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing>highlightsListEditor))block
+- (void)editHighlightsOfProjectWithUUID:(NSUUID *)projectUUID usingBlock:(void (^)(id<GLAArrayEditing>highlightsListEditor))block
 {
 	GLAProjectManagerStore *store = (self.store);
-	GLAArrayEditor *highlightsArrayEditor = [store highlightsArrayEditorForProject:project];
+	GLAArrayEditor *highlightsArrayEditor = [store highlightsArrayEditorForProjectWithUUID:projectUUID createIfNeeded:YES];
 	
 	GLAArrayEditorChanges *changes = [highlightsArrayEditor changesMadeInBlock:block];
 	if (changes.hasChanges) {
-		[self highlightsListForProjectDidChange:project];
+		[self highlightsListForProjectWithUUIDDidChange:projectUUID];
 	}
+}
+
+- (void)editHighlightsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing>highlightsListEditor))block
+{
+	[self editHighlightsOfProjectWithUUID:(project.UUID) usingBlock:block];
 }
 
 - (GLAHighlightedCollectedFile *)editHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile usingBlock:(void(^)(id<GLAHighlightedCollectedFileEditing>editor))editBlock
@@ -699,6 +706,24 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	return [(self.store) copyFilesListForCollection:filesListCollection];
 }
 
+/*
+- (BOOL)editFilesListOfCollectionWithUUID:(NSUUID *)filesListCollectionUUID inProjectWithUUID:(NSUUID *)projectUUID usingBlock:(void (^)(id<GLAArrayEditing> filesListEditor))block
+{
+	GLAProjectManagerStore *store = (self.store);
+	GLAArrayEditor *filesListArrayEditor = [store filesListArrayEditorForCollectionWithUUID:(filesListCollection.UUID)];
+	
+	GLAArrayEditorChanges *changes = [filesListArrayEditor changesMadeInBlock:block];
+	if (changes.hasChanges) {
+		GLAProject *project = [self projectWithUUID:(filesListCollection.projectUUID)];
+		[self removeHighlightedItemsWithCollectedFiles:(changes.removedChildren) fromProject:project];
+	}
+	
+	[self filesListForCollectionDidChange:filesListCollection didLoad:NO];
+	
+	return YES;
+}
+ */
+
 - (BOOL)editFilesListOfCollection:(GLACollection *)filesListCollection usingBlock:(void (^)(id<GLAArrayEditing> filesListEditor))block
 {
 	GLAProjectManagerStore *store = (self.store);
@@ -713,6 +738,14 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	[self filesListForCollectionDidChange:filesListCollection didLoad:NO];
 	
 	return YES;
+}
+
+- (NSArray *)filterFileURLs:(NSArray *)fileURLs notInFilesListCollectionWithUUID:(NSUUID *)filesListCollectionUUID
+{
+	GLAProjectManagerStore *store = (self.store);
+	GLAArrayEditor *filesListArrayEditor = [store filesListArrayEditorForCollectionWithUUID:filesListCollectionUUID];
+	
+	return [GLACollectedFile filteredFileURLs:fileURLs notAlreadyPresentInArrayInspector:filesListArrayEditor];
 }
 
 - (void)editFilesListOfCollection:(GLACollection *)filesListCollection insertingCollectedFiles:(NSArray *)collectedFiles atOptionalIndex:(NSUInteger)index
@@ -964,9 +997,9 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectCollectionsDidChangeNotification object:[self notificationObjectForProject:project]];
 }
 
-- (void)highlightsListForProjectDidChange:(GLAProject *)project
+- (void)highlightsListForProjectWithUUIDDidChange:(NSUUID *)projectUUID
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectHighlightsDidChangeNotification object:[self notificationObjectForProject:project]];
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectHighlightsDidChangeNotification object:[self notificationObjectForProjectUUID:projectUUID]];
 }
 
 - (void)collectionsWereDeleted:(NSArray *)collections
@@ -1829,14 +1862,13 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 #pragma mark Highlights
 
-- (GLAArrayEditor *)highlightsArrayEditorForProject:(GLAProject *)project createIfNeeded:(BOOL)create
+- (GLAArrayEditor *)highlightsArrayEditorForProjectWithUUID:(NSUUID *)projectUUID createIfNeeded:(BOOL)create
 {
 	NSMutableDictionary *projectIDsToHighlightsArrayEditors = (self.projectIDsToHighlightsArrayEditors);
 	if (projectIDsToHighlightsArrayEditors == nil) {
 		projectIDsToHighlightsArrayEditors = (self.projectIDsToHighlightsArrayEditors) = [NSMutableDictionary new];
 	}
 	
-	NSUUID *projectUUID = (project.UUID);
 	GLAArrayEditor *highlightsArrayEditor = projectIDsToHighlightsArrayEditors[projectUUID];
 	if (highlightsArrayEditor) {
 		return highlightsArrayEditor;
@@ -1852,6 +1884,11 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	projectIDsToHighlightsArrayEditors[projectUUID] = highlightsArrayEditor;
 	
 	return highlightsArrayEditor;
+}
+
+- (GLAArrayEditor *)highlightsArrayEditorForProject:(GLAProject *)project createIfNeeded:(BOOL)create
+{
+	return [self highlightsArrayEditorForProjectWithUUID:(project.UUID) createIfNeeded:create];
 }
 
 - (GLAArrayEditor *)highlightsArrayEditorForProject:(GLAProject *)project
@@ -1889,7 +1926,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 		__strong GLAProjectManagerStore *self = weakSelf;
 		if (self) {
 			[self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
-				[projectManager highlightsListForProjectDidChange:project];
+				[projectManager highlightsListForProjectWithUUIDDidChange:(project.UUID)];
 			}];
 		}
 		

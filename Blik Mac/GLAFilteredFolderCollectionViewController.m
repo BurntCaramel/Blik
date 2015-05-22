@@ -465,10 +465,8 @@
 
 - (void)updateOpenerApplicationsUIMenu
 {
-	NSMenu *menu = (self.openerApplicationsPopUpButton.menu);
-	
 	GLAFileOpenerApplicationFinder *openerApplicationCombiner = (self.openerApplicationCombiner);
-	[openerApplicationCombiner updateOpenerApplicationsMenu:menu target:self action:@selector(openWithChosenApplication:) preferredApplicationURL:nil forPopUpMenu:YES];
+	[openerApplicationCombiner updateOpenerApplicationsPullDownPopUpButton:(self.openerApplicationsPopUpButton) target:self action:@selector(openWithChosenApplication:) preferredApplicationURL:nil];
 }
 
 - (void)setNeedsToUpdateOpenerApplicationsUI
@@ -615,7 +613,7 @@
 	if (!quickLookPreviewHelper) {
 		(self.quickLookPreviewHelper) = quickLookPreviewHelper = [GLAQuickLookPreviewHelper new];
 		(quickLookPreviewHelper.delegate) = self;
-		(quickLookPreviewHelper.tableView) = (self.sourceFilesListTableView);
+		(quickLookPreviewHelper.sourceTableView) = (self.sourceFilesListTableView);
 		(quickLookPreviewHelper.previewHolderView) = (self.previewHolderView);
 		
 	}

@@ -29,12 +29,16 @@
 
 @property(nonatomic) BOOL doNotUpdateViews;
 
+@property(nonatomic) WindowFirstResponderAssistant *firstResponderAssistant;
+
 @property(nonatomic) GLACollectedFilesSetting *collectedFilesSetting;
 @property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
 @property(nonatomic) GLAFileOpenerApplicationFinder *openerApplicationCombiner;
 @property(nonatomic) BOOL openerApplicationsPopUpButtonNeedsUpdate;
 
-@property(nonatomic) NSArray *selectedURLs;
+@property(nonatomic) NSArray *sourceListSelectedURLs;
+
+@property(nonatomic) FileCollectionSelectionAssistant *selectionAssistant;
 
 @property(nonatomic) GLAQuickLookPreviewHelper *quickLookPreviewHelper;
 
@@ -43,6 +47,10 @@
 @property(nonatomic) NSMutableDictionary *collectedFileUUIDsToStackItemViewControllers;
 
 @property(nonatomic) NSSharingServicePicker *sharingServicePicker;
+
+@end
+
+@interface GLAFileCollectionViewController (FileCollectionSelectionSourcing) <FileCollectionSelectionSourcing, CollectedFileSelectionSourcing, GLAFolderContentsAssisting>
 
 @end
 
@@ -72,7 +80,9 @@
 
 - (void)prepareView
 {
+#if DEBUG
 	NSLog(@"FCVC prepareView");
+#endif
 	[super prepareView];
 	
 #if 1
@@ -122,18 +132,69 @@
 		[uiStyle prepareContentStackView:sourceFilesStackView];
 	}
 	
+	FileCollectionSelectionAssistant *selectionAssistant = [[FileCollectionSelectionAssistant alloc] initWithSource:self filesListCollectionUUID:(self.filesListCollection.UUID) projectUUID:(self.project.UUID) projectManager:(self.projectManager)];
 	
-	(self.openerApplicationsPopUpButton.menu.delegate) = self;
+	(self.selectionAssistant) = selectionAssistant;
 	
-	[(self.shareButton) sendActionOn:NSLeftMouseDownMask];
+	FileCollectionBarViewController *barViewController = [[FileCollectionBarViewController alloc] initWithNibName:@"FileCollectionBarViewController" bundle:nil];
+	(barViewController.selectionAssistant) = selectionAssistant;
+	(self.barViewController) = barViewController;
+	[self fillView:(self.barHolderView) withView:(barViewController.view)];
+	
+	
+	//(self.openerApplicationsPopUpButton.menu.delegate) = self;
+	
+	//[(self.shareButton) sendActionOn:NSLeftMouseDownMask];
 }
 
 - (void)didPrepareView
 {
-	[self updateSelectedFilesUIVisibilityAnimating:NO];
 	[self updateQuickLookPreviewAnimating:NO];
 	
 	[self reloadSourceFiles];
+}
+
+- (void)viewWillTransitionIn
+{
+	[super viewWillTransitionIn];
+	
+	(self.doNotUpdateViews) = NO;
+	[self reloadSourceFiles];
+}
+
+- (void)viewDidTransitionIn
+{
+	[self makeSourceFilesListFirstResponder];
+	
+	NSWindow *window = (self.view.window);
+	if (window) {
+		WindowFirstResponderAssistant *firstResponderAssistant = [[WindowFirstResponderAssistant alloc] initWithWindow:window];
+		__weak GLAFileCollectionViewController* weakSelf = self;
+		(firstResponderAssistant.firstResponderDidChange) = ^ {
+			__strong GLAFileCollectionViewController* self = weakSelf;
+			if (self) {
+				[(self.quickLookPreviewHelper) firstResponderDidChange];
+				[self updateSelectedURLs];
+			}
+		};
+		(self.firstResponderAssistant) = firstResponderAssistant;
+	}
+}
+
+- (void)viewWillTransitionOut
+{
+	[super viewWillTransitionOut];
+	
+	(self.doNotUpdateViews) = YES;
+	
+	GLAQuickLookPreviewHelper *quickLookPreviewHelper = (self.quickLookPreviewHelper);
+	if (quickLookPreviewHelper) {
+		[quickLookPreviewHelper deactivate];
+	}
+	
+	(self.firstResponderAssistant) = nil;
+	
+	[self stopAccessingAllSecurityScopedFileURLs];
 }
 
 - (GLAProjectManager *)projectManager
@@ -223,11 +284,6 @@
 	
 	
 	(self.fileInfoRetriever) = [[GLAFileInfoRetriever alloc] initWithDelegate:self defaultResourceKeysToRequest:@[NSURLLocalizedNameKey, NSURLEffectiveIconKey]];
-	
-	GLAFileOpenerApplicationFinder *openerApplicationCombiner = [GLAFileOpenerApplicationFinder new];
-	(self.openerApplicationCombiner) = openerApplicationCombiner;
-	
-	[nc addObserver:self selector:@selector(openerApplicationCombinerDidChangeNotification:) name:GLAFileURLOpenerApplicationCombinerDidChangeNotification object:openerApplicationCombiner];
 }
 
 - (void)stopObservingFileHelpers
@@ -342,7 +398,7 @@
 	//[(self.collectedFilesSetting) startAccessingCollectedFilesRemovingRemainders:collectedFiles];
 	
 	if (self.hasPreparedViews) {
-		NSArray *selectedURLs = (self.selectedURLs) ?: @[];
+		NSArray *selectedURLs = (self.sourceListSelectedURLs) ?: @[];
 		
 		NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
 		if (sourceFilesListTableView) {
@@ -369,7 +425,6 @@
 			[sourceFilesStackView setViews:stackItemViews inGravity:NSStackViewGravityTop];
 		}
 		
-		//[self updateSelectedFilesUIVisibilityAnimating:YES];
 		[self updateSelectedURLs];
 	}
 }
@@ -446,30 +501,6 @@
 	if (sourceFilesListTableView) {
 		[(sourceFilesListTableView.window) makeFirstResponder:sourceFilesListTableView];
 	}
-}
-
-- (void)viewWillTransitionIn
-{
-	[super viewWillTransitionIn];
-	
-	(self.doNotUpdateViews) = NO;
-	[self reloadSourceFiles];
-	
-	[self makeSourceFilesListFirstResponder];
-}
-
-- (void)viewWillTransitionOut
-{
-	[super viewWillTransitionOut];
-	
-	(self.doNotUpdateViews) = YES;
-	
-	GLAQuickLookPreviewHelper *quickLookPreviewHelper = (self.quickLookPreviewHelper);
-	if (quickLookPreviewHelper) {
-		[quickLookPreviewHelper deactivate];
-	}
-	
-	[self stopAccessingAllSecurityScopedFileURLs];
 }
 
 #pragma mark -
@@ -583,25 +614,50 @@
 
 - (void)updateSelectedURLs
 {
+#if DEBUG
+	NSLog(@"updateSelectedURLs");
+#endif
 	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
 	
 	if (sourceFilesListTableView) {
 		NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
-		(self.selectedURLs) = [self URLsForRowIndexes:selectedIndexes];
+		(self.sourceListSelectedURLs) = [self URLsForRowIndexes:selectedIndexes];
 	}
 	
-	//NSArray *selectedCollectedFiles = [self collectedFilesForRowIndexes:selectedIndexes];
-	//[(self.collectedFilesSetting) startAccessingCollectedFilesRemovingRemainders:selectedCollectedFiles];
-	
-	[self retrieveApplicationsToOpenSelection];
-	[self setNeedsToUpdateOpenerApplicationsUI];
-	
 	[self updateQuickLookPreviewAnimating:YES];
-	[self updateSelectedFilesUIVisibilityAnimating:YES];
+	
+	[(self.selectionAssistant) update];
+	[(self.barViewController) update];
+}
+
+- (NSArray *)firstResponderSelectedURLs
+{
+	NSArray *previewSelectedURLs = [(self.quickLookPreviewHelper) folderContentsSelectedURLsOnlyIfFirstResponder:YES];
+	
+	if (previewSelectedURLs) {
+		return previewSelectedURLs;
+	}
+	else {
+		return (self.sourceListSelectedURLs);
+	}
 }
 
 #if 0
-- (NSArray *)selectedURLs
+- (FileCollectionSelectionManualSource *)newSelectionSourceForCollectedFile:(GLACollectedFile *)collectedFile
+{
+	FileCollectionSelectionManualSource *source = [FileCollectionSelectionManualSource new];
+	
+	(source.selectedCollectedFiles) = @[collectedFile];
+	
+	GLAAccessedFileInfo *accessedFile = [(self.collectedFilesSetting) accessedFileInfoForCollectedFile:collectedFile];
+	(source.selectedFileURLs) = @[(accessedFile.filePathURL)];
+	
+	return source;
+}
+#endif
+
+#if 0
+- (NSArray *)sourceListSelectedURLs
 {
 	return [self URLsForRowIndexes:[self rowIndexesForActionFrom:nil]];
 }
@@ -609,50 +665,10 @@
 
 #pragma mark - UI Updating
 
-- (void)updateSelectedFilesUIVisibilityAnimating:(BOOL)animate
-{
-	GLAPopUpButton *popUpButton = (self.openerApplicationsPopUpButton);
-	GLAButton *addToHighlightsButton = (self.addToHighlightsButton);
-	GLAButton *shareButton = (self.shareButton);
-	
-	NSArray *views =
-	@[
-	  popUpButton,
-	  addToHighlightsButton,
-	  shareButton
-	  ];
-	
-	NSArray *selectedURLs = (self.selectedURLs);
-	BOOL hasNoURLs = (selectedURLs.count) == 0;
-	CGFloat alphaValue = hasNoURLs ? 0.0 : 1.0;
-	
-	if (animate) {
-		if (!hasNoURLs) {
-			[self updateAddToHighlightsUI];
-		}
-		
-		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-			(context.duration) = 3.0 / 16.0;
-			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-			
-			[[views valueForKey:@"animator"] setValue:@(alphaValue) forKey:@"alphaValue"];
-		} completionHandler:^{
-			if (hasNoURLs) {
-				[self updateAddToHighlightsUI];
-			}
-		}];
-	}
-	else {
-		[self updateAddToHighlightsUI];
-		
-		[views setValue:@(alphaValue) forKey:@"alphaValue"];
-	}
-}
-
-- (BOOL)collectedFilesAreAllHighlightedForActionFrom:(id)sender
+- (BOOL)collectedFilesAreAllHighlighted
 {
 	GLAProjectManager *pm = (self.projectManager);
-	NSArray *selectedCollectedFiles = [self collectedFilesForRowIndexes:[self rowIndexesForActionFrom:sender]];
+	NSArray *selectedCollectedFiles = [self collectedFilesForRowIndexes:[self rowIndexesForActionFrom:nil]];
 	BOOL isAllHighlighted = NO;
 	
 	if ((selectedCollectedFiles.count) > 0) {
@@ -675,6 +691,8 @@
 
 - (void)updateAddToHighlightsUI
 {
+	return;
+	
 	if (! self.hasProject) {
 		return;
 	}
@@ -690,7 +708,7 @@
 	
 	(button.enabled) = YES;
 	
-	BOOL selectionIsAllHighlighted = [self collectedFilesAreAllHighlightedForActionFrom:nil];
+	BOOL selectionIsAllHighlighted = [self collectedFilesAreAllHighlighted];
 	
 	// If all are already highlighted.
 	if (selectionIsAllHighlighted) {
@@ -722,7 +740,7 @@
 	
 	(menuItem.enabled) = YES;
 	
-	BOOL selectionIsAllHighlighted = [self collectedFilesAreAllHighlightedForActionFrom:menuItem];
+	BOOL selectionIsAllHighlighted = [self collectedFilesAreAllHighlighted];
 	
 	// If all are already highlighted.
 	if (selectionIsAllHighlighted) {
@@ -734,41 +752,6 @@
 		(menuItem.title) = NSLocalizedString(@"Add to Highlights", @"Title for 'Add to Highlights' menu item when the some of selected collected files are not yet in the highlights list.");
 		(menuItem.action) = @selector(addSelectedFilesToHighlights:);
 	}
-}
-
-- (void)updateOpenerApplicationsUIMenu
-{
-	NSMenu *menu = (self.openerApplicationsPopUpButton.menu);
-	
-	GLAFileOpenerApplicationFinder *openerApplicationCombiner = (self.openerApplicationCombiner);
-	[openerApplicationCombiner updateOpenerApplicationsMenu:menu target:self action:@selector(openWithChosenApplication:) preferredApplicationURL:nil forPopUpMenu:YES];
-}
-
-- (void)setNeedsToUpdateOpenerApplicationsUI
-{
-	if (self.openerApplicationsPopUpButtonNeedsUpdate) {
-		return;
-	}
-	
-	(self.openerApplicationsPopUpButtonNeedsUpdate) = YES;
-	
-	[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-		[self updateOpenerApplicationsUIMenu];
-		//[(self.openerApplicationsPopUpButton.menu) update];
-		
-		(self.openerApplicationsPopUpButtonNeedsUpdate) = NO;
-	}];
-}
-
-- (void)retrieveApplicationsToOpenSelection
-{
-	GLAFileOpenerApplicationFinder *openerApplicationCombiner = (self.openerApplicationCombiner);
-	(openerApplicationCombiner.fileURLs) = [NSSet setWithArray:(self.selectedURLs)];
-}
-
-- (void)openerApplicationCombinerDidChangeNotification:(NSNotification *)note
-{
-	[self updateOpenerApplicationsUIMenu];
 }
 
 #pragma mark - Actions
@@ -828,7 +811,7 @@
 
 - (IBAction)revealSelectedFilesInFinder:(id)sender
 {
-	NSArray *URLs = (self.selectedURLs);
+	NSArray *URLs = (self.sourceListSelectedURLs);
 	if (URLs && URLs.count > 0) {
 		[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:URLs];
 	}
@@ -932,7 +915,7 @@
 
 - (IBAction)showShareMenuForSelectedFiles:(GLAButton *)sender
 {
-	NSArray *selectedURLs = (self.selectedURLs);
+	NSArray *selectedURLs = (self.sourceListSelectedURLs);
 	//NSArray *sharingServices = [NSSharingService sharingServicesForItems:(self.selectedURLs)];
 	
 	NSSharingServicePicker *picker = [[NSSharingServicePicker alloc] initWithItems:selectedURLs];
@@ -976,7 +959,7 @@
 
 - (NSArray *)selectedURLsForQuickLookPreviewHelper:(GLAQuickLookPreviewHelper *)helper
 {
-	return (self.selectedURLs);
+	return (self.sourceListSelectedURLs);
 }
 
 - (NSInteger)quickLookPreviewHelper:(GLAQuickLookPreviewHelper *)helper tableRowForSelectedURL:(NSURL *)fileURL
@@ -996,8 +979,9 @@
 	if (!quickLookPreviewHelper) {
 		(self.quickLookPreviewHelper) = quickLookPreviewHelper = [GLAQuickLookPreviewHelper new];
 		(quickLookPreviewHelper.delegate) = self;
-		(quickLookPreviewHelper.tableView) = (self.sourceFilesListTableView);
+		(quickLookPreviewHelper.sourceTableView) = (self.sourceFilesListTableView);
 		(quickLookPreviewHelper.previewHolderView) = (self.previewHolderView);
+		(quickLookPreviewHelper.folderContentsAssistant) = self;
 		
 	}
 	
@@ -1006,9 +990,6 @@
 
 - (BOOL)acceptsPreviewPanelControl:(QLPreviewPanel *)panel
 {
-#if DEBUG
-	NSLog(@"gg acceptsPreviewPanelControl");
-#endif
 	return YES;
 }
 
@@ -1223,6 +1204,9 @@
 	GLACollectedFile *collectedFile = (note.userInfo)[GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedFile];
 	
 	NSUInteger index = [(self.collectedFiles) indexOfObject:collectedFile];
+	if (index == NSNotFound) {
+		return;
+	}
 	
 	NSTableView *sourceFilesListTableView = (self.sourceFilesListTableView);
 	if (sourceFilesListTableView) {
@@ -1283,7 +1267,7 @@
 		return;
 	}
 	
-	(self.selectedURLs) = @[fileURL];
+	(self.sourceListSelectedURLs) = @[fileURL];
 	
 	//[self updateQuickLookPreviewAnimating:YES];
 	
@@ -1367,6 +1351,62 @@
 	}
 	
 	return YES;
+}
+
+@end
+
+
+@implementation GLAFileCollectionViewController (FileCollectionSelectionSourcing)
+
+- (NSArray * __nonnull)selectedFileURLs
+{
+	return (self.firstResponderSelectedURLs);
+}
+
+- (id<CollectedFileSelectionSourcing>)collectedFileSource
+{
+	return self;
+}
+
+- (NSArray *)selectedCollectedFiles
+{
+	if (self.quickLookPreviewHelper.folderContentsIsFirstResponder) {
+		return nil;
+	}
+	else {
+		return [self collectedFilesForRowIndexes:[self rowIndexesForActionFrom:nil]];
+	}
+}
+
+- (BOOL)isReadyToHighlight
+{
+	return (self.selectionAssistant.isReadyToHighlight);
+}
+
+#pragma mark -
+
+- (void)folderContentsSelectionDidChange
+{
+#if DEBUG
+	NSLog(@"folderContentsSelectionDidChange");
+#endif
+	[(self.selectionAssistant) update];
+	[(self.barViewController) update];
+}
+
+- (BOOL)fileURLsAreAllCollected:(NSArray *)fileURLs
+{
+	return [(self.projectManager) filesAreAllCollected:fileURLs inFilesListCollectionWithUUID:(self.filesListCollection.UUID)];
+}
+
+- (void)addFileURLsToCollection:(NSArray *)fileURLs
+{
+	[(self.projectManager) addFiles:fileURLs toFilesListCollectionWithUUID:(self.filesListCollection.UUID) projectUUID:(self.project.UUID)];
+}
+
+- (void)removeFileURLsFromCollection:(NSArray *)fileURLs
+{
+	[(self.projectManager) removeFiles:fileURLs fromFilesListCollectionWithUUID:(self.filesListCollection.UUID) projectUUID:(self.project.UUID)];
 }
 
 @end

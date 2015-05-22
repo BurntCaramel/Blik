@@ -19,6 +19,8 @@
 + (NSArray *)collectedFilesWithFileURLs:(NSArray *)fileURLs;
 + (NSArray *)filePathsURLsForCollectedFiles:(NSArray *)collectedFiles ignoreMissing:(BOOL)ignoreMissing;
 
+
++ (NSArray *)filteredFileURLs:(NSArray *)fileURLs notAlreadyPresentInArrayInspector:(id<GLAArrayInspecting>)inspectableArray;
 + (NSArray *)filteredCollectedFiles:(NSArray *)collectedFiles notAlreadyPresentInArrayInspector:(id<GLAArrayInspecting>)inspectableArray;
 
 

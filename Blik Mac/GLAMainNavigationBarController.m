@@ -8,6 +8,7 @@
 
 #import "GLAMainNavigationBarController.h"
 @import QuartzCore;
+#import "NSViewController+PGWSConstraintConvenience.h"
 #import "GLAButton.h"
 #import "GLAUIStyle.h"
 #import "GLAProjectManager.h"

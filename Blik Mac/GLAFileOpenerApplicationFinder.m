@@ -329,7 +329,7 @@ NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileUR
 	return menuItem;
 }
 
-- (void)updateOpenerApplicationsMenu:(NSMenu *)menu target:(id)target action:(SEL)action preferredApplicationURL:(NSURL *)preferredApplicationURL forPopUpMenu:(BOOL)forPopUpMenu
+- (void)updateOpenerApplicationsMenu:(NSMenu *)menu target:(id)target action:(SEL)action preferredApplicationURL:(NSURL * __nullable)preferredApplicationURL forPullDownPopUpMenu:(BOOL)forPullDownPopUpMenu
 {
 	NSSet *combinedOpenerApplicationURLs = (self.combinedOpenerApplicationURLs);
 	NSURL *combinedDefaultOpenerApplicationURL = (self.combinedDefaultOpenerApplicationURL);
@@ -412,7 +412,7 @@ NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileUR
 		[menu addItem:menuItem];
 	}
 	
-	if (forPopUpMenu) {
+	if (forPullDownPopUpMenu) {
 		// Duplicate the first item, so it appears as the button's content.
 		NSMenuItem *firstItem = (menu.itemArray)[0];
 		if (firstItem) {
@@ -423,12 +423,17 @@ NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileUR
 	}
 }
 
-- (void)updateOpenerApplicationsMenu:(NSMenu *)menu target:(id)target action:(SEL)action preferredApplicationURL:(NSURL *)preferredApplicationURL
+- (void)updateOpenerApplicationsPullDownPopUpButton:(NSPopUpButton *)popUpButton target:(id)target action:(SEL)action preferredApplicationURL:(NSURL * __nullable)preferredApplicationURL
 {
-	[self updateOpenerApplicationsMenu:menu target:target action:action preferredApplicationURL:preferredApplicationURL forPopUpMenu:NO];
+	[self updateOpenerApplicationsMenu:popUpButton.menu target:target action:action preferredApplicationURL:preferredApplicationURL forPullDownPopUpMenu:YES];
 }
 
-- (void)updatePreferredOpenerApplicationsChoiceMenu:(NSMenu *)menu target:(id)target action:(SEL)action chosenPreferredApplicationURL:(NSURL *)preferredApplicationURL
+- (void)updateOpenerApplicationsMenu:(NSMenu *)menu target:(id)target action:(SEL)action preferredApplicationURL:(NSURL * __nullable)preferredApplicationURL
+{
+	[self updateOpenerApplicationsMenu:menu target:target action:action preferredApplicationURL:preferredApplicationURL forPullDownPopUpMenu:NO];
+}
+
+- (void)updatePreferredOpenerApplicationsChoiceMenu:(NSMenu *)menu target:(id)target action:(SEL)action chosenPreferredApplicationURL:(NSURL * __nullable)preferredApplicationURL
 {
 	NSSet *combinedOpenerApplicationURLs = (self.combinedOpenerApplicationURLs);
 	NSURL *combinedDefaultOpenerApplicationURL = (self.combinedDefaultOpenerApplicationURL);

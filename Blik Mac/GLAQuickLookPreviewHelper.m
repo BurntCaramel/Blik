@@ -7,11 +7,14 @@
 //
 
 #import "GLAQuickLookPreviewHelper.h"
+#import "Blik-Swift.h"
 
 
-@interface GLAQuickLookPreviewHelper () <QLPreviewPanelDataSource, QLPreviewPanelDelegate>
+@interface GLAQuickLookPreviewHelper () <QLPreviewPanelDataSource, QLPreviewPanelDelegate, GLAFolderContentsAssisting>
 
 @property(nonatomic) QLPreviewPanel *activeQuickLookPreviewPanel;
+
+@property(nonatomic) GLACollectedFolderContentsViewController *folderContentsViewController;
 
 @property(readwrite, nonatomic) NSURL *activeURL;
 @property(nonatomic) BOOL previewingDirectory;
@@ -34,49 +37,10 @@
 	(self.previewHolderViewController) = previewHolderViewController;
 }
 
-- (void)setTableView:(NSTableView *)tableView
-{
-	_tableView = tableView;
-	
-	[self startObservingWindowOfTable];
-}
-
-- (void)startObservingWindowOfTable
-{
-	NSTableView *tableView = (self.tableView);
-	if (!tableView) {
-		return;
-	}
-	
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	NSWindow *window = (tableView.window);
-	[nc addObserver:self selector:@selector(windowDidUpdate:) name:NSWindowDidUpdateNotification object:window];
-}
-
-- (void)stopObservingWindowOfTable
-{
-	NSTableView *tableView = (self.tableView);
-	if (!tableView) {
-		return;
-	}
-	
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	NSWindow *window = (tableView.window);
-	[nc removeObserver:self name:nil object:window];
-}
-
-- (void)windowDidUpdate:(NSNotification *)notification
+- (void)firstResponderDidChange
 {
 	QLPreviewPanel *activeQuickLookPreviewPanel = (self.activeQuickLookPreviewPanel);
 	if (activeQuickLookPreviewPanel) {
-		NSWindow *window = (notification.object);
-		NSResponder *firstResponder = (window.firstResponder);
-		if ((self.previousFirstResponder) == firstResponder) {
-			return;
-		}
-		
-		(self.previousFirstResponder) = firstResponder;
-		
 		[activeQuickLookPreviewPanel updateController];
 	}
 }
@@ -98,8 +62,6 @@
 	if (quickLookPreviewView && (quickLookPreviewView.previewItem) != nil) {
 		[quickLookPreviewView close];
 	}
-	
-	[self stopObservingWindowOfTable];
 }
 
 - (void)dealloc
@@ -199,6 +161,30 @@
 	}
 }
 
+- (BOOL)folderContentsIsFirstResponder
+{
+	if (self.previewingDirectory) {
+		GLACollectedFolderContentsViewController *folderContentsViewController = (self.folderContentsViewController);
+		if (folderContentsViewController.hasFirstResponder) {
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
+- (NSArray * __nullable)folderContentsSelectedURLsOnlyIfFirstResponder:(BOOL)onlyIfFirstResponder;
+{
+	if (self.previewingDirectory) {
+		GLACollectedFolderContentsViewController *folderContentsViewController = (self.folderContentsViewController);
+		if (folderContentsViewController.hasFirstResponder) {
+			return (folderContentsViewController.selectedURLs);
+		}
+	}
+	
+	return nil;
+}
+
 - (void)fadePreviewView:(NSView *)view fadeIn:(BOOL)fadeInNotOut animating:(BOOL)animate updateBlock:(dispatch_block_t)updateBlock
 {
 	if (!(view.superview)) {
@@ -291,7 +277,7 @@
 #endif
 }
 
-- (void)updateFolderContentsViewAnimation:(BOOL)animate
+- (void)updateFolderContentsViewAnimating:(BOOL)animate
 {
 	NSURL *URL = (self.activeURLForDirectoryPreviewing);
 	
@@ -301,7 +287,8 @@
 			return;
 		}
 		
-		folderContentsViewController = [[GLACollectedFolderContentsViewController alloc] initWithNibName:nil bundle:nil];
+		folderContentsViewController = [GLACollectedFolderContentsViewController new];
+		(folderContentsViewController.assistant) = self;
 		(self.folderContentsViewController) = folderContentsViewController;
 	}
 	
@@ -380,26 +367,60 @@
 					BOOL previewingDirectory = (isDirectory && !isPackage);
 					(self.previewingDirectory) = previewingDirectory;
 					
-					[self updateFolderContentsViewAnimation:animate];
+					[self updateFolderContentsViewAnimating:animate];
 					[self updateQuickLookPreviewViewAnimating:animate];
 				}];
 			}
 			else {
 				(self.activeURL) = nil;
 				[self updateQuickLookPreviewViewAnimating:animate];
-				[self updateFolderContentsViewAnimation:animate];
+				[self updateFolderContentsViewAnimating:animate];
 			}
 		});
 	}
 	else {
 		[self updateQuickLookPreviewViewAnimating:animate];
-		[self updateFolderContentsViewAnimation:animate];
+		[self updateFolderContentsViewAnimating:animate];
 	}
 }
 
 #pragma mark -
 
-#pragma mark QuickLook
+- (void)folderContentsSelectionDidChange
+{
+	id<GLAFolderContentsAssisting> folderContentsAssistant = (self.folderContentsAssistant);
+	if (folderContentsAssistant) {
+		[folderContentsAssistant folderContentsSelectionDidChange];
+	}
+}
+
+- (BOOL)fileURLsAreAllCollected:(NSArray * __nonnull)fileURLs
+{
+	id<GLAFolderContentsAssisting> folderContentsAssistant = (self.folderContentsAssistant);
+	if (folderContentsAssistant) {
+		return [folderContentsAssistant fileURLsAreAllCollected:fileURLs];
+	}
+	
+	return NO;
+}
+
+- (void)addFileURLsToCollection:(NSArray * __nonnull)fileURLs
+{
+	id<GLAFolderContentsAssisting> folderContentsAssistant = (self.folderContentsAssistant);
+	if (folderContentsAssistant) {
+		[folderContentsAssistant addFileURLsToCollection:fileURLs];
+	}
+}
+
+- (void)removeFileURLsFromCollection:(NSArray * __nonnull)fileURLs
+{
+	id<GLAFolderContentsAssisting> folderContentsAssistant = (self.folderContentsAssistant);
+	if (folderContentsAssistant) {
+		[folderContentsAssistant removeFileURLsFromCollection:fileURLs];
+	}
+}
+
+#pragma mark - QuickLook
 
 - (BOOL)acceptsPreviewPanelControl:(QLPreviewPanel *)panel
 {
@@ -484,7 +505,7 @@
 - (BOOL)previewPanel:(QLPreviewPanel *)panel handleEvent:(NSEvent *)event
 {
 	if ((event.type) == NSKeyDown) {
-		[(self.tableView) keyDown:event];
+		[(self.sourceTableView) keyDown:event];
 		return YES;
 	}
 	
@@ -498,7 +519,7 @@
 		return NSZeroRect;
 	}
 	
-	NSTableView *tableView = (self.tableView);
+	NSTableView *tableView = (self.sourceTableView);
 #if 1
 	NSTableCellView *cellView = [tableView viewAtColumn:0 row:rowIndex makeIfNecessary:YES];
 	NSImageView *imageView = (cellView.imageView);
@@ -519,7 +540,7 @@
 		return nil;
 	}
 	
-	NSTableView *tableView = (self.tableView);
+	NSTableView *tableView = (self.sourceTableView);
 	NSTableCellView *cellView = [tableView viewAtColumn:0 row:rowIndex makeIfNecessary:YES];
 	NSImageView *imageView = (cellView.imageView);
 	

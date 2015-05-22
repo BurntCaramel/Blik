@@ -8,12 +8,13 @@
 
 @import Cocoa;
 @import QuartzCore;
-
-
-typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint *oldConstraint, NSLayoutConstraint *newConstraint);
+#import "NSViewController+PGWSConstraintConvenience.h"
 
 
 @interface GLAViewController : NSViewController
+
++ (NSString *)defaultNibName;
+- (instancetype)init;
 
 - (void)prepareViewIfNeeded;
 @property(nonatomic) BOOL hasPreparedViews;
@@ -22,6 +23,7 @@ typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint
 
 - (void)prepareView; // Like 10.10's -viewDidLoad method.
 - (void)didPrepareView; // Set up that requires hasPreparedViews to be set.
+- (void)didInsertView; // For when the view hierarchy or window is needed.
 
 - (void)insertIntoResponderChain;
 
@@ -48,25 +50,6 @@ typedef void (^GLAViewControllerConstraintReplacementVisitor)(NSLayoutConstraint
 
 - (void)updateConstraintsWithAnimatedDuration:(NSTimeInterval)duration;
 - (void)updateConstraintsNow;
-
-- (NSLayoutConstraint *)layoutConstraintWithIdentifier:(NSString *)constraintIdentifier;
-
-+ (NSString *)layoutConstraintIdentifierWithBaseIdentifier:(NSString *)baseIdentifier forChildView:(NSView *)innerView;
-- (NSLayoutConstraint *)layoutConstraintWithIdentifier:(NSString *)baseIdentifier forChildView:(NSView *)innerView;
-
-
-- (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier priority:(NSLayoutPriority)priority;
-
-- (NSLayoutConstraint *)addLayoutConstraintToMatchAttribute:(NSLayoutAttribute)attribute withChildView:(NSView *)innerView identifier:(NSString *)identifier;
-
-- (void)fillViewWithChildView:(NSView *)innerView;
-
-
-- (NSArray *)allLayoutConstraintsUsingChildView:(NSView *)innerView;
-
-+ (NSArray *)copyLayoutConstraints:(NSArray *)oldConstraints replacingUsesOf:(id)originalItem with:(id)replacementItem constraintVisitor:(GLAViewControllerConstraintReplacementVisitor)constraintVisitor;
-
-- (void)wrapChildViewKeepingOutsideConstraints:(NSView *)childView withView:(NSView *)replacementView constraintVisitor:(GLAViewControllerConstraintReplacementVisitor)constraintVisitor;
 
 #pragma mark Colors
 

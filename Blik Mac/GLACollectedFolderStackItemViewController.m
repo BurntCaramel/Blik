@@ -11,7 +11,8 @@
 #import "GLACollectedFolderStackItemViewController.h"
 #import "GLAUIStyle.h"
 #import "GLACollectedFilePreviewView.h"
-#import "GLACollectedFolderContentsViewController.h"
+#import "Blik-Swift.h"
+//#import "GLACollectedFolderContentsViewController.h"
 
 
 @interface GLACollectedFolderStackItemViewController () <GLACollectedItemContentHolderViewDelegate>

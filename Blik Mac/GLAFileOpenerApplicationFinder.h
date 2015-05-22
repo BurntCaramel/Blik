@@ -8,6 +8,7 @@
 
 @import Cocoa;
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface GLAFileOpenerApplicationFinder : NSObject
 
@@ -23,8 +24,8 @@
 
 #pragma mark -
 
-+ (void)openFileURLs:(NSArray *)fileURLs withApplicationURL:(NSURL *)applicationURL;
-+ (void)openFileURLs:(NSArray *)fileURLs withApplicationURL:(NSURL *)applicationURL useSecurityScope:(BOOL)useSecurityScope;
++ (void)openFileURLs:(NSArray *)fileURLs withApplicationURL:(NSURL * __nullable)applicationURL;
++ (void)openFileURLs:(NSArray *)fileURLs withApplicationURL:(NSURL * __nullable)applicationURL useSecurityScope:(BOOL)useSecurityScope;
 
 - (void)openFileURLsUsingDefaultApplications;
 
@@ -35,10 +36,10 @@ extern NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification;
 
 @interface GLAFileOpenerApplicationFinder (MenuAdditions)
 
-- (void)updateOpenerApplicationsMenu:(NSMenu *)menu target:(id)target action:(SEL)action preferredApplicationURL:(NSURL *)preferredApplicationURL forPopUpMenu:(BOOL)forPopUpMenu;
-- (void)updateOpenerApplicationsMenu:(NSMenu *)menu target:(id)target action:(SEL)action preferredApplicationURL:(NSURL *)preferredApplicationURL;
+- (void)updateOpenerApplicationsMenu:(NSMenu *)menu target:(id)target action:(SEL)action preferredApplicationURL:(NSURL * __nullable)preferredApplicationURL;
+- (void)updateOpenerApplicationsPullDownPopUpButton:(NSPopUpButton *)popUpButton target:(id)target action:(SEL)action preferredApplicationURL:(NSURL * __nullable)preferredApplicationURL;
 
-- (void)updatePreferredOpenerApplicationsChoiceMenu:(NSMenu *)menu target:(id)target action:(SEL)action chosenPreferredApplicationURL:(NSURL *)preferredApplicationURL;
+- (void)updatePreferredOpenerApplicationsChoiceMenu:(NSMenu *)menu target:(id)target action:(SEL)action chosenPreferredApplicationURL:(NSURL * __nullable)preferredApplicationURL;
 
 - (NSMenuItem *)newMenuItemForApplicationURL:(NSURL *)applicationURL target:(id)target action:(SEL)action;
 
@@ -47,3 +48,5 @@ extern NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification;
 - (void)openFileURLsUsingChosenOpenerApplicationPopUpButton:(NSPopUpButton *)popUpButton;
 
 @end
+
+NS_ASSUME_NONNULL_END

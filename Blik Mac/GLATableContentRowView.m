@@ -21,7 +21,7 @@
 	GLAUIStyle *activeStyle = [GLAUIStyle activeStyle];
 	NSColor *selectionColor = (activeStyle.contentTableSelectionColor);
 	
-	NSView *firstResponder = (self.window.firstResponder);
+	NSView *firstResponder = (id)(self.window.firstResponder);
 	if ([firstResponder isKindOfClass:[NSView class]]) {
 		if (![self isDescendantOf:firstResponder]) {
 			selectionColor = (activeStyle.contentTableSelectionInactiveColor);

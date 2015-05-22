@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0610"
+   LastUpgradeVersion = "0630"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F8CFE275FFA22D37A6491EEE"
-               BuildableName = "libPods-BlikTests.a"
-               BlueprintName = "Pods-BlikTests"
-               ReferencedContainer = "container:Pods.xcodeproj">
+               BlueprintIdentifier = "B20DB2BE1B0C8ACA00E57532"
+               BuildableName = "Blik copy.app"
+               BlueprintName = "Blik Trial"
+               ReferencedContainer = "container:Blik.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -29,6 +29,15 @@
       buildConfiguration = "Debug">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "B20DB2BE1B0C8ACA00E57532"
+            BuildableName = "Blik copy.app"
+            BlueprintName = "Blik Trial"
+            ReferencedContainer = "container:Blik.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
@@ -39,15 +48,16 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F8CFE275FFA22D37A6491EEE"
-            BuildableName = "libPods-BlikTests.a"
-            BlueprintName = "Pods-BlikTests"
-            ReferencedContainer = "container:Pods.xcodeproj">
+            BlueprintIdentifier = "B20DB2BE1B0C8ACA00E57532"
+            BuildableName = "Blik copy.app"
+            BlueprintName = "Blik Trial"
+            ReferencedContainer = "container:Blik.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -57,15 +67,16 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F8CFE275FFA22D37A6491EEE"
-            BuildableName = "libPods-BlikTests.a"
-            BlueprintName = "Pods-BlikTests"
-            ReferencedContainer = "container:Pods.xcodeproj">
+            BlueprintIdentifier = "B20DB2BE1B0C8ACA00E57532"
+            BuildableName = "Blik copy.app"
+            BlueprintName = "Blik Trial"
+            ReferencedContainer = "container:Blik.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

@@ -8,7 +8,6 @@
 
 import Cocoa
 import XCTest
-//import GLACollection
 
 
 class GLATestCollections: XCTestCase {
@@ -27,7 +26,7 @@ class GLATestCollections: XCTestCase {
 	
 	func newCollection(name: String = "Test collection") -> GLACollection
 	{
-		let collection = GLACollection(type: GLACollectionTypeFilesList) { (editor) -> Void in
+		let collection = GLACollection(type: GLACollectionTypeFilesList) { editor in
 			editor.projectUUID = NSUUID()
 			editor.name = name
 		}
@@ -77,6 +76,10 @@ class GLATestCollections: XCTestCase {
 		
 		let isValidJSON = NSJSONSerialization.isValidJSONObject(JSONDictionary)
 		XCTAssertTrue(isValidJSON, "JSON dictionary is valid")
+		
+		var error: NSError?
+		let recreatedCollectedFile = MTLJSONAdapter.modelOfClass(GLACollectedFile.self, fromJSONDictionary: JSONDictionary, error: &error) as? GLACollectedFile
+		XCTAssertNotNil(recreatedCollectedFile, "Recreated collected file")
 	}
 	
 	func testCreateHighlightedCollectedItem()

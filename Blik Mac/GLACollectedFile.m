@@ -72,6 +72,24 @@
 	return URLs;
 }
 
++ (NSArray *)filteredFileURLs:(NSArray *)fileURLs notAlreadyPresentInArrayInspector:(id<GLAArrayInspecting>)inspectableArray
+{
+	return [inspectableArray filterArray:fileURLs whoseResultFromVisitorIsNotAlreadyPresent:^id(id child) {
+		if ([child isKindOfClass:[GLACollectedFile class]]) {
+			GLACollectedFile *collectedFile = child;
+			return ([collectedFile accessFile].filePathURL.path);
+		}
+		else if ([child isKindOfClass:[NSURL class]]) {
+			NSURL *fileURL = child;
+			return (fileURL.path);
+		}
+		else {
+			NSAssert(0, @"Must be GLACollectedFile or NSURL");
+			return nil;
+		}
+	}];
+}
+
 + (NSArray *)filteredCollectedFiles:(NSArray *)collectedFiles notAlreadyPresentInArrayInspector:(id<GLAArrayInspecting>)inspectableArray
 {
 	return [inspectableArray filterArray:collectedFiles whoseResultFromVisitorIsNotAlreadyPresent:^id(GLACollectedFile *child) {

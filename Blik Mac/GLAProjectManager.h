@@ -12,6 +12,7 @@
 #import "GLAFolderQuery.h"
 #import "GLAHighlightedItem.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface GLAProjectManager : NSObject
 
@@ -35,7 +36,7 @@
 // All of these may be nil until they are loaded.
 // Use the notifications below to react to when they are ready.
 - (NSArray *)copyAllProjects;
-- (GLAProject *)projectWithUUID:(NSUUID *)projectUUID;
+- (GLAProject * __nullable)projectWithUUID:(NSUUID *)projectUUID;
 
 - (BOOL)editAllProjectsUsingBlock:(void (^)(id<GLAArrayEditing> allProjectsEditor))block;
 
@@ -53,7 +54,7 @@
 
 - (void)loadNowProjectIfNeeded;
 
-@property(readonly, copy, nonatomic) GLAProject *nowProject;
+@property(readonly, copy, nonatomic) GLAProject * __nullable nowProject;
 
 - (void)changeNowProject:(GLAProject *)project;
 
@@ -75,7 +76,7 @@
 - (void)loadCollectionsForProjectIfNeeded:(GLAProject *)project;
 - (NSArray *)copyCollectionsForProject:(GLAProject *)project;
 
-- (GLACollection *)collectionWithUUID:(NSUUID *)collectionUUID inProjectWithUUID:(NSUUID *)projectUUID;
+- (GLACollection * __nullable)collectionWithUUID:(NSUUID *)collectionUUID inProjectWithUUID:(NSUUID *)projectUUID;
 
 - (BOOL)editCollectionsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionListEditor))block;
 
@@ -100,8 +101,8 @@
 - (BOOL)highlightsOfProject:(GLAProject *)project containsCollectedFile:(GLACollectedFile *)collectedFile;
 - (NSArray *)filterCollectedFiles:(NSArray *)collectedFiles notInHighlightsOfProject:(GLAProject *)project;
 
+- (void)editHighlightsOfProjectWithUUID:(NSUUID *)projectUUID usingBlock:(void (^)(id<GLAArrayEditing> highlightsEditor))block;
 - (void)editHighlightsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> highlightsEditor))block;
-//- (NSOperation *)operationIfNotLoadedToEditHighlightsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> highlightsEditor))block;
 
 - (GLAHighlightedCollectedFile *)editHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile usingBlock:(void(^)(id<GLAHighlightedCollectedFileEditing>editor))editBlock;
 
@@ -112,6 +113,9 @@
 
 - (NSArray *)copyFilesListForCollection:(GLACollection *)filesListCollection;
 
+- (NSArray *)filterFileURLs:(NSArray *)fileURLs notInFilesListCollectionWithUUID:(NSUUID *)filesListCollectionUUID;
+
+//- (BOOL)editFilesListOfCollectionWithUUID:(NSUUID *)filesListCollectionUUID inProjectWithUUID:(NSUUID *)projectUUID usingBlock:(void (^)(id<GLAArrayEditing> filesListEditor))block;
 - (BOOL)editFilesListOfCollection:(GLACollection *)filesListCollection usingBlock:(void (^)(id<GLAArrayEditing> filesListEditor))block;
 - (void)editFilesListOfCollection:(GLACollection *)filesListCollection insertingCollectedFiles:(NSArray *)collectedFiles atOptionalIndex:(NSUInteger)index;
 
@@ -134,10 +138,10 @@
 
 #pragma mark Notifications
 
-- (id)notificationObjectForProject:(GLAProject *)project;
 - (id)notificationObjectForProjectUUID:(NSUUID *)projectUUID;
-- (id)notificationObjectForCollection:(GLACollection *)collection;
+- (id)notificationObjectForProject:(GLAProject *)project;
 - (id)notificationObjectForCollectionUUID:(NSUUID *)collectionUUID;
+- (id)notificationObjectForCollection:(GLACollection *)collection;
 
 //- (void)addObserver:(id)observer selector:(SEL)aSelector name:(NSString *)aName project:(GLAProject *)project;
 
@@ -170,3 +174,5 @@ extern NSString *GLANotificationUserInfoCollectionKey;
 //extern NSString *GLAProjectManagerProjectRemindersDidChangeNotification;
 
 //extern NSString *GLAProjectManagerNotificationChangedPropertiesKey;
+
+NS_ASSUME_NONNULL_END

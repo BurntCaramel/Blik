@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="FileCollectionBarViewController">
+            <connections>
+                <outlet property="addToHighlightsButton" destination="yqV-pi-VcM" id="yzU-Q7-bw4"/>
+                <outlet property="openInApplicationPopUpButton" destination="C56-6A-MIM" id="dfw-0v-bSi"/>
+                <outlet property="shareButton" destination="38D-Mw-1zB" id="J27-q4-v0R"/>
+                <outlet property="view" destination="a0V-fO-uPq" id="A9D-FT-pAx"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="a0V-fO-uPq">
+            <rect key="frame" x="0.0" y="0.0" width="299" height="40"/>
+            <subviews>
+                <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="C56-6A-MIM" customClass="GLAPopUpButton">
+                    <rect key="frame" x="8" y="8" width="100" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="100" id="Cya-Lc-syA"/>
+                        <constraint firstAttribute="height" constant="24" id="uOl-C6-z0Z"/>
+                    </constraints>
+                    <popUpButtonCell key="cell" type="roundTextured" title="Open in" bezelStyle="texturedRounded" alignment="left" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="qob-Cy-kyV" id="5Vs-ru-HiZ" customClass="GLAPopUpButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                        <menu key="menu" id="IuY-W2-ZrW">
+                            <items>
+                                <menuItem title="Open in" state="on" hidden="YES" id="qob-Cy-kyV"/>
+                                <menuItem title="Item 2" id="k7g-Fp-yeQ"/>
+                                <menuItem title="Item 3" id="Upm-xT-duI"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                            <integer key="value" value="4"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="-1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                            <integer key="value" value="4"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="openSelectedFilesInChosenApplication:" target="-2" id="aW9-bF-ZKo"/>
+                    </connections>
+                </popUpButton>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="yqV-pi-VcM" customClass="GLAButton">
+                    <rect key="frame" x="183" y="0.0" width="116" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="Zkv-ff-fEQ"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="Add to Highlights" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LhL-Bu-zZg" customClass="GLAButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="-1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetYAmount">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="addSelectedFilesToHighlights:" target="-2" id="AtP-jx-4Wy"/>
+                    </connections>
+                </button>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="38D-Mw-1zB" customClass="GLAButton">
+                    <rect key="frame" x="108" y="0.0" width="17" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="n6e-Az-3O9"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="Share" bezelStyle="shadowlessSquare" image="NSShareTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="3su-Q4-iGH" customClass="GLAButtonCell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" size="13" name="AvenirNext-Medium"/>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                            <integer key="value" value="0"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                            <integer key="value" value="4"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetYAmount">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                            <integer key="value" value="13"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                            <integer key="value" value="13"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="showShareMenuForSelectedFiles:" target="-2" id="ejS-4R-St7"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="yqV-pi-VcM" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="38D-Mw-1zB" secondAttribute="trailing" id="DXo-zx-7AT"/>
+                <constraint firstItem="yqV-pi-VcM" firstAttribute="top" secondItem="a0V-fO-uPq" secondAttribute="top" id="HDY-fF-G0D"/>
+                <constraint firstItem="38D-Mw-1zB" firstAttribute="top" secondItem="a0V-fO-uPq" secondAttribute="top" id="Hj1-Qc-MKw"/>
+                <constraint firstAttribute="centerY" secondItem="C56-6A-MIM" secondAttribute="centerY" id="I9O-Cw-Rpk"/>
+                <constraint firstItem="38D-Mw-1zB" firstAttribute="leading" secondItem="C56-6A-MIM" secondAttribute="trailing" id="KYm-W7-p22"/>
+                <constraint firstAttribute="height" constant="40" id="MLh-P8-ZeC"/>
+                <constraint firstAttribute="bottom" secondItem="38D-Mw-1zB" secondAttribute="bottom" id="j2M-5m-0Kn"/>
+                <constraint firstAttribute="trailing" secondItem="yqV-pi-VcM" secondAttribute="trailing" id="lK4-rf-oBY"/>
+                <constraint firstItem="C56-6A-MIM" firstAttribute="leading" secondItem="a0V-fO-uPq" secondAttribute="leading" constant="8" id="prc-Qb-J2Q"/>
+            </constraints>
+        </customView>
+    </objects>
+    <resources>
+        <image name="NSShareTemplate" width="11" height="16"/>
+    </resources>
+</document>
