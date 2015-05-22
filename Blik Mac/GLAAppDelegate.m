@@ -11,6 +11,8 @@
 #import "GLAProjectManager.h"
 #import "GLAPreferencesWindowController.h"
 #import "GLAApplicationSettingsManager.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 #define DO_FOLDER_QUERY_TEST 0 && DEBUG
 
@@ -48,6 +50,8 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+	[Fabric with:@[CrashlyticsKit]];
+	
 	[self showMainWindow];
 	
 #if 0

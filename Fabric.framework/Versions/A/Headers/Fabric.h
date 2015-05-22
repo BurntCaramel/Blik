@@ -5,6 +5,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FABAttributes.h"
+
+FAB_START_NONNULL
 
 /**
  *  Fabric Base. Coordinates configuration and starts all provided kits.
@@ -23,6 +26,8 @@
  *
  *      `Fabric.with([Twitter(), Crashlytics(), MoPub()])`
  *  
+ *  Only the first call to this method is honored. Subsequent calls are no-ops.
+ *
  *  @param kits An array of kit instances. Kits may provide a macro such as CrashlyticsKit which can be passed in as array elements in objective-c.
  *
  *  @return Returns the shared Fabric instance. In most cases this can be ignored.
@@ -42,7 +47,7 @@
 /**
  *  Unavailable. Use `+sharedSDK` to retrieve the shared Fabric instance.
  */
-- (id)init __attribute__((unavailable("Use +sharedSDK to retrieve the shared Fabric instance.")));
+- (id)init FAB_UNAVAILABLE("Use +sharedSDK to retrieve the shared Fabric instance.");
 
 /**
  *  Returns Fabrics's instance of the specified kit.
@@ -51,7 +56,7 @@
  *
  *  @return The kit instance of class klass which was provided to with: or nil.
  */
-- (id)kitForClass:(Class)klass;
+- (id FAB_NULLABLE)kitForClass:(Class)klass;
 
 /**
  *  Returns a dictionary containing the kit configuration info for the provided kit.
@@ -62,6 +67,9 @@
  *
  *  @return A dictionary containing kit specific configuration information or nil if none exists.
  */
-- (NSDictionary *)configurationDictionaryForKit:(id)kitInstance;
+- (NSDictionary * FAB_NULLABLE)configurationDictionaryForKit:(id)kitInstance;
 
 @end
+
+FAB_END_NONNULL
+
