@@ -22,10 +22,17 @@
 @property (assign, nonatomic) IBOutlet NSMenu *mainHelpMenu;
 @property (assign, nonatomic) IBOutlet NSMenuItem *activityStatusMenuItem;
 
+@property (assign, nonatomic) IBOutlet NSMenuItem *buyMenuItem;
+@property (assign, nonatomic) IBOutlet NSMenuItem *buyMacAppStoreMenuItem;
+
 - (IBAction)toggleShowingMainWindow:(id)sender;
 
 - (IBAction)toggleShowingStatusItem:(id)sender;
 
 - (IBAction)showAppPreferences:(id)sender;
+
+- (IBAction)showAppInMacAppStore:(id)sender;
+- (IBAction)openAppWebsite:(id)sender;
+- (IBAction)openTwitterWebProfile:(id)sender;
 
 @end

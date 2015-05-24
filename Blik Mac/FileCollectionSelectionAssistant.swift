@@ -18,19 +18,47 @@ import BurntFoundation
 	
 	public let openerApplicationCombiner = GLAFileOpenerApplicationFinder()
 	
+	var projectObserver: NotificationObserver<AnyStringNotificationIdentifier>
+	
 	public init(source: FileCollectionSelectionSourcing, filesListCollectionUUID: NSUUID, projectUUID: NSUUID, projectManager: GLAProjectManager) {
 		self.source = source
 		self.filesListCollectionUUID = filesListCollectionUUID
 		self.projectUUID = projectUUID
 		self.projectManager = projectManager
+		
+		projectObserver = NotificationObserver<AnyStringNotificationIdentifier>(object: projectManager.notificationObjectForProjectUUID(projectUUID))
+		
+		super.init()
+		
+		observeProject()
+	}
+	
+	private func observeProject() {
+		projectObserver.addObserver(GLAProjectHighlightsDidChangeNotification, block: { [unowned self] notification in
+			self.update()
+		})
+	}
+	
+	enum Notification: String {
+		case DidUpdate = "FileCollectionSelectionAssistantDidUpdateNotification"
+	}
+	
+	internal func notify(notificationIdentifier: Notification) {
+		NSNotificationCenter.defaultCenter().postNotification(notificationIdentifier, object: self, userInfo: nil)
 	}
 	
 	public func update() {
 		openerApplicationCombiner.fileURLs = Set(source.selectedFileURLs)
+		
+		notify(.DidUpdate)
 	}
+	
+	// MARK:
 	
 	public var isReadyToHighlight: Bool {
 		if let project = projectManager.projectWithUUID(projectUUID) {
+			projectManager.loadHighlightsForProjectIfNeeded(project)
+			
 			return projectManager.hasLoadedHighlightsForProject(project)
 		}
 		

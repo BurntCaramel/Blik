@@ -11,8 +11,10 @@
 #import "GLAProjectManager.h"
 // VIEW
 #import "GLAUIStyle.h"
-#import "GLAMainContentManners.h"
+#import "GLATableProjectRowView.h"
 #import "GLAProjectOverviewTableCellView.h"
+// CONTROLLERS
+#import "GLAMainContentManners.h"
 #import "GLAArrayTableDraggingHelper.h"
 
 
@@ -163,12 +165,27 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	}
 }
 
+#if TRIAL
+
+- (BOOL)projectRowIsAllowedInTrial:(NSInteger)row
+{
+	return (row <= 4);
+}
+
+#endif
+
 - (GLAProject *)clickedProject
 {
 	NSInteger clickedRow = (self.tableView.clickedRow);
 	if (clickedRow == -1) {
 		return nil;
 	}
+	
+#if TRIAL
+	if (![self projectRowIsAllowedInTrial:clickedRow]) {
+		return nil;
+	}
+#endif
 	
 	GLAProject *project = (self.projects)[clickedRow];
 	
@@ -228,6 +245,12 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 		return;
 	}
 	
+#if TRIAL
+	if (![self projectRowIsAllowedInTrial:projectIndex]) {
+		return;
+	}
+#endif
+	
 	id project = (self.projects)[projectIndex];
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification object:self userInfo:@{@"project": project}];
 }
@@ -286,6 +309,17 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 
 #pragma mark Table View Delegate
 
+- (NSTableRowView *)tableView:(NSTableView *)tableView rowViewForRow:(NSInteger)row
+{
+	GLATableProjectRowView *rowView = [tableView makeViewWithIdentifier:NSTableViewRowViewKey owner:nil];
+	
+#if TRIAL
+	(rowView.enabled) = [self projectRowIsAllowedInTrial:row];
+#endif
+	
+	return rowView;
+}
+
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
 	GLAProjectOverviewTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
@@ -317,6 +351,18 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 		(workOnNowButton.tag) = row;
 		//(workOnNowButton.textHighlightColor) = ([GLAUIStyle activeStyle].deleteProjectButtonColor);
 	}
+	
+#if TRIAL
+	if (![self projectRowIsAllowedInTrial:row]) {
+		(cellView.alphaValue) = 0.3;
+		
+		(workOnNowButton.enabled) = NO;
+		(workOnNowButton.title) = NSLocalizedString(@"Limited by Trial", @"Title for Work on Now button when number of projects is past the trial limit");
+	}
+	else {
+		(cellView.alphaValue) = 1.0;
+	}
+#endif
 	
 	return cellView;
 }

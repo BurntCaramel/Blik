@@ -30,5 +30,19 @@
 	<string>Main</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>d78b0628a95d5798006bf463bd79aea5988e1d50</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict/>
+				<key>KitName</key>
+				<string>Crashlytics</string>
+			</dict>
+		</array>
+	</dict>
 </dict>
 </plist>

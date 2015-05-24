@@ -443,7 +443,7 @@
 
 - (void)projectHighlightedItemsDidChangeNotification:(NSNotification *)note
 {
-	[self updateAddToHighlightsUI];
+	
 }
 
 - (void)projectPrimaryFoldersDidChangeNotification:(NSNotification *)note
@@ -627,7 +627,7 @@
 	[self updateQuickLookPreviewAnimating:YES];
 	
 	[(self.selectionAssistant) update];
-	[(self.barViewController) update];
+	//[(self.barViewController) update];
 }
 
 - (NSArray *)firstResponderSelectedURLs
@@ -687,39 +687,6 @@
 		[pm loadHighlightsForProjectIfNeeded:project];
 	}
 	return [pm hasLoadedHighlightsForProject:project];
-}
-
-- (void)updateAddToHighlightsUI
-{
-	return;
-	
-	if (! self.hasProject) {
-		return;
-	}
-	
-	GLAButton *button = (self.addToHighlightsButton);
-	
-	BOOL canDoHighlightActions = [self canDoHighlightActionsLoadingIfNeeded:YES];
-	if (!canDoHighlightActions) {
-		(button.enabled) = NO;
-		(button.title) = NSLocalizedString(@"(Loading Highlights)", @"Title for 'Add to Highlights' button when the highlights is still loading.");
-		return;
-	}
-	
-	(button.enabled) = YES;
-	
-	BOOL selectionIsAllHighlighted = [self collectedFilesAreAllHighlighted];
-	
-	// If all are already highlighted.
-	if (selectionIsAllHighlighted) {
-		(button.title) = NSLocalizedString(@"Remove from Highlights", @"Title for 'Remove from Highlights' button when the all of selected collected files are already in the highlights list.");
-		(button.action) = @selector(removeSelectedFilesFromHighlights:);
-	}
-	// If some or all are not highlighted.
-	else {
-		(button.title) = NSLocalizedString(@"Add to Highlights", @"Title for 'Add to Highlights' button when the some of selected collected files are not yet in the highlights list.");
-		(button.action) = @selector(addSelectedFilesToHighlights:);
-	}
 }
 
 - (void)updateAddToHighlightsMenuItem
@@ -908,9 +875,6 @@
 	GLAProject *project = (self.project);
 	GLAProjectManager *pm = (self.projectManager);
 	[pm editHighlightsOfProject:project usingBlock:editingBlock];
-	
-	// This is called by the change notification observer:
-	//[self updateAddToHighlightsUI];
 }
 
 - (IBAction)showShareMenuForSelectedFiles:(GLAButton *)sender
@@ -1363,9 +1327,14 @@
 	return (self.firstResponderSelectedURLs);
 }
 
-- (id<CollectedFileSelectionSourcing>)collectedFileSource
+- (id<CollectedFileSelectionSourcing> __nullable)collectedFileSource
 {
-	return self;
+	if (self.quickLookPreviewHelper.folderContentsIsFirstResponder) {
+		return nil;
+	}
+	else {
+		return self;
+	}
 }
 
 - (NSArray *)selectedCollectedFiles
@@ -1391,7 +1360,7 @@
 	NSLog(@"folderContentsSelectionDidChange");
 #endif
 	[(self.selectionAssistant) update];
-	[(self.barViewController) update];
+	//[(self.barViewController) update];
 }
 
 - (BOOL)fileURLsAreAllCollected:(NSArray *)fileURLs

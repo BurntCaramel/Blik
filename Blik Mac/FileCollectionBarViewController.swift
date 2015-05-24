@@ -39,9 +39,23 @@ func changeViewValues<T: NSView>(views: [T], #animate: Bool, #viewBlock: (view: 
 			clearObservingOfOpenerApplicationCombiner()
 			startObservingOpenerApplicationCombiner()
 			
+			if let selectionAssistant = selectionAssistant {
+				let selectionAssistantNotificationObserver = NotificationObserver<FileCollectionSelectionAssistant.Notification>(object: selectionAssistant)
+				selectionAssistantNotificationObserver.addObserver(.DidUpdate, block: { [unowned self] notification in
+					self.update()
+				})
+				
+				self.selectionAssistantNotificationObserver = selectionAssistantNotificationObserver
+			}
+			else {
+				selectionAssistantNotificationObserver = nil
+			}
+			
 			update()
 		}
 	}
+	
+	var selectionAssistantNotificationObserver: NotificationObserver<FileCollectionSelectionAssistant.Notification>?
 	
 	func clearObservingOfOpenerApplicationCombiner() {
 		openerApplicationCombinerNotificationObserver = nil
@@ -113,7 +127,7 @@ func changeViewValues<T: NSView>(views: [T], #animate: Bool, #viewBlock: (view: 
 				else {
 					button.enabled = false
 					
-					button.title = NSLocalizedString("(Loading Highlights)", comment: "Title for 'Add to Highlights' button when the highlights is still loading.")
+					button.title = NSLocalizedString("Loading Highlights", comment: "Title for 'Add to Highlights' button when the highlights is still loading.")
 				}
 			}
 			else {
@@ -121,7 +135,7 @@ func changeViewValues<T: NSView>(views: [T], #animate: Bool, #viewBlock: (view: 
 				
 				if selectedFilesAreAllCollected {
 					button.enabled = false
-					button.title = NSLocalizedString("(Already in Collection)", comment: "Title for 'Add to Collection' button when all of the selected files are already in the collection.")
+					button.title = NSLocalizedString("Already in Collection", comment: "Title for 'Add to Collection' button when all of the selected files are already in the collection.")
 					button.action = nil
 				}
 				else {

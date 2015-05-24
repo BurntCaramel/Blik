@@ -36,7 +36,7 @@
 {
     self = [super init];
     if (self) {
-        [self prepareIfNeeded];
+		//[self prepareIfNeeded];
     }
     return self;
 }
@@ -86,6 +86,12 @@
 	[nc addObserver:self selector:@selector(toggleShowingMainWindowAndApplicationHidden:) name:GLAStatusItemControllerItemWasClickedNotification object:(self.statusItemController)];
 	
 	[nc addObserver:self selector:@selector(helpMenuDidBeginTracking:) name:NSMenuDidBeginTrackingNotification object:(self.mainHelpMenu)];
+	
+#if TRIAL
+	(self.buyMenuItem.hidden) = false;
+#else
+	(self.buyMenuItem.hidden) = true;
+#endif
 	
 	(self.hasPrepared) = YES;
 }
@@ -175,6 +181,27 @@
 	[sharedPreferencesWindowController showWindow:nil];
 }
 
+- (IBAction)showAppInMacAppStore:(id)sender
+{
+	NSURL *blikOnAppStoreURL = [NSURL URLWithString:@"macappstore://itunes.apple.com/us/app/blik/id955293604?mt=12"];
+	
+	[[NSWorkspace sharedWorkspace] openURL:blikOnAppStoreURL];
+}
+
+- (IBAction)openAppWebsite:(id)sender
+{
+	NSURL *blikWebsiteURL = [NSURL URLWithString:@"http://www.burntcaramel.com/blik/"];
+	
+	[[NSWorkspace sharedWorkspace] openURL:blikWebsiteURL];
+}
+
+- (void)openTwitterWebProfile:(id)sender
+{
+	NSURL *twitterProfileURL = [NSURL URLWithString:@"https://twitter.com/BlikApp"];
+	
+	[[NSWorkspace sharedWorkspace] openURL:twitterProfileURL];
+}
+
 #pragma mark Help Menu
 
 - (void)updateActivityStatusMenuItem
@@ -182,16 +209,17 @@
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	
 	NSMenuItem *activityStatusMenuItem = (self.activityStatusMenuItem);
-	
-	NSString *status = (projectManager.statusOfCompletedActivity);
-#if DEBUG
-	NSLog(@"%@", status);
-#endif
-	/*NSArray *actionStati = [status componentsSeparatedByString:@"\n"];
-	for (NSString *actionStatus in actionStati) {
-		
-	}*/
-	(activityStatusMenuItem.title) = status;
+	if (activityStatusMenuItem) {
+		NSString *status = (projectManager.statusOfCompletedActivity);
+	#if DEBUG
+		NSLog(@"%@", status);
+	#endif
+		/*NSArray *actionStati = [status componentsSeparatedByString:@"\n"];
+		for (NSString *actionStatus in actionStati) {
+			
+		}*/
+		(activityStatusMenuItem.title) = status;
+	}
 }
 
 - (void)helpMenuDidBeginTracking:(NSNotification *)note

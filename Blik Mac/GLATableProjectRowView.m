@@ -19,6 +19,24 @@
 
 @implementation GLATableProjectRowView
 
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+	self = [super initWithCoder:coder];
+	if (self) {
+		(self.enabled) = YES;
+	}
+	return self;
+}
+
+- (instancetype)initWithFrame:(NSRect)frameRect
+{
+	self = [super initWithFrame:frameRect];
+	if (self) {
+		(self.enabled) = YES;
+	}
+	return self;
+}
+
 - (void)dealloc
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -44,6 +62,7 @@
 
 - (void)prepareForReuse
 {
+	(self.enabled) = YES;
 	(self.mouseIsInside) = NO;
 	
 	[super prepareForReuse];
@@ -87,8 +106,8 @@
 	//[super drawBackgroundInRect:dirtyRect];
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
-	
-	if (self.mouseIsInside) {
+		
+	if ((self.enabled) && (self.mouseIsInside)) {
 		[(uiStyle.projectTableRowHoverBackgroundColor) setFill];
 		NSRectFillUsingOperation(dirtyRect, NSCompositeSourceOver);
 	}
