@@ -90,6 +90,14 @@
 	[self activateApplication];
 }
 
+- (IBAction)goToAllProjects:(id)sender
+{
+	GLAMainSectionNavigator *navigator = (self.mainSectionNavigator);
+	[navigator goToAllProjects];
+	
+	[self activateApplication];
+}
+
 #pragma mark Menu Delegate
 
 - (void)menuNeedsUpdate:(NSMenu *)menu
@@ -151,7 +159,13 @@
 	
 	[menu addItem:[NSMenuItem separatorItem]];
 	
-	NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"New Project…", @"Status item menu item for creating a new project" ) action:@selector(createNewProject:) keyEquivalent:@""];
+	// All Projects
+	NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"All Projects…", @"Status item menu item for going to all projects section" ) action:@selector(goToAllProjects:) keyEquivalent:@""];
+	(item.target) = self;
+	[menu addItem:item];
+	
+	// New Project
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"New Project…", @"Status item menu item for creating a new project" ) action:@selector(createNewProject:) keyEquivalent:@""];
 	(item.target) = self;
 	[menu addItem:item];
 }
