@@ -763,17 +763,7 @@
 
 - (IBAction)openSelectedFiles:(id)sender
 {
-	GLAFileOpenerApplicationFinder *openerApplicationCombiner = (self.openerApplicationCombiner);
-	
-	[openerApplicationCombiner openFileURLsUsingDefaultApplications];
-	//[openerApplicationCombiner openFileURLsUsingChosenOpenerApplicationPopUpButton:(self.openerApplicationsPopUpButton)];
-}
-
-- (IBAction)openWithChosenApplication:(NSMenuItem *)menuItem
-{
-	GLAFileOpenerApplicationFinder *openerApplicationCombiner = (self.openerApplicationCombiner);
-	
-	[openerApplicationCombiner openFileURLsUsingMenuItem:menuItem];
+	[(self.selectionAssistant.openerApplicationCombiner) openFileURLsUsingDefaultApplications];
 }
 
 - (IBAction)revealSelectedFilesInFinder:(id)sender
@@ -1356,11 +1346,16 @@
 
 - (void)folderContentsSelectionDidChange
 {
-#if DEBUG
+#if DEBUG && 0
 	NSLog(@"folderContentsSelectionDidChange");
 #endif
 	[(self.selectionAssistant) update];
 	//[(self.barViewController) update];
+}
+
+- (void)openFolderContentsSelectedFiles
+{
+	[(self.selectionAssistant.openerApplicationCombiner) openFileURLsUsingDefaultApplications];
 }
 
 - (BOOL)fileURLsAreAllCollected:(NSArray *)fileURLs

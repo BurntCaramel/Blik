@@ -142,6 +142,8 @@ extension BrowseChoice: UIChoiceRepresentative {
 		
 		folderContentOutlineView.setDataSource(self)
 		folderContentOutlineView.setDelegate(self)
+		folderContentOutlineView.target = self
+		folderContentOutlineView.doubleAction = "openSelectedFiles:"
 		style.prepareContentTableView(folderContentOutlineView)
 		
 		//browseChoicePopUpButtonAssistant = PopUpButtonAssistant<BrowseChoice>(popUpButton: browseChoicePopUpButton)
@@ -293,6 +295,10 @@ extension BrowseChoice: UIChoiceRepresentative {
 		}
 		
 		return false
+	}
+	
+	@IBAction internal func openSelectedFiles(sender: AnyObject?) {
+		assistant?.openFolderContentsSelectedFiles()
 	}
 	
 	override public func keyDown(theEvent: NSEvent) {

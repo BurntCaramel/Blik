@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Blik Trial.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>7</integer>
+		</dict>
 		<key>Blik.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
@@ -17,6 +22,21 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>B20DB29A1B0C899F00E57532</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B20DB2AF1B0C899F00E57532</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B20DB2BE1B0C8ACA00E57532</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>B2ADDBCD1963DA2E0014EF84</key>
 		<dict>
 			<key>primary</key>

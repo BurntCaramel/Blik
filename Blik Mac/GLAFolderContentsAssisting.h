@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)folderContentsSelectionDidChange;
 
-- (void)openSelectedFiles;
+- (void)openFolderContentsSelectedFiles;
 
 @end
 

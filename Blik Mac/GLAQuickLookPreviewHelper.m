@@ -386,6 +386,20 @@
 
 #pragma mark -
 
+- (id)forwardingTargetForSelector:(SEL)aSelector
+{
+	id<GLAFolderContentsAssisting> folderContentsAssistant = (self.folderContentsAssistant);
+	if (folderContentsAssistant) {
+		NSProtocolChecker *assistantChecker = [NSProtocolChecker protocolCheckerWithTarget:folderContentsAssistant protocol:@protocol(GLAFolderContentsAssisting)];
+		if ([assistantChecker respondsToSelector:aSelector]) {
+			return assistantChecker;
+		}
+	}
+	
+	return [super forwardingTargetForSelector:aSelector];
+}
+
+#if 0
 - (void)folderContentsSelectionDidChange
 {
 	id<GLAFolderContentsAssisting> folderContentsAssistant = (self.folderContentsAssistant);
@@ -419,6 +433,7 @@
 		[folderContentsAssistant removeFileURLsFromCollection:fileURLs];
 	}
 }
+#endif
 
 #pragma mark - QuickLook
 
