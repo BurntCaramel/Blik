@@ -114,6 +114,8 @@ import BurntCocoaUI
 		updateContextualMenu(initial: true)
 	}
 	
+	var directoryWatcher: GLADirectoryWatcher?
+	
 	var collectedFolder: GLACollectedFile!
 	var sourceDirectoryURL: NSURL! {
 		didSet {
@@ -121,7 +123,13 @@ import BurntCocoaUI
 			let view = self.view
 			
 			if let sourceDirectoryURL = sourceDirectoryURL {
+				directoryWatcher = GLADirectoryWatcher(delegate: self, previousStateData: nil)
+				
+				// Use a specific autosave name for the columns using the directory path.
 				folderContentOutlineView.autosaveName = "collectedFolderContentsOutlineView-\(sourceDirectoryURL.path)"
+			}
+			else {
+				directoryWatcher = nil
 			}
 			
 			reloadContentsOfFolder()
@@ -129,6 +137,8 @@ import BurntCocoaUI
 	}
 	
 	func reloadContentsOfFolder() {
+		directoryURLToArrangedChildren.removeAll()
+		
 		folderContentOutlineView.reloadData()
 	}
 	
@@ -283,10 +293,6 @@ extension GLACollectedFolderContentsViewController: GLAArrangedDirectoryChildren
 }
 
 extension GLACollectedFolderContentsViewController: GLAFileInfoRetrieverDelegate {
-	public func fileInfoRetriever(fileInfoRetriever: GLAFileInfoRetriever!, didRetrieveContentsOfDirectoryURL URL: NSURL!) {
-		
-	}
-	
 	public func fileInfoRetriever(fileInfoRetriever: GLAFileInfoRetriever!, didFailWithError error: NSError!, retrievingContentsOfDirectoryURL directoryURL: NSURL!) {
 		if directoryURL == sourceDirectoryURL {
 			folderContentOutlineView.reloadData()
@@ -294,6 +300,12 @@ extension GLACollectedFolderContentsViewController: GLAFileInfoRetrieverDelegate
 		else {
 			folderContentOutlineView.reloadItem(directoryURL, reloadChildren: true)
 		}
+	}
+}
+
+extension GLACollectedFolderContentsViewController: GLADirectoryWatcherDelegate {
+	public func directoryWatcher(directoryWatcher: GLADirectoryWatcher!, directoriesURLsDidChange directoryURLs: [AnyObject]!) {
+		reloadContentsOfFolder()
 	}
 }
 

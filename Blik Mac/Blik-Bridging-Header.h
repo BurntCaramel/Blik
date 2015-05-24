@@ -11,6 +11,7 @@
 #import "GLAArrangedDirectoryChildren.h"
 #import "GLAFileOpenerApplicationFinder.h"
 #import "GLAFolderContentsAssisting.h"
+#import "GLADirectoryWatcher.h"
 
 #import "GLAUIStyle.h"
 #import "GLAViewController.h"
