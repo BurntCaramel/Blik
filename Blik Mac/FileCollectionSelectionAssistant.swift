@@ -89,10 +89,8 @@ import BurntFoundation
 	
 	public var selectedFilesAreAllCollected: Bool {
 		let selectedFileURLs = source.selectedFileURLs
-		println("selectedFileURLs \(selectedFileURLs)")
 		if selectedFileURLs.count > 0 {
 			let fileURLsNotYetCollected = projectManager.filterFileURLs(selectedFileURLs, notInFilesListCollectionWithUUID: filesListCollectionUUID)
-			println("fileURLsNotYetCollected \(fileURLsNotYetCollected)")
 			return fileURLsNotYetCollected.count == 0
 		}
 		

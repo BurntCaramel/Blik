@@ -417,7 +417,7 @@ NSString *GLAFileURLOpenerApplicationCombinerDidChangeNotification = @"GLAFileUR
 		NSMenuItem *firstItem = (menu.itemArray)[0];
 		if (firstItem) {
 			NSMenuItem *titleMenuItem = [firstItem copy];
-			(titleMenuItem.title) = NSLocalizedString(@"Open in", @"Title for 'Open in' application menu");
+			(titleMenuItem.title) = NSLocalizedString(@"Open with", @"Title for 'Open with' application menu");
 			[menu insertItem:titleMenuItem atIndex:0];
 		}
 	}

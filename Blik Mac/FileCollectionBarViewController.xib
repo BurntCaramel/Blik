@@ -19,17 +19,17 @@
             <rect key="frame" x="0.0" y="0.0" width="299" height="40"/>
             <subviews>
                 <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="C56-6A-MIM" customClass="GLAPopUpButton">
-                    <rect key="frame" x="8" y="8" width="100" height="24"/>
+                    <rect key="frame" x="8" y="8" width="111" height="24"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="100" id="Cya-Lc-syA"/>
+                        <constraint firstAttribute="width" constant="111" id="Cya-Lc-syA"/>
                         <constraint firstAttribute="height" constant="24" id="uOl-C6-z0Z"/>
                     </constraints>
-                    <popUpButtonCell key="cell" type="roundTextured" title="Open in" bezelStyle="texturedRounded" alignment="left" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="qob-Cy-kyV" id="5Vs-ru-HiZ" customClass="GLAPopUpButtonCell">
+                    <popUpButtonCell key="cell" type="roundTextured" title="Open with" bezelStyle="texturedRounded" alignment="left" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" id="5Vs-ru-HiZ" customClass="GLAPopUpButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
                         <menu key="menu" id="IuY-W2-ZrW">
                             <items>
-                                <menuItem title="Open in" state="on" hidden="YES" id="qob-Cy-kyV"/>
+                                <menuItem title="Open with" state="on" hidden="YES" id="qob-Cy-kyV"/>
                                 <menuItem title="Item 2" id="k7g-Fp-yeQ"/>
                                 <menuItem title="Item 3" id="Upm-xT-duI"/>
                             </items>
@@ -83,7 +83,7 @@
                     </connections>
                 </button>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="38D-Mw-1zB" customClass="GLAButton">
-                    <rect key="frame" x="108" y="0.0" width="17" height="40"/>
+                    <rect key="frame" x="119" y="0.0" width="17" height="40"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="n6e-Az-3O9"/>
                     </constraints>
@@ -115,7 +115,6 @@
                 </button>
             </subviews>
             <constraints>
-                <constraint firstItem="yqV-pi-VcM" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="38D-Mw-1zB" secondAttribute="trailing" id="DXo-zx-7AT"/>
                 <constraint firstItem="yqV-pi-VcM" firstAttribute="top" secondItem="a0V-fO-uPq" secondAttribute="top" id="HDY-fF-G0D"/>
                 <constraint firstItem="38D-Mw-1zB" firstAttribute="top" secondItem="a0V-fO-uPq" secondAttribute="top" id="Hj1-Qc-MKw"/>
                 <constraint firstAttribute="centerY" secondItem="C56-6A-MIM" secondAttribute="centerY" id="I9O-Cw-Rpk"/>

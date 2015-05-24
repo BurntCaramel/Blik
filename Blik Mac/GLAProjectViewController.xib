@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
@@ -48,7 +49,7 @@
                     </constraints>
                 </customView>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="NA8-Ro-OD1">
-                    <rect key="frame" x="277.5" y="38" width="391.5" height="174"/>
+                    <rect key="frame" x="277" y="38" width="391.5" height="174"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="290" id="zC6-7U-5ej"/>
                     </constraints>
@@ -572,8 +573,8 @@
                                         <rect key="frame" x="1" y="1" width="297" height="36"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <textField verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" misplaced="YES" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wvd-37-nRU">
-                                                <rect key="frame" x="-2" y="7" width="257" height="23"/>
+                                            <textField verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wvd-37-nRU">
+                                                <rect key="frame" x="-2" y="7" width="249" height="23"/>
                                                 <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="3JX-zC-0E5">
                                                     <font key="font" size="13" name="AvenirNext-Medium"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -581,10 +582,10 @@
                                                 </textFieldCell>
                                             </textField>
                                             <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZXO-0g-NsT" customClass="GLACollectionIndicationButton">
-                                                <rect key="frame" x="261" y="0.0" width="16" height="36"/>
+                                                <rect key="frame" x="257" y="0.0" width="10" height="36"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="36" id="gab-hy-nzN"/>
-                                                    <constraint firstAttribute="width" constant="16" id="rLO-DY-XPr"/>
+                                                    <constraint firstAttribute="width" constant="10" id="rLO-DY-XPr"/>
                                                 </constraints>
                                                 <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="oCK-Gt-UZ3">
                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
@@ -602,7 +603,7 @@
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="wvd-37-nRU" firstAttribute="leading" secondItem="fxr-Bd-KTK" secondAttribute="leading" id="CSp-lD-VDA"/>
-                                            <constraint firstItem="ZXO-0g-NsT" firstAttribute="leading" secondItem="wvd-37-nRU" secondAttribute="trailing" constant="8" id="I4R-ik-hlo"/>
+                                            <constraint firstItem="ZXO-0g-NsT" firstAttribute="leading" secondItem="wvd-37-nRU" secondAttribute="trailing" constant="12" id="I4R-ik-hlo"/>
                                             <constraint firstItem="wvd-37-nRU" firstAttribute="top" secondItem="fxr-Bd-KTK" secondAttribute="top" priority="750" constant="6" id="M1u-gN-6nS"/>
                                             <constraint firstAttribute="trailing" secondItem="ZXO-0g-NsT" secondAttribute="trailing" constant="20" id="TSq-0R-S7p"/>
                                             <constraint firstAttribute="centerY" secondItem="wvd-37-nRU" secondAttribute="centerY" id="inZ-WJ-Li6"/>

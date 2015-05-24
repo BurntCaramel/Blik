@@ -89,9 +89,7 @@
 	
 	for (NSURL *foundURL in de) {
 		NSDictionary *resourceValues = [foundURL resourceValuesForKeys:requiredResourceKeys error:nil];
-#if DEBUG
-		//NSLog(@"DE %@ %@", foundURL, fileAttributes);
-#endif
+
 		if (!resourceValues) {
 			continue;
 		}

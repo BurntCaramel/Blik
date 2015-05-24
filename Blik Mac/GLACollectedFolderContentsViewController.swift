@@ -10,6 +10,43 @@ import Cocoa
 import BurntCocoaUI
 
 
+private enum BrowseChoice {
+	case Hierarchy
+	case LoadingAvailableTags
+	case FilesWithTag(tagName: String)
+	case ZeroAvailableTags
+}
+
+extension BrowseChoice: UIChoiceRepresentative {
+	var title: String {
+		switch self {
+		case .Hierarchy:
+			return NSLocalizedString("Content", comment: "Title for hierachy folder contents browsing choice.")
+		case .LoadingAvailableTags:
+			return NSLocalizedString("(Loading Tags)", comment: "Title for hierachy folder contents browsing choice when loading tags.")
+		case let .FilesWithTag(tagName):
+			return tagName
+		case .ZeroAvailableTags:
+			return NSLocalizedString("(No Tags)", comment: "Title for hierachy folder contents browsing choice when there are no tags.")
+		}
+	}
+	
+	typealias UniqueIdentifier = String
+	var uniqueIdentifier: UniqueIdentifier {
+		switch self {
+		case .Hierarchy:
+			return "hierarchy"
+		case .LoadingAvailableTags:
+			return "loadingAvailableTags"
+		case let .FilesWithTag(tagName):
+			return "filesWithTag-\(tagName)"
+		case .ZeroAvailableTags:
+			return "zeroAvailableTags"
+		}
+	}
+}
+
+
 @objc public class GLACollectedFolderContentsViewController: GLAViewController {
 	
 	var resourceKeyToSortBy = NSURLLocalizedNameKey
@@ -22,6 +59,11 @@ import BurntCocoaUI
 	
 	var fileInfoRetriever: GLAFileInfoRetriever!
 	var directoryURLToArrangedChildren = [NSURL: GLAArrangedDirectoryChildren]()
+	//var availableTagNames: Set<String>?
+	
+	private var browseChoice: BrowseChoice = .Hierarchy
+	@IBOutlet var browseChoicePopUpButton: NSPopUpButton!
+	private var browseChoicePopUpButtonAssistant: PopUpButtonAssistant<BrowseChoice>!
 	
 	var dateFormatter: NSDateFormatter = {
 		let dateFormatter = NSDateFormatter()
@@ -102,6 +144,8 @@ import BurntCocoaUI
 		folderContentOutlineView.setDelegate(self)
 		style.prepareContentTableView(folderContentOutlineView)
 		
+		//browseChoicePopUpButtonAssistant = PopUpButtonAssistant<BrowseChoice>(popUpButton: browseChoicePopUpButton)
+		
 		reloadContentsOfFolder()
 		
 		quickLookPreviewHelper = GLAQuickLookPreviewHelper()
@@ -132,6 +176,8 @@ import BurntCocoaUI
 				directoryWatcher = nil
 			}
 			
+			//updateBrowseChoiceUI(initial: true)
+			
 			reloadContentsOfFolder()
 		}
 	}
@@ -140,6 +186,49 @@ import BurntCocoaUI
 		directoryURLToArrangedChildren.removeAll()
 		
 		folderContentOutlineView.reloadData()
+	}
+	
+	func updateBrowseChoiceUI(initial: Bool = false) {
+		if let sourceDirectoryURL = sourceDirectoryURL {
+			var browseChoices: [BrowseChoice?] = [
+				.Hierarchy,
+				nil
+			]
+			
+			if let tagNames = fileInfoRetriever.availableTagNamesInsideDirectoryURL(sourceDirectoryURL, requestIfNeeded: true) as? Set<String> {
+				if tagNames.count > 0 {
+					for tagName in tagNames {
+						browseChoices.append(
+							BrowseChoice.FilesWithTag(tagName: tagName)
+						)
+					}
+				}
+				else {
+					browseChoices.append(
+						BrowseChoice.ZeroAvailableTags
+					)
+				}
+			}
+			else {
+				browseChoices.append(
+					BrowseChoice.LoadingAvailableTags
+				)
+			}
+			
+			if initial {
+				browseChoicePopUpButtonAssistant.menuAssistant.customization.enabled = { choice in
+					switch choice {
+					case .Hierarchy, .FilesWithTag:
+						return true
+					default:
+						return false
+					}
+				}
+			}
+			
+			browseChoicePopUpButtonAssistant.menuItemRepresentatives = browseChoices
+			browseChoicePopUpButtonAssistant.update()
+		}
 	}
 	
 	func updateSortingFromOutlineView() {
@@ -293,7 +382,11 @@ extension GLACollectedFolderContentsViewController: GLAArrangedDirectoryChildren
 }
 
 extension GLACollectedFolderContentsViewController: GLAFileInfoRetrieverDelegate {
-	public func fileInfoRetriever(fileInfoRetriever: GLAFileInfoRetriever!, didFailWithError error: NSError!, retrievingContentsOfDirectoryURL directoryURL: NSURL!) {
+	public func fileInfoRetriever(fileInfoRetriever: GLAFileInfoRetriever, didRetrieveAvailableTagNamesInsideDirectoryURL directoryURL: NSURL) {
+		updateBrowseChoiceUI()
+	}
+	
+	public func fileInfoRetriever(fileInfoRetriever: GLAFileInfoRetriever, didFailWithError error: NSError, retrievingContentsOfDirectoryURL directoryURL: NSURL) {
 		if directoryURL == sourceDirectoryURL {
 			folderContentOutlineView.reloadData()
 		}

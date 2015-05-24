@@ -70,7 +70,6 @@ func changeViewValues<T: NSView>(views: [T], #animate: Bool, #viewBlock: (view: 
 			let nc = NSNotificationCenter.defaultCenter()
 			
 			openerApplicationCombinerNotificationObserver.addObserver(GLAFileURLOpenerApplicationCombinerDidChangeNotification) { [unowned self] note in
-				println("GLAFileURLOpenerApplicationCombinerDidChangeNotification")
 				self.setNeedsToUpdateOpenerApplicationsUI()
 			}
 		}
@@ -153,10 +152,6 @@ func changeViewValues<T: NSView>(views: [T], #animate: Bool, #viewBlock: (view: 
 			addToHighlightsButton,
 			shareButton
 		]
-		
-		#if DEBUG
-			println("COUTN \(selectionAssistant?.source.selectedFileURLs.count)")
-		#endif
 		
 		let hasNoURLs = (selectionAssistant?.source.selectedFileURLs.count ?? 0) == 0
 		let alphaValue: CGFloat = hasNoURLs ? 0.0 : 1.0

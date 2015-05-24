@@ -12,6 +12,7 @@
 #import "GLAFileOpenerApplicationFinder.h"
 #import "GLAFolderContentsAssisting.h"
 #import "GLADirectoryWatcher.h"
+#import "GLAFolderQuery.h"
 
 #import "GLAUIStyle.h"
 #import "GLAViewController.h"

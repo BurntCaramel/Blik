@@ -9,6 +9,7 @@
 @import Foundation;
 @protocol GLAFileInfoRetrieverDelegate;
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface GLAFileInfoRetriever : NSObject
 
@@ -26,27 +27,31 @@
 
 - (void)requestResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL alwaysNotify:(BOOL)alwaysNotify;
 
-- (NSDictionary *)loadedResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL requestIfNeeded:(BOOL)request;
-- (NSError *)lastErrorLoadingResourceValuesForURL:(NSURL *)URL;
+- (NSDictionary * __nullable)loadedResourceValuesForKeys:(NSArray *)keys forURL:(NSURL *)URL requestIfNeeded:(BOOL)request;
+- (NSError * __nullable)lastErrorLoadingResourceValuesForURL:(NSURL *)URL;
 
 #pragma mark Convenience
 
-- (id)resourceValueForKey:(NSString *)key forURL:(NSURL *)URL;
-- (NSString *)localizedNameForURL:(NSURL *)URL;
-- (NSImage *)effectiveIconImageForURL:(NSURL *)URL;
-- (NSImage *)effectiveIconImageForURL:(NSURL *)URL withSizeDimension:(CGFloat)widthAndHeight;
+- (id __nullable)resourceValueForKey:(NSString *)key forURL:(NSURL *)URL;
+- (NSString * __nullable)localizedNameForURL:(NSURL *)URL;
+- (NSImage * __nullable)effectiveIconImageForURL:(NSURL *)URL;
+- (NSImage * __nullable)effectiveIconImageForURL:(NSURL *)URL withSizeDimension:(CGFloat)widthAndHeight;
 
 #pragma mark Applications
 
 - (void)requestApplicationURLsToOpenURL:(NSURL *)URL;
-- (NSArray *)applicationsURLsToOpenURL:(NSURL *)URL;
-- (NSURL *)defaultApplicationURLToOpenURL:(NSURL *)URL;
+- (NSArray * __nullable)applicationsURLsToOpenURL:(NSURL *)URL;
+- (NSURL * __nullable)defaultApplicationURLToOpenURL:(NSURL *)URL;
 
 #pragma mark Directory Contents
 
-- (void)requestChildrenOfDirectoryWithURL:(NSURL *)directoryURL;
-- (NSArray *)childURLsOfDirectoryWithURL:(NSURL *)directoryURL requestIfNeeded:(BOOL)requestIfNeeded;
-- (NSError *)errorRetrievingChildURLsOfDirectoryWithURL:(NSURL *)directoryURL;
+- (NSArray * __nullable)childURLsOfDirectoryWithURL:(NSURL *)directoryURL requestIfNeeded:(BOOL)requestIfNeeded;
+- (NSError * __nullable)errorRetrievingChildURLsOfDirectoryWithURL:(NSURL *)directoryURL;
+
+#pragma mark Tags
+
+- (NSSet * __nullable)availableTagNamesInsideDirectoryURL:(NSURL *)directoryURL requestIfNeeded:(BOOL)requestIfNeeded;
+//- (NSError * __nullable)errorRetrievingAvailableTagNamesInsideDirectoryURL:(NSURL *)directoryURL;
 
 #pragma mark Clearing Cache
 
@@ -71,6 +76,8 @@
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didRetrieveContentsOfDirectoryURL:(NSURL *)URL;
 - (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didFailWithError:(NSError *)error retrievingContentsOfDirectoryURL:(NSURL *)URL;
 
+- (void)fileInfoRetriever:(GLAFileInfoRetriever *)fileInfoRetriever didRetrieveAvailableTagNamesInsideDirectoryURL:(NSURL *)directoryURL;
+
 @end
 
 
@@ -85,3 +92,4 @@
 extern NSString *GLAFileInfoRetrieverDidRetrieveContentsOfDirectoryNotification;
 extern NSString *GLAFileInfoRetrieverNotificationInfoDirectoryURL;
 
+NS_ASSUME_NONNULL_END

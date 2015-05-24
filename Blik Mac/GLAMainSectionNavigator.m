@@ -175,7 +175,7 @@
 - (void)addNewProject
 {
 	GLAMainSection *previousSection = (self.currentSection);
-	if (!(previousSection.isAllProjects) || !(previousSection.isNow)) {
+	if (!(previousSection.isAllProjects) && !(previousSection.isNow)) {
 		previousSection = [GLAMainSection allProjectsSection];
 	}
 	

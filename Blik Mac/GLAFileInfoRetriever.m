@@ -29,6 +29,9 @@
 @property(readonly, nonatomic) NSMutableSet *directoryURLsHavingContentsLoaded;
 @property(readonly, nonatomic) NSCache *cacheOfDirectoryURLsToContentsURLs;
 
+@property(readonly, nonatomic) NSMutableSet *directoryURLsHavingAvailableTagNamesInsideLoaded;
+@property(readonly, nonatomic) NSCache *cacheOfDirectoryURLsToAvailableTagNamesInside;
+
 @end
 
 @implementation GLAFileInfoRetriever
@@ -57,6 +60,9 @@
 		
 		_directoryURLsHavingContentsLoaded = [NSMutableSet new];
 		_cacheOfDirectoryURLsToContentsURLs = [NSCache new];
+		
+		_directoryURLsHavingAvailableTagNamesInsideLoaded = [NSMutableSet new];
+		_cacheOfDirectoryURLsToAvailableTagNamesInside = [NSCache new];
 	}
 	return self;
 }
@@ -578,6 +584,103 @@
 	
 	return error;
 }
+
+#pragma mark Tags
+
+- (void)requestAvailableTagNamesInsideDirectoryURL:(NSURL *)directoryURL
+{
+	[self runAsyncOnInputQueue:^(GLAFileInfoRetriever *retriever) {
+		NSMutableSet *directoryURLsHavingAvailableTagNamesInsideLoaded = (retriever.directoryURLsHavingAvailableTagNamesInsideLoaded);
+		if ([directoryURLsHavingAvailableTagNamesInsideLoaded containsObject:directoryURL]) {
+			return;
+		}
+		
+		[directoryURLsHavingAvailableTagNamesInsideLoaded addObject:directoryURL];
+		
+		[retriever runAsyncInBackground:^(GLAFileInfoRetriever *retriever) {
+			NSSet *tagNames = [retriever background_availableTagNamesInsideDirectoryURL:directoryURL];
+			
+			[retriever background_processAvailableTagNames:tagNames forDirectoryURL:directoryURL];
+		}];
+	}];
+}
+
+- (NSSet *)background_availableTagNamesInsideDirectoryURL:(NSURL *)directoryURL
+{
+	NSMutableSet *foundTagNames = [NSMutableSet new];
+	
+	NSArray *requiredResourceKeys = @[NSURLTagNamesKey];
+	
+	NSFileManager *fm = (self.fileManager);
+	// TODO: multiple error handling?
+	NSDirectoryEnumerator *de = [fm enumeratorAtURL:directoryURL includingPropertiesForKeys:requiredResourceKeys options:( NSDirectoryEnumerationSkipsPackageDescendants | NSDirectoryEnumerationSkipsHiddenFiles) errorHandler:^BOOL(NSURL *url, NSError *error) {
+		return YES;
+	}];
+	
+	for (NSURL *foundURL in de) {
+		NSDictionary *resourceValues = [foundURL resourceValuesForKeys:requiredResourceKeys error:nil];
+		
+		if (!resourceValues) {
+			continue;
+		}
+		
+		NSArray *tagNamesForFile = resourceValues[NSURLTagNamesKey];
+		if (tagNamesForFile) {
+			[foundTagNames addObjectsFromArray:tagNamesForFile];
+		}
+	}
+	
+	return foundTagNames;
+}
+
+- (void)background_processAvailableTagNames:(NSSet *)tagNames forDirectoryURL:(NSURL *)directoryURL
+{
+	[self runAsyncOnInputQueue:^(GLAFileInfoRetriever *retriever) {
+		NSMutableSet *directoryURLsHavingAvailableTagNamesInsideLoaded = (retriever.directoryURLsHavingAvailableTagNamesInsideLoaded);
+		[directoryURLsHavingAvailableTagNamesInsideLoaded removeObject:directoryURL];
+		
+		NSCache *cacheOfDirectoryURLsToAvailableTagNamesInside = (retriever.cacheOfDirectoryURLsToAvailableTagNamesInside);
+		[cacheOfDirectoryURLsToAvailableTagNamesInside setObject:tagNames forKey:directoryURL];
+		
+		[retriever useDelegateOnMainQueue:^(GLAFileInfoRetriever *retriever, id<GLAFileInfoRetrieverDelegate> delegate) {
+			[delegate fileInfoRetriever:self didRetrieveAvailableTagNamesInsideDirectoryURL:directoryURL];
+		}];
+	}];
+}
+
+- (NSSet * __nullable)availableTagNamesInsideDirectoryURL:(NSURL *)directoryURL requestIfNeeded:(BOOL)requestIfNeeded
+{
+	NSParameterAssert(directoryURL != nil);
+	
+	__block NSSet *tagNames = nil;
+	__block BOOL hasNoResult = NO;
+	
+	dispatch_sync((self.inputDispatchQueue), ^{
+		NSCache *cacheOfDirectoryURLsToAvailableTagNamesInside = (self.cacheOfDirectoryURLsToAvailableTagNamesInside);
+		
+		id object = [cacheOfDirectoryURLsToAvailableTagNamesInside objectForKey:directoryURL];
+		if ([object isKindOfClass:[NSSet class]]) {
+			tagNames = object;
+		}
+		// If no error
+		else if (!object) {
+			hasNoResult = YES;
+		}
+	});
+	
+	if (requestIfNeeded && hasNoResult) {
+		[self requestAvailableTagNamesInsideDirectoryURL:directoryURL];
+	}
+	
+	return tagNames;
+}
+
+/*
+- (NSError *)errorRetrievingAvailableTagNamesInsideDirectoryURL:(NSURL *)directoryURL
+{
+	
+}
+ */
 
 #pragma mark Clearing Cache
 
