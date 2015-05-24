@@ -31,9 +31,9 @@
                                     <action selector="orderFrontStandardAboutPanel:" target="-1" id="Exp-CZ-Vem"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Haunts" id="jpz-u9-f2i">
+                            <menuItem title="Blik’s Haunts" id="jpz-u9-f2i">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Haunts" id="3Ke-6A-3cx">
+                                <menu key="submenu" title="Blik’s Haunts" id="3Ke-6A-3cx">
                                     <items>
                                         <menuItem title="Twitter…" id="MYi-Mo-VRQ">
                                             <modifierMask key="keyEquivalentModifierMask"/>

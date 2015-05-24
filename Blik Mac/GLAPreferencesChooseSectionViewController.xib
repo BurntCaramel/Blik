@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAPreferencesChooseSectionViewController">
@@ -20,7 +20,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="0AQ-QA-VI6">
-                    <rect key="frame" x="139" y="47" width="202" height="18"/>
+                    <rect key="frame" x="139" y="39" width="202" height="18"/>
                     <buttonCell key="cell" type="check" title="Show Launcher in Status Bar" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="KlU-bO-BMH">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -29,8 +29,8 @@
                         <action selector="toggleShowStatusMenuItem:" target="-2" id="67E-jR-Upr"/>
                     </connections>
                 </button>
-                <button identifier="chooseSection" misplaced="YES" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="cUl-LF-03T" customClass="GLAButton">
-                    <rect key="frame" x="90" y="99" width="300" height="27"/>
+                <button identifier="chooseSection" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="cUl-LF-03T" customClass="GLAButton">
+                    <rect key="frame" x="180" y="145" width="120" height="27"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="27" id="WIY-03-eB0"/>
                     </constraints>
@@ -58,7 +58,7 @@
                     </connections>
                 </button>
                 <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nuV-8B-eaD">
-                    <rect key="frame" x="88" y="134" width="304" height="46"/>
+                    <rect key="frame" x="88" y="91" width="304" height="46"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="300" id="ctg-1T-MH8"/>
                     </constraints>
@@ -70,10 +70,10 @@
                 </textField>
             </subviews>
             <constraints>
-                <constraint firstItem="0AQ-QA-VI6" firstAttribute="top" secondItem="cUl-LF-03T" secondAttribute="bottom" constant="36" id="Irw-aA-bBk"/>
-                <constraint firstItem="cUl-LF-03T" firstAttribute="top" secondItem="nuV-8B-eaD" secondAttribute="bottom" constant="8" id="UnO-dH-aDY"/>
-                <constraint firstItem="nuV-8B-eaD" firstAttribute="top" secondItem="BUd-m3-8GV" secondAttribute="top" constant="20" id="WcV-XM-JhP"/>
+                <constraint firstItem="nuV-8B-eaD" firstAttribute="top" secondItem="cUl-LF-03T" secondAttribute="bottom" constant="8" id="OXP-iW-WHH"/>
                 <constraint firstAttribute="centerX" secondItem="nuV-8B-eaD" secondAttribute="centerX" id="cs6-ed-peO"/>
+                <constraint firstAttribute="centerY" secondItem="cUl-LF-03T" secondAttribute="centerY" constant="58" id="fTg-wb-Az7"/>
+                <constraint firstItem="0AQ-QA-VI6" firstAttribute="top" secondItem="nuV-8B-eaD" secondAttribute="bottom" constant="36" id="rKu-ls-lQ7"/>
                 <constraint firstAttribute="centerX" secondItem="cUl-LF-03T" secondAttribute="centerX" id="w7f-yS-EzO"/>
                 <constraint firstAttribute="centerX" secondItem="0AQ-QA-VI6" secondAttribute="centerX" id="yus-jP-WKK"/>
             </constraints>

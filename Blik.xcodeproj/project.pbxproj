@@ -416,16 +416,6 @@
 		B20DB2901B08335700E57532 /* BurntFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BurntFoundation.framework; path = Carthage/Build/Mac/BurntFoundation.framework; sourceTree = "<group>"; };
 		B20DB2921B084A9B00E57532 /* FileCollectionBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileCollectionBarViewController.swift; sourceTree = "<group>"; };
 		B20DB2941B09A63700E57532 /* FileCollectionSelectionSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileCollectionSelectionSource.swift; sourceTree = "<group>"; };
-		B20DB29E1B0C899F00E57532 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B20DB29F1B0C899F00E57532 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		B20DB2A01B0C899F00E57532 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		B20DB2A21B0C899F00E57532 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		B20DB2A41B0C899F00E57532 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		B20DB2A51B0C899F00E57532 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		B20DB2A71B0C899F00E57532 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		B20DB2AA1B0C899F00E57532 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		B20DB2B51B0C899F00E57532 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B20DB2B61B0C899F00E57532 /* Blik_TrialTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Blik_TrialTests.m; sourceTree = "<group>"; };
 		B20DB3661B0C8ACA00E57532 /* Blik Trial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blik Trial.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B20DB3671B0C8ACA00E57532 /* Blik Trial-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Blik Trial-Info.plist"; path = "/Users/pgwsmith/Work/Apps Git/Blik/Blik Trial-Info.plist"; sourceTree = "<absolute>"; };
 		B20DB3681B0C8DE700E57532 /* FileCollectionBarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileCollectionBarViewController.xib; sourceTree = "<group>"; };
@@ -810,46 +800,6 @@
 			name = "Array Editing";
 			sourceTree = "<group>";
 		};
-		B20DB29C1B0C899F00E57532 /* Blik Trial */ = {
-			isa = PBXGroup;
-			children = (
-				B20DB29F1B0C899F00E57532 /* AppDelegate.h */,
-				B20DB2A01B0C899F00E57532 /* AppDelegate.m */,
-				B20DB2A41B0C899F00E57532 /* ViewController.h */,
-				B20DB2A51B0C899F00E57532 /* ViewController.m */,
-				B20DB2A71B0C899F00E57532 /* Images.xcassets */,
-				B20DB2A91B0C899F00E57532 /* Main.storyboard */,
-				B20DB29D1B0C899F00E57532 /* Supporting Files */,
-			);
-			path = "Blik Trial";
-			sourceTree = "<group>";
-		};
-		B20DB29D1B0C899F00E57532 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				B20DB29E1B0C899F00E57532 /* Info.plist */,
-				B20DB2A21B0C899F00E57532 /* main.m */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		B20DB2B31B0C899F00E57532 /* Blik TrialTests */ = {
-			isa = PBXGroup;
-			children = (
-				B20DB2B61B0C899F00E57532 /* Blik_TrialTests.m */,
-				B20DB2B41B0C899F00E57532 /* Supporting Files */,
-			);
-			path = "Blik TrialTests";
-			sourceTree = "<group>";
-		};
-		B20DB2B41B0C899F00E57532 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				B20DB2B51B0C899F00E57532 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		B20DB36F1B0CBFBC00E57532 /* Stack */ = {
 			isa = PBXGroup;
 			children = (
@@ -1065,8 +1015,6 @@
 				B2ADDBD71963DA2E0014EF84 /* Blik Mac */,
 				B2ADDBF51963DA2E0014EF84 /* Blik Tests */,
 				B2F0DBB319923887001AB5EE /* QuickLook Preview */,
-				B20DB29C1B0C899F00E57532 /* Blik Trial */,
-				B20DB2B31B0C899F00E57532 /* Blik TrialTests */,
 				B2ADDBD01963DA2E0014EF84 /* Frameworks */,
 				B2ADDBCF1963DA2E0014EF84 /* Products */,
 				BB8F3BC1C722507F051B0067 /* Pods */,
@@ -2138,14 +2086,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		B20DB2A91B0C899F00E57532 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B20DB2AA1B0C899F00E57532 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		B2ADDBDA1963DA2E0014EF84 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
