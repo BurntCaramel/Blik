@@ -197,6 +197,8 @@
 		B20DB3811B0EC63B00E57532 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB37E1B0EC63B00E57532 /* Fabric.framework */; };
 		B20DB3821B0EC63C00E57532 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB37F1B0EC63B00E57532 /* Crashlytics.framework */; };
 		B20DB3831B0EC63C00E57532 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB37F1B0EC63B00E57532 /* Crashlytics.framework */; };
+		B20DB38D1B12A7E800E57532 /* CreatorThoughts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DB38C1B12A7E800E57532 /* CreatorThoughts.swift */; };
+		B20DB38E1B12A7E800E57532 /* CreatorThoughts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DB38C1B12A7E800E57532 /* CreatorThoughts.swift */; };
 		B2174F7C19BEDBDF00BAE041 /* GLAModelErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = B2174F7B19BEDBDF00BAE041 /* GLAModelErrors.m */; };
 		B219DAA2196AB65D007900DF /* GLAMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B219DAA0196AB65D007900DF /* GLAMainWindowController.m */; };
 		B219DAA3196AB65D007900DF /* GLAMainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B219DAA1196AB65D007900DF /* GLAMainWindowController.xib */; };
@@ -428,6 +430,7 @@
 		B20DB37B1B0EB84600E57532 /* GLAFileCollecting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAFileCollecting.h; sourceTree = "<group>"; };
 		B20DB37E1B0EC63B00E57532 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		B20DB37F1B0EC63B00E57532 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		B20DB38C1B12A7E800E57532 /* CreatorThoughts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreatorThoughts.swift; sourceTree = "<group>"; };
 		B2174F7A19BEDBDF00BAE041 /* GLAModelErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAModelErrors.h; sourceTree = "<group>"; };
 		B2174F7B19BEDBDF00BAE041 /* GLAModelErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAModelErrors.m; sourceTree = "<group>"; };
 		B219DA9F196AB65D007900DF /* GLAMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainWindowController.h; sourceTree = "<group>"; };
@@ -1067,6 +1070,7 @@
 				B21B6E5E1B063740001B8430 /* Blik-Bridging-Header.h */,
 				B2ADDBE31963DA2E0014EF84 /* GLAAppDelegate.h */,
 				B2ADDBE41963DA2E0014EF84 /* GLAAppDelegate.m */,
+				B20DB38C1B12A7E800E57532 /* CreatorThoughts.swift */,
 				B2CCF8EA1A370C8700EC7703 /* Categories */,
 				B2ADDBE61963DA2E0014EF84 /* MainMenu.xib */,
 				B2ADDBE91963DA2E0014EF84 /* Images.xcassets */,
@@ -1826,6 +1830,7 @@
 				B20DB2DF1B0C8ACA00E57532 /* GLAFolderQueryResults.m in Sources */,
 				B20DB2E01B0C8ACA00E57532 /* GLATableActionsViewController.m in Sources */,
 				B20DB2E11B0C8ACA00E57532 /* GLAUIStyle.m in Sources */,
+				B20DB38E1B12A7E800E57532 /* CreatorThoughts.swift in Sources */,
 				B20DB2E21B0C8ACA00E57532 /* GLAAccessedFileInfo.m in Sources */,
 				B20DB2E31B0C8ACA00E57532 /* NSObject+PGWSNotificationObserving.m in Sources */,
 				B20DB2E41B0C8ACA00E57532 /* GLAPreferencesSectionNavigator.m in Sources */,
@@ -1961,6 +1966,7 @@
 				B2ED54281A9183D700F6B4FA /* GLAFolderQueryResults.m in Sources */,
 				B25591F519C3CD0D0039D2AC /* GLATableActionsViewController.m in Sources */,
 				B219DAB6196AD698007900DF /* GLAUIStyle.m in Sources */,
+				B20DB38D1B12A7E800E57532 /* CreatorThoughts.swift in Sources */,
 				B2ED538A1A8A20B700F6B4FA /* GLAAccessedFileInfo.m in Sources */,
 				B2CCF8E91A370C7D00EC7703 /* NSObject+PGWSNotificationObserving.m in Sources */,
 				B2E39B641A89B642000A9A12 /* GLAPreferencesSectionNavigator.m in Sources */,

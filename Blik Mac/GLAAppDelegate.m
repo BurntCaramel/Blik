@@ -13,6 +13,7 @@
 #import "GLAApplicationSettingsManager.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import "Blik-Swift.h"
 
 #define DO_FOLDER_QUERY_TEST 0 && DEBUG
 
@@ -23,6 +24,8 @@
 @interface GLAAppDelegate ()
 
 @property(nonatomic) BOOL hasPrepared;
+
+@property(nonatomic) CreatorThoughtsAssistant *creatorThoughtsAssistant;
 
 #if DO_FOLDER_QUERY_TEST
 @property(nonatomic) GLAFolderQueryResults *folderQueryResults;
@@ -60,6 +63,8 @@
 #endif
 	
 	[[GLAApplicationSettingsManager sharedApplicationSettingsManager] ensureAccessToPermittedApplicationsFolders];
+	
+	(self.creatorThoughtsAssistant) = [[CreatorThoughtsAssistant alloc] initWithMenu:(self.creatorThoughtsMenu)];
 	
 #if DO_FOLDER_QUERY_TEST
 	GLAFolderQuery *folderQuery = [[GLAFolderQuery alloc] initCreatingByEditing:^(id<GLAFolderQueryEditing> editor) {
@@ -200,6 +205,20 @@
 	NSURL *twitterProfileURL = [NSURL URLWithString:@"https://twitter.com/BlikApp"];
 	
 	[[NSWorkspace sharedWorkspace] openURL:twitterProfileURL];
+}
+
+- (IBAction)openFeedbackWebsite:(id)sender
+{
+	NSURL *blikSupportWebsiteURL = [NSURL URLWithString:@"http://www.burntcaramel.com/blik/support/"];
+	
+	[[NSWorkspace sharedWorkspace] openURL:blikSupportWebsiteURL];
+}
+
+- (IBAction)openFeedbackEmail:(id)sender
+{
+	NSURL *blikEmailURL = [NSURL URLWithString:@"mailto:blik@burntcaramel.com"];
+	
+	[[NSWorkspace sharedWorkspace] openURL:blikEmailURL];
 }
 
 #pragma mark Help Menu

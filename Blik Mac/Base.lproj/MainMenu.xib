@@ -15,6 +15,7 @@
         <customObject id="Voe-Tx-rLC" customClass="GLAAppDelegate">
             <connections>
                 <outlet property="buyMenuItem" destination="00M-E5-hBF" id="Wqd-0o-ag6"/>
+                <outlet property="creatorThoughtsMenu" destination="IDb-BM-AKA" id="mTG-dM-ppZ"/>
                 <outlet property="mainHelpMenu" destination="F2S-fz-NVQ" id="6Va-3s-85r"/>
             </connections>
         </customObject>
@@ -67,6 +68,11 @@
                                 <connections>
                                     <action selector="toggleShowingStatusItem:" target="Voe-Tx-rLC" id="Xo5-0D-ois"/>
                                 </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="bIA-pm-bZk"/>
+                            <menuItem title="Creator’s Thoughts" id="DLI-xQ-gGw">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Creator’s Thoughts" id="IDb-BM-AKA"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                             <menuItem title="Services" id="NMo-om-nkz">
@@ -513,9 +519,15 @@ DQ
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
                         <items>
-                            <menuItem title="Blik Help" keyEquivalent="?" id="FKE-Sm-Kum">
+                            <menuItem title="Blik Help" hidden="YES" keyEquivalent="?" id="FKE-Sm-Kum">
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="y7X-2Q-9no"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Email Feedback or Support…" id="Erd-ek-tSW">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="openFeedbackEmail:" target="Voe-Tx-rLC" id="oTR-XG-lB5"/>
                                 </connections>
                             </menuItem>
                         </items>

@@ -25,6 +25,8 @@
 @property (assign, nonatomic) IBOutlet NSMenuItem *buyMenuItem;
 @property (assign, nonatomic) IBOutlet NSMenuItem *buyMacAppStoreMenuItem;
 
+@property (assign, nonatomic) IBOutlet NSMenu *creatorThoughtsMenu;
+
 - (IBAction)toggleShowingMainWindow:(id)sender;
 
 - (IBAction)toggleShowingStatusItem:(id)sender;
@@ -34,5 +36,7 @@
 - (IBAction)showAppInMacAppStore:(id)sender;
 - (IBAction)openAppWebsite:(id)sender;
 - (IBAction)openTwitterWebProfile:(id)sender;
+
+- (IBAction)openFeedbackWebsite:(id)sender;
 
 @end
