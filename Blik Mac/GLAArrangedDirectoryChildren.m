@@ -107,7 +107,12 @@
 			[arrangedChildURLs removeObjectsAtIndexes:invisibleFilesIndexes];
 		}
 		
-		NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:sortsAscending];
+		SEL compareSelector = @selector(compare:);
+		if ([resourceKeyToSortBy isEqualToString:NSURLLocalizedNameKey]) {
+			compareSelector = @selector(localizedStandardCompare:);
+		}
+		
+		NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:sortsAscending selector:compareSelector];
 		[arrangedChildURLs sortUsingComparator:^NSComparisonResult(NSURL *fileURL1, NSURL *fileURL2) {
 			id<NSObject> value1 = [fileInfoRetriever resourceValueForKey:resourceKeyToSortBy forURL:fileURL1];
 			id<NSObject> value2 = [fileInfoRetriever resourceValueForKey:resourceKeyToSortBy forURL:fileURL2];
