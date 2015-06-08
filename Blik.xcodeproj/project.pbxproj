@@ -304,8 +304,10 @@
 		B2CCF8F01A38682400EC7703 /* GLAPendingAddedCollectedFilesInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B2CCF8EF1A38682400EC7703 /* GLAPendingAddedCollectedFilesInfo.m */; };
 		B2D0331919FFA3E600C396FB /* GLACollectionIndicationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B2D0331819FFA3E600C396FB /* GLACollectionIndicationButton.m */; };
 		B2D0331C19FFA69000C396FB /* GLAHighlightsTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = B2D0331B19FFA69000C396FB /* GLAHighlightsTableCellView.m */; };
-		B2D9D8821B248DD800217300 /* IdentifierUniter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D9D8811B248DD800217300 /* IdentifierUniter.swift */; };
-		B2D9D8831B248DD800217300 /* IdentifierUniter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D9D8811B248DD800217300 /* IdentifierUniter.swift */; };
+		B2D9D87A1B247ACA00217300 /* Paddle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2D9D8791B247ACA00217300 /* Paddle.framework */; };
+		B2D9D87E1B247BBC00217300 /* Paddle-MAS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2D9D87D1B247BBC00217300 /* Paddle-MAS.framework */; };
+		B2D9D87F1B247D2600217300 /* Paddle-MAS.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B2D9D87D1B247BBC00217300 /* Paddle-MAS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B2D9D8801B247D2A00217300 /* Paddle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B2D9D8791B247ACA00217300 /* Paddle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B2D9EE5B1AD3B0B400F5F34E /* GLAOverlaidBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = B2D9EE5A1AD3B0B400F5F34E /* GLAOverlaidBarView.m */; };
 		B2D9EE5E1AD3B34F00F5F34E /* GLACollectedItemContentHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = B2D9EE5D1AD3B34F00F5F34E /* GLACollectedItemContentHolderView.m */; };
 		B2D9EE621AD4D27D00F5F34E /* GLAProjectsListMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2D9EE611AD4D27D00F5F34E /* GLAProjectsListMenuController.m */; };
@@ -370,6 +372,7 @@
 			files = (
 				B20DB1D41B06DBA500E57532 /* BurntCocoaUI.framework in Copy Frameworks */,
 				B20DB2911B08335700E57532 /* BurntFoundation.framework in Copy Frameworks */,
+				B2D9D87F1B247D2600217300 /* Paddle-MAS.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -382,6 +385,7 @@
 			files = (
 				B20DB3611B0C8ACA00E57532 /* BurntCocoaUI.framework in Copy Frameworks */,
 				B20DB3621B0C8ACA00E57532 /* BurntFoundation.framework in Copy Frameworks */,
+				B2D9D8801B247D2A00217300 /* Paddle.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -626,7 +630,8 @@
 		B2D0331819FFA3E600C396FB /* GLACollectionIndicationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLACollectionIndicationButton.m; sourceTree = "<group>"; };
 		B2D0331A19FFA69000C396FB /* GLAHighlightsTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAHighlightsTableCellView.h; sourceTree = "<group>"; };
 		B2D0331B19FFA69000C396FB /* GLAHighlightsTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAHighlightsTableCellView.m; sourceTree = "<group>"; };
-		B2D9D8811B248DD800217300 /* IdentifierUniter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentifierUniter.swift; sourceTree = "<group>"; };
+		B2D9D8791B247ACA00217300 /* Paddle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Paddle.framework; sourceTree = "<group>"; };
+		B2D9D87D1B247BBC00217300 /* Paddle-MAS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "Paddle-MAS.framework"; sourceTree = "<group>"; };
 		B2D9EE591AD3B0B400F5F34E /* GLAOverlaidBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAOverlaidBarView.h; sourceTree = "<group>"; };
 		B2D9EE5A1AD3B0B400F5F34E /* GLAOverlaidBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAOverlaidBarView.m; sourceTree = "<group>"; };
 		B2D9EE5C1AD3B34F00F5F34E /* GLACollectedItemContentHolderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLACollectedItemContentHolderView.h; sourceTree = "<group>"; };
@@ -723,6 +728,7 @@
 				B20DB3411B0C8ACA00E57532 /* BurntCocoaUI.framework in Frameworks */,
 				B20DB3421B0C8ACA00E57532 /* BurntFoundation.framework in Frameworks */,
 				B20DB3811B0EC63B00E57532 /* Fabric.framework in Frameworks */,
+				B2D9D87A1B247ACA00217300 /* Paddle.framework in Frameworks */,
 				B20DB3831B0EC63C00E57532 /* Crashlytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -731,6 +737,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2D9D87E1B247BBC00217300 /* Paddle-MAS.framework in Frameworks */,
 				B2ADDBD21963DA2E0014EF84 /* Cocoa.framework in Frameworks */,
 				B2A8FCB21A23BFB00002108E /* libPods-Blik-Mantle.a in Frameworks */,
 				B2A8FCB31A23BFB00002108E /* libPods-Blik-pop.a in Frameworks */,
@@ -1014,9 +1021,6 @@
 		B2ADDBC51963DA2E0014EF84 = {
 			isa = PBXGroup;
 			children = (
-				B20DB37E1B0EC63B00E57532 /* Fabric.framework */,
-				B20DB37F1B0EC63B00E57532 /* Crashlytics.framework */,
-				B20DB2901B08335700E57532 /* BurntFoundation.framework */,
 				B22E80CC198F8B13005C4108 /* Blik.entitlements */,
 				B2ADDBD71963DA2E0014EF84 /* Blik Mac */,
 				B2ADDBF51963DA2E0014EF84 /* Blik Tests */,
@@ -1041,6 +1045,11 @@
 		B2ADDBD01963DA2E0014EF84 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B2D9D87C1B247AEF00217300 /* Mac App Store */,
+				B2D9D87B1B247ACD00217300 /* Not Mac App Store */,
+				B20DB37E1B0EC63B00E57532 /* Fabric.framework */,
+				B20DB37F1B0EC63B00E57532 /* Crashlytics.framework */,
+				B20DB2901B08335700E57532 /* BurntFoundation.framework */,
 				B20DB28E1B08334800E57532 /* BurntFoundation.framework */,
 				B20DB1D11B06DB9100E57532 /* BurntCocoaUI.framework */,
 				B2A8FCB01A23BFB00002108E /* libPods-Blik-Mantle.a */,
@@ -1293,6 +1302,22 @@
 			name = "Add Collected Files Choice";
 			sourceTree = "<group>";
 		};
+		B2D9D87B1B247ACD00217300 /* Not Mac App Store */ = {
+			isa = PBXGroup;
+			children = (
+				B2D9D8791B247ACA00217300 /* Paddle.framework */,
+			);
+			name = "Not Mac App Store";
+			sourceTree = "<group>";
+		};
+		B2D9D87C1B247AEF00217300 /* Mac App Store */ = {
+			isa = PBXGroup;
+			children = (
+				B2D9D87D1B247BBC00217300 /* Paddle-MAS.framework */,
+			);
+			name = "Mac App Store";
+			sourceTree = "<group>";
+		};
 		B2D9EE5F1AD4B08C00F5F34E /* QuickLook */ = {
 			isa = PBXGroup;
 			children = (
@@ -1452,7 +1477,6 @@
 				B20362C01A0779F3007169C2 /* GLACollectedFilesSetting.m */,
 				B20362C21A077C87007169C2 /* GLAFileOpenerApplicationFinder.h */,
 				B20362C31A077C87007169C2 /* GLAFileOpenerApplicationFinder.m */,
-				B2D9D8811B248DD800217300 /* IdentifierUniter.swift */,
 			);
 			name = "File Helpers";
 			sourceTree = "<group>";
@@ -1838,7 +1862,6 @@
 				B20DB2E21B0C8ACA00E57532 /* GLAAccessedFileInfo.m in Sources */,
 				B20DB2E31B0C8ACA00E57532 /* NSObject+PGWSNotificationObserving.m in Sources */,
 				B20DB2E41B0C8ACA00E57532 /* GLAPreferencesSectionNavigator.m in Sources */,
-				B2D9D8831B248DD800217300 /* IdentifierUniter.swift in Sources */,
 				B20DB2E51B0C8ACA00E57532 /* GLAArrayTableDraggingHelper.m in Sources */,
 				B20DB2E61B0C8ACA00E57532 /* GLAMainSection.m in Sources */,
 				B20DB3771B0DB1EA00E57532 /* GLAProjectManager+Convenience.swift in Sources */,
@@ -1975,7 +1998,6 @@
 				B2ED538A1A8A20B700F6B4FA /* GLAAccessedFileInfo.m in Sources */,
 				B2CCF8E91A370C7D00EC7703 /* NSObject+PGWSNotificationObserving.m in Sources */,
 				B2E39B641A89B642000A9A12 /* GLAPreferencesSectionNavigator.m in Sources */,
-				B2D9D8821B248DD800217300 /* IdentifierUniter.swift in Sources */,
 				B207633F1A114AC9003C5922 /* GLAArrayTableDraggingHelper.m in Sources */,
 				B2F0DBC11992607B001AB5EE /* GLAMainSection.m in Sources */,
 				B20DB3761B0DB1EA00E57532 /* GLAProjectManager+Convenience.swift in Sources */,
