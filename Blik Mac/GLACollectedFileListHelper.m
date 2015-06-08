@@ -121,6 +121,10 @@
 	NSArray *projectFolders = [pm copyPrimaryFoldersForProject:(self.project)];
 	NSMutableSet *directoryURLs = [NSMutableSet new];
 	for (GLACollectedFile *collectedFile in projectFolders) {
+		if (collectedFile.empty) {
+			continue;
+		}
+		
 		GLAAccessedFileInfo *accessedFileInfo = [collectedFile accessFile];
 		NSURL *directoryURL = (accessedFileInfo.filePathURL);
 		[directoryURLs addObject:directoryURL];
