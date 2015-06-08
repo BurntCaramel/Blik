@@ -20,6 +20,12 @@
 #import "GLAFolderQuery.h"
 #import "GLAFolderQueryResults.h"
 
+#if TRIAL
+	#import <Paddle/Paddle.h>
+#else
+	#import <Paddle-MAS/Paddle.h>
+#endif
+
 
 @interface GLAAppDelegate ()
 
@@ -51,6 +57,13 @@
 	[self prepareIfNeeded];
 }
 
+#if TRIAL
+- (void)showThanksForTrying
+{
+	[[Paddle sharedInstance] startLicensing:[self productInfo] timeTrial:NO withWindow:(self.mainWindowController.window)];
+}
+#endif
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	[Fabric with:@[CrashlyticsKit]];
@@ -66,6 +79,13 @@
 	
 	(self.creatorThoughtsAssistant) = [[CreatorThoughtsAssistant alloc] initWithMenu:(self.creatorThoughtsMenu)];
 	
+	
+	Paddle *paddle = [Paddle sharedInstance];
+	[paddle setProductId:@"499457"];
+	[paddle setVendorId:@"8725"];
+	[paddle setApiKey:@"ab5bb78fc07545f6f78772d2255bce71"];
+	
+	
 #if DO_FOLDER_QUERY_TEST
 	GLAFolderQuery *folderQuery = [[GLAFolderQuery alloc] initCreatingByEditing:^(id<GLAFolderQueryEditing> editor) {
 		(editor.collectedFileForFolderURL) = [[GLACollectedFile alloc] initWithFileURL:[NSURL fileURLWithPath:NSHomeDirectory()]];
@@ -78,6 +98,23 @@
 	(self.folderQueryResults) = folderQueryResults;
 #endif
 }
+
+#if TRIAL
+- (NSDictionary *)productInfo
+{
+	return
+  @{
+	kPADCurrentPrice: @"8.99",
+	kPADDevName: @"Patrick Smith",
+	kPADCurrency: @"USD",
+	//kPADImage: @"http://www.macupdate.com/util/iconlg/17227.png",
+	kPADProductName: @"Blik",
+	//kPADTrialDuration: @"7",
+	kPADTrialText: @"Get Blik without limitations by purchasing",
+	kPADProductImage: [NSImage imageNamed:@"AppIcon.icns"],
+	};
+}
+#endif
 
 - (void)prepareIfNeeded
 {
