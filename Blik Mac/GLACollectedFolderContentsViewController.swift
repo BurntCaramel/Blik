@@ -12,6 +12,8 @@ import BurntCocoaUI
 
 private enum BrowseChoice {
 	case Hierarchy
+	case Flat
+	
 	case LoadingAvailableTags
 	case FilesWithTag(tagName: String)
 	case ZeroAvailableTags
@@ -21,7 +23,9 @@ extension BrowseChoice: UIChoiceRepresentative {
 	var title: String {
 		switch self {
 		case .Hierarchy:
-			return NSLocalizedString("Content", comment: "Title for hierachy folder contents browsing choice.")
+			return NSLocalizedString("Hierarchy", comment: "Title for hierarchical folder contents browsing choice.")
+		case .Flat:
+			return NSLocalizedString("Flat", comment: "Title for flat (non-hierarchical) folder contents browsing choice.")
 		case .LoadingAvailableTags:
 			return NSLocalizedString("(Loading Tags)", comment: "Title for hierachy folder contents browsing choice when loading tags.")
 		case let .FilesWithTag(tagName):
@@ -36,6 +40,8 @@ extension BrowseChoice: UIChoiceRepresentative {
 		switch self {
 		case .Hierarchy:
 			return "hierarchy"
+		case .Flat:
+			return "flat"
 		case .LoadingAvailableTags:
 			return "loadingAvailableTags"
 		case let .FilesWithTag(tagName):
@@ -146,7 +152,9 @@ extension BrowseChoice: UIChoiceRepresentative {
 		folderContentOutlineView.doubleAction = "openSelectedFiles:"
 		style.prepareContentTableView(folderContentOutlineView)
 		
-		//browseChoicePopUpButtonAssistant = PopUpButtonAssistant<BrowseChoice>(popUpButton: browseChoicePopUpButton)
+		if let browseChoicePopUpButton = browseChoicePopUpButton {
+			browseChoicePopUpButtonAssistant = PopUpButtonAssistant<BrowseChoice>(popUpButton: browseChoicePopUpButton)
+		}
 		
 		reloadContentsOfFolder()
 		
@@ -178,7 +186,7 @@ extension BrowseChoice: UIChoiceRepresentative {
 				directoryWatcher = nil
 			}
 			
-			//updateBrowseChoiceUI(initial: true)
+			updateBrowseChoiceUI(initial: true)
 			
 			reloadContentsOfFolder()
 		}
@@ -194,6 +202,7 @@ extension BrowseChoice: UIChoiceRepresentative {
 		if let sourceDirectoryURL = sourceDirectoryURL {
 			var browseChoices: [BrowseChoice?] = [
 				.Hierarchy,
+				.Flat,
 				nil
 			]
 			

@@ -258,6 +258,10 @@
 {
 	NSError *error = nil;
 	BOOL isValid = [self validateBookmarkData:&bookmarkData updateProperties:YES error:&error];
+#if DEBUG
+	//NSLog(@"setBookmarkData %@", bookmarkData);
+	NSLog(@"setBookmarkData %@", @(isValid));
+#endif
 	if (!isValid) {
 		(self.wasCreatedFromBookmarkData) = NO;
 		//(self.sourceBookmarkData) = nil;
@@ -287,6 +291,9 @@
 	NSURL *URL = [NSURL URLByResolvingBookmarkData:bookmarkData options:NSURLBookmarkResolutionWithSecurityScope relativeToURL:nil bookmarkDataIsStale:&isStale error:&error];
 	// No URL could be found: invalid.
 	if (!URL) {
+#if DEBUG
+		NSLog(@"Could not resolve bookmark data; stale %@; error %@", @(isStale), error);
+#endif
 		switch (error.code) {
 			case NSFileNoSuchFileError:
 			case NSFileReadUnknownError:
@@ -301,7 +308,7 @@
 	}
 	
 	if (update) {
-#if 0
+#if DEBUG
 		NSLog(@"LOADED URL %@", URL);
 		NSLog(@"FILE PATH URL %@", [URL filePathURL]);
 		NSLog(@"FILE REF URL %@", [URL fileReferenceURL]);
