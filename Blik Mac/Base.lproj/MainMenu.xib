@@ -442,6 +442,19 @@ DQ
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="Designate" id="TL4-Bt-PFx">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Designate" id="8nc-Vq-OWw">
+                        <items>
+                            <menuItem title="Designate For Images" id="fhq-Lf-huO">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem title="Designate For Web URLs" id="xuh-LC-csm">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
                 <menuItem title="Pluck" id="96z-eX-NDn">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Pluck" id="5cF-uk-BG1">
