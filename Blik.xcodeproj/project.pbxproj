@@ -286,6 +286,8 @@
 		B2ADDBF11963DA2E0014EF84 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBF01963DA2E0014EF84 /* XCTest.framework */; };
 		B2ADDBF21963DA2E0014EF84 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2ADDBD11963DA2E0014EF84 /* Cocoa.framework */; };
 		B2ADDBFA1963DA2E0014EF84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBF81963DA2E0014EF84 /* InfoPlist.strings */; };
+		B2B466711B29B88A001C4BC0 /* SymlinkCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B466701B29B88A001C4BC0 /* SymlinkCreator.swift */; };
+		B2B466721B29B88A001C4BC0 /* SymlinkCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B466701B29B88A001C4BC0 /* SymlinkCreator.swift */; };
 		B2BB85151A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85141A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m */; };
 		B2BB85181A3F095B00BF186C /* GLAMainContentManners.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85171A3F095B00BF186C /* GLAMainContentManners.m */; };
 		B2C154401A00D7BB00912AB1 /* GLAModelUUIDMap.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C1543F1A00D7BB00912AB1 /* GLAModelUUIDMap.m */; };
@@ -593,6 +595,7 @@
 		B2ADDBF01963DA2E0014EF84 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		B2ADDBF71963DA2E0014EF84 /* BlikTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BlikTests-Info.plist"; sourceTree = "<group>"; };
 		B2ADDBF91963DA2E0014EF84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B2B466701B29B88A001C4BC0 /* SymlinkCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SymlinkCreator.swift; sourceTree = "<group>"; };
 		B2BB850D1A39C4AB00BF186C /* GLAArrayMantleJSONStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAArrayMantleJSONStore.h; sourceTree = "<group>"; };
 		B2BB850E1A39C4AB00BF186C /* GLAArrayMantleJSONStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAArrayMantleJSONStore.m; sourceTree = "<group>"; };
 		B2BB85131A3BE97A00BF186C /* PGWSQueuedBlockConvenience.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGWSQueuedBlockConvenience.h; sourceTree = "<group>"; };
@@ -1477,6 +1480,7 @@
 				B20362C01A0779F3007169C2 /* GLACollectedFilesSetting.m */,
 				B20362C21A077C87007169C2 /* GLAFileOpenerApplicationFinder.h */,
 				B20362C31A077C87007169C2 /* GLAFileOpenerApplicationFinder.m */,
+				B2B466701B29B88A001C4BC0 /* SymlinkCreator.swift */,
 			);
 			name = "File Helpers";
 			sourceTree = "<group>";
@@ -1907,6 +1911,7 @@
 				B20DB30D1B0C8ACA00E57532 /* GLAHighlightsTableCellView.m in Sources */,
 				B20DB30E1B0C8ACA00E57532 /* GLAReminder.m in Sources */,
 				B20DB30F1B0C8ACA00E57532 /* GLAEditPermittedApplicationFoldersViewController.m in Sources */,
+				B2B466721B29B88A001C4BC0 /* SymlinkCreator.swift in Sources */,
 				B20DB3101B0C8ACA00E57532 /* GLAProjectsListViewController.m in Sources */,
 				B20DB3111B0C8ACA00E57532 /* GLAPopUpButton.m in Sources */,
 				B20DB3121B0C8ACA00E57532 /* GLAMultipleArrayTableHelper.m in Sources */,
@@ -2043,6 +2048,7 @@
 				B2D0331C19FFA69000C396FB /* GLAHighlightsTableCellView.m in Sources */,
 				B24B3607196D1F720094FA1F /* GLAReminder.m in Sources */,
 				B2E39B421A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.m in Sources */,
+				B2B466711B29B88A001C4BC0 /* SymlinkCreator.swift in Sources */,
 				B2C7F28B197023EF005780B4 /* GLAProjectsListViewController.m in Sources */,
 				B2F0DBCA199449FB001AB5EE /* GLAPopUpButton.m in Sources */,
 				B2E39B331A7C5BEF000A9A12 /* GLAMultipleArrayTableHelper.m in Sources */,
