@@ -68,6 +68,7 @@
 
 - (void)fillView:(NSView *)holderView withView:(NSView *)innerView
 {
+	NSParameterAssert(holderView != nil);
 	NSParameterAssert(innerView != nil);
 	
 	if (!(innerView.identifier)) {
