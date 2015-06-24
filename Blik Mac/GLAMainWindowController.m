@@ -45,6 +45,14 @@
 	NSWindow *window = (self.window);
 	(window.movableByWindowBackground) = YES;
 	
+	// TODO: check if this will run on 10.9 ok.
+	// Dark title bar
+	(window.appearance) = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
+	(((NSView *)(window.contentView)).appearance) = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+	
+	GLAUIStyle *style = [GLAUIStyle activeStyle];
+	(window.backgroundColor) = (style.contentBackgroundColor);
+	
 	//(window.level) = CGWindowLevelForKey(kCGDesktopIconWindowLevelKey) - 1;
 	
 	//(window.excludedFromWindowsMenu) = NO;
