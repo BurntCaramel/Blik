@@ -310,26 +310,6 @@
 		[panel reloadData];
 	}
 	
-#if 0
-	// PREVIEW
-	if (!(self.quickLookPreviewView)) {
-		GLAViewController *previewHolderViewController = [[GLAViewController alloc] init];
-		NSView *holderView = (self.previewHolderView);
-		if (holderView) {
-			//(holderView.wantsLayer) = YES;
-			//(holderView.canDrawSubviewsIntoLayer) = YES;
-			(previewHolderViewController.view) = holderView;
-			
-			(self.previewHolderViewController) = previewHolderViewController;
-			
-			QLPreviewView *quickLookPreviewView = [[QLPreviewView alloc] initWithFrame:NSZeroRect style:QLPreviewViewStyleNormal];
-			//(quickLookPreviewView.wantsLayer) = YES;
-			[previewHolderViewController fillViewWithChildView:quickLookPreviewView];
-			(self.quickLookPreviewView) = quickLookPreviewView;
-		}
-	}
-#endif
-	
 	NSArray *selectedURLs = (self.selectedURLs);
 	NSURL *URL = nil;
 	

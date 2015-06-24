@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="addToHighlightsMenuItem" destination="beX-h3-nbY" id="GBj-fp-Dsu"/>
                 <outlet property="barHolderView" destination="ktp-Qj-ozg" id="S3v-Bi-CRy"/>
+                <outlet property="commentsTextView" destination="7Tm-kw-eAm" id="nfl-TC-s1I"/>
                 <outlet property="previewHolderView" destination="qn1-n0-gYl" id="lx5-hz-3W2"/>
                 <outlet property="sourceFilesListContextualMenu" destination="JOI-as-pHF" id="q63-4h-AMF"/>
                 <outlet property="sourceFilesListTableView" destination="vUu-g3-xAK" id="IgR-dz-cWU"/>
@@ -175,7 +176,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <subviews>
                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="qn1-n0-gYl">
-                                    <rect key="frame" x="0.0" y="40" width="299" height="232"/>
+                                    <rect key="frame" x="0.0" y="40" width="299" height="198"/>
                                 </customView>
                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="ktp-Qj-ozg">
                                     <rect key="frame" x="0.0" y="0.0" width="299" height="40"/>
@@ -183,18 +184,58 @@
                                         <constraint firstAttribute="height" constant="40" id="qjt-XT-qlL"/>
                                     </constraints>
                                 </customView>
+                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="RJ3-h4-SZz">
+                                    <rect key="frame" x="0.0" y="238" width="299" height="34"/>
+                                    <subviews>
+                                        <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fec-Vu-n3f">
+                                            <rect key="frame" x="0.0" y="0.0" width="299" height="34"/>
+                                            <clipView key="contentView" id="ejh-Ul-4Bt">
+                                                <rect key="frame" x="1" y="1" width="223" height="133"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <textView importsGraphics="NO" richText="NO" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="7Tm-kw-eAm">
+                                                        <rect key="frame" x="0.0" y="0.0" width="223" height="133"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <size key="minSize" width="299" height="34"/>
+                                                        <size key="maxSize" width="463" height="10000000"/>
+                                                        <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <size key="minSize" width="299" height="34"/>
+                                                        <size key="maxSize" width="463" height="10000000"/>
+                                                    </textView>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </clipView>
+                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="Qzf-jQ-Iwy">
+                                                <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </scroller>
+                                            <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="aW8-gz-kuA">
+                                                <rect key="frame" x="224" y="1" width="15" height="133"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </scroller>
+                                        </scrollView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="34" id="9fN-EX-1X1"/>
+                                        <constraint firstAttribute="bottom" secondItem="fec-Vu-n3f" secondAttribute="bottom" id="AdS-WH-awn"/>
+                                        <constraint firstAttribute="trailing" secondItem="fec-Vu-n3f" secondAttribute="trailing" id="DpR-Eg-3Mq"/>
+                                        <constraint firstItem="fec-Vu-n3f" firstAttribute="leading" secondItem="RJ3-h4-SZz" secondAttribute="leading" id="hz6-C4-mgb"/>
+                                        <constraint firstItem="fec-Vu-n3f" firstAttribute="top" secondItem="RJ3-h4-SZz" secondAttribute="top" id="kFe-0c-q4I"/>
+                                    </constraints>
+                                </customView>
                             </subviews>
                             <constraints>
-                                <constraint firstItem="qn1-n0-gYl" firstAttribute="top" secondItem="Tix-1S-YGD" secondAttribute="top" id="Ftw-Dp-Pi2"/>
+                                <constraint firstItem="RJ3-h4-SZz" firstAttribute="leading" secondItem="Tix-1S-YGD" secondAttribute="leading" id="CSv-Nq-9Vy"/>
                                 <constraint firstItem="ktp-Qj-ozg" firstAttribute="top" secondItem="qn1-n0-gYl" secondAttribute="bottom" id="Nrn-CU-Qbv"/>
-                                <constraint firstItem="qn1-n0-gYl" firstAttribute="leading" secondItem="Tix-1S-YGD" secondAttribute="leading" id="PJC-B0-vMy"/>
                                 <constraint firstItem="ktp-Qj-ozg" firstAttribute="leading" secondItem="Tix-1S-YGD" secondAttribute="leading" id="Vys-lF-OtK"/>
-                                <constraint firstItem="qn1-n0-gYl" firstAttribute="top" secondItem="Tix-1S-YGD" secondAttribute="top" id="ijH-xR-I9i"/>
+                                <constraint firstItem="RJ3-h4-SZz" firstAttribute="top" secondItem="Tix-1S-YGD" secondAttribute="top" id="XpD-F5-i14"/>
                                 <constraint firstItem="qn1-n0-gYl" firstAttribute="leading" secondItem="Tix-1S-YGD" secondAttribute="leading" id="oC1-gE-vwr"/>
                                 <constraint firstAttribute="trailing" secondItem="ktp-Qj-ozg" secondAttribute="trailing" id="odC-Fm-6xq"/>
                                 <constraint firstAttribute="trailing" secondItem="qn1-n0-gYl" secondAttribute="trailing" id="qZr-F0-qng"/>
                                 <constraint firstAttribute="bottom" secondItem="ktp-Qj-ozg" secondAttribute="bottom" id="rDi-Fk-PP0"/>
-                                <constraint firstAttribute="trailing" secondItem="qn1-n0-gYl" secondAttribute="trailing" id="tDO-TO-L2f"/>
+                                <constraint firstAttribute="trailing" secondItem="RJ3-h4-SZz" secondAttribute="trailing" id="uNK-OZ-UYb"/>
+                                <constraint firstItem="qn1-n0-gYl" firstAttribute="top" secondItem="RJ3-h4-SZz" secondAttribute="bottom" id="uYU-m2-jbT"/>
                             </constraints>
                         </customView>
                     </subviews>

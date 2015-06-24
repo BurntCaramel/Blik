@@ -64,7 +64,8 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	]];
 	
 	// I think Apple (from a WWDC video) says this is better for scrolling performance.
-	(tableView.enclosingScrollView.wantsLayer) = YES;
+	//(tableView.enclosingScrollView.wantsLayer) = YES;
+	//(tableView.enclosingScrollView.layerContentsRedrawPolicy) = NSViewLayerContentsRedrawCrossfade;
 	
 	[self wrapScrollView];
 	//[self setUpEditingActionsView];
@@ -522,6 +523,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 {
 	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	(cellView.canDrawSubviewsIntoLayer) = YES;
+	(cellView.layerContentsRedrawPolicy) = NSViewLayerContentsRedrawBeforeViewResize;
 	
 	GLACollection *collection = (self.collections)[row];
 	NSString *title = (collection.name);

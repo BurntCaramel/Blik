@@ -30,6 +30,8 @@
 @property(nonatomic) IBOutlet NSView *barHolderView;
 @property(nonatomic) IBOutlet FileCollectionBarViewController *barViewController;
 
+@property(strong, nonatomic) IBOutlet NSTextView *commentsTextView;
+
 @property(strong, nonatomic) IBOutlet GLAPopUpButton *openerApplicationsPopUpButton;
 @property(strong, nonatomic) IBOutlet GLAButton *shareButton;
 @property(strong, nonatomic) IBOutlet GLAButton *addToHighlightsButton;

@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAFileCollectionViewController">
             <connections>
-                <outlet property="addToHighlightsButton" destination="mwN-Xs-gtx" id="Crn-G6-ZGr"/>
-                <outlet property="openerApplicationsPopUpButton" destination="vuN-TK-s4w" id="qug-7t-xwX"/>
-                <outlet property="shareButton" destination="PNP-Jb-j8k" id="v2E-v2-a9Y"/>
+                <outlet property="barHolderView" destination="WPC-xk-zpe" id="jVh-LM-4HY"/>
                 <outlet property="sourceFilesStackView" destination="xja-7H-QQk" id="yuy-0t-0w7"/>
                 <outlet property="view" destination="RnZ-xC-chF" id="VVi-HS-BnQ"/>
             </connections>
@@ -20,133 +18,10 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="274"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="L4w-do-n2H" customClass="GLAButton">
-                    <rect key="frame" x="0.0" y="0.0" width="180" height="40"/>
-                    <constraints>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="iZV-lb-Ob9"/>
-                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="180" id="vI6-dh-AsF"/>
-                        <constraint firstAttribute="height" constant="40" id="viZ-ab-IXg"/>
-                    </constraints>
-                    <buttonCell key="cell" type="square" title="Add File or Folder" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0Gz-4H-Jna" customClass="GLAButtonCell">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" size="13" name="AvenirNext-Medium"/>
-                    </buttonCell>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                            <integer key="value" value="-1"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
-                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
-                            <integer key="value" value="8"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetYAmount">
-                            <integer key="value" value="8"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <action selector="chooseFilesToAdd:" target="-2" id="0Bf-BZ-k2z"/>
-                    </connections>
-                </button>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="WPC-xk-zpe">
-                    <rect key="frame" x="180" y="0.0" width="300" height="40"/>
-                    <subviews>
-                        <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="vuN-TK-s4w" customClass="GLAPopUpButton">
-                            <rect key="frame" x="8" y="8" width="100" height="24"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="24" id="Gds-ce-hgj"/>
-                                <constraint firstAttribute="width" constant="100" id="tR2-fz-grp"/>
-                            </constraints>
-                            <popUpButtonCell key="cell" type="roundTextured" title="Open in" bezelStyle="texturedRounded" alignment="left" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="ci5-IG-xe3" id="AVJ-zS-B9M" customClass="GLAPopUpButtonCell">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" size="13" name="AvenirNext-Medium"/>
-                                <menu key="menu" id="VlR-Z9-yFW">
-                                    <items>
-                                        <menuItem title="Open in" state="on" hidden="YES" id="ci5-IG-xe3"/>
-                                        <menuItem title="Item 2" id="Se4-zG-PD9"/>
-                                        <menuItem title="Item 3" id="eMs-eC-7DL"/>
-                                    </items>
-                                </menu>
-                            </popUpButtonCell>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
-                                <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
-                                    <integer key="value" value="4"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                                    <integer key="value" value="-1"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
-                                    <integer key="value" value="4"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </popUpButton>
-                        <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mwN-Xs-gtx" customClass="GLAButton">
-                            <rect key="frame" x="183" y="0.0" width="116" height="40"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="40" id="BPb-Hy-U0G"/>
-                            </constraints>
-                            <buttonCell key="cell" type="square" title="Add to Highlights" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jvS-DL-Osp" customClass="GLAButtonCell">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" size="13" name="AvenirNext-Medium"/>
-                            </buttonCell>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                                    <integer key="value" value="-1"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
-                                <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
-                                    <integer key="value" value="8"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetYAmount">
-                                    <integer key="value" value="8"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
-                                    <integer key="value" value="16"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
-                                    <integer key="value" value="16"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </button>
-                        <button translatesAutoresizingMaskIntoConstraints="NO" id="PNP-Jb-j8k" customClass="GLAButton">
-                            <rect key="frame" x="108" y="0.0" width="17" height="40"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="40" id="cOK-RH-2x6"/>
-                            </constraints>
-                            <buttonCell key="cell" type="square" title="Share" bezelStyle="shadowlessSquare" image="NSShareTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0aF-yY-RYE" customClass="GLAButtonCell">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" size="13" name="AvenirNext-Medium"/>
-                            </buttonCell>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
-                                    <integer key="value" value="0"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
-                                <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
-                                    <integer key="value" value="4"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetYAmount">
-                                    <integer key="value" value="8"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
-                                    <integer key="value" value="13"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
-                                    <integer key="value" value="13"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </button>
-                    </subviews>
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="40"/>
                     <constraints>
-                        <constraint firstAttribute="centerY" secondItem="vuN-TK-s4w" secondAttribute="centerY" id="Ini-fp-r3U"/>
-                        <constraint firstItem="mwN-Xs-gtx" firstAttribute="top" secondItem="WPC-xk-zpe" secondAttribute="top" id="KXR-KG-td5"/>
-                        <constraint firstItem="vuN-TK-s4w" firstAttribute="leading" secondItem="WPC-xk-zpe" secondAttribute="leading" constant="8" id="MCZ-hT-UoM"/>
-                        <constraint firstAttribute="bottom" secondItem="PNP-Jb-j8k" secondAttribute="bottom" id="YBU-f6-39D"/>
-                        <constraint firstItem="mwN-Xs-gtx" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="PNP-Jb-j8k" secondAttribute="trailing" id="ZhJ-EJ-gdp"/>
                         <constraint firstAttribute="height" constant="40" id="b72-sy-e5q"/>
-                        <constraint firstAttribute="trailing" secondItem="mwN-Xs-gtx" secondAttribute="trailing" id="eyY-Sa-dHZ"/>
-                        <constraint firstItem="PNP-Jb-j8k" firstAttribute="top" secondItem="WPC-xk-zpe" secondAttribute="top" id="fMO-Gu-VFW"/>
-                        <constraint firstItem="PNP-Jb-j8k" firstAttribute="leading" secondItem="vuN-TK-s4w" secondAttribute="trailing" id="xIM-53-9yo"/>
                     </constraints>
                 </customView>
                 <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pgR-Oo-r29" customClass="GLATopDownScrollView">
@@ -175,19 +50,14 @@
             </subviews>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="WPC-xk-zpe" secondAttribute="trailing" id="8AQ-kO-xsF"/>
-                <constraint firstAttribute="bottom" secondItem="L4w-do-n2H" secondAttribute="bottom" id="H61-8q-9za"/>
                 <constraint firstItem="pgR-Oo-r29" firstAttribute="top" secondItem="RnZ-xC-chF" secondAttribute="top" id="JVC-Of-1QV"/>
                 <constraint firstItem="WPC-xk-zpe" firstAttribute="top" secondItem="pgR-Oo-r29" secondAttribute="bottom" id="X3g-aU-9p6"/>
                 <constraint firstAttribute="bottom" secondItem="WPC-xk-zpe" secondAttribute="bottom" id="Yma-g2-9jS"/>
-                <constraint firstItem="L4w-do-n2H" firstAttribute="leading" secondItem="RnZ-xC-chF" secondAttribute="leading" id="c26-zt-axW"/>
-                <constraint firstItem="WPC-xk-zpe" firstAttribute="leading" secondItem="L4w-do-n2H" secondAttribute="trailing" id="nVr-y6-zXX"/>
                 <constraint firstItem="pgR-Oo-r29" firstAttribute="leading" secondItem="RnZ-xC-chF" secondAttribute="leading" id="nXh-Hx-Nkp"/>
+                <constraint firstItem="WPC-xk-zpe" firstAttribute="leading" secondItem="RnZ-xC-chF" secondAttribute="leading" id="tGn-TV-GZN"/>
                 <constraint firstAttribute="trailing" secondItem="pgR-Oo-r29" secondAttribute="trailing" id="zCp-Ag-vVv"/>
             </constraints>
             <point key="canvasLocation" x="448" y="376"/>
         </customView>
     </objects>
-    <resources>
-        <image name="NSShareTemplate" width="11" height="16"/>
-    </resources>
 </document>

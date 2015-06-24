@@ -22,13 +22,30 @@
 	return YES;
 }
 
+- (CGFloat)innerContentHeight
+{
+	if ((self.subviews.count) == 0) {
+		return 0.0;
+	}
+	
+	NSView *innerView = (self.subviews)[0];
+	if ([innerView isKindOfClass:[NSScrollView class]]) {
+		NSScrollView *scrollView = (NSScrollView *)innerView;
+		return [scrollView contentSize].height;
+	}
+	
+	return NSHeight(innerView.frame);
+}
+
 - (NSSize)intrinsicContentSize
 {
 	CGFloat minimumHeight = (self.minimumHeight);
 	if (minimumHeight == 0.0) {
+		//return NSMakeSize(NSViewNoInstrinsicMetric, (self.innerContentHeight));
 		return [super intrinsicContentSize];
 	}
 	else {
+		//minimumHeight = fmax(minimumHeight, (self.innerContentHeight));
 		return NSMakeSize(NSViewNoInstrinsicMetric, minimumHeight);
 	}
 }

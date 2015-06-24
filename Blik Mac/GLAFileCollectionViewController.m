@@ -132,9 +132,14 @@
 		[uiStyle prepareContentStackView:sourceFilesStackView];
 	}
 	
-	FileCollectionSelectionAssistant *selectionAssistant = [[FileCollectionSelectionAssistant alloc] initWithSource:self filesListCollectionUUID:(self.filesListCollection.UUID) projectUUID:(self.project.UUID) projectManager:(self.projectManager)];
 	
+	FileCollectionSelectionAssistant *selectionAssistant = [[FileCollectionSelectionAssistant alloc] initWithSource:self filesListCollectionUUID:(self.filesListCollection.UUID) projectUUID:(self.project.UUID) projectManager:(self.projectManager)];
 	(self.selectionAssistant) = selectionAssistant;
+	
+	
+	NSTextView *commentsTextView = (self.commentsTextView);
+	[uiStyle prepareContentTextView:commentsTextView];
+	
 	
 	FileCollectionBarViewController *barViewController = [[FileCollectionBarViewController alloc] initWithNibName:@"FileCollectionBarViewController" bundle:nil];
 	(barViewController.selectionAssistant) = selectionAssistant;
@@ -921,8 +926,17 @@
 	return [self rowIndexForURL:fileURL];
 }
 
+- (BOOL)hasQuickLookPreview
+{
+	return (self.previewHolderView) != nil;
+}
+
 - (void)updateQuickLookPreviewAnimating:(BOOL)animate
 {
+	if (!(self.hasQuickLookPreview)) {
+		return;
+	}
+	
 	GLAQuickLookPreviewHelper *quickLookPreviewHelper = [self setUpQuickLookPreviewHelperIfNeeded];
 	[quickLookPreviewHelper updatePreviewAnimating:animate];
 }

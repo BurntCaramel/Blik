@@ -731,6 +731,7 @@
 	
 	(cellView.backgroundStyle) = NSBackgroundStyleDark;
 	(cellView.canDrawSubviewsIntoLayer) = YES;
+	(cellView.layerContentsRedrawPolicy) = NSViewLayerContentsRedrawBeforeViewResize;
 	(cellView.alphaValue) = 1.0;
 	
 	if (row < (highlightedItems.count)) {

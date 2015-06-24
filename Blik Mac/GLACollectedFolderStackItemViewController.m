@@ -86,7 +86,13 @@
 
 - (void)updateContentWithDirectoryURL:(NSURL *)directoryURL
 {
-	GLACollectedFolderContentsViewController *folderContentsViewController = [GLACollectedFolderContentsViewController new];
+	GLACollectedFolderContentsViewController *oldVC = (self.folderContentsViewController);
+	if (oldVC) {
+		[(oldVC.view) removeFromSuperview];
+	}
+	
+	//GLACollectedFolderContentsViewController *folderContentsViewController = [GLACollectedFolderContentsViewController new];
+	GLACollectedFolderContentsViewController *folderContentsViewController = [[GLACollectedFolderContentsViewController alloc] initWithWithoutScrollView:YES];
 	(folderContentsViewController.sourceDirectoryURL) = directoryURL;
 	(self.folderContentsViewController) = folderContentsViewController;
 	
