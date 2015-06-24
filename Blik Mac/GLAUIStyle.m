@@ -291,6 +291,13 @@
 	//[textField noteFocusRingMaskChanged];
 }
 
+- (void)prepareContentTextView:(NSTextView *)textView
+{
+	NSColor *backgroundColor = (self.contentBackgroundColor);
+	(textView.backgroundColor) = backgroundColor;
+	(textView.textColor) = (self.lightTextColor);
+}
+
 - (void)prepareContentTableView:(NSTableView *)tableView
 {
 	NSColor *backgroundColor = (self.contentBackgroundColor);
@@ -377,7 +384,11 @@
 
 - (void)primaryWindowDidResignMain:(NSWindow *)window
 {
-	(window.alphaValue) = 30.5/32.0;
+	BOOL isFullScreen = ((window.styleMask) & NSFullScreenWindowMask) == NSFullScreenWindowMask;
+	
+	if (!isFullScreen) {
+		(window.alphaValue) = 30.5/32.0;
+	}
 }
 
 - (void)secondaryWindowDidBecomeMain:(NSWindow *)window

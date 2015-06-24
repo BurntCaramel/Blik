@@ -127,6 +127,7 @@
 - (void)prepareSecondaryInstructionalTextLabel:(NSTextField *)textField;
 
 - (void)prepareOutlinedTextField:(NSTextField *)textField;
+- (void)prepareContentTextView:(NSTextView *)textView;
 - (void)prepareContentTableView:(NSTableView *)tableView;
 - (void)prepareContentStackView:(NSStackView *)stackView;
 
