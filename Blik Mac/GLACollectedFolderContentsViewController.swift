@@ -54,8 +54,35 @@ extension BrowseChoice: UIChoiceRepresentative {
 	var hidesInvisibles = true
 	
 	@IBOutlet var folderContentOutlineView: NSOutlineView!
+	var folderContentScrollView: NSScrollView? {
+		return folderContentOutlineView.enclosingScrollView
+	}
 	
 	public var assistant: GLAFolderContentsAssisting?
+	
+	private var maximumHeightLayoutConstraint: NSLayoutConstraint?
+	internal var constraintToMaximumHeight: Bool {
+		return folderContentScrollView == nil
+	}
+	
+	private func updateMaximumHeightConstraint() {
+		if constraintToMaximumHeight {
+			let folderContentOutlineView = self.folderContentOutlineView
+			let constraint = maximumHeightLayoutConstraint ?? {
+				let constraint = NSLayoutConstraint(item: folderContentOutlineView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 0.0)
+				constraint.priority = 750
+				
+				folderContentOutlineView.addConstraint(constraint)
+				
+				self.maximumHeightLayoutConstraint = constraint
+				
+				return constraint
+			}()
+			
+			let height = folderContentOutlineView.rowHeight * CGFloat(folderContentOutlineView.numberOfRows)
+			constraint.constant = height
+		}
+	}
 	
 	var fileInfoRetriever: GLAFileInfoRetriever!
 	var directoryURLToArrangedChildren = [NSURL: GLAArrangedDirectoryChildren]()
@@ -99,6 +126,16 @@ extension BrowseChoice: UIChoiceRepresentative {
 	
 	override public class func defaultNibName() -> String {
 		return "GLACollectedFolderContentsViewController"
+	}
+	
+	convenience init(withoutScrollView: Bool) {
+		self.init()
+		
+		if let scrollView = self.view.enclosingScrollView where withoutScrollView {
+			scrollView.documentView = nil
+		}
+		
+		self.view = folderContentOutlineView
 	}
 	
 	override public func prepareView() {
@@ -187,7 +224,24 @@ extension BrowseChoice: UIChoiceRepresentative {
 	func reloadContentsOfFolder() {
 		directoryURLToArrangedChildren.removeAll()
 		
-		folderContentOutlineView.reloadData()
+		if let sourceDirectoryURL = sourceDirectoryURL {
+			updateContentsOfDirectoryForURL(sourceDirectoryURL)
+		}
+		else {
+			folderContentOutlineView.reloadData()
+			updateMaximumHeightConstraint()
+		}
+	}
+	
+	func updateContentsOfDirectoryForURL(directoryURL: NSURL) {
+		if directoryURL == sourceDirectoryURL {
+			folderContentOutlineView.reloadData()
+		}
+		else {
+			folderContentOutlineView.reloadItem(directoryURL, reloadChildren: true)
+		}
+		
+		updateMaximumHeightConstraint()
 	}
 	
 	func updateBrowseChoiceUI(initial: Bool = false) {
@@ -378,12 +432,7 @@ extension GLACollectedFolderContentsViewController: GLAArrangedDirectoryChildren
 	public func arrangedDirectoryChildrenDidUpdateChildren(arrangedDirectoryChildren: GLAArrangedDirectoryChildren) {
 		let directoryURL = arrangedDirectoryChildren.directoryURL
 		
-		if directoryURL == sourceDirectoryURL {
-			folderContentOutlineView.reloadData()
-		}
-		else {
-			folderContentOutlineView.reloadItem(directoryURL, reloadChildren: true)
-		}
+		updateContentsOfDirectoryForURL(directoryURL)
 	}
 }
 
@@ -393,12 +442,7 @@ extension GLACollectedFolderContentsViewController: GLAFileInfoRetrieverDelegate
 	}
 	
 	public func fileInfoRetriever(fileInfoRetriever: GLAFileInfoRetriever, didFailWithError error: NSError, retrievingContentsOfDirectoryURL directoryURL: NSURL) {
-		if directoryURL == sourceDirectoryURL {
-			folderContentOutlineView.reloadData()
-		}
-		else {
-			folderContentOutlineView.reloadItem(directoryURL, reloadChildren: true)
-		}
+		updateContentsOfDirectoryForURL(directoryURL)
 	}
 }
 
