@@ -60,6 +60,8 @@ typedef id (^ GLAArrayChildVisitorBlock)(id child);
 
 - (NSArray *)copyChildrenLoadingIfNeeded;
 - (id<GLAArrayInspecting>)inspectLoadingIfNeeded;
+- (void)ensureLoaded:(void (^)(id<GLAArrayInspecting>))block;
+
 // finishedLoading must be true before calling this method:
 - (void)editChildrenUsingBlock:(GLAArrayEditingBlock)block;
 

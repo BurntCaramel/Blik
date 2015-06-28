@@ -14,6 +14,11 @@
 @property(copy, nonatomic) GLAArrayEditorUserLoadingBlock sourceLoadingBlock;
 @property(copy, nonatomic) GLAArrayEditorUserMakeEditsBlock sourceMakeEditsBlock;
 
+@property(copy, nonatomic) dispatch_group_t loadingDispatchGroup;
+@property(nonatomic) BOOL hasEnteredLoadingGroup;
+
+//@property(copy, nonatomic) dispatch_group_t savingDispatchGroup;
+
 @end
 
 @implementation GLAArrayEditorUser
@@ -27,6 +32,10 @@
 	if (self) {
 		_sourceLoadingBlock = [loadingBlock copy];
 		_sourceMakeEditsBlock = [makeEditsBlock copy];
+		
+		_loadingDispatchGroup = dispatch_group_create();
+		dispatch_group_enter(_loadingDispatchGroup);
+		_hasEnteredLoadingGroup = YES;
 	}
 	return self;
 }
@@ -68,6 +77,11 @@
 		return nil;
 	}
 	
+	if (_hasEnteredLoadingGroup) {
+		dispatch_group_leave(_loadingDispatchGroup);
+		_hasEnteredLoadingGroup = NO;
+	}
+	
 	return arrayEditor;
 }
 
@@ -91,6 +105,14 @@
 	return arrayEditor;
 }
 
+- (void)ensureLoaded:(void (^)(id<GLAArrayInspecting>))block
+{
+	[self inspectLoadingIfNeeded];
+	dispatch_group_notify(_loadingDispatchGroup, dispatch_get_main_queue(), ^{
+		block([self loadArrayEditor]);
+	});
+}
+
 - (void)editChildrenUsingBlock:(void (^)(id<GLAArrayEditing>))block
 {
 	GLAArrayEditor *arrayEditor = [self arrayEditorCreatingAndLoadingIfNeeded:NO];
@@ -105,6 +127,11 @@
 	if (changeCompletionBlock) {
 		GLAArrayEditor *arrayEditor = [self arrayEditorCreatingAndLoadingIfNeeded:YES];
 		changeCompletionBlock(arrayEditor);
+	}
+	
+	if (_hasEnteredLoadingGroup) {
+		dispatch_group_leave(_loadingDispatchGroup);
+		_hasEnteredLoadingGroup = NO;
 	}
 }
 

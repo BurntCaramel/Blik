@@ -108,6 +108,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark Collection Files List
 
+- (id<GLALoadableArrayUsing>)useFilesListForCollection:(GLACollection *)filesListCollection;
+
 - (BOOL)hasLoadedFilesForCollection:(GLACollection *)filesListCollection;
 - (void)loadFilesListForCollectionIfNeeded:(GLACollection *)filesListCollection;
 

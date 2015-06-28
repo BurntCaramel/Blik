@@ -254,6 +254,8 @@
 		B26B6F5019EBE3C800D17ECD /* GLATableView.m in Sources */ = {isa = PBXBuildFile; fileRef = B26B6F4F19EBE3C800D17ECD /* GLATableView.m */; };
 		B2711F3C1A69D41D001CB4AF /* GLAProjectEditPrimaryFoldersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2711F3A1A69D41D001CB4AF /* GLAProjectEditPrimaryFoldersViewController.m */; };
 		B2711F3D1A69D41D001CB4AF /* GLAProjectEditPrimaryFoldersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2711F3B1A69D41D001CB4AF /* GLAProjectEditPrimaryFoldersViewController.xib */; };
+		B27B31A81B3FC1E600ACC214 /* AppDelegate+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27B31A71B3FC1E600ACC214 /* AppDelegate+.swift */; };
+		B27B31A91B3FC1E600ACC214 /* AppDelegate+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27B31A71B3FC1E600ACC214 /* AppDelegate+.swift */; };
 		B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */ = {isa = PBXBuildFile; fileRef = B2841B3219809E15005BB6A3 /* GLAProject.m */; };
 		B284D5621978EC1F00157126 /* GLACollection.m in Sources */ = {isa = PBXBuildFile; fileRef = B284D5611978EC1F00157126 /* GLACollection.m */; };
 		B28927531A6B1F64007238D6 /* GLACollectedFileListHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927521A6B1F64007238D6 /* GLACollectedFileListHelper.m */; };
@@ -537,6 +539,7 @@
 		B2711F391A69D41D001CB4AF /* GLAProjectEditPrimaryFoldersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProjectEditPrimaryFoldersViewController.h; sourceTree = "<group>"; };
 		B2711F3A1A69D41D001CB4AF /* GLAProjectEditPrimaryFoldersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProjectEditPrimaryFoldersViewController.m; sourceTree = "<group>"; };
 		B2711F3B1A69D41D001CB4AF /* GLAProjectEditPrimaryFoldersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAProjectEditPrimaryFoldersViewController.xib; sourceTree = "<group>"; };
+		B27B31A71B3FC1E600ACC214 /* AppDelegate+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppDelegate+.swift"; sourceTree = "<group>"; };
 		B2841B3119809E15005BB6A3 /* GLAProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProject.h; sourceTree = "<group>"; };
 		B2841B3219809E15005BB6A3 /* GLAProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProject.m; sourceTree = "<group>"; };
 		B284D5601978EC1F00157126 /* GLACollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLACollection.h; sourceTree = "<group>"; };
@@ -1085,6 +1088,7 @@
 				B21B6E5E1B063740001B8430 /* Blik-Bridging-Header.h */,
 				B2ADDBE31963DA2E0014EF84 /* GLAAppDelegate.h */,
 				B2ADDBE41963DA2E0014EF84 /* GLAAppDelegate.m */,
+				B27B31A71B3FC1E600ACC214 /* AppDelegate+.swift */,
 				B20DB38C1B12A7E800E57532 /* CreatorThoughts.swift */,
 				B2CCF8EA1A370C8700EC7703 /* Categories */,
 				B2ADDBE61963DA2E0014EF84 /* MainMenu.xib */,
@@ -1855,6 +1859,7 @@
 				B20DB2D81B0C8ACA00E57532 /* GLAMainContentManners.m in Sources */,
 				B20DB2D91B0C8ACA00E57532 /* GLASegmentedControl.m in Sources */,
 				B20DB2DA1B0C8ACA00E57532 /* GLAModelUUIDMap.m in Sources */,
+				B27B31A91B3FC1E600ACC214 /* AppDelegate+.swift in Sources */,
 				B20DB2DB1B0C8ACA00E57532 /* GLAMainNavigationBarController.m in Sources */,
 				B20DB2DC1B0C8ACA00E57532 /* GLAWorkingFoldersManager.m in Sources */,
 				B20DB2DD1B0C8ACA00E57532 /* GLAProjectActionsBarController.m in Sources */,
@@ -1992,6 +1997,7 @@
 				B2BB85181A3F095B00BF186C /* GLAMainContentManners.m in Sources */,
 				B23966DE1ACB983B00C6A420 /* GLASegmentedControl.m in Sources */,
 				B2C154401A00D7BB00912AB1 /* GLAModelUUIDMap.m in Sources */,
+				B27B31A81B3FC1E600ACC214 /* AppDelegate+.swift in Sources */,
 				B24B360B196E336E0094FA1F /* GLAMainNavigationBarController.m in Sources */,
 				B2E39B4E1A85B797000A9A12 /* GLAWorkingFoldersManager.m in Sources */,
 				B2C7F29D1973998C005780B4 /* GLAProjectActionsBarController.m in Sources */,

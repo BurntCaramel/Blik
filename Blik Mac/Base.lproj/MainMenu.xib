@@ -69,6 +69,13 @@
                                     <action selector="toggleShowingStatusItem:" target="Voe-Tx-rLC" id="Xo5-0D-ois"/>
                                 </connections>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="7O0-yG-yjC"/>
+                            <menuItem title="Create Symlinks…" id="YYF-E4-nzV">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="createSymlinks:" target="-1" id="ipC-P4-mvS"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="bIA-pm-bZk"/>
                             <menuItem title="Creator’s Thoughts" id="DLI-xQ-gGw">
                                 <modifierMask key="keyEquivalentModifierMask"/>
