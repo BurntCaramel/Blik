@@ -26,6 +26,7 @@
 @property(strong, nonatomic) IBOutlet NSMenuItem *addToHighlightsMenuItem;
 
 @property(nonatomic) IBOutlet NSStackView *sourceFilesStackView;
+@property(nonatomic) IBOutlet NSTableView *expandedTableView;
 
 @property(nonatomic) IBOutlet NSView *barHolderView;
 @property(nonatomic) IBOutlet FileCollectionBarViewController *barViewController;

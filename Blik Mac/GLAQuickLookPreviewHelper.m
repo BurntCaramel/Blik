@@ -14,7 +14,7 @@
 
 @property(nonatomic) QLPreviewPanel *activeQuickLookPreviewPanel;
 
-@property(nonatomic) GLACollectedFolderContentsViewController *folderContentsViewController;
+@property(nonatomic) GLAFolderContentsViewController *folderContentsViewController;
 
 @property(readwrite, nonatomic) NSURL *activeURL;
 @property(nonatomic) BOOL previewingDirectory;
@@ -164,7 +164,7 @@
 - (BOOL)folderContentsIsFirstResponder
 {
 	if (self.previewingDirectory) {
-		GLACollectedFolderContentsViewController *folderContentsViewController = (self.folderContentsViewController);
+		GLAFolderContentsViewController *folderContentsViewController = (self.folderContentsViewController);
 		if (folderContentsViewController.hasFirstResponder) {
 			return YES;
 		}
@@ -176,7 +176,7 @@
 - (NSArray * __nullable)folderContentsSelectedURLsOnlyIfFirstResponder:(BOOL)onlyIfFirstResponder;
 {
 	if (self.previewingDirectory) {
-		GLACollectedFolderContentsViewController *folderContentsViewController = (self.folderContentsViewController);
+		GLAFolderContentsViewController *folderContentsViewController = (self.folderContentsViewController);
 		if (folderContentsViewController.hasFirstResponder) {
 			return (folderContentsViewController.selectedURLs);
 		}
@@ -281,13 +281,13 @@
 {
 	NSURL *URL = (self.activeURLForDirectoryPreviewing);
 	
-	GLACollectedFolderContentsViewController *folderContentsViewController = (self.folderContentsViewController);
+	GLAFolderContentsViewController *folderContentsViewController = (self.folderContentsViewController);
 	if (!folderContentsViewController) {
 		if (!URL) {
 			return;
 		}
 		
-		folderContentsViewController = [GLACollectedFolderContentsViewController new];
+		folderContentsViewController = [GLAFolderContentsViewController new];
 		(folderContentsViewController.assistant) = self;
 		(self.folderContentsViewController) = folderContentsViewController;
 	}

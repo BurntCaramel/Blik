@@ -184,7 +184,7 @@
                 <constraint firstItem="ysM-AR-GRG" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="u0q-f4-JEO"/>
                 <constraint firstItem="mzD-n5-IlL" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="z2J-TB-RUV"/>
             </constraints>
-            <point key="canvasLocation" x="462" y="294.5"/>
+            <point key="canvasLocation" x="363" y="227.5"/>
         </customView>
     </objects>
     <resources>

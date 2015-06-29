@@ -12,14 +12,14 @@
 #import "GLAUIStyle.h"
 #import "GLACollectedFilePreviewView.h"
 #import "Blik-Swift.h"
-//#import "GLACollectedFolderContentsViewController.h"
+//#import "GLAFolderContentsViewController.h"
 
 
 @interface GLACollectedFolderStackItemViewController () <GLACollectedItemContentHolderViewDelegate>
 
 @property(nonatomic) GLACollectedFilePreviewView *filePreviewView;
 
-@property(nonatomic) GLACollectedFolderContentsViewController *folderContentsViewController;
+@property(nonatomic) GLAFolderContentsViewController *folderContentsViewController;
 
 @end
 
@@ -86,7 +86,7 @@
 
 - (void)updateContentWithDirectoryURL:(NSURL *)directoryURL
 {
-	GLACollectedFolderContentsViewController *folderContentsViewController = [GLACollectedFolderContentsViewController new];
+	GLAFolderContentsViewController *folderContentsViewController = [GLAFolderContentsViewController new];
 	(folderContentsViewController.sourceDirectoryURL) = directoryURL;
 	(self.folderContentsViewController) = folderContentsViewController;
 	

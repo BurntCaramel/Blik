@@ -1,5 +1,5 @@
 //
-//  GLACollectedFolderContentsViewController.swift
+//  GLAContentsViewController.swift
 //  Blik
 //
 //  Created by Patrick Smith on 16/05/2015.
@@ -47,7 +47,28 @@ extension BrowseChoice: UIChoiceRepresentative {
 }
 
 
-@objc public class GLACollectedFolderContentsViewController: GLAViewController {
+private enum MenuChoice: Int, UIChoiceRepresentative {
+	case AddToCollection = 1
+	case RemoveFromCollection
+	case ShowInFinder
+	
+	var title: String {
+		switch self {
+		case AddToCollection:
+			return "Add to Collection"
+		case RemoveFromCollection:
+			return "Remove from Collection"
+		case ShowInFinder:
+			return "Show in Finder…"
+		}
+	}
+	
+	typealias UniqueIdentifier = MenuChoice
+	var uniqueIdentifier: UniqueIdentifier { return self }
+}
+
+
+@objc public class GLAFolderContentsViewController: GLAViewController {
 	
 	var resourceKeyToSortBy = NSURLLocalizedNameKey
 	var sortsAscending = true
@@ -58,6 +79,8 @@ extension BrowseChoice: UIChoiceRepresentative {
 	public var assistant: GLAFolderContentsAssisting?
 	
 	var fileInfoRetriever: GLAFileInfoRetriever!
+	var fileInfoDisplayingAssistant: FileInfoDisplayingAssistant!
+	
 	var directoryURLToArrangedChildren = [NSURL: GLAArrangedDirectoryChildren]()
 	//var availableTagNames: Set<String>?
 	
@@ -65,40 +88,13 @@ extension BrowseChoice: UIChoiceRepresentative {
 	@IBOutlet var browseChoicePopUpButton: NSPopUpButton!
 	private var browseChoicePopUpButtonAssistant: PopUpButtonAssistant<BrowseChoice>!
 	
-	var dateFormatter: NSDateFormatter = {
-		let dateFormatter = NSDateFormatter()
-		dateFormatter.dateStyle = .MediumStyle
-		dateFormatter.timeStyle = .ShortStyle
-		dateFormatter.doesRelativeDateFormatting = true
-		return dateFormatter
-	}()
-	
 	var quickLookPreviewHelper: GLAQuickLookPreviewHelper!
 	
-	private enum MenuChoice: Int, UIChoiceRepresentative {
-		case AddToCollection = 1
-		case RemoveFromCollection
-		case ShowInFinder
-		
-		var title: String {
-			switch self {
-			case AddToCollection:
-				return "Add to Collection"
-			case RemoveFromCollection:
-				return "Remove from Collection"
-			case ShowInFinder:
-				return "Show in Finder…"
-			}
-		}
-		
-		typealias UniqueIdentifier = MenuChoice
-		var uniqueIdentifier: UniqueIdentifier { return self }
-	}
 	private var contextualMenuAssistant: MenuAssistant<MenuChoice>!
 	
 	
 	override public class func defaultNibName() -> String {
-		return "GLACollectedFolderContentsViewController"
+		return "GLAFolderContentsViewController"
 	}
 	
 	override public func prepareView() {
@@ -115,6 +111,10 @@ extension BrowseChoice: UIChoiceRepresentative {
 			NSURLContentModificationDateKey
 		]
 		fileInfoRetriever = GLAFileInfoRetriever(delegate:self, defaultResourceKeysToRequest:defaultResourceKeys)
+		
+		
+		fileInfoDisplayingAssistant = FileInfoDisplayingAssistant(fileInfoRetriever: fileInfoRetriever)
+		
 		
 		let style = GLAUIStyle.activeStyle()
 		
@@ -162,7 +162,6 @@ extension BrowseChoice: UIChoiceRepresentative {
 	
 	var directoryWatcher: GLADirectoryWatcher?
 	
-	var collectedFolder: GLACollectedFile!
 	var sourceDirectoryURL: NSURL! {
 		didSet {
 			// Make sure view has loaded
@@ -308,7 +307,7 @@ extension BrowseChoice: UIChoiceRepresentative {
 	}
 }
 
-extension GLACollectedFolderContentsViewController {
+extension GLAFolderContentsViewController {
 	var fileURLsForContextualMenu: [NSURL]? {
 		let row = folderContentOutlineView.clickedRow
 		if row == -1 {
@@ -374,7 +373,7 @@ extension GLACollectedFolderContentsViewController {
 	}
 }
 
-extension GLACollectedFolderContentsViewController: GLAArrangedDirectoryChildrenDelegate {
+extension GLAFolderContentsViewController: GLAArrangedDirectoryChildrenDelegate {
 	public func arrangedDirectoryChildrenDidUpdateChildren(arrangedDirectoryChildren: GLAArrangedDirectoryChildren) {
 		let directoryURL = arrangedDirectoryChildren.directoryURL
 		
@@ -387,7 +386,7 @@ extension GLACollectedFolderContentsViewController: GLAArrangedDirectoryChildren
 	}
 }
 
-extension GLACollectedFolderContentsViewController: GLAFileInfoRetrieverDelegate {
+extension GLAFolderContentsViewController: GLAFileInfoRetrieverDelegate {
 	public func fileInfoRetriever(fileInfoRetriever: GLAFileInfoRetriever, didRetrieveAvailableTagNamesInsideDirectoryURL directoryURL: NSURL) {
 		updateBrowseChoiceUI()
 	}
@@ -402,13 +401,13 @@ extension GLACollectedFolderContentsViewController: GLAFileInfoRetrieverDelegate
 	}
 }
 
-extension GLACollectedFolderContentsViewController: GLADirectoryWatcherDelegate {
+extension GLAFolderContentsViewController: GLADirectoryWatcherDelegate {
 	public func directoryWatcher(directoryWatcher: GLADirectoryWatcher!, directoriesURLsDidChange directoryURLs: [AnyObject]!) {
 		reloadContentsOfFolder()
 	}
 }
 
-extension GLACollectedFolderContentsViewController: NSOutlineViewDataSource, NSOutlineViewDelegate {
+extension GLAFolderContentsViewController: NSOutlineViewDataSource, NSOutlineViewDelegate {
 	public func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
 		let directoryURL: NSURL
 		if item == nil {
@@ -477,33 +476,10 @@ extension GLACollectedFolderContentsViewController: NSOutlineViewDataSource, NSO
 	// MARK: Delegate
 	
 	public func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
-		if let identifier = tableColumn?.identifier {
-			let cellView = outlineView.makeViewWithIdentifier(identifier, owner: nil) as! NSTableCellView
-			
-			let fileURL = item as! NSURL
-			let fileInfoRetriever = self.fileInfoRetriever
-			
-			var text: String?
-			var image: NSImage?
-			let hasImageView = (cellView.imageView != nil)
-			
-			switch identifier {
-			case "displayNameAndIcon":
-				text = fileInfoRetriever.resourceValueForKey(NSURLLocalizedNameKey, forURL: fileURL) as? String
-				if hasImageView {
-					image = fileInfoRetriever.resourceValueForKey(NSURLEffectiveIconKey, forURL: fileURL) as? NSImage
-				}
-			case "dateModified":
-				if let dateModified = fileInfoRetriever.resourceValueForKey(NSURLContentModificationDateKey, forURL: fileURL) as? NSDate {
-					text = dateFormatter.stringFromDate(dateModified)
-				}
-			default:
-				break
-			}
-			
-			cellView.textField?.stringValue = text ?? "Loading…"
-			cellView.imageView?.image = image
-			
+		
+		let fileURL = item as! NSURL
+		
+		if let cellView = fileInfoDisplayingAssistant.tableCellViewForTableView(outlineView, tableColumn: tableColumn, fileURL: fileURL) {
 			cellView.menu = contextualMenuAssistant.menu
 			
 			return cellView
@@ -519,7 +495,7 @@ extension GLACollectedFolderContentsViewController: NSOutlineViewDataSource, NSO
 	}
 }
 
-extension GLACollectedFolderContentsViewController: GLAQuickLookPreviewHelperDelegate {
+extension GLAFolderContentsViewController: GLAQuickLookPreviewHelperDelegate {
 	public func selectedURLsForQuickLookPreviewHelper(helper: GLAQuickLookPreviewHelper) -> [AnyObject] {
 		return selectedURLs
 	}
@@ -545,7 +521,7 @@ extension GLACollectedFolderContentsViewController: GLAQuickLookPreviewHelperDel
 	}
 }
 
-extension GLACollectedFolderContentsViewController: NSMenuDelegate {
+extension GLAFolderContentsViewController: NSMenuDelegate {
 	public func menuNeedsUpdate(menu: NSMenu) {
 		updateContextualMenu()
 	}
