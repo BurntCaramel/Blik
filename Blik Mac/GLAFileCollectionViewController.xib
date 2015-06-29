@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAFileCollectionViewController">
             <connections>
                 <outlet property="addToHighlightsMenuItem" destination="beX-h3-nbY" id="GBj-fp-Dsu"/>
                 <outlet property="barHolderView" destination="ktp-Qj-ozg" id="S3v-Bi-CRy"/>
-                <outlet property="commentsTextView" destination="7Tm-kw-eAm" id="nfl-TC-s1I"/>
                 <outlet property="previewHolderView" destination="qn1-n0-gYl" id="lx5-hz-3W2"/>
                 <outlet property="sourceFilesListContextualMenu" destination="JOI-as-pHF" id="q63-4h-AMF"/>
                 <outlet property="sourceFilesListTableView" destination="vUu-g3-xAK" id="IgR-dz-cWU"/>
@@ -176,7 +175,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <subviews>
                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="qn1-n0-gYl">
-                                    <rect key="frame" x="0.0" y="40" width="299" height="198"/>
+                                    <rect key="frame" x="0.0" y="40" width="299" height="192"/>
                                 </customView>
                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="ktp-Qj-ozg">
                                     <rect key="frame" x="0.0" y="0.0" width="299" height="40"/>
@@ -185,43 +184,67 @@
                                     </constraints>
                                 </customView>
                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="RJ3-h4-SZz">
-                                    <rect key="frame" x="0.0" y="238" width="299" height="34"/>
+                                    <rect key="frame" x="0.0" y="232" width="299" height="40"/>
                                     <subviews>
-                                        <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fec-Vu-n3f">
-                                            <rect key="frame" x="0.0" y="0.0" width="299" height="34"/>
-                                            <clipView key="contentView" id="ejh-Ul-4Bt">
-                                                <rect key="frame" x="1" y="1" width="223" height="133"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
-                                                    <textView importsGraphics="NO" richText="NO" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="7Tm-kw-eAm">
-                                                        <rect key="frame" x="0.0" y="0.0" width="223" height="133"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <size key="minSize" width="299" height="34"/>
-                                                        <size key="maxSize" width="463" height="10000000"/>
-                                                        <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                        <size key="minSize" width="299" height="34"/>
-                                                        <size key="maxSize" width="463" height="10000000"/>
-                                                    </textView>
-                                                </subviews>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            </clipView>
-                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="Qzf-jQ-Iwy">
-                                                <rect key="frame" x="-100" y="-100" width="87" height="18"/>
-                                                <autoresizingMask key="autoresizingMask"/>
-                                            </scroller>
-                                            <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="aW8-gz-kuA">
-                                                <rect key="frame" x="224" y="1" width="15" height="133"/>
-                                                <autoresizingMask key="autoresizingMask"/>
-                                            </scroller>
-                                        </scrollView>
+                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="VYN-57-CkV" customClass="GLAButton">
+                                            <rect key="frame" x="0.0" y="0.0" width="105" height="40"/>
+                                            <buttonCell key="cell" type="square" title="Add Comments" bezelStyle="shadowlessSquare" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="N87-4d-z0c" customClass="GLAButtonCell">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" size="13" name="AvenirNext-Medium"/>
+                                            </buttonCell>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                                                    <integer key="value" value="8"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                                                    <integer key="value" value="-1"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetYAmount">
+                                                    <integer key="value" value="8"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                                                    <integer key="value" value="16"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                                                    <integer key="value" value="16"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </button>
+                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="dDD-Q8-SX9" customClass="GLAButton">
+                                            <rect key="frame" x="166" y="0.0" width="133" height="40"/>
+                                            <buttonCell key="cell" type="square" title="Change Designation" bezelStyle="shadowlessSquare" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7M1-Uh-NY7" customClass="GLAButtonCell">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" size="13" name="AvenirNext-Medium"/>
+                                            </buttonCell>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="hasSecondaryStyle" value="YES"/>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetXAmount">
+                                                    <integer key="value" value="8"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="cell.verticalOffsetDown">
+                                                    <integer key="value" value="-1"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="backgroundInsetYAmount">
+                                                    <integer key="value" value="8"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="leftSpacing">
+                                                    <integer key="value" value="16"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="rightSpacing">
+                                                    <integer key="value" value="16"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="34" id="9fN-EX-1X1"/>
-                                        <constraint firstAttribute="bottom" secondItem="fec-Vu-n3f" secondAttribute="bottom" id="AdS-WH-awn"/>
-                                        <constraint firstAttribute="trailing" secondItem="fec-Vu-n3f" secondAttribute="trailing" id="DpR-Eg-3Mq"/>
-                                        <constraint firstItem="fec-Vu-n3f" firstAttribute="leading" secondItem="RJ3-h4-SZz" secondAttribute="leading" id="hz6-C4-mgb"/>
-                                        <constraint firstItem="fec-Vu-n3f" firstAttribute="top" secondItem="RJ3-h4-SZz" secondAttribute="top" id="kFe-0c-q4I"/>
+                                        <constraint firstAttribute="height" constant="40" id="9fN-EX-1X1"/>
+                                        <constraint firstItem="VYN-57-CkV" firstAttribute="leading" secondItem="RJ3-h4-SZz" secondAttribute="leading" id="Dae-hF-Kxo"/>
+                                        <constraint firstAttribute="bottom" secondItem="VYN-57-CkV" secondAttribute="bottom" id="Ekk-yd-uSb"/>
+                                        <constraint firstAttribute="trailing" secondItem="dDD-Q8-SX9" secondAttribute="trailing" id="H0m-Rz-bcU"/>
+                                        <constraint firstItem="VYN-57-CkV" firstAttribute="top" secondItem="dDD-Q8-SX9" secondAttribute="top" id="TZG-RC-CSv"/>
+                                        <constraint firstItem="VYN-57-CkV" firstAttribute="top" secondItem="RJ3-h4-SZz" secondAttribute="top" id="Tnz-ca-UNN"/>
+                                        <constraint firstItem="VYN-57-CkV" firstAttribute="bottom" secondItem="dDD-Q8-SX9" secondAttribute="bottom" id="Wkh-ER-TGc"/>
                                     </constraints>
                                 </customView>
                             </subviews>
