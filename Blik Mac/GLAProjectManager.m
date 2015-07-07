@@ -688,6 +688,38 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 #pragma mark Collection Files List
 
+- (id<GLALoadableArrayUsing>)useFilesListForCollection:(GLACollection * __nonnull)filesListCollection
+{
+	GLAArrayEditorUser *arrayEditorUser = [[GLAArrayEditorUser alloc] initWithLoadingBlock:^GLAArrayEditor *(BOOL createAndLoadIfNeeded) {
+		GLAProjectManagerStore *store = (self.store);
+		GLAArrayEditor *arrayEditor = [store filesListArrayEditorForCollectionWithUUID:(filesListCollection.UUID)];
+		
+		if (createAndLoadIfNeeded) {
+			[store loadFilesListForCollectionIfNeeded:filesListCollection];
+		}
+		
+		return arrayEditor;
+	} makeEditsBlock:^(GLAArrayEditingBlock editingBlock) {
+		[self editFilesListOfCollection:filesListCollection usingBlock:editingBlock];
+	}];
+	
+	/*
+	(arrayEditorUser.dependenciesAreFulfilledBlock) = ^{
+		return [self hasLoadedPrimaryFoldersForProject:project];
+	};
+	 */
+	
+	id collectionNotifier = [self notificationObjectForCollection:filesListCollection];
+	
+	// Dependent on primary folders
+	//[arrayEditorUser makeObserverOfObject:projectNotifier forDependencyFulfilledNotificationWithName:GLAProjectPrimaryFoldersDidChangeNotification];
+	
+	// Change notification
+	[arrayEditorUser makeObserverOfObject:collectionNotifier forChangeNotificationWithName:GLACollectionFilesListDidChangeNotification];
+	
+	return arrayEditorUser;
+}
+
 - (BOOL)hasLoadedFilesForCollection:(GLACollection *)filesListCollection
 {
 	NSParameterAssert(filesListCollection != nil);
