@@ -5,11 +5,11 @@
 //  Created by Patrick Smith on 4/08/2014.
 //  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
+NS_ASSUME_NONNULL_BEGIN
 
 @import Foundation;
 @protocol GLAFileInfoRetrieverDelegate;
 
-NS_ASSUME_NONNULL_BEGIN
 
 @interface GLAFileInfoRetriever : NSObject
 
@@ -91,5 +91,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *GLAFileInfoRetrieverDidRetrieveContentsOfDirectoryNotification;
 extern NSString *GLAFileInfoRetrieverNotificationInfoDirectoryURL;
+
 
 NS_ASSUME_NONNULL_END

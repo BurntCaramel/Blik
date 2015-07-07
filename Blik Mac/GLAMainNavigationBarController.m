@@ -487,8 +487,8 @@
 	(viewModeSegmentedControl.target) = self;
 	(viewModeSegmentedControl.action) = @selector(changeCollectionViewMode:);
 	(viewModeSegmentedControl.segmentCount) = 2;
-	[viewModeSegmentedControl setLabel:NSLocalizedString(@"List", @"Title for collection view mode button for list view") forSegment:0];
-	[viewModeSegmentedControl setLabel:NSLocalizedString(@"Stack", @"Title for collection view mode button for stack view") forSegment:1];
+	[viewModeSegmentedControl setLabel:NSLocalizedString(@"Two Pane", @"Title for collection view mode button for list view") forSegment:0];
+	[viewModeSegmentedControl setLabel:NSLocalizedString(@"Expanded", @"Title for collection view mode button for expanded view") forSegment:1];
 	(viewModeSegmentedControl.font) = (uiStyle.buttonFont);
 	[viewModeSegmentedControl sizeToFit];
 	(viewModeSegmentedControl.backgroundInsetXAmount) = 0.0;

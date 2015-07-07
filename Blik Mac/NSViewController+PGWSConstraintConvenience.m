@@ -158,4 +158,22 @@
 	[view addConstraints:newConstraints];
 }
 
+#pragma mark -
+
+- (void)viewWillTransitionIn
+{
+}
+
+- (void)viewDidTransitionIn
+{
+}
+
+- (void)viewWillTransitionOut
+{
+}
+
+- (void)viewDidTransitionOut
+{
+}
+
 @end

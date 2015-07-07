@@ -441,7 +441,7 @@
 
 #pragma mark Collections
 
-- (GLAViewController *)createViewControllerForCollection:(GLACollection *)collection
+- (NSViewController *)createViewControllerForCollection:(GLACollection *)collection
 {
 	GLAViewController *controller = nil;
 	
@@ -461,10 +461,17 @@
 			controller = fileCollectionViewController;
 		}
 		else {
+#if 0
 			GLAFileCollectionViewController *fileCollectionStackedViewController = [[GLAFileCollectionViewController alloc] initWithNibName:@"GLAFileCollectionStackedViewController" bundle:nil];
 			(fileCollectionStackedViewController.filesListCollection) = collection;
 			
 			controller = fileCollectionStackedViewController;
+#else
+			FileCollectionExpandedTableViewController *fileCollectionExpandedTableVC = [[FileCollectionExpandedTableViewController alloc] initWithNibName:@"GLAFileCollectionStackedViewController" bundle:nil];
+			//(fileCollectionExpandedTableVC.filesListCollection) = collection;
+			
+			controller = fileCollectionExpandedTableVC;
+#endif
 		}
 	}
 	else if ([collectionType isEqualToString:GLACollectionTypeFilteredFolder]) {
@@ -480,14 +487,14 @@
 - (void)setUpEditedCollectionViewControllerForSection:(GLAEditCollectionSection *)section
 {
 	// Remove old view
-	GLAViewController *oldCollectionViewController = (self.activeCollectionViewController);
+	NSViewController *oldCollectionViewController = (self.activeCollectionViewController);
 	//NSLayoutConstraint *keepWidthConstraint = nil;
 	if (oldCollectionViewController) {
 		[oldCollectionViewController viewWillTransitionOut];
 	}
 	
 	// Set up new view
-	GLAViewController *collectionViewController = [self createViewControllerForCollection:(section.collection)];
+	NSViewController *collectionViewController = [self createViewControllerForCollection:(section.collection)];
 	NSView *newView = (collectionViewController.view);
 	(newView.identifier) = @"activeCollection";
 	

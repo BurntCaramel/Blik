@@ -38,4 +38,12 @@ typedef void (^PGWSViewControllerConstraintReplacementVisitor)(NSLayoutConstrain
 
 - (void)wrapChildViewKeepingOutsideConstraints:(NSView *)childView withView:(NSView *)replacementView constraintVisitor:(PGWSViewControllerConstraintReplacementVisitor)constraintVisitor;
 
+#pragma mark -
+
+- (void)viewWillTransitionIn;
+- (void)viewDidTransitionIn;
+
+- (void)viewWillTransitionOut;
+- (void)viewDidTransitionOut;
+
 @end

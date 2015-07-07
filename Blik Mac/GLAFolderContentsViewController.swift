@@ -118,7 +118,10 @@ private enum MenuChoice: Int, UIChoiceRepresentative {
 		
 		let style = GLAUIStyle.activeStyle()
 		
-		let folderContentOutlineView = self.folderContentOutlineView
+		let folderContentOutlineView = self.folderContentOutlineView!
+		
+		//FileInfoIdentifier.DisplayNameAndIcon.updateTableColumnInTableView(folderContentOutlineView)
+		//FileInfoIdentifier.DateModified.updateTableColumnInTableView(folderContentOutlineView)
 		
 		let nameSortDescriptor = NSSortDescriptor(key:NSURLLocalizedNameKey, ascending:true)
 		let dateModifiedSortDescriptor = NSSortDescriptor(key:NSURLContentModificationDateKey, ascending:false)

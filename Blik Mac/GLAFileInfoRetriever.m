@@ -465,7 +465,6 @@
 			
 			NSError *error = nil;
 			NSArray *contentsURLs = [fm contentsOfDirectoryAtURL:directoryURL includingPropertiesForKeys:defaultResourceKeysToRequest options:0 error:&error];
-			// FIXME: report error
 			
 			if (contentsURLs) {
 				NSMutableDictionary *childURLToResourceValues = [NSMutableDictionary new];

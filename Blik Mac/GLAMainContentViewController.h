@@ -51,7 +51,7 @@
 
 // Collection
 
-@property(nonatomic) GLAViewController *activeCollectionViewController;
+@property(nonatomic) NSViewController *activeCollectionViewController;
 
 // Adding Project or Collection
 
