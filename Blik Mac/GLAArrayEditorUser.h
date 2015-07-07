@@ -19,6 +19,9 @@ typedef BOOL (^ GLAArrayEditorUserBooleanResultBlock)();
 - (instancetype)initWithLoadingBlock:(GLAArrayEditorUserLoadingBlock)loadingBlock makeEditsBlock:(GLAArrayEditorUserMakeEditsBlock)makeEditsBlock NS_DESIGNATED_INITIALIZER;
 
 
+@property (nonatomic) dispatch_queue_t foregroundQueue;
+
+
 // Change notification, add those particular to your object.
 - (void)makeObserverOfObject:(id)notifier forChangeNotificationWithName:(NSString *)changeNotificationName;
 - (void)didChangeNotification:(NSNotification *)note;
