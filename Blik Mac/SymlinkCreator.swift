@@ -15,17 +15,27 @@ let workDispatchQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0
 public class SymlinkCreator {
 	let holdingDirectoryURL: NSURL
 	let projectManager: GLAProjectManager
+	private var modelUsers = [GLALoadableArrayUsing]()
+	
 	private let fileManager: NSFileManager
-	var modelUsers = [GLALoadableArrayUsing]()
+	private let fileOperationQueue: dispatch_queue_t
 	
 	init(holdingDirectoryURL: NSURL, projectManager: GLAProjectManager = GLAProjectManager.sharedProjectManager()) {
 		self.holdingDirectoryURL = holdingDirectoryURL
 		self.projectManager = projectManager
 		self.fileManager = NSFileManager()
+		self.fileOperationQueue = dispatch_queue_create("SymlinkCreator.fileOperationQueue", DISPATCH_QUEUE_SERIAL)
 	}
 	
 	public func createLinks() {
 		self.createLinksForAllProjectsInDirectoryURL(self.holdingDirectoryURL)
+	}
+	
+	private func useFileManagerInBackground(closure: (fileManager: NSFileManager) -> Void) {
+		let fileManager = self.fileManager
+		dispatch_async(fileOperationQueue) {
+			closure(fileManager: fileManager)
+		}
 	}
 	
 	private var allProjectsUser: GLALoadableArrayUsing?
@@ -48,10 +58,13 @@ public class SymlinkCreator {
 	}
 	
 	private func removeContentsOfDirectoryWithURL(directoryURL: NSURL) {
-		var error: NSError?
-		let existingURLs = fileManager.contentsOfDirectoryAtURL(holdingDirectoryURL, includingPropertiesForKeys: nil, options: .SkipsSubdirectoryDescendants, error: &error) as! [NSURL]
-		for existingURL in existingURLs {
-			fileManager.removeItemAtURL(existingURL, error: &error)
+		let holdingDirectoryURL = self.holdingDirectoryURL
+		useFileManagerInBackground { fileManager in
+			var error: NSError?
+			let existingURLs = fileManager.contentsOfDirectoryAtURL(holdingDirectoryURL, includingPropertiesForKeys: nil, options: .SkipsSubdirectoryDescendants, error: &error) as! [NSURL]
+			for existingURL in existingURLs {
+				fileManager.removeItemAtURL(existingURL, error: &error)
+			}
 		}
 	}
 	
@@ -61,22 +74,29 @@ public class SymlinkCreator {
 	}
 	
 	private func createDirectoryAtURL(directoryURL: NSURL) {
-		var error: NSError?
-		fileManager.createDirectoryAtURL(directoryURL, withIntermediateDirectories: true, attributes: nil, error: &error)
+		useFileManagerInBackground { fileManager in
+			var error: NSError?
+			fileManager.createDirectoryAtURL(directoryURL, withIntermediateDirectories: true, attributes: nil, error: &error)
+		}
 	}
 	
 	private func createLinksForAllProjectsInDirectoryURL(holdingDirectoryURL: NSURL) {
 		let projectsUser = useAllProjects()
 		
-		projectsUser.ensureLoaded { projectsInspector in
+		projectsUser.whenLoaded { projectsInspector in
 			let projects = projectsInspector.copyChildren() as! [GLAProject]
 			for project in projects {
 				let projectDirectoryURL = holdingDirectoryURL.URLByAppendingPathComponent(project.name)
-				println("PROJECT \(projectDirectoryURL)")
 				self.createDirectoryAtURL(projectDirectoryURL)
 				
 				self.createLinksForProjectWithUUID(project.UUID, inDirectoryURL: projectDirectoryURL)
 			}
+			
+			#if DEBUG
+				self.useFileManagerInBackground { (fileManager) in
+					println("Created symlinks for all projects")
+				}
+			#endif
 		}
 	}
 	
@@ -89,7 +109,7 @@ public class SymlinkCreator {
 		let collectionsUser = pm.useCollectionsForProject(project)
 		modelUsers.append(collectionsUser)
 		
-		collectionsUser.ensureLoaded { collectionsInspector in
+		collectionsUser.whenLoaded { collectionsInspector in
 			let collections = collectionsInspector.copyChildren() as! [GLACollection]
 			
 			for collection in collections {
@@ -109,23 +129,21 @@ public class SymlinkCreator {
 		let filesListUser = pm.useFilesListForCollection(collection)
 		modelUsers.append(filesListUser)
 		
-		println("ENSURE LOADED")
-		filesListUser.ensureLoaded { filesListInspector in
+		filesListUser.whenLoaded { filesListInspector in
 			let filesList = filesListInspector.copyChildren() as! [GLACollectedFile]
-			println("DID LOAD")
 			
-			for collectedFile in filesList {
-				let accessedFile = collectedFile.accessFile()
-				println("HOLDING \(holdingDirectoryURL) \n ACCESSED FILE \(accessedFile.filePathURL)")
-				if let
-					filePathURL = accessedFile.filePathURL,
-					fileName = filePathURL.lastPathComponent
-				{
-					let linkURL = holdingDirectoryURL.URLByAppendingPathComponent(fileName)
-					println("Creating symbolic link \(filePathURL) -> \(linkURL)")
-					let success = self.fileManager.createSymbolicLinkAtURL(linkURL, withDestinationURL: filePathURL, error: &error)
-					if !success {
-						
+			self.useFileManagerInBackground { fileManager in
+				for collectedFile in filesList {
+					let accessedFile = collectedFile.accessFile()
+					if let
+						filePathURL = accessedFile.filePathURL,
+						fileName = filePathURL.lastPathComponent
+					{
+						let linkURL = holdingDirectoryURL.URLByAppendingPathComponent(fileName)
+						let success = fileManager.createSymbolicLinkAtURL(linkURL, withDestinationURL: filePathURL, error: &error)
+						if !success {
+							
+						}
 					}
 				}
 			}
