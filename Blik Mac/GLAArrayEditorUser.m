@@ -120,9 +120,9 @@
 	GLAArrayEditor *arrayEditor = [self arrayEditorCreatingAndLoadingIfNeeded:NO];
 	NSAssert(arrayEditor != nil && (arrayEditor.finishedLoadingFromStore), @"Array editor must be loaded before editing");
 	
-	dispatch_sync((self.foregroundQueue), ^{
+	//dispatch_sync((self.foregroundQueue), ^{
 		(self.sourceMakeEditsBlock)(block);
-	});
+	//});
 }
 
 - (void)didChangeNotification:(NSNotification *)note
