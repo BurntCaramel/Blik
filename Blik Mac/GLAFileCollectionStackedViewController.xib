@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="FileCollectionExpandedViewController" customModule="Blik" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="FileCollectionExpandedTableViewController" customModule="Blik">
             <connections>
-                <outlet property="barHolderView" destination="WPC-xk-zpe" id="jVh-LM-4HY"/>
-                <outlet property="tableView" destination="PNu-Bp-lYK" id="PXa-aW-hPb"/>
+                <outlet property="outlineView" destination="PNu-Bp-lYK" id="JfV-ks-xx3"/>
                 <outlet property="view" destination="RnZ-xC-chF" id="VVi-HS-BnQ"/>
             </connections>
         </customObject>
@@ -18,7 +17,7 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="274"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="L4w-do-n2H" customClass="GLAButton">
+                <button ambiguous="YES" placeholderIntrinsicWidth="43" placeholderIntrinsicHeight="90" translatesAutoresizingMaskIntoConstraints="NO" id="L4w-do-n2H" customClass="GLAButton">
                     <rect key="frame" x="0.0" y="0.0" width="180" height="40"/>
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="iZV-lb-Ob9"/>
@@ -41,11 +40,8 @@
                             <integer key="value" value="8"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
-                    <connections>
-                        <action selector="chooseFilesToAdd:" target="-2" id="0Bf-BZ-k2z"/>
-                    </connections>
                 </button>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="WPC-xk-zpe">
+                <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WPC-xk-zpe">
                     <rect key="frame" x="180" y="0.0" width="300" height="40"/>
                     <subviews>
                         <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="vuN-TK-s4w" customClass="GLAPopUpButton">
@@ -154,7 +150,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <outlineView identifier="collectedFolderContentsOutlineView" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" headerView="hnz-gd-VJf" viewBased="YES" indentationPerLevel="16" autosaveExpandedItems="YES" autoresizesOutlineColumn="YES" outlineTableColumn="7MU-VG-IwI" id="PNu-Bp-lYK" customClass="OutlineView" customModule="Blik" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="496" height="0.0"/>
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -174,7 +170,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView id="9gX-IR-12t">
-                                                <rect key="frame" x="1" y="1" width="255.5" height="20"/>
+                                                <rect key="frame" x="1" y="1" width="255" height="20"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="53A-5l-6oI">
@@ -207,7 +203,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <customView identifier="NSTableViewRowViewKey" id="M2x-cp-8i8" customClass="GLATableContentRowView">
-                                                <rect key="frame" x="1" y="23" width="255.5" height="39"/>
+                                                <rect key="frame" x="1" y="23" width="255" height="39"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             </customView>
                                             <tableCellView id="hSi-yK-9VD">
@@ -258,11 +254,11 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView id="zcT-Pw-cnj">
-                                                <rect key="frame" x="259.5" y="1" width="218.5" height="20"/>
+                                                <rect key="frame" x="259.5" y="1" width="218" height="20"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="lLB-Rb-p3g">
-                                                        <rect key="frame" x="6" y="-2" width="194" height="23"/>
+                                                        <rect key="frame" x="6" y="-2" width="193.5" height="23"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="bVA-FQ-YR0">
                                                             <font key="font" size="13" name="AvenirNext-Medium"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>

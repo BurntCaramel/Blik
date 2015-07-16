@@ -468,7 +468,7 @@
 			controller = fileCollectionStackedViewController;
 #else
 			FileCollectionExpandedTableViewController *fileCollectionExpandedTableVC = [[FileCollectionExpandedTableViewController alloc] initWithNibName:@"GLAFileCollectionStackedViewController" bundle:nil];
-			//(fileCollectionExpandedTableVC.filesListCollection) = collection;
+			(fileCollectionExpandedTableVC.filesListCollection) = collection;
 			
 			controller = fileCollectionExpandedTableVC;
 #endif

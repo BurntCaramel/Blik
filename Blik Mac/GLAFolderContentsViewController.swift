@@ -258,7 +258,7 @@ private enum MenuChoice: Int, UIChoiceRepresentative {
 			return arrangedChildren
 		}()
 		
-		return arrangedChildren.arrangedChildren as! [NSURL]?
+		return arrangedChildren.fileURLs as! [NSURL]?
 	}
 	
 	func updateArrangedChildrenWithSortingOptions(arrangedChildren: GLAArrangedDirectoryChildren)
