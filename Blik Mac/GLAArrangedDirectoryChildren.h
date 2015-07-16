@@ -7,7 +7,8 @@
 //
 
 @import Foundation;
-//#import "GLAFileInfoRetriever.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @class GLAFileInfoRetriever;
 
@@ -44,7 +45,7 @@
 
 - (void)updateAfterEditingOptions:( void( ^ )(id<GLAArrangedDirectoryChildrenOptionEditing> editor) )editorBlock;
 
-@property(readonly, copy, nonatomic) NSArray *arrangedChildren;
+@property(readonly, copy, nonatomic) NSArray * __nullable fileURLs;
 
 @end
 
@@ -53,3 +54,5 @@
 - (void)arrangedDirectoryChildrenDidUpdateChildren:(GLAArrangedDirectoryChildren *)arrangedDirectoryChildren;
 
 @end
+
+NS_ASSUME_NONNULL_END
