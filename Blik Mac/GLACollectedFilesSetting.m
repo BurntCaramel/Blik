@@ -25,8 +25,6 @@
 @property(nonatomic) NSMutableDictionary *retrievedURLsToCollectedFileUUIDs;
 @property(nonatomic) NSOperationQueue *backgroundOperationQueue;
 
-@property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
-
 @property(nonatomic) NSMutableDictionary *infoIdentifiersToRetrieverBlocks;
 @property(nonatomic) NSCache *collectedFileUUIDsToDictionaryOfInfoIdentifiersToLastRetrievedValues;
 @property(nonatomic) NSCache *fileURLsToCollectedFileUUIDs;

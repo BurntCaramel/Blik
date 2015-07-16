@@ -10,11 +10,15 @@
 #import "GLACollectedFile.h"
 #import "GLAFileInfoRetriever.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
-typedef id (^ GLACollectedFilesSettingFileInfoRetriever)(GLAFileInfoRetriever *fileInfoRetriever, NSURL *fileURL);
+
+typedef id __nonnull (^ GLACollectedFilesSettingFileInfoRetriever)(GLAFileInfoRetriever *fileInfoRetriever, NSURL *fileURL);
 
 
 @interface GLACollectedFilesSetting : NSObject
+
+@property(nonatomic, readonly) GLAFileInfoRetriever *fileInfoRetriever;
 
 @property(nonatomic) NSSet *directoryURLsToWatch;
 
@@ -30,8 +34,8 @@ typedef id (^ GLACollectedFilesSettingFileInfoRetriever)(GLAFileInfoRetriever *f
 @property(nonatomic) id<GLALoadableArrayUsing> sourceCollectedFilesLoadableArray;
 
 // Must call -startAccessing first. Can be nil.
-- (GLAAccessedFileInfo *)accessedFileInfoForCollectedFile:(GLACollectedFile *)collectedFile;
-- (NSURL *)filePathURLForCollectedFile:(GLACollectedFile *)collectedFile;
+- (GLAAccessedFileInfo * __nullable)accessedFileInfoForCollectedFile:(GLACollectedFile *)collectedFile;
+- (NSURL * __nullable)filePathURLForCollectedFile:(GLACollectedFile *)collectedFile;
 
 - (void)invalidateAllAccessedFiles;
 
@@ -40,11 +44,11 @@ typedef id (^ GLACollectedFilesSettingFileInfoRetriever)(GLAFileInfoRetriever *f
 @property(copy, nonatomic) NSArray *defaultURLResourceKeysToRequest;
 - (void)addToDefaultURLResourceKeysToRequest:(NSArray *)array;
 
-- (id)copyValueForURLResourceKey:(NSString *)resourceKey forCollectedFile:(GLACollectedFile *)collectedFile;
+- (id __nullable)copyValueForURLResourceKey:(NSString *)resourceKey forCollectedFile:(GLACollectedFile *)collectedFile;
 
 - (void)addRetrieverBlockForFileInfo:(GLACollectedFilesSettingFileInfoRetriever)retrieverBlock withIdentifier:(NSString *)infoIdentifier;
 // Will be nil until it has loaded.
-- (id)copyValueForFileInfoIdentifier:(NSString *)infoIdentifier forCollectedFile:(GLACollectedFile *)collectedFile;
+- (id __nullable)copyValueForFileInfoIdentifier:(NSString *)infoIdentifier forCollectedFile:(GLACollectedFile *)collectedFile;
 
 @end
 
@@ -60,3 +64,5 @@ extern NSString *GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_Col
 - (void)setUpMenuItem:(NSMenuItem *)menuItem forOptionalCollectedFile:(GLACollectedFile *)collectedFile wantsIcon:(BOOL)wantsIcon;
 
 @end
+
+NS_ASSUME_NONNULL_END
