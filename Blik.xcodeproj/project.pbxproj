@@ -292,8 +292,8 @@
 		B2ADDBFA1963DA2E0014EF84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBF81963DA2E0014EF84 /* InfoPlist.strings */; };
 		B2B466711B29B88A001C4BC0 /* SymlinkCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B466701B29B88A001C4BC0 /* SymlinkCreator.swift */; };
 		B2B466721B29B88A001C4BC0 /* SymlinkCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B466701B29B88A001C4BC0 /* SymlinkCreator.swift */; };
-		B2B4668F1B3ADBE8001C4BC0 /* FileCollectionExpandedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B4668E1B3ADBE8001C4BC0 /* FileCollectionExpandedViewController.swift */; };
-		B2B466901B3ADBE8001C4BC0 /* FileCollectionExpandedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B4668E1B3ADBE8001C4BC0 /* FileCollectionExpandedViewController.swift */; };
+		B2B4668F1B3ADBE8001C4BC0 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		B2B466901B3ADBE8001C4BC0 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		B2BB85151A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85141A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m */; };
 		B2BB85181A3F095B00BF186C /* GLAMainContentManners.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85171A3F095B00BF186C /* GLAMainContentManners.m */; };
 		B2C154401A00D7BB00912AB1 /* GLAModelUUIDMap.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C1543F1A00D7BB00912AB1 /* GLAModelUUIDMap.m */; };
@@ -358,6 +358,8 @@
 		B2F0DBC719936321001AB5EE /* GLAChooseRemindersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2F0DBC519936321001AB5EE /* GLAChooseRemindersViewController.xib */; };
 		B2F0DBCA199449FB001AB5EE /* GLAPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B2F0DBC9199449FB001AB5EE /* GLAPopUpButton.m */; };
 		B2F0DBCD1994C854001AB5EE /* GLATextField.m in Sources */ = {isa = PBXBuildFile; fileRef = B2F0DBCC1994C854001AB5EE /* GLATextField.m */; };
+		B2F8B5351B4BFB5E005FD8F3 /* FileCollectionExpandedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F8B5341B4BFB5E005FD8F3 /* FileCollectionExpandedViewController.swift */; };
+		B2F8B5361B4BFB5E005FD8F3 /* FileCollectionExpandedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F8B5341B4BFB5E005FD8F3 /* FileCollectionExpandedViewController.swift */; };
 		E240A36C1A0DA7E70043AE93 /* GLATestCollections.swift in Sources */ = {isa = PBXBuildFile; fileRef = E240A36B1A0DA7E70043AE93 /* GLATestCollections.swift */; };
 /* End PBXBuildFile section */
 
@@ -721,6 +723,7 @@
 		B2F0DBC9199449FB001AB5EE /* GLAPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAPopUpButton.m; sourceTree = "<group>"; };
 		B2F0DBCB1994C854001AB5EE /* GLATextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLATextField.h; sourceTree = "<group>"; };
 		B2F0DBCC1994C854001AB5EE /* GLATextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLATextField.m; sourceTree = "<group>"; };
+		B2F8B5341B4BFB5E005FD8F3 /* FileCollectionExpandedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileCollectionExpandedViewController.swift; sourceTree = "<group>"; };
 		DB9B4E5529B5EA7EDC5EF68E /* Pods-Blik.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blik.release.xcconfig"; path = "Pods/Target Support Files/Pods-Blik/Pods-Blik.release.xcconfig"; sourceTree = "<group>"; };
 		E240A36A1A0DA7E60043AE93 /* BlikTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BlikTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		E240A36B1A0DA7E70043AE93 /* GLATestCollections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLATestCollections.swift; sourceTree = "<group>"; };
@@ -828,7 +831,7 @@
 			isa = PBXGroup;
 			children = (
 				B22B7D751AC12DAE0026AEDB /* GLAFileCollectionStackedViewController.xib */,
-				B2B4668E1B3ADBE8001C4BC0 /* FileCollectionExpandedViewController.swift */,
+				B2F8B5341B4BFB5E005FD8F3 /* FileCollectionExpandedViewController.swift */,
 				B22B7D781AC134BD0026AEDB /* GLACollectedFolderStackItemViewController.h */,
 				B22B7D791AC134BD0026AEDB /* GLACollectedFolderStackItemViewController.m */,
 				B22B7D7A1AC134BD0026AEDB /* GLACollectedFolderStackItemViewController.xib */,
@@ -1872,7 +1875,7 @@
 				B20DB2D51B0C8ACA00E57532 /* GLACollectedFilePreviewView.m in Sources */,
 				B20DB2D61B0C8ACA00E57532 /* GLATableCellView.m in Sources */,
 				B20DB2D71B0C8ACA00E57532 /* GLAPluckedCollectedFilesMenuController.m in Sources */,
-				B2B466901B3ADBE8001C4BC0 /* FileCollectionExpandedViewController.swift in Sources */,
+				B2B466901B3ADBE8001C4BC0 /* (null) in Sources */,
 				B20DB2D81B0C8ACA00E57532 /* GLAMainContentManners.m in Sources */,
 				B20DB2D91B0C8ACA00E57532 /* GLASegmentedControl.m in Sources */,
 				B20DB2DA1B0C8ACA00E57532 /* GLAModelUUIDMap.m in Sources */,
@@ -1952,6 +1955,7 @@
 				B28636AB1B417C150007A944 /* FileInfoDisplaying.swift in Sources */,
 				B20DB31F1B0C8ACA00E57532 /* GLAAddNewCollectionChooseNameAndColorViewController.m in Sources */,
 				B20DB3201B0C8ACA00E57532 /* GLAFileOpenerApplicationFinder.m in Sources */,
+				B2F8B5361B4BFB5E005FD8F3 /* FileCollectionExpandedViewController.swift in Sources */,
 				B20DB3211B0C8ACA00E57532 /* NSEvent+extension.swift in Sources */,
 				B20DB3221B0C8ACA00E57532 /* GLAAddCollectedFilesChoiceViewController.m in Sources */,
 				B20DB3231B0C8ACA00E57532 /* GLANavigationButton.m in Sources */,
@@ -2012,7 +2016,7 @@
 				B22B7D821AC555D00026AEDB /* GLACollectedFilePreviewView.m in Sources */,
 				B26158111ADB9EFE0082067E /* GLATableCellView.m in Sources */,
 				B289276A1A730F43007238D6 /* GLAPluckedCollectedFilesMenuController.m in Sources */,
-				B2B4668F1B3ADBE8001C4BC0 /* FileCollectionExpandedViewController.swift in Sources */,
+				B2B4668F1B3ADBE8001C4BC0 /* (null) in Sources */,
 				B2BB85181A3F095B00BF186C /* GLAMainContentManners.m in Sources */,
 				B23966DE1ACB983B00C6A420 /* GLASegmentedControl.m in Sources */,
 				B2C154401A00D7BB00912AB1 /* GLAModelUUIDMap.m in Sources */,
@@ -2092,6 +2096,7 @@
 				B28636AA1B417C150007A944 /* FileInfoDisplaying.swift in Sources */,
 				B2214E1819D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.m in Sources */,
 				B20362C41A077C87007169C2 /* GLAFileOpenerApplicationFinder.m in Sources */,
+				B2F8B5351B4BFB5E005FD8F3 /* FileCollectionExpandedViewController.swift in Sources */,
 				B21B6E641B06CD4F001B8430 /* NSEvent+extension.swift in Sources */,
 				B2CCF8E21A36D24D00EC7703 /* GLAAddCollectedFilesChoiceViewController.m in Sources */,
 				B219DAAB196AB8D1007900DF /* GLANavigationButton.m in Sources */,
