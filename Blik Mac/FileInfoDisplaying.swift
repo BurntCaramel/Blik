@@ -70,7 +70,6 @@ internal struct FileInfoDisplayingAssistant {
 			
 			var text: String?
 			var image: NSImage?
-			let hasImageView = (cellView.imageView != nil)
 			
 			if let infoIdentifier = FileInfoIdentifier(rawValue: identifier) {
 				text = textForInfoIdentifier(infoIdentifier, fileURL: fileURL)

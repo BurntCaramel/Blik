@@ -34,6 +34,10 @@ private struct CollectedFileInfo {
 	private var collectedFilesSetting: GLACollectedFilesSetting!
 	private var collectedFilesSettingNotificationObserver: NotificationObserver<AnyStringNotificationIdentifier>!
 	
+	var resourceKeyToSortBy = NSURLLocalizedNameKey
+	var sortsAscending = true
+	var hidesInvisibles = true
+	
 	private var orderedChildCounts = [Int]()
 	private var collectedFileUUIDToInfo = [NSUUID: CollectedFileInfo]()
 	private var directoryURLToArrangedChildren = [NSURL: GLAArrangedDirectoryChildren]()
@@ -94,7 +98,6 @@ private struct CollectedFileInfo {
 		let pm = projectManager
 		
 		if let filesListCollection = filesListCollection {
-			println("useFilesListForCollection \(filesListCollection)")
 			filesListClient = pm.useFilesListForCollection(filesListCollection)
 			filesListClient.changeCompletionBlock = { [unowned self] (filesListInspector) in
 				self.reloadFromFilesListInspector(filesListInspector)
@@ -117,19 +120,39 @@ private struct CollectedFileInfo {
 	func reloadViews() {
 		outlineView.reloadData()
 		
-		for collectedFile in collectedFiles {
+		/*for collectedFile in collectedFiles {
 			outlineView.expandItem(collectedFile)
-		}
+		}*/
 	}
 	
-	func arrangedChildrenForDirectoryURL(directoryURL: NSURL) -> GLAArrangedDirectoryChildren? {
+	func arrangedChildrenForDirectoryURL(directoryURL: NSURL, collectedFile: GLACollectedFile? = nil) -> GLAArrangedDirectoryChildren? {
 		if let directoryChildren = directoryURLToArrangedChildren[directoryURL] {
 			return directoryChildren
 		}
 		else {
 			let directoryChildren = GLAArrangedDirectoryChildren(directoryURL: directoryURL, delegate: self, fileInfoRetriever: fileInfoRetriever)
+			
+			var userInfo = [String: AnyObject]()
+			if let collectedFile = collectedFile {
+				userInfo["collectedFile"] = collectedFile
+			}
+			directoryChildren.userInfo = userInfo
+			
 			directoryURLToArrangedChildren[directoryURL] = directoryChildren
+			
+			updateArrangedChildrenWithSortingOptions(directoryChildren)
+			
 			return directoryChildren
+		}
+	}
+	
+	func updateArrangedChildrenWithSortingOptions(arrangedChildren: GLAArrangedDirectoryChildren)
+	{
+		println("updateArrangedChildrenWithSortingOptions")
+		arrangedChildren.updateAfterEditingOptions { editor in
+			editor.resourceKeyToSortBy = self.resourceKeyToSortBy
+			editor.sortsAscending = self.sortsAscending
+			editor.hidesInvisibles = self.hidesInvisibles
 		}
 	}
 }
@@ -147,10 +170,13 @@ extension FileCollectionExpandedTableViewController: NSOutlineViewDataSource, NS
 		else if let collectedFile = item as? GLACollectedFile {
 			if let info = collectedFileUUIDToInfo[collectedFile.UUID] {
 				if info.isDirectory {
-					if let fileURLs = arrangedChildrenForDirectoryURL(info.URL)?.fileURLs {
+					println("IDDIR \(info.URL)")
+					if let fileURLs = arrangedChildrenForDirectoryURL(info.URL, collectedFile: collectedFile)?.fileURLs {
+						println("fileURLs \(fileURLs)")
 						return fileURLs.count
 					}
 					else {
+						println("zero")
 						return 0
 					}
 				}
@@ -180,6 +206,14 @@ extension FileCollectionExpandedTableViewController: NSOutlineViewDataSource, NS
 			if let arrangedChildren = arrangedChildrenForDirectoryURL(fileURL) {
 				return true
 			}
+		}
+		
+		return false
+	}
+	
+	public func outlineView(outlineView: NSOutlineView, isGroupItem item: AnyObject) -> Bool {
+		if let collectedFile = item as? GLACollectedFile {
+			return true
 		}
 		
 		return false
@@ -234,7 +268,17 @@ extension FileCollectionExpandedTableViewController: NSOutlineViewDataSource, NS
 
 extension FileCollectionExpandedTableViewController: GLAArrangedDirectoryChildrenDelegate {
 	public func arrangedDirectoryChildrenDidUpdateChildren(arrangedDirectoryChildren: GLAArrangedDirectoryChildren) {
-		println("arrangedDirectoryChildrenDidUpdateChildren \(arrangedDirectoryChildren.directoryURL)")
-		outlineView.reloadItem(arrangedDirectoryChildren.directoryURL, reloadChildren: true)
+		println("arrangedDirectoryChildrenDidUpdateChildren \(arrangedDirectoryChildren.fileURLs)")
+		
+		var item: AnyObject
+		if let collectedFile = arrangedDirectoryChildren.userInfo?["collectedFile"] as? GLACollectedFile {
+			item = collectedFile
+		}
+		else {
+			item = arrangedDirectoryChildren.directoryURL
+		}
+		
+		outlineView.reloadData()
+		//outlineView.reloadItem(item, reloadChildren: true)
 	}
 }

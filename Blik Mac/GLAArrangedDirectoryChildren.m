@@ -16,7 +16,7 @@
 @property(readwrite, nonatomic) BOOL sortsAscending;
 @property(readwrite, nonatomic) BOOL hidesInvisibles;
 
-@property(readwrite, copy, nonatomic) NSArray *arrangedChildren;
+@property(readwrite, copy, nonatomic) NSArray *fileURLs;
 
 @property(nonatomic) id<NSObject> didRetrieveContentsOfDirectoryNotificationToken;
 
@@ -139,7 +139,8 @@
 				return;
 			}
 			
-			(self.arrangedChildren) = arrangedChildURLs;
+			NSLog(@"arrangedChildURLs %@", arrangedChildURLs);
+			(self.fileURLs) = arrangedChildURLs;
 			
 			[(self.delegate) arrangedDirectoryChildrenDidUpdateChildren:self];
 		}];

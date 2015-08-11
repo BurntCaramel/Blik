@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(readonly, copy, nonatomic) NSArray * __nullable fileURLs;
 
+@property(copy, nonatomic) NSDictionary * __nullable userInfo;
+
 @end
 
 @protocol GLAArrangedDirectoryChildrenDelegate <NSObject>
