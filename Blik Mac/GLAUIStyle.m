@@ -121,6 +121,8 @@
 		(style.strongPinkItemColor) = SRGB255(255, 109, 180);
 		(style.strongOrangeItemColor) = SRGB255(255, 146, 61);
 		(style.strongGreenItemColor) = SRGB255(70, 227, 105);
+	
+		(style.primaryFoldersItemColor) = [NSColor gla_colorWithSRGBGray:230.0/255.0 alpha:1.0];
 		
 		(style.chooseColorBackgroundColor) = grayExtraDark;
 		

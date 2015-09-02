@@ -96,7 +96,7 @@
                                                                         </constraints>
                                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="ZRM-KP-s17"/>
                                                                     </imageView>
-                                                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="eq0-Wx-G4Z">
+                                                                    <button horizontalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="eq0-Wx-G4Z">
                                                                         <rect key="frame" x="11" y="5" width="22" height="18"/>
                                                                         <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" inset="2" id="anK-KW-nAf">
                                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>

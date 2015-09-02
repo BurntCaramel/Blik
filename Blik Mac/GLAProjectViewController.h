@@ -102,5 +102,6 @@ extern NSString *GLAProjectViewControllerDidBeginEditingPlanNotification;
 extern NSString *GLAProjectViewControllerDidEndEditingPlanNotification;
 
 extern NSString *GLAProjectViewControllerDidEnterCollectionNotification;
+extern NSString *GLAProjectViewControllerDidRequestPrimaryFoldersNotification;
 
 extern NSString *GLAProjectViewControllerRequestAddNewCollectionNotification;

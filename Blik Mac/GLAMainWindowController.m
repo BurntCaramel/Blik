@@ -441,6 +441,14 @@
 	[self enterCollection:collection];
 }
 
+- (void)activeProjectViewControllerDidRequestPrimaryFolders:(NSNotification *)note
+{
+	GLAProjectViewController *controller = (note.object);
+	GLAProject *project = (controller.project);
+	
+	[(self.mainSectionNavigator) editPrimaryFoldersOfProject:project];
+}
+
 - (void)activeProjectViewControllerDidRequestAddNewCollection:(NSNotification *)note
 {
 	GLAProjectViewController *controller = (note.object);
@@ -465,6 +473,7 @@
 	
 	// Enter collection
 	[nc addObserver:self selector:@selector(activeProjectViewControllerDidEnterCollection:) name:GLAProjectViewControllerDidEnterCollectionNotification object:projectViewController];
+	[nc addObserver:self selector:@selector(activeProjectViewControllerDidRequestPrimaryFolders:) name:GLAProjectViewControllerDidRequestPrimaryFoldersNotification object:projectViewController];
 	
 	// Request add new collection
 	[nc addObserver:self selector:@selector(activeProjectViewControllerDidRequestAddNewCollection:) name:GLAProjectViewControllerRequestAddNewCollectionNotification object:projectViewController];

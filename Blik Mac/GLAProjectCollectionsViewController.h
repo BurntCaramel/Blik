@@ -62,3 +62,4 @@
 @end
 
 extern NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification;
+extern NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification;

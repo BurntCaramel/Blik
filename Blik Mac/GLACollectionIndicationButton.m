@@ -62,7 +62,12 @@
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	GLACollection *collection = (self.collection);
 	
-	return [uiStyle colorForCollectionColor:(collection.color)];
+	if (collection) {
+		return [uiStyle colorForCollectionColor:(collection.color)];
+	}
+	else {
+		return (uiStyle.primaryFoldersItemColor);
+	}
 }
 
 - (CAShapeLayer *)newFolderShapeLayer
