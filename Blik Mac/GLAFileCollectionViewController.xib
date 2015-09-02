@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAFileCollectionViewController">
@@ -76,12 +76,12 @@
                                                                     <outlet property="textField" destination="KcS-Xl-css" id="1nB-Qz-5lL"/>
                                                                 </connections>
                                                             </tableCellView>
-                                                            <tableCellView identifier="collectedFile" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="32" id="Ewx-kx-foZ">
+                                                            <tableCellView identifier="collectedFile" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="32" id="Ewx-kx-foZ" customClass="FileCollectionTableCellView" customModule="Blik" customModuleProvider="target">
                                                                 <rect key="frame" x="1" y="30" width="177" height="27"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
-                                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a6i-8q-QKU">
-                                                                        <rect key="frame" x="34" y="4" width="125" height="23"/>
+                                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="a6i-8q-QKU">
+                                                                        <rect key="frame" x="57" y="4" width="122" height="23"/>
                                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Collected File Name" id="ok1-l5-fkZ">
                                                                             <font key="font" size="13" name="AvenirNext-Medium"/>
                                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -89,22 +89,35 @@
                                                                         </textFieldCell>
                                                                     </textField>
                                                                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1j3-nr-TPY">
-                                                                        <rect key="frame" x="12" y="6" width="16" height="16"/>
+                                                                        <rect key="frame" x="35" y="6" width="16" height="16"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="16" id="kyX-Yh-fpp"/>
                                                                             <constraint firstAttribute="width" constant="16" id="ncS-qR-mMb"/>
                                                                         </constraints>
                                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="ZRM-KP-s17"/>
                                                                     </imageView>
+                                                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="eq0-Wx-G4Z">
+                                                                        <rect key="frame" x="11" y="5" width="22" height="18"/>
+                                                                        <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" inset="2" id="anK-KW-nAf">
+                                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                            <font key="font" metaFont="smallSystem"/>
+                                                                        </buttonCell>
+                                                                        <connections>
+                                                                            <action selector="toggleFileIsHighlighted:" target="-1" id="s6N-7u-J1m"/>
+                                                                        </connections>
+                                                                    </button>
                                                                 </subviews>
                                                                 <constraints>
                                                                     <constraint firstItem="a6i-8q-QKU" firstAttribute="leading" secondItem="1j3-nr-TPY" secondAttribute="trailing" constant="8" id="E4A-yz-YGR"/>
+                                                                    <constraint firstItem="eq0-Wx-G4Z" firstAttribute="leading" secondItem="Ewx-kx-foZ" secondAttribute="leading" constant="14" id="GN5-xC-MOZ"/>
                                                                     <constraint firstAttribute="centerY" secondItem="1j3-nr-TPY" secondAttribute="centerY" id="PkS-Bp-Cwa"/>
+                                                                    <constraint firstItem="1j3-nr-TPY" firstAttribute="leading" secondItem="eq0-Wx-G4Z" secondAttribute="trailing" constant="4" id="QUF-86-kKk"/>
                                                                     <constraint firstAttribute="trailing" secondItem="a6i-8q-QKU" secondAttribute="trailing" id="gfE-aF-4Ue"/>
                                                                     <constraint firstItem="a6i-8q-QKU" firstAttribute="centerY" secondItem="1j3-nr-TPY" secondAttribute="centerY" constant="-2" id="o3l-sl-Bvv"/>
-                                                                    <constraint firstItem="1j3-nr-TPY" firstAttribute="leading" secondItem="Ewx-kx-foZ" secondAttribute="leading" constant="12" id="u1k-kE-8eh"/>
+                                                                    <constraint firstItem="a6i-8q-QKU" firstAttribute="baseline" secondItem="eq0-Wx-G4Z" secondAttribute="baseline" constant="-3" id="x4W-K6-uSb"/>
                                                                 </constraints>
                                                                 <connections>
+                                                                    <outlet property="highlightsCheckbox" destination="eq0-Wx-G4Z" id="ya2-Xi-9sg"/>
                                                                     <outlet property="imageView" destination="1j3-nr-TPY" id="2YV-MG-Me1"/>
                                                                     <outlet property="textField" destination="a6i-8q-QKU" id="hT0-fn-kvv"/>
                                                                 </connections>

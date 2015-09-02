@@ -272,6 +272,8 @@
 		B292453A19E4058A00DD30CB /* GLANoNowProjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B292453819E4058A00DD30CB /* GLANoNowProjectViewController.xib */; };
 		B292F4711AD6546E0041E7A1 /* NSMenu+GLAMenuItemConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = B292F4701AD6546E0041E7A1 /* NSMenu+GLAMenuItemConvenience.m */; };
 		B292F4741AD65A9A0041E7A1 /* GLAProjectManager+GLAOpeningFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = B292F4731AD65A9A0041E7A1 /* GLAProjectManager+GLAOpeningFiles.m */; };
+		B29C43441B9715450084F6AA /* FileCollectionTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29C43431B9715450084F6AA /* FileCollectionTable.swift */; };
+		B29C43451B9715450084F6AA /* FileCollectionTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29C43431B9715450084F6AA /* FileCollectionTable.swift */; };
 		B29F8DDA1980D45400F58F59 /* NSValueTransformer+GLAModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B29F8DD91980D45400F58F59 /* NSValueTransformer+GLAModel.m */; };
 		B29F8DDD1981139300F58F59 /* GLAReminderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B29F8DDC1981139300F58F59 /* GLAReminderManager.m */; };
 		B2A8FCB21A23BFB00002108E /* libPods-Blik-Mantle.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B2A8FCB01A23BFB00002108E /* libPods-Blik-Mantle.a */; };
@@ -571,6 +573,7 @@
 		B292F4701AD6546E0041E7A1 /* NSMenu+GLAMenuItemConvenience.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMenu+GLAMenuItemConvenience.m"; sourceTree = "<group>"; };
 		B292F4721AD65A9A0041E7A1 /* GLAProjectManager+GLAOpeningFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GLAProjectManager+GLAOpeningFiles.h"; sourceTree = "<group>"; };
 		B292F4731AD65A9A0041E7A1 /* GLAProjectManager+GLAOpeningFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GLAProjectManager+GLAOpeningFiles.m"; sourceTree = "<group>"; };
+		B29C43431B9715450084F6AA /* FileCollectionTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileCollectionTable.swift; sourceTree = "<group>"; };
 		B29F8DD81980D45400F58F59 /* NSValueTransformer+GLAModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSValueTransformer+GLAModel.h"; sourceTree = "<group>"; };
 		B29F8DD91980D45400F58F59 /* NSValueTransformer+GLAModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSValueTransformer+GLAModel.m"; sourceTree = "<group>"; };
 		B29F8DDB1981139300F58F59 /* GLAReminderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAReminderManager.h; sourceTree = "<group>"; };
@@ -1257,6 +1260,7 @@
 				B20DB2941B09A63700E57532 /* FileCollectionSelectionSource.swift */,
 				B20DB3721B0DADD000E57532 /* FileCollectionSelectionAssistant.swift */,
 				B226E9581988D00C00D607CC /* GLAFileCollectionViewController.xib */,
+				B29C43431B9715450084F6AA /* FileCollectionTable.swift */,
 				B20DB2921B084A9B00E57532 /* FileCollectionBarViewController.swift */,
 				B20DB3681B0C8DE700E57532 /* FileCollectionBarViewController.xib */,
 				B20DB36F1B0CBFBC00E57532 /* Stack */,
@@ -1833,6 +1837,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B29C43451B9715450084F6AA /* FileCollectionTable.swift in Sources */,
 				B20DB2C11B0C8ACA00E57532 /* GLACollectionViewColorChoiceItem.m in Sources */,
 				B20DB2C21B0C8ACA00E57532 /* GLAView.m in Sources */,
 				B20DB2C31B0C8ACA00E57532 /* GLATableContentRowView.m in Sources */,
@@ -1971,6 +1976,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B29C43441B9715450084F6AA /* FileCollectionTable.swift in Sources */,
 				B255920419C8508C0039D2AC /* GLACollectionViewColorChoiceItem.m in Sources */,
 				B2C7F287196FFFDF005780B4 /* GLAView.m in Sources */,
 				B25591F219C284040039D2AC /* GLATableContentRowView.m in Sources */,
