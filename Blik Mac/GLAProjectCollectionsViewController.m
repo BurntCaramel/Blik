@@ -56,7 +56,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 	(tableView.target) = self;
 	(tableView.action) = @selector(tableViewWasClicked:);
 	
-	(tableView.menu) = (self.contextualMenu);
+	//(tableView.menu) = (self.contextualMenu);
 	
 	[tableView registerForDraggedTypes:
   @[
@@ -555,10 +555,14 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 		(cellView.textField.stringValue) = title;
 		
 		(cellView.textField.textColor) = [uiStyle colorForCollectionColor:(collection.color)];
+		
+		(cellView.menu) = (self.contextualMenu);
 	}
 	else {
 		(cellView.textField.stringValue) = NSLocalizedString(@"Primary Folders", @"Collection name for primary folders");
 		(cellView.textField.textColor) = (uiStyle.primaryFoldersItemColor);
+		
+		(cellView.menu) = nil;
 	}
 	
 	return cellView;
