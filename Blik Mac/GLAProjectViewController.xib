@@ -317,14 +317,14 @@
                 <menuItem title="Rename or Recolor Collection…" id="5AV-kD-8fd">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="renameClickedCollection:" target="raF-W4-b8E" id="0E8-6W-27y"/>
+                        <action selector="renameClickedCollection:" target="-1" id="age-ex-OHl"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="UPi-eN-JLm"/>
                 <menuItem title="Delete Collection…" id="B9A-Yw-QEs">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="permanentlyDeleteClickedCollection:" target="raF-W4-b8E" id="e4P-wL-pT3"/>
+                        <action selector="permanentlyDeleteClickedCollection:" target="-1" id="HgF-41-zuW"/>
                     </connections>
                 </menuItem>
             </items>

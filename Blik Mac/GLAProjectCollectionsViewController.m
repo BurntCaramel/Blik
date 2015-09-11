@@ -421,6 +421,8 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 
 - (IBAction)renameClickedCollection:(id)sender
 {
+	NSLog(@"renameClickedCollection %@", @((self.tableView.clickedRow)));
+	
 	NSInteger clickedRow = (self.tableView.clickedRow);
 	if (clickedRow == -1) {
 		return;
@@ -492,7 +494,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 - (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
 {
 	if (row >= (self.collections.count)) {
-		[tableView setDropRow:(self.collections.count) dropOperation:NSTableViewDropAbove];
+		[tableView setDropRow:(self.collections.count) dropOperation:NSTableViewDropOn];
 	}
 	
 	NSPasteboard *pboard = (info.draggingPasteboard);
@@ -509,26 +511,50 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 {
 	NSPasteboard *pboard = (info.draggingPasteboard);
 	if ([pboard availableTypeFromArray:@[(__bridge NSString *)kUTTypeFileURL]] != nil) {
-		NSArray *fileURLs = [pboard readObjectsForClasses:@[ [NSURL class] ] options:@{ NSPasteboardURLReadingFileURLsOnlyKey: @(YES) }];
-		if (fileURLs) {
-			NSArray *collections = (self.collections);
-			
-			if (dropOperation == NSTableViewDropAbove) {
-				row = MIN((collections.count), row);
-				[self showAddCollectedFilesChoiceForFileURLs:fileURLs withIndexOfNewCollectionInList:row];
+		if (row < (self.collections.count)) {
+			NSArray *fileURLs = [pboard readObjectsForClasses:@[ [NSURL class] ] options:@{ NSPasteboardURLReadingFileURLsOnlyKey: @(YES) }];
+			if (fileURLs) {
+				NSArray *collections = (self.collections);
+				
+				if (dropOperation == NSTableViewDropAbove) {
+					row = MIN((collections.count), row);
+					[self showAddCollectedFilesChoiceForFileURLs:fileURLs withIndexOfNewCollectionInList:row];
+				}
+				else if (dropOperation == NSTableViewDropOn) {
+					GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+					GLACollection *collection = collections[row];
+					NSArray *collectedFiles = [GLACollectedFile collectedFilesWithFileURLs:fileURLs];
+					[pm editFilesListOfCollection:collection addingCollectedFiles:collectedFiles queueIfNeedsLoading:YES];
+				}
+				
+				return YES;
 			}
-			else if (dropOperation == NSTableViewDropOn) {
-				GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-				GLACollection *collection = collections[row];
-				NSArray *collectedFiles = [GLACollectedFile collectedFilesWithFileURLs:fileURLs];
-				[pm editFilesListOfCollection:collection addingCollectedFiles:collectedFiles queueIfNeedsLoading:YES];
-			}
-			
-			return YES;
 		}
 		else {
-			return NO;
+			NSDictionary *pasteboardReadingOptions =
+				@{
+				  NSPasteboardURLReadingFileURLsOnlyKey: @(YES),
+				  NSPasteboardURLReadingContentsConformToTypesKey: @[(id)kUTTypeFolder]
+				  }
+				;
+			NSArray *folderURLs = [pboard readObjectsForClasses:@[ [NSURL class] ] options:pasteboardReadingOptions];
+			if (folderURLs) {
+				NSArray *collectedFoldersToAdd = [GLACollectedFile collectedFilesWithFileURLs:folderURLs];
+				
+				GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+				[pm editPrimaryFoldersOfProject:(self.project) usingBlock:^(id<GLAArrayEditing> __nonnull foldersListEditor) {
+					NSArray *filteredFolders = [GLACollectedFile filteredCollectedFiles:collectedFoldersToAdd notAlreadyPresentInArrayInspector:foldersListEditor];
+					if ((filteredFolders.count) == 0) {
+						return;
+					}
+					[foldersListEditor addChildren:filteredFolders];
+				}];
+				
+				return YES;
+			}
 		}
+		
+		return NO;
 	}
 	
 	return [(self.tableDraggingHelper) tableView:tableView acceptDrop:info row:row dropOperation:dropOperation];
@@ -556,7 +582,9 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 		
 		(cellView.textField.textColor) = [uiStyle colorForCollectionColor:(collection.color)];
 		
-		(cellView.menu) = (self.contextualMenu);
+		NSMenu *menu = (self.contextualMenu);
+		(cellView.menu) = menu;
+		(cellView.nextResponder) = self;
 	}
 	else {
 		(cellView.textField.stringValue) = NSLocalizedString(@"Primary Folders", @"Collection name for primary folders");
