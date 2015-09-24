@@ -24,6 +24,11 @@
 
 - (void)ensureAccessToPermittedApplicationsFolders;
 
+#pragma mark -
+
+@property(nonatomic) BOOL hidesMainWindowWhenInactive;
+- (IBAction)toggleHidesMainWindowWhenInactive:(id)sender;
+
 @end
 
 extern NSString *GLAApplicationSettingsManagerPermittedApplicationFoldersDidChangeNotification;

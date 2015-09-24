@@ -297,6 +297,9 @@
 			GLAStatusItemController *statusItemController = (self.statusItemController);
 			stateAsBool = (statusItemController.showsItem);
 		}
+		else if (sel_isEqual(@selector(toggleHideMainWindowWhenInactive:), action)) {
+			stateAsBool = (self.mainWindowController.hidesWhenInactive);
+		}
 		
 		(menuItem.state) = stateAsBool ? NSOnState : NSOffState;
 	}

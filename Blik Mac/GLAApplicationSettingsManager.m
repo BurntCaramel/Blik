@@ -16,6 +16,9 @@
 #import "GLAWorkingFoldersManager.h"
 
 
+NSString *GLAMainWindowHidesWhenInactive = @"mainWindow.hidesWhenInactive";
+
+
 @interface GLAApplicationSettingsManager () <GLAArrayMantleJSONStoreErrorHandler>
 
 @property(nonatomic) NSOperationQueue *backgroundOperationQueue;
@@ -45,8 +48,22 @@
 		NSOperationQueue *backgroundOperationQueue = [NSOperationQueue new];
 		(backgroundOperationQueue.maxConcurrentOperationCount) = 1;
 		_backgroundOperationQueue = backgroundOperationQueue;
+		
+		[self loadUserDefaults];
 	}
 	return self;
+}
+
+- (void)loadUserDefaults
+{
+	NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+	[ud registerDefaults:
+	 @{
+	   GLAMainWindowHidesWhenInactive: @YES
+	   }
+	 ];
+	
+	_hidesMainWindowWhenInactive = [ud boolForKey:GLAMainWindowHidesWhenInactive];
 }
 
 #pragma mark -
@@ -168,6 +185,20 @@
 	GLACollectedFilesSetting *permittedApplicationFoldersSetting = [GLACollectedFilesSetting new];
 	(permittedApplicationFoldersSetting.sourceCollectedFilesLoadableArray) = [self usePermittedApplicationFolders];
 	_permittedApplicationFoldersSetting = permittedApplicationFoldersSetting;
+}
+
+#pragma mark -
+
+- (void)setHidesMainWindowWhenInactive:(BOOL)hidesMainWindowWhenInactive
+{
+	_hidesMainWindowWhenInactive = hidesMainWindowWhenInactive;
+	
+	[[NSUserDefaults standardUserDefaults] setBool:hidesMainWindowWhenInactive forKey:GLAMainWindowHidesWhenInactive];
+}
+
+- (IBAction)toggleHidesMainWindowWhenInactive:(id)sender
+{
+	(self.hidesMainWindowWhenInactive) = !(self.hidesMainWindowWhenInactive);
 }
 
 #pragma mark -

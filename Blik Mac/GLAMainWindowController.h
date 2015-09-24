@@ -73,4 +73,7 @@
 
 - (IBAction)addNewProject:(id)sender;
 
+@property(nonatomic) BOOL hidesWhenInactive;
+- (IBAction)toggleHideWhenInactive:(id)sender;
+
 @end

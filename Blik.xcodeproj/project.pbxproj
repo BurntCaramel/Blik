@@ -22,7 +22,6 @@
 		B20DB1D21B06DB9100E57532 /* BurntCocoaUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB1D11B06DB9100E57532 /* BurntCocoaUI.framework */; };
 		B20DB1D41B06DBA500E57532 /* BurntCocoaUI.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB1D11B06DB9100E57532 /* BurntCocoaUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B20DB28F1B08334800E57532 /* BurntFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB28E1B08334800E57532 /* BurntFoundation.framework */; };
-		B20DB2911B08335700E57532 /* BurntFoundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB2901B08335700E57532 /* BurntFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B20DB2931B084A9B00E57532 /* FileCollectionBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DB2921B084A9B00E57532 /* FileCollectionBarViewController.swift */; };
 		B20DB2951B09A63700E57532 /* FileCollectionSelectionSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DB2941B09A63700E57532 /* FileCollectionSelectionSource.swift */; };
 		B20DB2C11B0C8ACA00E57532 /* GLACollectionViewColorChoiceItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B255920319C8508C0039D2AC /* GLACollectionViewColorChoiceItem.m */; };
@@ -182,7 +181,6 @@
 		B20DB35D1B0C8ACA00E57532 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBE61963DA2E0014EF84 /* MainMenu.xib */; };
 		B20DB35E1B0C8ACA00E57532 /* GLACollectedFolderStackItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B22B7D7A1AC134BD0026AEDB /* GLACollectedFolderStackItemViewController.xib */; };
 		B20DB3611B0C8ACA00E57532 /* BurntCocoaUI.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB1D11B06DB9100E57532 /* BurntCocoaUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B20DB3621B0C8ACA00E57532 /* BurntFoundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB2901B08335700E57532 /* BurntFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B20DB3691B0C8DE700E57532 /* FileCollectionBarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B20DB3681B0C8DE700E57532 /* FileCollectionBarViewController.xib */; };
 		B20DB36A1B0C8DE700E57532 /* FileCollectionBarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B20DB3681B0C8DE700E57532 /* FileCollectionBarViewController.xib */; };
 		B20DB36D1B0C8E9500E57532 /* NSViewController+PGWSConstraintConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = B20DB36C1B0C8E9500E57532 /* NSViewController+PGWSConstraintConvenience.m */; };
@@ -377,7 +375,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				B20DB1D41B06DBA500E57532 /* BurntCocoaUI.framework in Copy Frameworks */,
-				B20DB2911B08335700E57532 /* BurntFoundation.framework in Copy Frameworks */,
 				B2D9D87F1B247D2600217300 /* Paddle-MAS.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
@@ -390,7 +387,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				B20DB3611B0C8ACA00E57532 /* BurntCocoaUI.framework in Copy Frameworks */,
-				B20DB3621B0C8ACA00E57532 /* BurntFoundation.framework in Copy Frameworks */,
 				B2D9D8801B247D2A00217300 /* Paddle.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
@@ -427,7 +423,6 @@
 		B208E40219F91B66000EF97B /* GLAModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAModel.m; sourceTree = "<group>"; };
 		B20DB1D11B06DB9100E57532 /* BurntCocoaUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BurntCocoaUI.framework; path = Carthage/Build/Mac/BurntCocoaUI.framework; sourceTree = "<group>"; };
 		B20DB28E1B08334800E57532 /* BurntFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BurntFoundation.framework; path = Carthage/Build/Mac/BurntFoundation.framework; sourceTree = "<group>"; };
-		B20DB2901B08335700E57532 /* BurntFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BurntFoundation.framework; path = Carthage/Build/Mac/BurntFoundation.framework; sourceTree = "<group>"; };
 		B20DB2921B084A9B00E57532 /* FileCollectionBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileCollectionBarViewController.swift; sourceTree = "<group>"; };
 		B20DB2941B09A63700E57532 /* FileCollectionSelectionSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileCollectionSelectionSource.swift; sourceTree = "<group>"; };
 		B20DB3661B0C8ACA00E57532 /* Blik Trial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blik Trial.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1058,7 +1053,6 @@
 				B2D9D87B1B247ACD00217300 /* Not Mac App Store */,
 				B20DB37E1B0EC63B00E57532 /* Fabric.framework */,
 				B20DB37F1B0EC63B00E57532 /* Crashlytics.framework */,
-				B20DB2901B08335700E57532 /* BurntFoundation.framework */,
 				B20DB28E1B08334800E57532 /* BurntFoundation.framework */,
 				B20DB1D11B06DB9100E57532 /* BurntCocoaUI.framework */,
 				B2A8FCB01A23BFB00002108E /* libPods-Blik-Mantle.a */,
@@ -1582,6 +1576,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = GLA;
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Burnt Caramel";
 				TargetAttributes = {
