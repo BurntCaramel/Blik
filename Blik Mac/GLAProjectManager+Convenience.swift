@@ -54,7 +54,7 @@ public extension GLAProjectManager {
 	public func collectedFilesAreAllHighlighted(collectedFiles: [GLACollectedFile], fromCollectionWithUUID collectionUUID: NSUUID, projectUUID: NSUUID) -> Bool {
 		if collectedFiles.count > 0 {
 			let project = projectWithUUID(projectUUID)!
-			var collectedFilesNotHighlighted = filterCollectedFiles(collectedFiles, notInHighlightsOfProject:project);
+			let collectedFilesNotHighlighted = filterCollectedFiles(collectedFiles, notInHighlightsOfProject:project);
 			return (collectedFilesNotHighlighted.count == 0)
 		}
 		

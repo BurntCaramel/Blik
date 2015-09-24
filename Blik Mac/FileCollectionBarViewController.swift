@@ -10,7 +10,7 @@ import Cocoa
 import BurntFoundation
 
 
-func changeViewValues<T: NSView>(views: [T], #animate: Bool, #viewBlock: (view: NSView) -> Void) {
+func changeViewValues<T: NSView>(views: [T], animate: Bool, viewBlock: (view: NSView) -> Void) {
 	for view in views {
 		viewBlock(view: animate ? view.animator() : view)
 	}
@@ -22,7 +22,7 @@ func changeViewValues<T: NSView>(views: [T], #animate: Bool, #viewBlock: (view: 
 	@IBOutlet var shareButton: GLAButton!
 	@IBOutlet var addToHighlightsButton: GLAButton!
 	
-	var openerApplicationCombinerNotificationObserver: NotificationObserver<AnyStringNotificationIdentifier>!
+	var openerApplicationCombinerNotificationObserver: AnyNotificationObserver!
 	
 	public override func prepareView() {
 		super.prepareView()
@@ -64,19 +64,17 @@ func changeViewValues<T: NSView>(views: [T], #animate: Bool, #viewBlock: (view: 
 	func startObservingOpenerApplicationCombiner() {
 		if let selectionAssistant = selectionAssistant {
 			if openerApplicationCombinerNotificationObserver == nil {
-				openerApplicationCombinerNotificationObserver = NotificationObserver<AnyStringNotificationIdentifier>(object: selectionAssistant.openerApplicationCombiner)
+				openerApplicationCombinerNotificationObserver = AnyNotificationObserver(object: selectionAssistant.openerApplicationCombiner)
 			}
 			
-			let nc = NSNotificationCenter.defaultCenter()
-			
-			openerApplicationCombinerNotificationObserver.addObserver(GLAFileURLOpenerApplicationCombinerDidChangeNotification) { [unowned self] note in
-				self.setNeedsToUpdateOpenerApplicationsUI()
+			openerApplicationCombinerNotificationObserver.addObserver(GLAFileURLOpenerApplicationCombinerDidChangeNotification) { [weak self] note in
+				self?.setNeedsToUpdateOpenerApplicationsUI()
 			}
 		}
 	}
 	
 	public func update() {
-		let view = self.view
+		_ = self.view
 		
 		//updateAddToHighlightsUI()
 		updateSelectedFilesUIVisibilityAnimating(false)
@@ -214,7 +212,7 @@ func changeViewValues<T: NSView>(views: [T], #animate: Bool, #viewBlock: (view: 
 			let picker = NSSharingServicePicker(items: selectedFileURLs)
 			self.sharingServicePicker = picker
 		
-			picker.showRelativeToRect(sender.insetBounds, ofView: sender, preferredEdge: NSMinYEdge)
+			picker.showRelativeToRect(sender.insetBounds, ofView: sender, preferredEdge: NSRectEdge.MinY)
 		}
 	}
 }

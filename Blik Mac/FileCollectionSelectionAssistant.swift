@@ -18,7 +18,7 @@ import BurntFoundation
 	
 	public let openerApplicationCombiner = GLAFileOpenerApplicationFinder()
 	
-	var projectObserver: NotificationObserver<AnyStringNotificationIdentifier>
+	var projectObserver: AnyNotificationObserver
 	
 	public init(source: FileCollectionSelectionSourcing, filesListCollectionUUID: NSUUID, projectUUID: NSUUID, projectManager: GLAProjectManager) {
 		self.source = source
@@ -26,7 +26,7 @@ import BurntFoundation
 		self.projectUUID = projectUUID
 		self.projectManager = projectManager
 		
-		projectObserver = NotificationObserver<AnyStringNotificationIdentifier>(object: projectManager.notificationObjectForProjectUUID(projectUUID))
+		projectObserver = AnyNotificationObserver(object: projectManager.notificationObjectForProjectUUID(projectUUID))
 		
 		super.init()
 		

@@ -298,7 +298,7 @@
 			stateAsBool = (statusItemController.showsItem);
 		}
 		else if (sel_isEqual(@selector(toggleHideMainWindowWhenInactive:), action)) {
-			stateAsBool = (self.mainWindowController.hidesWhenInactive);
+			stateAsBool = (self.hidesMainWindowWhenInactive);
 		}
 		
 		(menuItem.state) = stateAsBool ? NSOnState : NSOffState;

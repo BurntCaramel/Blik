@@ -13,6 +13,11 @@ var global_symlinkCreator: SymlinkCreator?
 
 
 extension GLAAppDelegate {
+	var hidesMainWindowWhenInactive: Bool {
+		let settings = GLAApplicationSettingsManager.sharedApplicationSettingsManager()
+		return settings.hidesMainWindowWhenInactive
+	}
+	
 	@IBAction func toggleHideMainWindowWhenInactive(sender: AnyObject?) {
 		let settings = GLAApplicationSettingsManager.sharedApplicationSettingsManager()
 		settings.toggleHidesMainWindowWhenInactive(sender)
@@ -27,7 +32,7 @@ extension GLAAppDelegate {
 }
 
 
-enum MainWindowVisibilityWhenInactiveChoice: Bool {
+/*enum MainWindowVisibilityWhenInactiveChoice: Bool {
 	case Shows = true
 	case Hides = false
-}
+}*/

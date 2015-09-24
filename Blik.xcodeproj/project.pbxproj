@@ -1576,6 +1576,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = GLA;
+				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Burnt Caramel";

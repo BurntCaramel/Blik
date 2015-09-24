@@ -29,7 +29,7 @@
 
 @property(nonatomic) BOOL doNotUpdateViews;
 
-@property(nonatomic) WindowFirstResponderAssistant *firstResponderAssistant;
+@property(nonatomic) GLAWindowFirstResponderAssistant *firstResponderAssistant;
 
 @property(nonatomic) GLACollectedFilesSetting *collectedFilesSetting;
 @property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
@@ -168,7 +168,7 @@
 	
 	NSWindow *window = (self.view.window);
 	if (window) {
-		WindowFirstResponderAssistant *firstResponderAssistant = [[WindowFirstResponderAssistant alloc] initWithWindow:window];
+		GLAWindowFirstResponderAssistant *firstResponderAssistant = [[GLAWindowFirstResponderAssistant alloc] initWithWindow:window];
 		__weak GLAFileCollectionViewController* weakSelf = self;
 		(firstResponderAssistant.firstResponderDidChange) = ^ {
 			__strong GLAFileCollectionViewController* self = weakSelf;
