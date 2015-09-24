@@ -256,6 +256,7 @@
 		B27B31A91B3FC1E600ACC214 /* AppDelegate+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27B31A71B3FC1E600ACC214 /* AppDelegate+.swift */; };
 		B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */ = {isa = PBXBuildFile; fileRef = B2841B3219809E15005BB6A3 /* GLAProject.m */; };
 		B284D5621978EC1F00157126 /* GLACollection.m in Sources */ = {isa = PBXBuildFile; fileRef = B284D5611978EC1F00157126 /* GLACollection.m */; };
+		B28518271BB42D2C00135E5C /* BurntFoundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB28E1B08334800E57532 /* BurntFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B28927531A6B1F64007238D6 /* GLACollectedFileListHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927521A6B1F64007238D6 /* GLACollectedFileListHelper.m */; };
 		B28927571A6BA433007238D6 /* NSTableView+GLAActionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927561A6BA433007238D6 /* NSTableView+GLAActionHelpers.m */; };
 		B289275A1A6BDCDB007238D6 /* GLADividerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927591A6BDCDB007238D6 /* GLADividerView.m */; };
@@ -374,6 +375,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				B28518271BB42D2C00135E5C /* BurntFoundation.framework in Copy Frameworks */,
 				B20DB1D41B06DBA500E57532 /* BurntCocoaUI.framework in Copy Frameworks */,
 				B2D9D87F1B247D2600217300 /* Paddle-MAS.framework in Copy Frameworks */,
 			);
