@@ -19,10 +19,6 @@ private class Example {
 
 
 class NotificationTests: XCTestCase {
-	enum TestNotification: String {
-		case DidUpdate = "NotificationTestsDidUpdateNotification"
-	}
-	
 	override func setUp() {
 		super.setUp()
 		// Put setup code here. This method is called before the invocation of each test method in the class.
@@ -32,8 +28,6 @@ class NotificationTests: XCTestCase {
 		// Put teardown code here. This method is called after the invocation of each test method in the class.
 		super.tearDown()
 	}
-	
-	var currentObjects: [AnyObject]?
 	
 	func testObserving() {
 		let nc = NSNotificationCenter()
@@ -46,17 +40,13 @@ class NotificationTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		currentObjects = [
-			object,
-			notificationObserver
-		]
-		
 		NSOperationQueue.mainQueue().addOperationWithBlock {
-			nc.postNotificationName(Example.Notification.DidUpdate.rawValue, object: object)
+			withExtendedLifetime(notificationObserver) {
+				nc.postNotificationName(Example.Notification.DidUpdate.rawValue, object: object)
+			}
 		}
 		
 		waitForExpectationsWithTimeout(2) { error in
-			self.currentObjects = nil
 		}
 	}
 	
@@ -66,16 +56,11 @@ class NotificationTests: XCTestCase {
 		
 		let expectation = expectationForNotification(Example.Notification.DidUpdate.rawValue, object: object, handler: nil)
 		
-		currentObjects = [
-			object
-		]
-		
 		NSOperationQueue.mainQueue().addOperationWithBlock {
 			nc.postNotification(Example.Notification.DidUpdate, object: object, userInfo: nil)
 		}
 		
 		waitForExpectationsWithTimeout(2) { error in
-			self.currentObjects = nil
 		}
 	}
 	

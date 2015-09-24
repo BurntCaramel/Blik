@@ -12,20 +12,20 @@ import BurntFoundation
 
 
 class UserDefaultsTests: XCTestCase {
-	enum TestIntChoice: Int, UserDefaultsChoiceRepresentable {
+	enum ExampleIntChoice: Int, UserDefaultsChoiceRepresentable {
 		case One = 1
 		case Two = 2
 		case Three = 3
 		
-		static var defaultsKey: String = "testInt"
+		static var defaultsKey: String = "exampleInt"
 	}
 	
-	enum TestStringChoice: String, UserDefaultsChoiceRepresentable {
+	enum ExampleStringChoice: String, UserDefaultsChoiceRepresentable {
 		case Apple = "apple"
 		case Banana = "banana"
 		case Carrot = "carrot"
 		
-		static var defaultsKey: String = "testString"
+		static var defaultsKey: String = "exampleString"
 	}
 	
     override func setUp() {
@@ -41,21 +41,21 @@ class UserDefaultsTests: XCTestCase {
     func testIntChoice() {
 		let ud = NSUserDefaults()
 		
-		ud.setInteger(3, forKey: TestIntChoice.defaultsKey)
-		XCTAssertEqual(ud.intChoiceWithFallback(TestIntChoice.One), .Three, "Set integer, get choice")
+		ud.setInteger(3, forKey: ExampleIntChoice.defaultsKey)
+		XCTAssertEqual(ud.intChoiceWithFallback(ExampleIntChoice.One), ExampleIntChoice.Three, "Set integer, get choice")
 		
-		ud.setIntChoice(TestIntChoice.Two)
-		XCTAssertEqual(ud.integerForKey(TestIntChoice.defaultsKey), 2, "Set choice, get integer")
+		ud.setIntChoice(ExampleIntChoice.Two)
+		XCTAssertEqual(ud.integerForKey(ExampleIntChoice.defaultsKey), 2, "Set choice, get integer")
     }
 	
 	func testStringChoice() {
 		let ud = NSUserDefaults()
 		
-		ud.setObject("banana", forKey: TestStringChoice.defaultsKey)
-		XCTAssertEqual(ud.stringChoiceWithFallback(TestStringChoice.Apple), .Banana, "Set string, get choice")
+		ud.setObject("banana", forKey: ExampleStringChoice.defaultsKey)
+		XCTAssertEqual(ud.stringChoiceWithFallback(ExampleStringChoice.Apple), ExampleStringChoice.Banana, "Set string, get choice")
 		
-		ud.setStringChoice(TestStringChoice.Carrot)
-		XCTAssertEqual(ud.stringForKey(TestStringChoice.defaultsKey)!, "carrot", "Set choice, get string")
+		ud.setStringChoice(ExampleStringChoice.Carrot)
+		XCTAssertEqual(ud.stringForKey(ExampleStringChoice.defaultsKey)!, "carrot", "Set choice, get string")
 	}
 	
 }
