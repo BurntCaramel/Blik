@@ -194,6 +194,8 @@ NSString *GLAMainWindowHidesWhenInactive = @"mainWindow.hidesWhenInactive";
 	_hidesMainWindowWhenInactive = hidesMainWindowWhenInactive;
 	
 	[[NSUserDefaults standardUserDefaults] setBool:hidesMainWindowWhenInactive forKey:GLAMainWindowHidesWhenInactive];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification object:self];
 }
 
 - (IBAction)toggleHidesMainWindowWhenInactive:(id)sender
@@ -216,3 +218,4 @@ NSString *GLAMainWindowHidesWhenInactive = @"mainWindow.hidesWhenInactive";
 @end
 
 NSString *GLAApplicationSettingsManagerPermittedApplicationFoldersDidChangeNotification = @"GLAApplicationSettingsManagerPermittedApplicationFoldersDidChangeNotification";
+NSString *GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification = @"GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification";

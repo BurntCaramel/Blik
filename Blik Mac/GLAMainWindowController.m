@@ -11,6 +11,7 @@
 #import "GLATableProjectRowView.h"
 #import "GLAMainContentManners.h"
 // MODEL
+#import "GLAApplicationSettingsManager.h"
 #import "GLAProjectManager.h"
 #import "GLACollection.h"
 #import <objc/runtime.h>
@@ -50,6 +51,8 @@
 	//(window.excludedFromWindowsMenu) = NO;
 	[NSApp addWindowsItem:window title:NSLocalizedString(@"Main Window", @"Title for main window as it appears in the Windows menu") filename:NO];
 	
+	[self updateHideMainWindowWhenInactiveSetting];
+	
 	(self.mainSectionNavigator) = [GLAMainSectionNavigator sharedMainSectionNavigator];
 	
 	[self setUpNotifications];
@@ -66,11 +69,30 @@
 	[self goToNowProject:nil];
 }
 
+- (GLAApplicationSettingsManager *)applicationSettingsManager
+{
+	return [GLAApplicationSettingsManager sharedApplicationSettingsManager];
+}
+
 #pragma mark Setting Up View Controllers
 
 - (void)setUpNotifications
 {
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
+	GLAApplicationSettingsManager *settingsManager = (self.applicationSettingsManager);
+	[nc addObserver:self selector:@selector(hideMainWindowWhenInactiveSettingDidChangeNotification:) name:GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification object:settingsManager];
+}
+
+- (void)updateHideMainWindowWhenInactiveSetting
+{
+	GLAApplicationSettingsManager *settingsManager = (self.applicationSettingsManager);
+	(self.window.hidesOnDeactivate) = (settingsManager.hidesMainWindowWhenInactive);
+}
+
+- (void)hideMainWindowWhenInactiveSettingDidChangeNotification:(NSNotification *)note
+{
+	[self updateHideMainWindowWhenInactiveSetting];
 }
 
 - (void)setUpBaseUI

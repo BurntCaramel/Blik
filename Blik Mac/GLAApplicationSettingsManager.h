@@ -32,3 +32,4 @@
 @end
 
 extern NSString *GLAApplicationSettingsManagerPermittedApplicationFoldersDidChangeNotification;
+extern NSString *GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification;

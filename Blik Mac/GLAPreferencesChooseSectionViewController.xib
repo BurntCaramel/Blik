@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAPreferencesChooseSectionViewController">
             <connections>
                 <outlet property="editPermittedApplicationFoldersButton" destination="cUl-LF-03T" id="2Gf-4G-rc2"/>
                 <outlet property="editPermittedApplicationFoldersLabel" destination="nuV-8B-eaD" id="vGh-aR-Lii"/>
+                <outlet property="hideMainWindowWhenInactiveCheckButton" destination="r1c-71-hoJ" id="jQq-IZ-2FM"/>
                 <outlet property="showStatusMenuItemCheckButton" destination="0AQ-QA-VI6" id="VfP-zV-Yjp"/>
                 <outlet property="view" destination="BUd-m3-8GV" id="0CN-R3-Fyl"/>
             </connections>
@@ -16,12 +18,12 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="BUd-m3-8GV">
-            <rect key="frame" x="0.0" y="0.0" width="480" height="200"/>
+            <rect key="frame" x="0.0" y="0.0" width="480" height="199"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="0AQ-QA-VI6">
-                    <rect key="frame" x="139" y="39" width="202" height="18"/>
-                    <buttonCell key="cell" type="check" title="Show Launcher in Status Bar" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="KlU-bO-BMH">
+                    <rect key="frame" x="138" y="48" width="198" height="18"/>
+                    <buttonCell key="cell" type="check" title="Show Launcher in status bar" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="KlU-bO-BMH">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -30,7 +32,7 @@
                     </connections>
                 </button>
                 <button identifier="chooseSection" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="cUl-LF-03T" customClass="GLAButton">
-                    <rect key="frame" x="180" y="145" width="120" height="27"/>
+                    <rect key="frame" x="180" y="154" width="120" height="27"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="27" id="WIY-03-eB0"/>
                     </constraints>
@@ -58,7 +60,7 @@
                     </connections>
                 </button>
                 <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nuV-8B-eaD">
-                    <rect key="frame" x="88" y="91" width="304" height="46"/>
+                    <rect key="frame" x="88" y="100" width="304" height="46"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="300" id="ctg-1T-MH8"/>
                     </constraints>
@@ -68,16 +70,28 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="r1c-71-hoJ">
+                    <rect key="frame" x="138" y="28" width="224" height="18"/>
+                    <buttonCell key="cell" type="check" title="Hide main window when inactive" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="HVM-r9-TLq">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="toggleHideMainWindowWhenInactive:" target="-2" id="abR-xo-2Ql"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
+                <constraint firstItem="r1c-71-hoJ" firstAttribute="leading" secondItem="0AQ-QA-VI6" secondAttribute="leading" id="0gG-As-A7j"/>
+                <constraint firstItem="r1c-71-hoJ" firstAttribute="top" secondItem="0AQ-QA-VI6" secondAttribute="bottom" constant="6" id="Jyv-Zi-N7a"/>
                 <constraint firstItem="nuV-8B-eaD" firstAttribute="top" secondItem="cUl-LF-03T" secondAttribute="bottom" constant="8" id="OXP-iW-WHH"/>
                 <constraint firstAttribute="centerX" secondItem="nuV-8B-eaD" secondAttribute="centerX" id="cs6-ed-peO"/>
-                <constraint firstAttribute="centerY" secondItem="cUl-LF-03T" secondAttribute="centerY" constant="58" id="fTg-wb-Az7"/>
+                <constraint firstAttribute="centerY" secondItem="cUl-LF-03T" secondAttribute="centerY" constant="68" id="fTg-wb-Az7"/>
                 <constraint firstItem="0AQ-QA-VI6" firstAttribute="top" secondItem="nuV-8B-eaD" secondAttribute="bottom" constant="36" id="rKu-ls-lQ7"/>
                 <constraint firstAttribute="centerX" secondItem="cUl-LF-03T" secondAttribute="centerX" id="w7f-yS-EzO"/>
-                <constraint firstAttribute="centerX" secondItem="0AQ-QA-VI6" secondAttribute="centerX" id="yus-jP-WKK"/>
+                <constraint firstAttribute="centerX" secondItem="0AQ-QA-VI6" secondAttribute="leading" constant="100" id="yus-jP-WKK"/>
             </constraints>
-            <point key="canvasLocation" x="231" y="234"/>
+            <point key="canvasLocation" x="231" y="233.5"/>
         </customView>
     </objects>
 </document>
