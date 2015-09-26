@@ -169,7 +169,9 @@ extension BrowseChoice: UIChoiceRepresentative {
 			let view = self.view
 			
 			if let sourceDirectoryURL = sourceDirectoryURL {
-				directoryWatcher = GLADirectoryWatcher(delegate: self, previousStateData: nil)
+				let directoryWatcher = self.directoryWatcher ?? GLADirectoryWatcher(delegate: self, previousStateData: nil)!
+				directoryWatcher.directoryURLsToWatch = Set([sourceDirectoryURL])
+				self.directoryWatcher = directoryWatcher
 				
 				// Use a specific autosave name for the columns using the directory path.
 				folderContentOutlineView.autosaveName = "collectedFolderContentsOutlineView-\(sourceDirectoryURL.path)"
