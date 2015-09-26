@@ -2217,6 +2217,7 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Blik-ecafheqcwuiabcajggtdmnblcmme/Build/Products/Debug",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-D TRIAL -D DEBUG";
 				PRODUCT_MODULE_NAME = Blik;
 				PRODUCT_NAME = "Blik Trial";
@@ -2260,6 +2261,7 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Blik-ecafheqcwuiabcajggtdmnblcmme/Build/Products/Debug",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-D TRIAL";
 				PRODUCT_MODULE_NAME = Blik;
 				PRODUCT_NAME = "Blik Trial";
@@ -2367,6 +2369,7 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Blik-ecafheqcwuiabcajggtdmnblcmme/Build/Products/Debug",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				PRODUCT_NAME = Blik;
 				SDKROOT = macosx;
@@ -2403,6 +2406,7 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Blik-ecafheqcwuiabcajggtdmnblcmme/Build/Products/Debug",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = Blik;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "Blik Mac/Blik-Bridging-Header.h";
