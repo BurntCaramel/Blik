@@ -443,7 +443,7 @@
 
 - (void)projectHighlightedItemsDidChangeNotification:(NSNotification *)note
 {
-	
+	[self reloadSourceFiles];
 }
 
 - (void)projectPrimaryFoldersDidChangeNotification:(NSNotification *)note
@@ -536,7 +536,12 @@
 			return [NSIndexSet indexSet];
 		}
 		else {
-			return [NSIndexSet indexSetWithIndex:row];
+			if ([selectedIndexes containsIndex:row]) {
+				return selectedIndexes;
+			}
+			else {
+				return [NSIndexSet indexSetWithIndex:row];
+			}
 		}
 	}
 	else {
