@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
@@ -463,7 +462,7 @@
             </constraints>
             <point key="canvasLocation" x="760" y="-209.5"/>
         </customView>
-        <scrollView verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="YLn-7g-05l">
+        <scrollView identifier="Collections List" verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="YLn-7g-05l" userLabel="Collections List Scroll">
             <rect key="frame" x="0.0" y="0.0" width="200" height="176"/>
             <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="2Hx-he-lwf">
                 <rect key="frame" x="0.0" y="0.0" width="160" height="177"/>
@@ -489,7 +488,7 @@
                                 </textFieldCell>
                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                 <prototypeCellViews>
-                                    <tableCellView placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="34" id="73t-iT-KXT">
+                                    <tableCellView placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="34" id="73t-iT-KXT" customClass="CollectionItemTableCellView" customModule="Blik" customModuleProvider="target">
                                         <rect key="frame" x="1" y="1" width="197" height="32"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
@@ -543,7 +542,7 @@
             </scroller>
             <point key="canvasLocation" x="-296" y="611"/>
         </scrollView>
-        <scrollView identifier="width" verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="41" horizontalPageScroll="10" verticalLineScroll="41" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="Ycp-cg-NFY">
+        <scrollView identifier="Highlights List" verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="41" horizontalPageScroll="10" verticalLineScroll="41" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="Ycp-cg-NFY" userLabel="Highlights List Scroll">
             <rect key="frame" x="0.0" y="0.0" width="290" height="174"/>
             <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="QRp-oz-4iV">
                 <rect key="frame" x="0.0" y="0.0" width="300" height="175"/>
