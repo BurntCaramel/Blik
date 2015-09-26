@@ -32,6 +32,7 @@
 @property(nonatomic) BOOL hasPrepared;
 
 @property(nonatomic) CreatorThoughtsAssistant *creatorThoughtsAssistant;
+@property(nonatomic) GuideArticlesAssistant *helpGuidesAssistant;
 
 #if DO_FOLDER_QUERY_TEST
 @property(nonatomic) GLAFolderQueryResults *folderQueryResults;
@@ -78,6 +79,7 @@
 	[[GLAApplicationSettingsManager sharedApplicationSettingsManager] ensureAccessToPermittedApplicationsFolders];
 	
 	(self.creatorThoughtsAssistant) = [[CreatorThoughtsAssistant alloc] initWithMenu:(self.creatorThoughtsMenu)];
+	(self.helpGuidesAssistant) = [[GuideArticlesAssistant alloc] initWithPlaceholderMenuItem:(self.helpGuidesPlaceholderMenuItem)];
 	
 	
 	Paddle *paddle = [Paddle sharedInstance];

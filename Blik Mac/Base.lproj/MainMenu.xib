@@ -16,6 +16,7 @@
             <connections>
                 <outlet property="buyMenuItem" destination="00M-E5-hBF" id="Wqd-0o-ag6"/>
                 <outlet property="creatorThoughtsMenu" destination="IDb-BM-AKA" id="mTG-dM-ppZ"/>
+                <outlet property="helpGuidesPlaceholderMenuItem" destination="l1Z-1N-zjb" id="p2U-sy-Cn3"/>
                 <outlet property="mainHelpMenu" destination="F2S-fz-NVQ" id="6Va-3s-85r"/>
             </connections>
         </customObject>
@@ -538,6 +539,10 @@ DQ
                                 <connections>
                                     <action selector="openFeedbackEmail:" target="Voe-Tx-rLC" id="oTR-XG-lB5"/>
                                 </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="Dng-oA-Yu9"/>
+                            <menuItem title="«Help Guides»" id="l1Z-1N-zjb">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                         </items>
                     </menu>
