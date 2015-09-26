@@ -587,7 +587,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 		(cellView.nextResponder) = self;
 	}
 	else {
-		(cellView.textField.stringValue) = NSLocalizedString(@"Primary Folders", @"Collection name for primary folders");
+		(cellView.textField.stringValue) = NSLocalizedString(@"Master Folders", @"Collection name for master folders");
 		(cellView.textField.textColor) = (uiStyle.primaryFoldersItemColor);
 		
 		(cellView.menu) = nil;

@@ -135,7 +135,7 @@ DQ
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="YWM-TE-tpN"/>
-                            <menuItem title="Choose Primary Folders…" keyEquivalent="P" id="IXk-fU-xTp">
+                            <menuItem title="Choose Master Folders…" keyEquivalent="P" id="IXk-fU-xTp">
                                 <connections>
                                     <action selector="editPrimaryFoldersOfViewedProject:" target="-1" id="jkh-NZ-qED"/>
                                 </connections>
