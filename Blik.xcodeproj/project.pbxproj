@@ -259,6 +259,8 @@
 		B28518271BB42D2C00135E5C /* BurntFoundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB28E1B08334800E57532 /* BurntFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B285182C1BB60D7600135E5C /* GuideArticles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182B1BB60D7600135E5C /* GuideArticles.swift */; settings = {ASSET_TAGS = (); }; };
 		B285182D1BB60D7600135E5C /* GuideArticles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182B1BB60D7600135E5C /* GuideArticles.swift */; settings = {ASSET_TAGS = (); }; };
+		B28518301BB62C1300135E5C /* CollectionItemAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182F1BB62C1300135E5C /* CollectionItemAssistant.swift */; settings = {ASSET_TAGS = (); }; };
+		B28518311BB62C1300135E5C /* CollectionItemAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182F1BB62C1300135E5C /* CollectionItemAssistant.swift */; settings = {ASSET_TAGS = (); }; };
 		B28927531A6B1F64007238D6 /* GLACollectedFileListHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927521A6B1F64007238D6 /* GLACollectedFileListHelper.m */; };
 		B28927571A6BA433007238D6 /* NSTableView+GLAActionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927561A6BA433007238D6 /* NSTableView+GLAActionHelpers.m */; };
 		B289275A1A6BDCDB007238D6 /* GLADividerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927591A6BDCDB007238D6 /* GLADividerView.m */; };
@@ -546,6 +548,7 @@
 		B284D5601978EC1F00157126 /* GLACollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLACollection.h; sourceTree = "<group>"; };
 		B284D5611978EC1F00157126 /* GLACollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLACollection.m; sourceTree = "<group>"; };
 		B285182B1BB60D7600135E5C /* GuideArticles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuideArticles.swift; sourceTree = "<group>"; };
+		B285182F1BB62C1300135E5C /* CollectionItemAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionItemAssistant.swift; sourceTree = "<group>"; };
 		B28927511A6B1F64007238D6 /* GLACollectedFileListHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLACollectedFileListHelper.h; sourceTree = "<group>"; };
 		B28927521A6B1F64007238D6 /* GLACollectedFileListHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLACollectedFileListHelper.m; sourceTree = "<group>"; };
 		B28927551A6BA433007238D6 /* NSTableView+GLAActionHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTableView+GLAActionHelpers.h"; sourceTree = "<group>"; };
@@ -979,6 +982,7 @@
 			children = (
 				B26B6F4B19EBDB3200D17ECD /* GLAProjectCollectionsViewController.h */,
 				B26B6F4C19EBDB3200D17ECD /* GLAProjectCollectionsViewController.m */,
+				B285182F1BB62C1300135E5C /* CollectionItemAssistant.swift */,
 				B26B6F4719EBDB0100D17ECD /* GLAProjectPlanViewController.h */,
 				B26B6F4819EBDB0100D17ECD /* GLAProjectPlanViewController.m */,
 				B208E3FB19F90CFA000EF97B /* GLAProjectHighlightsViewController.h */,
@@ -1584,7 +1588,7 @@
 				CLASSPREFIX = GLA;
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Burnt Caramel";
 				TargetAttributes = {
 					B20DB2BE1B0C8ACA00E57532 = {
@@ -1942,6 +1946,7 @@
 				B20DB31F1B0C8ACA00E57532 /* GLAAddNewCollectionChooseNameAndColorViewController.m in Sources */,
 				B20DB3201B0C8ACA00E57532 /* GLAFileOpenerApplicationFinder.m in Sources */,
 				B20DB3211B0C8ACA00E57532 /* NSEvent+extension.swift in Sources */,
+				B28518311BB62C1300135E5C /* CollectionItemAssistant.swift in Sources */,
 				B20DB3221B0C8ACA00E57532 /* GLAAddCollectedFilesChoiceViewController.m in Sources */,
 				B20DB3231B0C8ACA00E57532 /* GLANavigationButton.m in Sources */,
 				B20DB3241B0C8ACA00E57532 /* GLAPreferencesMainViewController.m in Sources */,
@@ -2082,6 +2087,7 @@
 				B2214E1819D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.m in Sources */,
 				B20362C41A077C87007169C2 /* GLAFileOpenerApplicationFinder.m in Sources */,
 				B21B6E641B06CD4F001B8430 /* NSEvent+extension.swift in Sources */,
+				B28518301BB62C1300135E5C /* CollectionItemAssistant.swift in Sources */,
 				B2CCF8E21A36D24D00EC7703 /* GLAAddCollectedFilesChoiceViewController.m in Sources */,
 				B219DAAB196AB8D1007900DF /* GLANavigationButton.m in Sources */,
 				B2E39B521A88C930000A9A12 /* GLAPreferencesMainViewController.m in Sources */,
@@ -2219,6 +2225,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-D TRIAL -D DEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = com.burntcaramel.Blik.Mac;
 				PRODUCT_MODULE_NAME = Blik;
 				PRODUCT_NAME = "Blik Trial";
 				SDKROOT = macosx;
@@ -2263,6 +2270,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-D TRIAL";
+				PRODUCT_BUNDLE_IDENTIFIER = com.burntcaramel.Blik.Mac;
 				PRODUCT_MODULE_NAME = Blik;
 				PRODUCT_NAME = "Blik Trial";
 				SDKROOT = macosx;
@@ -2289,6 +2297,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -2371,6 +2380,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.burntcaramel.$(PRODUCT_NAME:rfc1034identifier).Mac";
 				PRODUCT_NAME = Blik;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "Blik Mac/Blik-Bridging-Header.h";
@@ -2407,6 +2417,7 @@
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Blik-ecafheqcwuiabcajggtdmnblcmme/Build/Products/Debug",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.burntcaramel.$(PRODUCT_NAME:rfc1034identifier).Mac";
 				PRODUCT_NAME = Blik;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "Blik Mac/Blik-Bridging-Header.h";
@@ -2439,6 +2450,7 @@
 					"-framework",
 					"\"Foundation\"",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.burntcaramel.Blik.Mac.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = BlikTests;
 				SWIFT_OBJC_BRIDGING_HEADER = "Blik Tests/BlikTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2468,6 +2480,7 @@
 					"-framework",
 					"\"Foundation\"",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.burntcaramel.Blik.Mac.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = BlikTests;
 				SWIFT_OBJC_BRIDGING_HEADER = "Blik Tests/BlikTests-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Blik.app/Contents/MacOS/Blik";
@@ -2487,6 +2500,7 @@
 				);
 				INFOPLIST_FILE = "QuickLook Preview/QuickLook Preview-Info.plist";
 				MACH_O_TYPE = mh_execute;
+				PRODUCT_BUNDLE_IDENTIFIER = "${PRODUCT_NAME}";
 				PRODUCT_NAME = "com.burntcaramel.Blik.Mac.$(TARGET_NAME:rfc1034identifier)";
 				WRAPPER_EXTENSION = xpc;
 			};
@@ -2500,6 +2514,7 @@
 				GCC_PREFIX_HEADER = "QuickLook Preview/QuickLook Preview-Prefix.pch";
 				INFOPLIST_FILE = "QuickLook Preview/QuickLook Preview-Info.plist";
 				MACH_O_TYPE = mh_execute;
+				PRODUCT_BUNDLE_IDENTIFIER = "${PRODUCT_NAME}";
 				PRODUCT_NAME = "com.burntcaramel.Blik.Mac.$(TARGET_NAME:rfc1034identifier)";
 				WRAPPER_EXTENSION = xpc;
 			};
