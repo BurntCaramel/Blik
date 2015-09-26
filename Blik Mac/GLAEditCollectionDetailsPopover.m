@@ -22,7 +22,7 @@
 		
 		(popover.editCollectionDetailsViewController) = editCollectionDetailsViewController;
 		(popover.contentViewController) = editCollectionDetailsViewController;
-		(popover.appearance) = NSPopoverAppearanceHUD;
+		//(popover.appearance) = NSPopoverAppearanceHUD;
 		(popover.behavior) = NSPopoverBehaviorSemitransient;
 	});
 	
