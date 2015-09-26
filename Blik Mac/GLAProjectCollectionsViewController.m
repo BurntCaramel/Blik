@@ -71,7 +71,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 	//[self setUpEditingActionsView];
 	
 	(self.tableDraggingHelper) = [[GLAArrayTableDraggingHelper alloc] initWithDelegate:self];
-	
+
 	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
 }
 
@@ -322,6 +322,12 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 	}
 }
 
+- (void)deleteCollection:(GLACollection *)collection atRow:(NSInteger)collectionRow
+{
+	GLAMainContentManners *manners = [GLAMainContentManners sharedManners];
+	[manners askToPermanentlyDeleteCollection:collection fromView:(self.view)];
+}
+
 #pragma mark -
 
 - (GLACollectionColorPickerPopover *)colorPickerPopover
@@ -569,7 +575,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
+	CollectionItemTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	(cellView.canDrawSubviewsIntoLayer) = YES;
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
@@ -582,14 +588,19 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 		
 		(cellView.textField.textColor) = [uiStyle colorForCollectionColor:(collection.color)];
 		
-		NSMenu *menu = (self.contextualMenu);
-		(cellView.menu) = menu;
-		(cellView.nextResponder) = self;
+		//NSMenu *menu = (self.contextualMenu);
+		//CollectionItemAssistant *collectionItemAssistant = [[CollectionItemAssistant alloc] initWithDelegate:self]
+		//[collectionItemAssistant setActiveCollection:collection row:row];
+		[cellView setCollection:collection row:row];
+		(cellView.delegate) = self;
+		(cellView.menu) = (cellView.contextualMenu);
+		//(cellView.nextResponder) = self;
 	}
 	else {
 		(cellView.textField.stringValue) = NSLocalizedString(@"Master Folders", @"Collection name for master folders");
 		(cellView.textField.textColor) = (uiStyle.primaryFoldersItemColor);
 		
+		[cellView clearCollection];
 		(cellView.menu) = nil;
 	}
 	

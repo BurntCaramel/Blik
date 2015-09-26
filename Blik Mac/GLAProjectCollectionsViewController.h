@@ -21,11 +21,12 @@
 #import "GLAProject.h"
 #import "GLACollection.h"
 #import "GLAReminder.h"
+#import "Blik-Swift.h"
 
 @class GLAProjectViewController;
 
 
-@interface GLAProjectCollectionsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource>
+@interface GLAProjectCollectionsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource, CollectionItemAssistantDelegate>
 
 @property(weak, nonatomic) id<GLAAddCollectedFilesChoiceActionsDelegate> addCollectedFilesChoiceActionsDelegate;
 
@@ -48,10 +49,13 @@
 
 @property(nonatomic) BOOL editing;
 
+@property(nonatomic) CollectionItemAssistant *collectionItemAssistant;
+
 - (void)reloadCollections;
 
 //- (IBAction)makeNewCollection:(id)sender;
 
+- (void)deleteCollection:(GLACollection *)collection atRow:(NSInteger)collectionRow;
 - (IBAction)permanentlyDeleteClickedCollection:(id)sender;
 - (IBAction)renameClickedCollection:(id)sender;
 
