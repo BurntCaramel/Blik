@@ -60,10 +60,16 @@ public class SymlinkCreator {
 	private func removeContentsOfDirectoryWithURL(directoryURL: NSURL) {
 		let holdingDirectoryURL = self.holdingDirectoryURL
 		useFileManagerInBackground { fileManager in
-			var error: NSError?
-			let existingURLs = fileManager.contentsOfDirectoryAtURL(holdingDirectoryURL, includingPropertiesForKeys: nil, options: .SkipsSubdirectoryDescendants, error: &error) as! [NSURL]
-			for existingURL in existingURLs {
-				fileManager.removeItemAtURL(existingURL, error: &error)
+			do {
+				let existingURLs = try fileManager.contentsOfDirectoryAtURL(holdingDirectoryURL, includingPropertiesForKeys: nil, options: .SkipsSubdirectoryDescendants)
+				for existingURL in existingURLs {
+					do {
+						try fileManager.removeItemAtURL(existingURL)
+					}
+				}
+			}
+			catch {
+				NSLog("%@", error as NSError)
 			}
 		}
 	}
@@ -75,8 +81,12 @@ public class SymlinkCreator {
 	
 	private func createDirectoryAtURL(directoryURL: NSURL) {
 		useFileManagerInBackground { fileManager in
-			var error: NSError?
-			fileManager.createDirectoryAtURL(directoryURL, withIntermediateDirectories: true, attributes: nil, error: &error)
+			do {
+				try fileManager.createDirectoryAtURL(directoryURL, withIntermediateDirectories: true, attributes: nil)
+			}
+			catch {
+				NSLog("%@", error as NSError)
+			}
 		}
 	}
 	
@@ -94,7 +104,7 @@ public class SymlinkCreator {
 			
 			#if DEBUG
 				self.useFileManagerInBackground { (fileManager) in
-					println("Created symlinks for all projects")
+					print("Created symlinks for all projects")
 				}
 			#endif
 		}
@@ -122,7 +132,6 @@ public class SymlinkCreator {
 	}
 	
 	private func createLinksForFilesListCollection(collection: GLACollection, inDirectoryURL holdingDirectoryURL: NSURL) {
-		var error: NSError?
 		
 		let pm = projectManager
 		
@@ -140,9 +149,13 @@ public class SymlinkCreator {
 						fileName = filePathURL.lastPathComponent
 					{
 						let linkURL = holdingDirectoryURL.URLByAppendingPathComponent(fileName)
-						let success = fileManager.createSymbolicLinkAtURL(linkURL, withDestinationURL: filePathURL, error: &error)
-						if !success {
-							
+						do {
+							try fileManager.createSymbolicLinkAtURL(linkURL, withDestinationURL: filePathURL)
+						}
+						catch {
+							NSOperationQueue.mainQueue().addOperationWithBlock {
+								NSApp.presentError(error as NSError)
+							}
 						}
 					}
 				}
@@ -161,10 +174,9 @@ extension SymlinkCreator {
 		
 		openPanel.beginWithCompletionHandler { result in
 			if result == NSFileHandlingPanelOKButton {
-				if let fileURL = openPanel.URLs[0] as? NSURL {
-					let symlinkCreator = SymlinkCreator(holdingDirectoryURL: fileURL)
-					completion(symlinkCreator)
-				}
+				let fileURL = openPanel.URLs[0]
+				let symlinkCreator = SymlinkCreator(holdingDirectoryURL: fileURL)
+				completion(symlinkCreator)
 			}
 		}
 	}

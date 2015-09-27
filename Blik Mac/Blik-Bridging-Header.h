@@ -6,6 +6,7 @@
 #import "GLAAccessedFileInfo.h"
 #import "GLAHighlightedItem.h"
 #import "GLAProjectManager.h"
+#import "GLAApplicationSettingsManager.h"
 
 #import "GLAFileInfoRetriever.h"
 #import "GLAArrangedDirectoryChildren.h"

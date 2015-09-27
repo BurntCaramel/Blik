@@ -86,6 +86,8 @@
 @property(nonatomic) NSColor *strongOrangeItemColor;
 @property(nonatomic) NSColor *strongGreenItemColor;
 
+@property(nonatomic) NSColor *primaryFoldersItemColor;
+
 - (NSColor *)colorForCollectionColor:(GLACollectionColor *)color;
 
 

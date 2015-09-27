@@ -345,7 +345,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 - (NSArray /* GLACollectedFile */ *)copyPrimaryFoldersForProject:(GLAProject *)project
 {
 	GLAArrayEditor *arrayEditor = [(self.store) primaryFoldersArrayEditorForProject:project];
-	NSAssert(arrayEditor != nil, @"Project must have a primary folders array editor to copy from.");
+	NSAssert(arrayEditor != nil, @"Project must have a master folders array editor to copy from.");
 
 	return [arrayEditor copyChildren];
 }
@@ -1706,10 +1706,10 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	
 	if (load && (primaryFoldersArrayEditor.needsLoadingFromStore)) {
 		id<GLAArrayStoring> editorStore = (primaryFoldersArrayEditor.store);
-		NSAssert(editorStore != nil, @"Primary folders array editor must have a store");
+		NSAssert(editorStore != nil, @"Master folders array editor must have a store");
 		
 		__weak GLAProjectManagerStore *weakSelf = self;
-		dispatch_block_t actionTracker = [self beginActionWithIdentifier:@"Load Primary Folders for Project \"%@\"", (project.name)];
+		dispatch_block_t actionTracker = [self beginActionWithIdentifier:@"Load Master Folders for Project \"%@\"", (project.name)];
 		
 		[editorStore
 		 loadIfNeededWithChildProcessor:nil

@@ -11,12 +11,15 @@ import BurntCocoaUI
 
 
 private enum Link {
+	case PerfectionIsADirection
 	case AlasOnlyApple
 	case TheHeartOfUserInterfaces
 	case TheDailyExpectation
 	
 	var title: String {
 		switch self {
+		case .PerfectionIsADirection:
+			return "Perfection is a Direction, Not a Destination"
 		case .AlasOnlyApple:
 			return "Alas, Only Apple"
 		case .TheHeartOfUserInterfaces:
@@ -29,6 +32,8 @@ private enum Link {
 	
 	var URL: NSURL {
 		switch self {
+		case .PerfectionIsADirection:
+			return NSURL(string: "https://medium.com/@concreteniche/perfection-is-a-direction-not-a-destination-9237caade2a5")!
 		case .AlasOnlyApple:
 			return NSURL(string: "https://medium.com/@concreteniche/alas-only-apple-20e0bc8b1c8f")!
 		case .TheHeartOfUserInterfaces:
@@ -41,6 +46,7 @@ private enum Link {
 	
 	static var chosenLinks: [Link] {
 		return [
+			.PerfectionIsADirection,
 			.AlasOnlyApple,
 			.TheHeartOfUserInterfaces,
 			.TheDailyExpectation
@@ -57,11 +63,9 @@ extension Link: UIChoiceRepresentative {
 
 
 class CreatorThoughtsAssistant: NSObject {
-	let menu: NSMenu
 	private let menuAssistant: MenuAssistant<Link>
 	
 	init(menu: NSMenu) {
-		self.menu = menu
 		menuAssistant = MenuAssistant<Link>(menu: menu)
 		
 		super.init()

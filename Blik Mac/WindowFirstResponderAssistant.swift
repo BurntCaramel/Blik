@@ -34,7 +34,7 @@ import Cocoa
 		window.removeObserver(self, forKeyPath: "firstResponder")
 	}
 	
-	public override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
+	public override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
 		if object === window {
 			if keyPath == "firstResponder" {
 				firstResponderDidChange?()

@@ -20,6 +20,7 @@
 @property (nonatomic) GLAStatusItemController *statusItemController;
 
 @property (assign, nonatomic) IBOutlet NSMenu *mainHelpMenu;
+@property (assign, nonatomic) IBOutlet NSMenuItem *helpGuidesPlaceholderMenuItem;
 @property (assign, nonatomic) IBOutlet NSMenuItem *activityStatusMenuItem;
 
 @property (assign, nonatomic) IBOutlet NSMenuItem *buyMenuItem;

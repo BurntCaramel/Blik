@@ -32,7 +32,7 @@ private struct CollectedFileInfo {
 		}
 	}
 	private var collectedFilesSetting: GLACollectedFilesSetting!
-	private var collectedFilesSettingNotificationObserver: NotificationObserver<AnyStringNotificationIdentifier>!
+	private var collectedFilesSettingNotificationObserver: AnyNotificationObserver!
 	
 	var resourceKeyToSortBy = NSURLLocalizedNameKey
 	var sortsAscending = true
@@ -60,7 +60,7 @@ private struct CollectedFileInfo {
 		//style.prepareContentTableView(outlineView)
 		
 		collectedFilesSetting = GLACollectedFilesSetting()
-		collectedFilesSettingNotificationObserver = NotificationObserver<AnyStringNotificationIdentifier>(object: collectedFilesSetting)
+		collectedFilesSettingNotificationObserver = AnyNotificationObserver(object: collectedFilesSetting)
 	collectedFilesSettingNotificationObserver.addObserver( GLACollectedFilesSettingLoadedFileInfoDidChangeNotification ) { [unowned self] notification in
 			if let collectedFile = notification.userInfo?[GLACollectedFilesSettingLoadedFileInfoDidChangeNotification_CollectedFile] as? GLACollectedFile {
 				self.updateInfoForCollectedFile(collectedFile)
@@ -148,7 +148,7 @@ private struct CollectedFileInfo {
 	
 	func updateArrangedChildrenWithSortingOptions(arrangedChildren: GLAArrangedDirectoryChildren)
 	{
-		println("updateArrangedChildrenWithSortingOptions")
+		print("updateArrangedChildrenWithSortingOptions")
 		arrangedChildren.updateAfterEditingOptions { editor in
 			editor.resourceKeyToSortBy = self.resourceKeyToSortBy
 			editor.sortsAscending = self.sortsAscending
@@ -170,13 +170,13 @@ extension FileCollectionExpandedTableViewController: NSOutlineViewDataSource, NS
 		else if let collectedFile = item as? GLACollectedFile {
 			if let info = collectedFileUUIDToInfo[collectedFile.UUID] {
 				if info.isDirectory {
-					println("IDDIR \(info.URL)")
+					print("IDDIR \(info.URL)")
 					if let fileURLs = arrangedChildrenForDirectoryURL(info.URL, collectedFile: collectedFile)?.fileURLs {
-						println("fileURLs \(fileURLs)")
+						print("fileURLs \(fileURLs)")
 						return fileURLs.count
 					}
 					else {
-						println("zero")
+						print("zero")
 						return 0
 					}
 				}
@@ -268,7 +268,7 @@ extension FileCollectionExpandedTableViewController: NSOutlineViewDataSource, NS
 
 extension FileCollectionExpandedTableViewController: GLAArrangedDirectoryChildrenDelegate {
 	public func arrangedDirectoryChildrenDidUpdateChildren(arrangedDirectoryChildren: GLAArrangedDirectoryChildren) {
-		println("arrangedDirectoryChildrenDidUpdateChildren \(arrangedDirectoryChildren.fileURLs)")
+		print("arrangedDirectoryChildrenDidUpdateChildren \(arrangedDirectoryChildren.fileURLs)")
 		
 		var item: AnyObject
 		if let collectedFile = arrangedDirectoryChildren.userInfo?["collectedFile"] as? GLACollectedFile {

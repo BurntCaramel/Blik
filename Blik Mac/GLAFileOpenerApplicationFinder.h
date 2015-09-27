@@ -15,12 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addFileURLs:(NSSet *)fileURLsSet;
 - (void)removeFileURLs:(NSSet *)fileURLsSet;
 - (BOOL)hasFileURL:(NSURL *)fileURL;
-@property(copy, nonatomic) NSSet *fileURLs;
+@property(null_resettable, copy, nonatomic) NSSet *fileURLs;
 
 @property(readonly, nonatomic) BOOL hasLoadedAll;
 
 @property(readonly, copy, nonatomic) NSSet *combinedOpenerApplicationURLs;
-@property(readonly, nonatomic) NSURL *combinedDefaultOpenerApplicationURL;
+@property(readonly, nullable, nonatomic) NSURL *combinedDefaultOpenerApplicationURL;
 
 #pragma mark -
 

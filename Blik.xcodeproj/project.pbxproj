@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -22,7 +22,6 @@
 		B20DB1D21B06DB9100E57532 /* BurntCocoaUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB1D11B06DB9100E57532 /* BurntCocoaUI.framework */; };
 		B20DB1D41B06DBA500E57532 /* BurntCocoaUI.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB1D11B06DB9100E57532 /* BurntCocoaUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B20DB28F1B08334800E57532 /* BurntFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB28E1B08334800E57532 /* BurntFoundation.framework */; };
-		B20DB2911B08335700E57532 /* BurntFoundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB2901B08335700E57532 /* BurntFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B20DB2931B084A9B00E57532 /* FileCollectionBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DB2921B084A9B00E57532 /* FileCollectionBarViewController.swift */; };
 		B20DB2951B09A63700E57532 /* FileCollectionSelectionSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DB2941B09A63700E57532 /* FileCollectionSelectionSource.swift */; };
 		B20DB2C11B0C8ACA00E57532 /* GLACollectionViewColorChoiceItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B255920319C8508C0039D2AC /* GLACollectionViewColorChoiceItem.m */; };
@@ -182,7 +181,6 @@
 		B20DB35D1B0C8ACA00E57532 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBE61963DA2E0014EF84 /* MainMenu.xib */; };
 		B20DB35E1B0C8ACA00E57532 /* GLACollectedFolderStackItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B22B7D7A1AC134BD0026AEDB /* GLACollectedFolderStackItemViewController.xib */; };
 		B20DB3611B0C8ACA00E57532 /* BurntCocoaUI.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB1D11B06DB9100E57532 /* BurntCocoaUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B20DB3621B0C8ACA00E57532 /* BurntFoundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB2901B08335700E57532 /* BurntFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B20DB3691B0C8DE700E57532 /* FileCollectionBarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B20DB3681B0C8DE700E57532 /* FileCollectionBarViewController.xib */; };
 		B20DB36A1B0C8DE700E57532 /* FileCollectionBarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B20DB3681B0C8DE700E57532 /* FileCollectionBarViewController.xib */; };
 		B20DB36D1B0C8E9500E57532 /* NSViewController+PGWSConstraintConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = B20DB36C1B0C8E9500E57532 /* NSViewController+PGWSConstraintConvenience.m */; };
@@ -258,8 +256,13 @@
 		B27B31A91B3FC1E600ACC214 /* AppDelegate+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27B31A71B3FC1E600ACC214 /* AppDelegate+.swift */; };
 		B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */ = {isa = PBXBuildFile; fileRef = B2841B3219809E15005BB6A3 /* GLAProject.m */; };
 		B284D5621978EC1F00157126 /* GLACollection.m in Sources */ = {isa = PBXBuildFile; fileRef = B284D5611978EC1F00157126 /* GLACollection.m */; };
-		B28636AA1B417C150007A944 /* FileInfoDisplaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28636A91B417C150007A944 /* FileInfoDisplaying.swift */; };
-		B28636AB1B417C150007A944 /* FileInfoDisplaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28636A91B417C150007A944 /* FileInfoDisplaying.swift */; };
+		B28518271BB42D2C00135E5C /* BurntFoundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB28E1B08334800E57532 /* BurntFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B285182C1BB60D7600135E5C /* GuideArticles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182B1BB60D7600135E5C /* GuideArticles.swift */; settings = {ASSET_TAGS = (); }; };
+		B285182D1BB60D7600135E5C /* GuideArticles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182B1BB60D7600135E5C /* GuideArticles.swift */; settings = {ASSET_TAGS = (); }; };
+		B28518301BB62C1300135E5C /* CollectionItemAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182F1BB62C1300135E5C /* CollectionItemAssistant.swift */; settings = {ASSET_TAGS = (); }; };
+		B28518311BB62C1300135E5C /* CollectionItemAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182F1BB62C1300135E5C /* CollectionItemAssistant.swift */; settings = {ASSET_TAGS = (); }; };
+		B28518331BB77ACE00135E5C /* FileInfoDisplaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28518321BB77ACE00135E5C /* FileInfoDisplaying.swift */; settings = {ASSET_TAGS = (); }; };
+		B28518341BB77ACE00135E5C /* FileInfoDisplaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28518321BB77ACE00135E5C /* FileInfoDisplaying.swift */; settings = {ASSET_TAGS = (); }; };
 		B28927531A6B1F64007238D6 /* GLACollectedFileListHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927521A6B1F64007238D6 /* GLACollectedFileListHelper.m */; };
 		B28927571A6BA433007238D6 /* NSTableView+GLAActionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927561A6BA433007238D6 /* NSTableView+GLAActionHelpers.m */; };
 		B289275A1A6BDCDB007238D6 /* GLADividerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927591A6BDCDB007238D6 /* GLADividerView.m */; };
@@ -274,6 +277,8 @@
 		B292453A19E4058A00DD30CB /* GLANoNowProjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B292453819E4058A00DD30CB /* GLANoNowProjectViewController.xib */; };
 		B292F4711AD6546E0041E7A1 /* NSMenu+GLAMenuItemConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = B292F4701AD6546E0041E7A1 /* NSMenu+GLAMenuItemConvenience.m */; };
 		B292F4741AD65A9A0041E7A1 /* GLAProjectManager+GLAOpeningFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = B292F4731AD65A9A0041E7A1 /* GLAProjectManager+GLAOpeningFiles.m */; };
+		B29C43441B9715450084F6AA /* FileCollectionTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29C43431B9715450084F6AA /* FileCollectionTable.swift */; };
+		B29C43451B9715450084F6AA /* FileCollectionTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29C43431B9715450084F6AA /* FileCollectionTable.swift */; };
 		B29F8DDA1980D45400F58F59 /* NSValueTransformer+GLAModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B29F8DD91980D45400F58F59 /* NSValueTransformer+GLAModel.m */; };
 		B29F8DDD1981139300F58F59 /* GLAReminderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B29F8DDC1981139300F58F59 /* GLAReminderManager.m */; };
 		B2A8FCB21A23BFB00002108E /* libPods-Blik-Mantle.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B2A8FCB01A23BFB00002108E /* libPods-Blik-Mantle.a */; };
@@ -380,8 +385,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				B28518271BB42D2C00135E5C /* BurntFoundation.framework in Copy Frameworks */,
 				B20DB1D41B06DBA500E57532 /* BurntCocoaUI.framework in Copy Frameworks */,
-				B20DB2911B08335700E57532 /* BurntFoundation.framework in Copy Frameworks */,
 				B2D9D87F1B247D2600217300 /* Paddle-MAS.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
@@ -394,7 +399,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				B20DB3611B0C8ACA00E57532 /* BurntCocoaUI.framework in Copy Frameworks */,
-				B20DB3621B0C8ACA00E57532 /* BurntFoundation.framework in Copy Frameworks */,
 				B2D9D8801B247D2A00217300 /* Paddle.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
@@ -431,7 +435,6 @@
 		B208E40219F91B66000EF97B /* GLAModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAModel.m; sourceTree = "<group>"; };
 		B20DB1D11B06DB9100E57532 /* BurntCocoaUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BurntCocoaUI.framework; path = Carthage/Build/Mac/BurntCocoaUI.framework; sourceTree = "<group>"; };
 		B20DB28E1B08334800E57532 /* BurntFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BurntFoundation.framework; path = Carthage/Build/Mac/BurntFoundation.framework; sourceTree = "<group>"; };
-		B20DB2901B08335700E57532 /* BurntFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BurntFoundation.framework; path = Carthage/Build/Mac/BurntFoundation.framework; sourceTree = "<group>"; };
 		B20DB2921B084A9B00E57532 /* FileCollectionBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileCollectionBarViewController.swift; sourceTree = "<group>"; };
 		B20DB2941B09A63700E57532 /* FileCollectionSelectionSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileCollectionSelectionSource.swift; sourceTree = "<group>"; };
 		B20DB3661B0C8ACA00E57532 /* Blik Trial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blik Trial.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -550,7 +553,9 @@
 		B2841B3219809E15005BB6A3 /* GLAProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProject.m; sourceTree = "<group>"; };
 		B284D5601978EC1F00157126 /* GLACollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLACollection.h; sourceTree = "<group>"; };
 		B284D5611978EC1F00157126 /* GLACollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLACollection.m; sourceTree = "<group>"; };
-		B28636A91B417C150007A944 /* FileInfoDisplaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileInfoDisplaying.swift; sourceTree = "<group>"; };
+		B285182B1BB60D7600135E5C /* GuideArticles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuideArticles.swift; sourceTree = "<group>"; };
+		B285182F1BB62C1300135E5C /* CollectionItemAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionItemAssistant.swift; sourceTree = "<group>"; };
+		B28518321BB77ACE00135E5C /* FileInfoDisplaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileInfoDisplaying.swift; sourceTree = "<group>"; };
 		B28927511A6B1F64007238D6 /* GLACollectedFileListHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLACollectedFileListHelper.h; sourceTree = "<group>"; };
 		B28927521A6B1F64007238D6 /* GLACollectedFileListHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLACollectedFileListHelper.m; sourceTree = "<group>"; };
 		B28927551A6BA433007238D6 /* NSTableView+GLAActionHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTableView+GLAActionHelpers.h"; sourceTree = "<group>"; };
@@ -578,6 +583,7 @@
 		B292F4701AD6546E0041E7A1 /* NSMenu+GLAMenuItemConvenience.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMenu+GLAMenuItemConvenience.m"; sourceTree = "<group>"; };
 		B292F4721AD65A9A0041E7A1 /* GLAProjectManager+GLAOpeningFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GLAProjectManager+GLAOpeningFiles.h"; sourceTree = "<group>"; };
 		B292F4731AD65A9A0041E7A1 /* GLAProjectManager+GLAOpeningFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GLAProjectManager+GLAOpeningFiles.m"; sourceTree = "<group>"; };
+		B29C43431B9715450084F6AA /* FileCollectionTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileCollectionTable.swift; sourceTree = "<group>"; };
 		B29F8DD81980D45400F58F59 /* NSValueTransformer+GLAModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSValueTransformer+GLAModel.h"; sourceTree = "<group>"; };
 		B29F8DD91980D45400F58F59 /* NSValueTransformer+GLAModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSValueTransformer+GLAModel.m"; sourceTree = "<group>"; };
 		B29F8DDB1981139300F58F59 /* GLAReminderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAReminderManager.h; sourceTree = "<group>"; };
@@ -848,6 +854,7 @@
 			children = (
 				B20DB37B1B0EB84600E57532 /* GLAFileCollecting.h */,
 				B20DB3701B0D6BC900E57532 /* GLAFolderContentsAssisting.h */,
+				B28518321BB77ACE00135E5C /* FileInfoDisplaying.swift */,
 				B21B6E611B063916001B8430 /* GLAFolderContentsViewController.swift */,
 				B24ADB2A1AD784E0007214C2 /* GLAFolderContentsViewController.xib */,
 			);
@@ -985,6 +992,7 @@
 			children = (
 				B26B6F4B19EBDB3200D17ECD /* GLAProjectCollectionsViewController.h */,
 				B26B6F4C19EBDB3200D17ECD /* GLAProjectCollectionsViewController.m */,
+				B285182F1BB62C1300135E5C /* CollectionItemAssistant.swift */,
 				B26B6F4719EBDB0100D17ECD /* GLAProjectPlanViewController.h */,
 				B26B6F4819EBDB0100D17ECD /* GLAProjectPlanViewController.m */,
 				B208E3FB19F90CFA000EF97B /* GLAProjectHighlightsViewController.h */,
@@ -1009,7 +1017,6 @@
 		B28636A81B417BF30007A944 /* File Info Displaying */ = {
 			isa = PBXGroup;
 			children = (
-				B28636A91B417C150007A944 /* FileInfoDisplaying.swift */,
 			);
 			name = "File Info Displaying";
 			sourceTree = "<group>";
@@ -1073,7 +1080,6 @@
 				B2D9D87B1B247ACD00217300 /* Not Mac App Store */,
 				B20DB37E1B0EC63B00E57532 /* Fabric.framework */,
 				B20DB37F1B0EC63B00E57532 /* Crashlytics.framework */,
-				B20DB2901B08335700E57532 /* BurntFoundation.framework */,
 				B20DB28E1B08334800E57532 /* BurntFoundation.framework */,
 				B20DB1D11B06DB9100E57532 /* BurntCocoaUI.framework */,
 				B2A8FCB01A23BFB00002108E /* libPods-Blik-Mantle.a */,
@@ -1108,6 +1114,7 @@
 				B2ADDBE41963DA2E0014EF84 /* GLAAppDelegate.m */,
 				B27B31A71B3FC1E600ACC214 /* AppDelegate+.swift */,
 				B20DB38C1B12A7E800E57532 /* CreatorThoughts.swift */,
+				B285182B1BB60D7600135E5C /* GuideArticles.swift */,
 				B2CCF8EA1A370C8700EC7703 /* Categories */,
 				B2ADDBE61963DA2E0014EF84 /* MainMenu.xib */,
 				B2ADDBE91963DA2E0014EF84 /* Images.xcassets */,
@@ -1275,6 +1282,7 @@
 				B20DB2941B09A63700E57532 /* FileCollectionSelectionSource.swift */,
 				B20DB3721B0DADD000E57532 /* FileCollectionSelectionAssistant.swift */,
 				B226E9581988D00C00D607CC /* GLAFileCollectionViewController.xib */,
+				B29C43431B9715450084F6AA /* FileCollectionTable.swift */,
 				B20DB2921B084A9B00E57532 /* FileCollectionBarViewController.swift */,
 				B20DB3681B0C8DE700E57532 /* FileCollectionBarViewController.xib */,
 				B20DB36F1B0CBFBC00E57532 /* Expanded */,
@@ -1596,8 +1604,9 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = GLA;
+				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Burnt Caramel";
 				TargetAttributes = {
 					B20DB2BE1B0C8ACA00E57532 = {
@@ -1617,7 +1626,7 @@
 				};
 			};
 			buildConfigurationList = B2ADDBC91963DA2E0014EF84 /* Build configuration list for PBXProject "Blik" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1852,6 +1861,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B29C43451B9715450084F6AA /* FileCollectionTable.swift in Sources */,
 				B20DB2C11B0C8ACA00E57532 /* GLACollectionViewColorChoiceItem.m in Sources */,
 				B20DB2C21B0C8ACA00E57532 /* GLAView.m in Sources */,
 				B20DB2C31B0C8ACA00E57532 /* GLATableContentRowView.m in Sources */,
@@ -1894,6 +1904,7 @@
 				B20DB2E51B0C8ACA00E57532 /* GLAArrayTableDraggingHelper.m in Sources */,
 				B20DB2E61B0C8ACA00E57532 /* GLAMainSection.m in Sources */,
 				B20DB3771B0DB1EA00E57532 /* GLAProjectManager+Convenience.swift in Sources */,
+				B28518341BB77ACE00135E5C /* FileInfoDisplaying.swift in Sources */,
 				B20DB2E71B0C8ACA00E57532 /* main.m in Sources */,
 				B20DB2E81B0C8ACA00E57532 /* NSMenu+GLAMenuItemConvenience.m in Sources */,
 				B20DB2E91B0C8ACA00E57532 /* GLADirectoryWatcher.m in Sources */,
@@ -1952,11 +1963,11 @@
 				B20DB31C1B0C8ACA00E57532 /* GLAHighlightedItem.m in Sources */,
 				B20DB31D1B0C8ACA00E57532 /* GLASimpleBezierPath.m in Sources */,
 				B20DB31E1B0C8ACA00E57532 /* FileCollectionSelectionSource.swift in Sources */,
-				B28636AB1B417C150007A944 /* FileInfoDisplaying.swift in Sources */,
 				B20DB31F1B0C8ACA00E57532 /* GLAAddNewCollectionChooseNameAndColorViewController.m in Sources */,
 				B20DB3201B0C8ACA00E57532 /* GLAFileOpenerApplicationFinder.m in Sources */,
 				B2F8B5361B4BFB5E005FD8F3 /* FileCollectionExpandedViewController.swift in Sources */,
 				B20DB3211B0C8ACA00E57532 /* NSEvent+extension.swift in Sources */,
+				B28518311BB62C1300135E5C /* CollectionItemAssistant.swift in Sources */,
 				B20DB3221B0C8ACA00E57532 /* GLAAddCollectedFilesChoiceViewController.m in Sources */,
 				B20DB3231B0C8ACA00E57532 /* GLANavigationButton.m in Sources */,
 				B20DB3241B0C8ACA00E57532 /* GLAPreferencesMainViewController.m in Sources */,
@@ -1969,6 +1980,7 @@
 				B20DB32B1B0C8ACA00E57532 /* GLANavigationBar.m in Sources */,
 				B20DB32C1B0C8ACA00E57532 /* GLAEditCollectionDetailsPopover.m in Sources */,
 				B20DB32D1B0C8ACA00E57532 /* GLACollectionIndicationButton.m in Sources */,
+				B285182D1BB60D7600135E5C /* GuideArticles.swift in Sources */,
 				B20DB32E1B0C8ACA00E57532 /* GLAProjectManager+GLAOpeningFiles.m in Sources */,
 				B20DB32F1B0C8ACA00E57532 /* GLADividerView.m in Sources */,
 				B20DB3301B0C8ACA00E57532 /* GLAProjectManager.m in Sources */,
@@ -1993,6 +2005,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B29C43441B9715450084F6AA /* FileCollectionTable.swift in Sources */,
 				B255920419C8508C0039D2AC /* GLACollectionViewColorChoiceItem.m in Sources */,
 				B2C7F287196FFFDF005780B4 /* GLAView.m in Sources */,
 				B25591F219C284040039D2AC /* GLATableContentRowView.m in Sources */,
@@ -2035,6 +2048,7 @@
 				B207633F1A114AC9003C5922 /* GLAArrayTableDraggingHelper.m in Sources */,
 				B2F0DBC11992607B001AB5EE /* GLAMainSection.m in Sources */,
 				B20DB3761B0DB1EA00E57532 /* GLAProjectManager+Convenience.swift in Sources */,
+				B28518331BB77ACE00135E5C /* FileInfoDisplaying.swift in Sources */,
 				B2ADDBDE1963DA2E0014EF84 /* main.m in Sources */,
 				B292F4711AD6546E0041E7A1 /* NSMenu+GLAMenuItemConvenience.m in Sources */,
 				B2E39B361A7C60EC000A9A12 /* GLADirectoryWatcher.m in Sources */,
@@ -2093,11 +2107,11 @@
 				B208E3FA19F8E38F000EF97B /* GLAHighlightedItem.m in Sources */,
 				B250206E1B03207200ABAE96 /* GLASimpleBezierPath.m in Sources */,
 				B20DB2951B09A63700E57532 /* FileCollectionSelectionSource.swift in Sources */,
-				B28636AA1B417C150007A944 /* FileInfoDisplaying.swift in Sources */,
 				B2214E1819D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.m in Sources */,
 				B20362C41A077C87007169C2 /* GLAFileOpenerApplicationFinder.m in Sources */,
 				B2F8B5351B4BFB5E005FD8F3 /* FileCollectionExpandedViewController.swift in Sources */,
 				B21B6E641B06CD4F001B8430 /* NSEvent+extension.swift in Sources */,
+				B28518301BB62C1300135E5C /* CollectionItemAssistant.swift in Sources */,
 				B2CCF8E21A36D24D00EC7703 /* GLAAddCollectedFilesChoiceViewController.m in Sources */,
 				B219DAAB196AB8D1007900DF /* GLANavigationButton.m in Sources */,
 				B2E39B521A88C930000A9A12 /* GLAPreferencesMainViewController.m in Sources */,
@@ -2110,6 +2124,7 @@
 				B219DAA8196AB7D6007900DF /* GLANavigationBar.m in Sources */,
 				B208E3F619F518D5000EF97B /* GLAEditCollectionDetailsPopover.m in Sources */,
 				B2D0331919FFA3E600C396FB /* GLACollectionIndicationButton.m in Sources */,
+				B285182C1BB60D7600135E5C /* GuideArticles.swift in Sources */,
 				B292F4741AD65A9A0041E7A1 /* GLAProjectManager+GLAOpeningFiles.m in Sources */,
 				B289275A1A6BDCDB007238D6 /* GLADividerView.m in Sources */,
 				B2C5FD2D1988AB0200AEFBAF /* GLAProjectManager.m in Sources */,
@@ -2232,7 +2247,9 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Blik-ecafheqcwuiabcajggtdmnblcmme/Build/Products/Debug",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-D TRIAL -D DEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = com.burntcaramel.Blik.Mac;
 				PRODUCT_MODULE_NAME = Blik;
 				PRODUCT_NAME = "Blik Trial";
 				SDKROOT = macosx;
@@ -2275,7 +2292,9 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Blik-ecafheqcwuiabcajggtdmnblcmme/Build/Products/Debug",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-D TRIAL";
+				PRODUCT_BUNDLE_IDENTIFIER = com.burntcaramel.Blik.Mac;
 				PRODUCT_MODULE_NAME = Blik;
 				PRODUCT_NAME = "Blik Trial";
 				SDKROOT = macosx;
@@ -2302,6 +2321,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -2317,7 +2337,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -2350,7 +2370,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -2382,7 +2402,9 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Blik-ecafheqcwuiabcajggtdmnblcmme/Build/Products/Debug",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.burntcaramel.$(PRODUCT_NAME:rfc1034identifier).Mac";
 				PRODUCT_NAME = Blik;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "Blik Mac/Blik-Bridging-Header.h";
@@ -2418,6 +2440,8 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Blik-ecafheqcwuiabcajggtdmnblcmme/Build/Products/Debug",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.burntcaramel.$(PRODUCT_NAME:rfc1034identifier).Mac";
 				PRODUCT_NAME = Blik;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "Blik Mac/Blik-Bridging-Header.h";
@@ -2450,6 +2474,7 @@
 					"-framework",
 					"\"Foundation\"",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.burntcaramel.Blik.Mac.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = BlikTests;
 				SWIFT_OBJC_BRIDGING_HEADER = "Blik Tests/BlikTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2479,6 +2504,7 @@
 					"-framework",
 					"\"Foundation\"",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.burntcaramel.Blik.Mac.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = BlikTests;
 				SWIFT_OBJC_BRIDGING_HEADER = "Blik Tests/BlikTests-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Blik.app/Contents/MacOS/Blik";
@@ -2498,6 +2524,7 @@
 				);
 				INFOPLIST_FILE = "QuickLook Preview/QuickLook Preview-Info.plist";
 				MACH_O_TYPE = mh_execute;
+				PRODUCT_BUNDLE_IDENTIFIER = "${PRODUCT_NAME}";
 				PRODUCT_NAME = "com.burntcaramel.Blik.Mac.$(TARGET_NAME:rfc1034identifier)";
 				WRAPPER_EXTENSION = xpc;
 			};
@@ -2511,6 +2538,7 @@
 				GCC_PREFIX_HEADER = "QuickLook Preview/QuickLook Preview-Prefix.pch";
 				INFOPLIST_FILE = "QuickLook Preview/QuickLook Preview-Info.plist";
 				MACH_O_TYPE = mh_execute;
+				PRODUCT_BUNDLE_IDENTIFIER = "${PRODUCT_NAME}";
 				PRODUCT_NAME = "com.burntcaramel.Blik.Mac.$(TARGET_NAME:rfc1034identifier)";
 				WRAPPER_EXTENSION = xpc;
 			};

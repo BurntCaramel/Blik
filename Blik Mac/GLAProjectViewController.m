@@ -26,6 +26,7 @@ NSString *GLAProjectViewControllerDidBeginEditingPlanNotification = @"GLA.projec
 NSString *GLAProjectViewControllerDidEndEditingPlanNotification = @"GLA.projectViewController.didEndEditingPlan";
 
 NSString *GLAProjectViewControllerDidEnterCollectionNotification = @"GLA.projectViewController.didEnterCollection";
+NSString *GLAProjectViewControllerDidRequestPrimaryFoldersNotification = @"GLA.projectViewController.didRequestPrimaryFolders";
 
 NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.projectViewController.requestAddNewCollection";
 
@@ -72,6 +73,12 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
     return self;
 }
 
+- (void)dealloc
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc removeObserver:self];
+}
+
 
 - (void)loadView
 {
@@ -83,6 +90,7 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	(self.projectView.delegate) = self;
 	
 	[nc addObserver:self selector:@selector(collectionsViewControllerDidClickCollection:) name:GLAProjectCollectionsViewControllerDidClickCollectionNotification object:(self.collectionsViewController)];
+	[nc addObserver:self selector:@selector(collectionsViewControllerDidClickPrimaryFolders:) name:GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification object:(self.collectionsViewController)];
 	
 	
 	(self.collectionsViewController.addCollectedFilesChoiceActionsDelegate) = self;
@@ -271,6 +279,11 @@ NSString *GLAProjectViewControllerRequestAddNewCollectionNotification = @"GLA.pr
 	 @{
 	   @"collection": collection
 	   }];
+}
+
+- (void)collectionsViewControllerDidClickPrimaryFolders:(NSNotification *)note
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectViewControllerDidRequestPrimaryFoldersNotification object:self userInfo:nil];
 }
 
 #pragma mark -
