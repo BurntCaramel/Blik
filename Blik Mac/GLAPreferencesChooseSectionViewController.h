@@ -20,6 +20,10 @@
 @property(copy, nonatomic) NSString *editPermittedApplicationFoldersButtonIdentifier;
 
 @property(nonatomic) IBOutlet NSButton *showStatusMenuItemCheckButton;
+- (IBAction)toggleShowStatusMenuItem:(id)sender;
+
+@property(nonatomic) IBOutlet NSButton *hideMainWindowWhenInactiveCheckButton;
+- (IBAction)toggleHideMainWindowWhenInactive:(id)sender;
 
 @end
 

@@ -26,7 +26,8 @@
 		
 		(popover.addCollectedFilesChoiceViewController) = addCollectedFilesChoiceViewController;
 		(popover.contentViewController) = addCollectedFilesChoiceViewController;
-		(popover.appearance) = NSPopoverAppearanceHUD;
+		//(popover.appearance) = NSPopoverAppearanceHUD;
+		(popover.appearance) = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
 		(popover.behavior) = NSPopoverBehaviorSemitransient;
 	});
 	

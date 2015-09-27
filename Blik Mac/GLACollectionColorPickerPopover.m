@@ -20,7 +20,8 @@
 		GLACollectionColorPickerViewController *colorPickerViewController = [[GLACollectionColorPickerViewController alloc] initWithNibName:@"GLACollectionColorPickerViewController" bundle:nil];
 		(colorChoicePopover.colorPickerViewController) = colorPickerViewController;
 		(colorChoicePopover.contentViewController) = colorPickerViewController;
-		(colorChoicePopover.appearance) = NSPopoverAppearanceHUD;
+		//(colorChoicePopover.appearance) = NSPopoverAppearanceHUD;
+		(colorChoicePopover.appearance) = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
 		(colorChoicePopover.behavior) = NSPopoverBehaviorSemitransient;
 	});
 	

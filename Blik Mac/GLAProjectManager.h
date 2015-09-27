@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)changeNowProject:(GLAProject *)project;
 
-#pragma mark Project Primary Folders
+#pragma mark Project Master Folders
 
 - (id<GLALoadableArrayUsing>)usePrimaryFoldersForProject:(GLAProject *)project;
 
@@ -107,6 +107,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (GLAHighlightedCollectedFile *)editHighlightedCollectedFile:(GLAHighlightedCollectedFile *)highlightedCollectedFile usingBlock:(void(^)(id<GLAHighlightedCollectedFileEditing>editor))editBlock;
 
 #pragma mark Collection Files List
+
+- (id<GLALoadableArrayUsing>)useFilesListForCollection:(GLACollection *)filesListCollection;
 
 - (BOOL)hasLoadedFilesForCollection:(GLACollection *)filesListCollection;
 - (void)loadFilesListForCollectionIfNeeded:(GLACollection *)filesListCollection;

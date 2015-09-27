@@ -178,7 +178,7 @@
 	(openPanel.canChooseDirectories) = YES;
 	(openPanel.allowsMultipleSelection) = YES;
 	
-	NSString *chooseString = NSLocalizedString(@"Choose", @"NSOpenPanel button for choosing folder to add to primary folders list.");
+	NSString *chooseString = NSLocalizedString(@"Choose", @"NSOpenPanel button for choosing folder to add to master folders list.");
 	(openPanel.title) = chooseString;
 	(openPanel.prompt) = chooseString;
 	

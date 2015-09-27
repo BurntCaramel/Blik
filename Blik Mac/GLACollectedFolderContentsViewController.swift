@@ -165,7 +165,7 @@ extension BrowseChoice: UIChoiceRepresentative {
 		let contextualMenu = NSMenu()
 		contextualMenu.delegate = self
 		contextualMenuAssistant = MenuAssistant<MenuChoice>(menu: contextualMenu)
-		updateContextualMenu(initial: true)
+		updateContextualMenu(true)
 	}
 	
 	var directoryWatcher: GLADirectoryWatcher?
@@ -177,7 +177,9 @@ extension BrowseChoice: UIChoiceRepresentative {
 			let view = self.view
 			
 			if let sourceDirectoryURL = sourceDirectoryURL {
-				directoryWatcher = GLADirectoryWatcher(delegate: self, previousStateData: nil)
+				let directoryWatcher = self.directoryWatcher ?? GLADirectoryWatcher(delegate: self, previousStateData: nil)!
+				directoryWatcher.directoryURLsToWatch = Set([sourceDirectoryURL])
+				self.directoryWatcher = directoryWatcher
 				
 				// Use a specific autosave name for the columns using the directory path.
 				folderContentOutlineView.autosaveName = "collectedFolderContentsOutlineView-\(sourceDirectoryURL.path)"
@@ -245,9 +247,9 @@ extension BrowseChoice: UIChoiceRepresentative {
 	func updateSortingFromOutlineView() {
 		let sortDescriptors = folderContentOutlineView.sortDescriptors
 		if sortDescriptors.count > 0 {
-			let firstSortDescriptor = sortDescriptors[0] as! NSSortDescriptor
+			let firstSortDescriptor = sortDescriptors[0] 
 			
-			let sortingKey = firstSortDescriptor.key()!
+			let sortingKey = firstSortDescriptor.key!
 			resourceKeyToSortBy = sortingKey
 			sortsAscending = firstSortDescriptor.ascending
 			
@@ -475,11 +477,11 @@ extension GLACollectedFolderContentsViewController: NSOutlineViewDataSource, NSO
 		return childURLs![index]
 	}
 	
-	public func outlineView(outlineView: NSOutlineView, sortDescriptorsDidChange oldDescriptors: [AnyObject]) {
+	public func outlineView(outlineView: NSOutlineView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
 		updateSortingFromOutlineView()
 	}
 	
-	public func outlineView(outlineView: NSOutlineView, pasteboardWriterForItem item: AnyObject?) -> NSPasteboardWriting! {
+	public func outlineView(outlineView: NSOutlineView, pasteboardWriterForItem item: AnyObject) -> NSPasteboardWriting? {
 		return item as? NSURL
 	}
 	
