@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -16,6 +16,7 @@
             <connections>
                 <outlet property="buyMenuItem" destination="00M-E5-hBF" id="Wqd-0o-ag6"/>
                 <outlet property="creatorThoughtsMenu" destination="IDb-BM-AKA" id="mTG-dM-ppZ"/>
+                <outlet property="helpGuidesPlaceholderMenuItem" destination="l1Z-1N-zjb" id="p2U-sy-Cn3"/>
                 <outlet property="mainHelpMenu" destination="F2S-fz-NVQ" id="6Va-3s-85r"/>
             </connections>
         </customObject>
@@ -26,15 +27,9 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Blik" systemMenu="apple" id="uQy-DD-JDr">
                         <items>
-                            <menuItem title="About Blik" id="5kV-Vb-QxS">
+                            <menuItem title="About Blik…" id="jpz-u9-f2i">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="orderFrontStandardAboutPanel:" target="-1" id="Exp-CZ-Vem"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Blik’s Haunts" id="jpz-u9-f2i">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Blik’s Haunts" id="3Ke-6A-3cx">
+                                <menu key="submenu" title="About Blik…" id="3Ke-6A-3cx">
                                     <items>
                                         <menuItem title="Twitter…" id="MYi-Mo-VRQ">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -56,6 +51,13 @@
                                         </menuItem>
                                     </items>
                                 </menu>
+                                <connections>
+                                    <action selector="orderFrontStandardAboutPanel:" target="-1" id="BAW-3I-9F3"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Burnt Caramel" id="DLI-xQ-gGw">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Burnt Caramel" id="IDb-BM-AKA"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
                             <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
@@ -63,16 +65,24 @@
                                     <action selector="showAppPreferences:" target="Voe-Tx-rLC" id="Hjx-Mg-ZIk"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Launcher in Status Bar" id="ZUB-Aa-pTP">
+                            <menuItem title="Show in Status Bar" id="ZUB-Aa-pTP">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleShowingStatusItem:" target="Voe-Tx-rLC" id="Xo5-0D-ois"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="bIA-pm-bZk"/>
-                            <menuItem title="Creator’s Thoughts" id="DLI-xQ-gGw">
+                            <menuItem title="Hide Window When Inactive" id="rhq-Zn-ud0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Creator’s Thoughts" id="IDb-BM-AKA"/>
+                                <connections>
+                                    <action selector="toggleHideMainWindowWhenInactive:" target="Voe-Tx-rLC" id="DTk-mC-D3V"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="7O0-yG-yjC"/>
+                            <menuItem title="Create Symlinks…" id="YYF-E4-nzV">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="createSymlinks:" target="-1" id="ipC-P4-mvS"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                             <menuItem title="Services" id="NMo-om-nkz">
@@ -125,7 +135,7 @@ DQ
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="YWM-TE-tpN"/>
-                            <menuItem title="Choose Primary Folders…" keyEquivalent="P" id="IXk-fU-xTp">
+                            <menuItem title="Choose Master Folders…" keyEquivalent="P" id="IXk-fU-xTp">
                                 <connections>
                                     <action selector="editPrimaryFoldersOfViewedProject:" target="-1" id="jkh-NZ-qED"/>
                                 </connections>
@@ -535,6 +545,10 @@ DQ
                                 <connections>
                                     <action selector="openFeedbackEmail:" target="Voe-Tx-rLC" id="oTR-XG-lB5"/>
                                 </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="Dng-oA-Yu9"/>
+                            <menuItem title="«Help Guides»" id="l1Z-1N-zjb">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                         </items>
                     </menu>

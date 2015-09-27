@@ -418,7 +418,7 @@
 	NSString *backTitle = (self.titleForEditingProjectPrimaryFoldersBackButton);
 	[buttonGroup makeLeadingButtonWithTitle:backTitle action:@selector(exitEditPrimaryFoldersOfProject:) identifier:@"back-editingProjectPrimaryFolders"];
 	
-	NSString *title = [NSString localizedStringWithFormat:NSLocalizedString(@"Project ‘%@’", @"String format for projec title when editing primary folders."), (project.name)];
+	NSString *title = [NSString localizedStringWithFormat:NSLocalizedString(@"Project ‘%@’", @"String format for projec title when editing master folders."), (project.name)];
 	GLAButton *titleButton = [buttonGroup makeCenterButtonWithTitle:title action:nil identifier:@"projectTitle-editingProjectPrimaryFolders"];
 	(titleButton.hasSecondaryStyle) = NO;
 	

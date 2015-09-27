@@ -294,10 +294,10 @@
 		//collectionCount = 0;
 		
 		if (primaryFolderCount == 0) {
-			[menu gla_addDescriptiveMenuItemWithTitle:NSLocalizedString( @"No Primary Folders Yet", @"Menu item for status item menu project menu when there are no primary folders" )];
+			[menu gla_addDescriptiveMenuItemWithTitle:NSLocalizedString( @"No Master Folders Yet", @"Menu item for status item menu project menu when there are no master folders" )];
 		}
 		else {
-			[menu gla_addDescriptiveMenuItemWithTitle:NSLocalizedString( @"Primary Folders", @"Status item menu item for grouping primary folders" )];
+			[menu gla_addDescriptiveMenuItemWithTitle:NSLocalizedString( @"Master Folders", @"Status item menu item for grouping master folders" )];
 			
 			for (NSUInteger primaryFolderIndex = 0; primaryFolderIndex < primaryFolderCount; primaryFolderIndex++) {
 				GLACollectedFile *collectedFolder = [primaryFoldersInspector childAtIndex:primaryFolderIndex];
@@ -315,7 +315,7 @@
 		}
 	}
 	else {
-		[menu gla_addDescriptiveMenuItemWithTitle:NSLocalizedString(@"Loading Primary Folders…", @"Loading menu item for primary folders inside a project menu")];
+		[menu gla_addDescriptiveMenuItemWithTitle:NSLocalizedString(@"Loading Master Folders…", @"Loading menu item for master folders inside a project menu")];
 	}
 }
 

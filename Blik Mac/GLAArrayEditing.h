@@ -5,14 +5,17 @@
 //  Created by Patrick Smith on 4/08/2014.
 //  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
+NS_ASSUME_NONNULL_BEGIN
 
 @import Foundation;
+
+
 
 @protocol GLAArrayInspecting, GLAArrayEditing;
 
 typedef void (^ GLAArrayInspectingBlock)(id<GLAArrayInspecting> arrayInspector);
 typedef void (^ GLAArrayEditingBlock)(id<GLAArrayEditing> arrayEditor);
-typedef id (^ GLAArrayChildVisitorBlock)(id child);
+typedef __nullable id (^ GLAArrayChildVisitorBlock)(id child);
 
 
 @protocol GLAArrayInspecting <NSObject>
@@ -60,9 +63,13 @@ typedef id (^ GLAArrayChildVisitorBlock)(id child);
 
 - (NSArray *)copyChildrenLoadingIfNeeded;
 - (id<GLAArrayInspecting>)inspectLoadingIfNeeded;
+- (void)whenLoaded:(void (^)(id<GLAArrayInspecting>))block; // completion:( void (^ __nullable )())completitionBlock;
+
 // finishedLoading must be true before calling this method:
 - (void)editChildrenUsingBlock:(GLAArrayEditingBlock)block;
 
 @property(nonatomic) id representedObject;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -37,14 +37,14 @@ class GLATestCollections: XCTestCase {
     func testCreateCollection()
 	{
 		let name = "ABCDEF"
-		let collection = newCollection(name: name)
+		let collection = newCollection(name)
 		XCTAssertNotNil(collection, "Collection was made");
 		XCTAssertEqual(collection.name, name, "Name is correct");
     }
 	
 	func testJSONifyCollection()
 	{
-		let collection = newCollection(name: "Test collection");
+		let collection = newCollection("Test collection");
 		XCTAssertNotNil(collection, "Collection was created")
 	
 		let JSONDictionary = MTLJSONAdapter.JSONDictionaryFromModel(collection)
@@ -55,7 +55,7 @@ class GLATestCollections: XCTestCase {
 		
 		let modelClass = GLACollection.self
 		var error: NSError?
-		let collectionFromJSON: GLACollection = MTLJSONAdapter.modelOfClass(modelClass, fromJSONDictionary: JSONDictionary, error: &error) as! GLACollection
+		let collectionFromJSON: GLACollection = (try! MTLJSONAdapter.modelOfClass(modelClass, fromJSONDictionary: JSONDictionary)) as! GLACollection
 		
 		XCTAssertNotNil(collectionFromJSON, "Created collection from JSON")
 		XCTAssertEqual(collection.UUID, collectionFromJSON.UUID, "Have same UUID")
@@ -78,7 +78,7 @@ class GLATestCollections: XCTestCase {
 		XCTAssertTrue(isValidJSON, "JSON dictionary is valid")
 		
 		var error: NSError?
-		let recreatedCollectedFile = MTLJSONAdapter.modelOfClass(GLACollectedFile.self, fromJSONDictionary: JSONDictionary, error: &error) as? GLACollectedFile
+		let recreatedCollectedFile = MTLJSONAdapter.modelOfClass(GLACollectedFile.self, fromJSONDictionary: JSONDictionary) as? GLACollectedFile
 		XCTAssertNotNil(recreatedCollectedFile, "Recreated collected file")
 	}
 	
@@ -104,7 +104,7 @@ class GLATestCollections: XCTestCase {
 		
 		let modelClass = GLAHighlightedCollectedFile.self
 		var error: NSError?
-		let highlightedItemFromJSON: GLAHighlightedCollectedFile = MTLJSONAdapter.modelOfClass(modelClass, fromJSONDictionary: JSONDictionary, error: &error) as! GLAHighlightedCollectedFile
+		let highlightedItemFromJSON: GLAHighlightedCollectedFile = (try! MTLJSONAdapter.modelOfClass(modelClass, fromJSONDictionary: JSONDictionary)) as! GLAHighlightedCollectedFile
 		
 		XCTAssertNotNil(highlightedItemFromJSON, "Created highlighted item from JSON")
 		XCTAssertEqual(highlightedItem.UUID, highlightedItemFromJSON.UUID, "Have same UUID")

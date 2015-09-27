@@ -20,6 +20,7 @@
 
 
 NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"GLA.projectCollectionsViewController.didClickCollection";
+NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification = @"GLA.projectCollectionsViewController.didClickPrimaryFolders";
 
 @interface GLAProjectCollectionsViewController () <GLAArrayTableDraggingHelperDelegate>
 
@@ -55,7 +56,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	(tableView.target) = self;
 	(tableView.action) = @selector(tableViewWasClicked:);
 	
-	(tableView.menu) = (self.contextualMenu);
+	//(tableView.menu) = (self.contextualMenu);
 	
 	[tableView registerForDraggedTypes:
   @[
@@ -71,7 +72,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	//[self setUpEditingActionsView];
 	
 	(self.tableDraggingHelper) = [[GLAArrayTableDraggingHelper alloc] initWithDelegate:self];
-	
+
 	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
 }
 
@@ -178,7 +179,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	
 	[(self.tableView) reloadData];
 	
-	if ((collections.count) > 0) {
+	if ((collections.count) > 0 || YES) {
 		[self showTable];
 		[self hideInstructions];
 	}
@@ -322,6 +323,12 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	}
 }
 
+- (void)deleteCollection:(GLACollection *)collection atRow:(NSInteger)collectionRow
+{
+	GLAMainContentManners *manners = [GLAMainContentManners sharedManners];
+	[manners askToPermanentlyDeleteCollection:collection fromView:(self.view)];
+}
+
 #pragma mark -
 
 - (GLACollectionColorPickerPopover *)colorPickerPopover
@@ -379,6 +386,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 	
 	NSArray *collections = (self.collections);
 	if (clickedRow >= (collections.count)) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification object:self userInfo:nil];
 		return;
 	}
 	
@@ -420,6 +428,8 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 - (IBAction)renameClickedCollection:(id)sender
 {
+	NSLog(@"renameClickedCollection %@", @((self.tableView.clickedRow)));
+	
 	NSInteger clickedRow = (self.tableView.clickedRow);
 	if (clickedRow == -1) {
 		return;
@@ -446,19 +456,36 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	return (self.collections.count);
+	NSUInteger count = 0;
+	
+	count += (self.collections.count);
+	count += 1;
+	
+	return count;
+	
+	
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	GLACollection *collection = (self.collections)[row];
-	return collection;
+	if (row < (self.collections.count)) {
+		GLACollection *collection = (self.collections)[row];
+		return collection;
+	}
+	else {
+		return @"primaryFolders";
+	}
 }
 
 - (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row
 {
-	GLACollection *collection = (self.collections)[row];
-	return collection;
+	if (row < (self.collections.count)) {
+		GLACollection *collection = (self.collections)[row];
+		return collection;
+	}
+	else {
+		return nil;
+	}
 }
 
 - (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forRowIndexes:(NSIndexSet *)rowIndexes
@@ -473,6 +500,10 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 - (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
 {
+	if (row >= (self.collections.count)) {
+		[tableView setDropRow:(self.collections.count) dropOperation:NSTableViewDropOn];
+	}
+	
 	NSPasteboard *pboard = (info.draggingPasteboard);
 	if ([pboard availableTypeFromArray:@[(__bridge NSString *)kUTTypeFileURL]] != nil) {
 		//[tableView setDropRow:(tableView.numberOfRows) dropOperation:NSTableViewDropAbove];
@@ -487,26 +518,50 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 {
 	NSPasteboard *pboard = (info.draggingPasteboard);
 	if ([pboard availableTypeFromArray:@[(__bridge NSString *)kUTTypeFileURL]] != nil) {
-		NSArray *fileURLs = [pboard readObjectsForClasses:@[ [NSURL class] ] options:@{ NSPasteboardURLReadingFileURLsOnlyKey: @(YES) }];
-		if (fileURLs) {
-			NSArray *collections = (self.collections);
-			
-			if (dropOperation == NSTableViewDropAbove) {
-				row = MIN((collections.count), row);
-				[self showAddCollectedFilesChoiceForFileURLs:fileURLs withIndexOfNewCollectionInList:row];
+		if (row < (self.collections.count)) {
+			NSArray *fileURLs = [pboard readObjectsForClasses:@[ [NSURL class] ] options:@{ NSPasteboardURLReadingFileURLsOnlyKey: @(YES) }];
+			if (fileURLs) {
+				NSArray *collections = (self.collections);
+				
+				if (dropOperation == NSTableViewDropAbove) {
+					row = MIN((collections.count), row);
+					[self showAddCollectedFilesChoiceForFileURLs:fileURLs withIndexOfNewCollectionInList:row];
+				}
+				else if (dropOperation == NSTableViewDropOn) {
+					GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+					GLACollection *collection = collections[row];
+					NSArray *collectedFiles = [GLACollectedFile collectedFilesWithFileURLs:fileURLs];
+					[pm editFilesListOfCollection:collection addingCollectedFiles:collectedFiles queueIfNeedsLoading:YES];
+				}
+				
+				return YES;
 			}
-			else if (dropOperation == NSTableViewDropOn) {
-				GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
-				GLACollection *collection = collections[row];
-				NSArray *collectedFiles = [GLACollectedFile collectedFilesWithFileURLs:fileURLs];
-				[pm editFilesListOfCollection:collection addingCollectedFiles:collectedFiles queueIfNeedsLoading:YES];
-			}
-			
-			return YES;
 		}
 		else {
-			return NO;
+			NSDictionary *pasteboardReadingOptions =
+				@{
+				  NSPasteboardURLReadingFileURLsOnlyKey: @(YES),
+				  NSPasteboardURLReadingContentsConformToTypesKey: @[(id)kUTTypeFolder]
+				  }
+				;
+			NSArray *folderURLs = [pboard readObjectsForClasses:@[ [NSURL class] ] options:pasteboardReadingOptions];
+			if (folderURLs) {
+				NSArray *collectedFoldersToAdd = [GLACollectedFile collectedFilesWithFileURLs:folderURLs];
+				
+				GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+				[pm editPrimaryFoldersOfProject:(self.project) usingBlock:^(id<GLAArrayEditing> __nonnull foldersListEditor) {
+					NSArray *filteredFolders = [GLACollectedFile filteredCollectedFiles:collectedFoldersToAdd notAlreadyPresentInArrayInspector:foldersListEditor];
+					if ((filteredFolders.count) == 0) {
+						return;
+					}
+					[foldersListEditor addChildren:filteredFolders];
+				}];
+				
+				return YES;
+			}
 		}
+		
+		return NO;
 	}
 	
 	return [(self.tableDraggingHelper) tableView:tableView acceptDrop:info row:row dropOperation:dropOperation];
@@ -521,17 +576,35 @@ NSString *GLAProjectCollectionsViewControllerDidClickCollectionNotification = @"
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	NSTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
+	CollectionItemTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
 	(cellView.canDrawSubviewsIntoLayer) = YES;
 	(cellView.layerContentsRedrawPolicy) = NSViewLayerContentsRedrawBeforeViewResize;
 	
-	GLACollection *collection = (self.collections)[row];
-	NSString *title = (collection.name);
-	(cellView.objectValue) = collection;
-	(cellView.textField.stringValue) = title;
-	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
-	(cellView.textField.textColor) = [uiStyle colorForCollectionColor:(collection.color)];
+	
+	if (row < (self.collections.count)) {
+		GLACollection *collection = (self.collections)[row];
+		NSString *title = (collection.name);
+		(cellView.objectValue) = collection;
+		(cellView.textField.stringValue) = title;
+		
+		(cellView.textField.textColor) = [uiStyle colorForCollectionColor:(collection.color)];
+		
+		//NSMenu *menu = (self.contextualMenu);
+		//CollectionItemAssistant *collectionItemAssistant = [[CollectionItemAssistant alloc] initWithDelegate:self]
+		//[collectionItemAssistant setActiveCollection:collection row:row];
+		[cellView setCollection:collection row:row];
+		(cellView.delegate) = self;
+		(cellView.menu) = (cellView.contextualMenu);
+		//(cellView.nextResponder) = self;
+	}
+	else {
+		(cellView.textField.stringValue) = NSLocalizedString(@"Master Folders", @"Collection name for master folders");
+		(cellView.textField.textColor) = (uiStyle.primaryFoldersItemColor);
+		
+		[cellView clearCollection];
+		(cellView.menu) = nil;
+	}
 	
 	return cellView;
 }

@@ -19,6 +19,8 @@
 		B20DB28B1B07481600E57532 /* BurntFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = B20DB1E41B07338000E57532 /* BurntFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B20DB28C1B07481B00E57532 /* NotificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DB2431B073EDD00E57532 /* NotificationTests.swift */; };
 		B20DB28D1B07481B00E57532 /* UserDefaultsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DB1F11B07338100E57532 /* UserDefaultsTests.swift */; };
+		B27F48D31B64F352003F1215 /* SystemDirectory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F48D21B64F352003F1215 /* SystemDirectory.swift */; };
+		B27F48D41B64F352003F1215 /* SystemDirectory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F48D21B64F352003F1215 /* SystemDirectory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +52,7 @@
 		B20DB2431B073EDD00E57532 /* NotificationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationTests.swift; sourceTree = "<group>"; };
 		B20DB26F1B07480900E57532 /* BurntFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BurntFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B20DB2791B07480900E57532 /* BurntFoundation iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BurntFoundation iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B27F48D21B64F352003F1215 /* SystemDirectory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemDirectory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +115,7 @@
 				B20DB1E41B07338000E57532 /* BurntFoundation.h */,
 				B20DB21A1B0734D600E57532 /* NotificationObserver.swift */,
 				B20DB21B1B0734D600E57532 /* ChoiceUserDefaults.swift */,
+				B27F48D21B64F352003F1215 /* SystemDirectory.swift */,
 				B20DB1E21B07338000E57532 /* Supporting Files */,
 			);
 			path = Source;
@@ -243,6 +247,7 @@
 		B20DB1D61B07338000E57532 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0700;
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = "Burnt Caramel";
 				TargetAttributes = {
@@ -316,6 +321,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B27F48D31B64F352003F1215 /* SystemDirectory.swift in Sources */,
 				B20DB2411B073B6500E57532 /* NotificationObserver.swift in Sources */,
 				B20DB2421B073BAE00E57532 /* ChoiceUserDefaults.swift in Sources */,
 			);
@@ -334,6 +340,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B27F48D41B64F352003F1215 /* SystemDirectory.swift in Sources */,
 				B20DB2891B07481000E57532 /* NotificationObserver.swift in Sources */,
 				B20DB28A1B07481000E57532 /* ChoiceUserDefaults.swift in Sources */,
 			);
@@ -621,6 +628,7 @@
 				B20DB23A1B07387100E57532 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B20DB23B1B07387100E57532 /* Build configuration list for PBXNativeTarget "BurntFoundation OS X Tests" */ = {
 			isa = XCConfigurationList;
@@ -629,6 +637,7 @@
 				B20DB23D1B07387100E57532 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B20DB2821B07480900E57532 /* Build configuration list for PBXNativeTarget "BurntFoundation iOS" */ = {
 			isa = XCConfigurationList;
@@ -637,6 +646,7 @@
 				B20DB2841B07480900E57532 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B20DB2851B07480900E57532 /* Build configuration list for PBXNativeTarget "BurntFoundation iOSTests" */ = {
 			isa = XCConfigurationList;
@@ -645,6 +655,7 @@
 				B20DB2871B07480900E57532 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

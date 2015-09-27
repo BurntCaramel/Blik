@@ -29,7 +29,7 @@
 
 @property(nonatomic) BOOL doNotUpdateViews;
 
-@property(nonatomic) WindowFirstResponderAssistant *firstResponderAssistant;
+@property(nonatomic) GLAWindowFirstResponderAssistant *firstResponderAssistant;
 
 @property(nonatomic) GLACollectedFilesSetting *collectedFilesSetting;
 @property(nonatomic) GLAFileInfoRetriever *fileInfoRetriever;
@@ -173,7 +173,7 @@
 	
 	NSWindow *window = (self.view.window);
 	if (window) {
-		WindowFirstResponderAssistant *firstResponderAssistant = [[WindowFirstResponderAssistant alloc] initWithWindow:window];
+		GLAWindowFirstResponderAssistant *firstResponderAssistant = [[GLAWindowFirstResponderAssistant alloc] initWithWindow:window];
 		__weak GLAFileCollectionViewController* weakSelf = self;
 		(firstResponderAssistant.firstResponderDidChange) = ^ {
 			__strong GLAFileCollectionViewController* self = weakSelf;
@@ -448,7 +448,7 @@
 
 - (void)projectHighlightedItemsDidChangeNotification:(NSNotification *)note
 {
-	
+	[self reloadSourceFiles];
 }
 
 - (void)projectPrimaryFoldersDidChangeNotification:(NSNotification *)note
@@ -520,6 +520,7 @@
 	NSIndexSet *selectedIndexes = (sourceFilesListTableView.selectedRowIndexes);
 	
 	BOOL isContextual = ((sender != nil) && [sender isKindOfClass:[NSMenuItem class]]);
+	BOOL isControl = ((sender != nil) && [sender isKindOfClass:[NSControl class]]);
 	
 	if (isContextual) {
 		NSInteger clickedRow = (sourceFilesListTableView.clickedRow);
@@ -532,6 +533,20 @@
 		}
 		else {
 			return [NSIndexSet indexSetWithIndex:clickedRow];
+		}
+	}
+	else if (isControl) {
+		NSInteger row = [sourceFilesListTableView rowForView:(NSButton *)sender];
+		if (row == -1) {
+			return [NSIndexSet indexSet];
+		}
+		else {
+			if ([selectedIndexes containsIndex:row]) {
+				return selectedIndexes;
+			}
+			else {
+				return [NSIndexSet indexSetWithIndex:row];
+			}
 		}
 	}
 	else {
@@ -872,6 +887,16 @@
 	[pm editHighlightsOfProject:project usingBlock:editingBlock];
 }
 
+- (IBAction)toggleFileIsHighlighted:(NSButton *)sender
+{
+	if (sender.state == NSOnState) {
+		[self addSelectedFilesToHighlights:sender];
+	}
+	else {
+		[self removeSelectedFilesFromHighlights:sender];
+	}
+}
+
 - (IBAction)showShareMenuForSelectedFiles:(GLAButton *)sender
 {
 	NSArray *selectedURLs = (self.sourceListSelectedURLs);
@@ -1120,7 +1145,7 @@
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	NSTableCellView *cellView = nil;
+	FileCollectionTableCellView *cellView = nil;
 	
 #if EXTRA_ROW_COUNT == 1
 	if (row == 0) {
@@ -1137,12 +1162,14 @@
 #endif
 	
 	GLACollectedFile *collectedFile = [self collectedFileForRow:row];
+	GLAProjectManager *pm = (self.projectManager);
 	
 	cellView = [tableView makeViewWithIdentifier:@"collectedFile" owner:nil];
 	(cellView.objectValue) = collectedFile;
 	
 	NSString *displayName = nil;
 	NSImage *iconImage = nil;
+	BOOL isHighlighted = [pm collectedFilesAreAllHighlighted:@[collectedFile] fromCollectionWithUUID:(self.filesListCollection.UUID) projectUUID:(self.project.UUID)];
 	
 	if (collectedFile.empty) {
 		displayName = NSLocalizedString(@"(Gone)", @"Display name for empty collected file");
@@ -1156,6 +1183,7 @@
 	
 	(cellView.textField.stringValue) = displayName ?: @"Loading…";
 	(cellView.imageView.image) = iconImage;
+	(cellView.highlightsCheckbox.state) = isHighlighted ? NSOnState : NSOffState;
 	
 	return cellView;
 }
