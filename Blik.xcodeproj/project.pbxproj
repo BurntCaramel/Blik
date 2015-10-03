@@ -313,6 +313,7 @@
 		B2CCF8F01A38682400EC7703 /* GLAPendingAddedCollectedFilesInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B2CCF8EF1A38682400EC7703 /* GLAPendingAddedCollectedFilesInfo.m */; };
 		B2D0331919FFA3E600C396FB /* GLACollectionIndicationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B2D0331819FFA3E600C396FB /* GLACollectionIndicationButton.m */; };
 		B2D0331C19FFA69000C396FB /* GLAHighlightsTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = B2D0331B19FFA69000C396FB /* GLAHighlightsTableCellView.m */; };
+		B2D40B0A1BC01A8D001ACEBF /* BurntFoundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB28E1B08334800E57532 /* BurntFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B2D9D87A1B247ACA00217300 /* Paddle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2D9D8791B247ACA00217300 /* Paddle.framework */; };
 		B2D9D87E1B247BBC00217300 /* Paddle-MAS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2D9D87D1B247BBC00217300 /* Paddle-MAS.framework */; };
 		B2D9D87F1B247D2600217300 /* Paddle-MAS.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B2D9D87D1B247BBC00217300 /* Paddle-MAS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -392,6 +393,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				B2D40B0A1BC01A8D001ACEBF /* BurntFoundation.framework in Copy Frameworks */,
 				B20DB3611B0C8ACA00E57532 /* BurntCocoaUI.framework in Copy Frameworks */,
 				B2D9D8801B247D2A00217300 /* Paddle.framework in Copy Frameworks */,
 			);
