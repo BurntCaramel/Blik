@@ -851,7 +851,7 @@
 			name = "Folder Contents";
 			sourceTree = "<group>";
 		};
-		B219DAA4196AB665007900DF /* View Controller */ = {
+		B219DAA4196AB665007900DF /* VIEW CONTROLLER */ = {
 			isa = PBXGroup;
 			children = (
 				B20DB36B1B0C8E9500E57532 /* NSViewController+PGWSConstraintConvenience.h */,
@@ -871,7 +871,7 @@
 				B2E39B381A8497F4000A9A12 /* Preferences */,
 				B260F85619ADC92D002E3753 /* Status Item */,
 			);
-			name = "View Controller";
+			name = "VIEW CONTROLLER";
 			sourceTree = "<group>";
 		};
 		B219DAB7196AD69D007900DF /* Style (Colours) */ = {
@@ -912,7 +912,7 @@
 			name = "Collected File";
 			sourceTree = "<group>";
 		};
-		B24B3604196D1F4D0094FA1F /* Model */ = {
+		B24B3604196D1F4D0094FA1F /* MODEL */ = {
 			isa = PBXGroup;
 			children = (
 				B208E40419F91B6E000EF97B /* Array Editing */,
@@ -936,7 +936,7 @@
 				B208E3FF19F914A7000EF97B /* GLAObjectNotificationRepresenter.m */,
 				E240A3711A0DC8080043AE93 /* BlikModel.h */,
 			);
-			name = Model;
+			name = MODEL;
 			sourceTree = "<group>";
 		};
 		B25591F619C8456F0039D2AC /* Color Pickers */ = {
@@ -1102,12 +1102,12 @@
 				B2ADDBE91963DA2E0014EF84 /* Images.xcassets */,
 				B219DAB7196AD69D007900DF /* Style (Colours) */,
 				B2F0DBC2199327D9001AB5EE /* Section */,
-				B219DAA4196AB665007900DF /* View Controller */,
-				B2C7F284196FFFC1005780B4 /* View */,
-				B24B3604196D1F4D0094FA1F /* Model */,
-				B289275E1A7255EA007238D6 /* Plucked Items */,
-				E240A3751A0EF3090043AE93 /* File Helpers */,
-				B2C5FD2E1988AB0A00AEFBAF /* Model Controllers */,
+				B219DAA4196AB665007900DF /* VIEW CONTROLLER */,
+				B2C7F284196FFFC1005780B4 /* VIEW */,
+				B24B3604196D1F4D0094FA1F /* MODEL */,
+				E240A3751A0EF3090043AE93 /* MODEL SERVICES */,
+				B2C5FD2E1988AB0A00AEFBAF /* MODEL CONTROLLERS */,
+				B2D40B091BC0170B001ACEBF /* FEATURES */,
 				B2ADDBD81963DA2E0014EF84 /* Supporting Files */,
 			);
 			path = "Blik Mac";
@@ -1145,7 +1145,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		B2C5FD2E1988AB0A00AEFBAF /* Model Controllers */ = {
+		B2C5FD2E1988AB0A00AEFBAF /* MODEL CONTROLLERS */ = {
 			isa = PBXGroup;
 			children = (
 				B2E39B4C1A85B797000A9A12 /* GLAWorkingFoldersManager.h */,
@@ -1160,10 +1160,10 @@
 				B2E39B491A859B82000A9A12 /* GLAApplicationSettingsManager.h */,
 				B2E39B4A1A859B82000A9A12 /* GLAApplicationSettingsManager.m */,
 			);
-			name = "Model Controllers";
+			name = "MODEL CONTROLLERS";
 			sourceTree = "<group>";
 		};
-		B2C7F284196FFFC1005780B4 /* View */ = {
+		B2C7F284196FFFC1005780B4 /* VIEW */ = {
 			isa = PBXGroup;
 			children = (
 				B2C7F2901970D5D3005780B4 /* GLAMainWindow.h */,
@@ -1218,7 +1218,7 @@
 				B21B6E631B06CD4F001B8430 /* NSEvent+extension.swift */,
 				B21B6E5F1B063741001B8430 /* TableView-OutlineView-Subclass.swift */,
 			);
-			name = View;
+			name = VIEW;
 			sourceTree = "<group>";
 		};
 		B2C7F29919739925005780B4 /* Project Related */ = {
@@ -1315,6 +1315,14 @@
 				B2CCF8E51A37016600EC7703 /* GLAAddCollectedFilesChoicePopover.m */,
 			);
 			name = "Add Collected Files Choice";
+			sourceTree = "<group>";
+		};
+		B2D40B091BC0170B001ACEBF /* FEATURES */ = {
+			isa = PBXGroup;
+			children = (
+				B289275E1A7255EA007238D6 /* Plucked Items */,
+			);
+			name = FEATURES;
 			sourceTree = "<group>";
 		};
 		B2D9D87B1B247ACD00217300 /* Not Mac App Store */ = {
@@ -1477,7 +1485,7 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		E240A3751A0EF3090043AE93 /* File Helpers */ = {
+		E240A3751A0EF3090043AE93 /* MODEL SERVICES */ = {
 			isa = PBXGroup;
 			children = (
 				B2ED53881A8A20B700F6B4FA /* GLAAccessedFileInfo.h */,
@@ -1494,7 +1502,7 @@
 				B20362C31A077C87007169C2 /* GLAFileOpenerApplicationFinder.m */,
 				B2B466701B29B88A001C4BC0 /* SymlinkCreator.swift */,
 			);
-			name = "File Helpers";
+			name = "MODEL SERVICES";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
