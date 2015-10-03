@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(readonly, copy, nonatomic) GLAProject * __nullable nowProject;
 
-- (void)changeNowProject:(GLAProject *)project;
+- (void)changeNowProject:(GLAProject __nullable *)project;
 
 #pragma mark Project Master Folders
 

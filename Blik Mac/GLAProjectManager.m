@@ -320,7 +320,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	return (self.store.nowProject);
 }
 
-- (void)changeNowProject:(GLAProject *)project
+- (void)changeNowProject:(GLAProject __nullable *)project
 {
 	GLAProjectManagerStore *store = (self.store);
 	
