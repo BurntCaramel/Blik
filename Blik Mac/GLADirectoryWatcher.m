@@ -198,21 +198,21 @@ NSString *GLADirectoryWatcherArchiverKey_FSEventStreamEventId = @"FSEventStreamE
 	[[NSOperationQueue mainQueue] addOperationWithBlock:^{
 		NSNotification *note = [NSNotification notificationWithName:GLADirectoryWatcherDirectoriesDidChangeNotification object:self];
 		[[NSNotificationQueue defaultQueue] enqueueNotification:note postingStyle:NSPostASAP coalesceMask:(NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender) forModes:@[NSRunLoopCommonModes]];
+	
+		id<GLADirectoryWatcherDelegate> delegate = (self.delegate);
+		if (delegate) {
+			[delegate directoryWatcher:self directoriesURLsDidChange:URLs];
+			
+			if (subdirectoriesDidChange && [delegate respondsToSelector:@selector(directoryWatcher:subdirectoriesDidChangeForURLs:)]) {
+				[delegate directoryWatcher:self subdirectoriesDidChangeForURLs:URLs];
+			}
+			
+			if (mainDirectoriesWereMoved && [delegate respondsToSelector:@selector(directoryWatcher:mainDirectoriesWereMovedOrDeleted:)]) {
+				[delegate directoryWatcher:self mainDirectoriesWereMovedOrDeleted:URLs];
+			}
+		}
+		
 	}];
-	
-	
-	id<GLADirectoryWatcherDelegate> delegate = (self.delegate);
-	if (delegate) {
-		[delegate directoryWatcher:self directoriesURLsDidChange:URLs];
-		
-		if (subdirectoriesDidChange && [delegate respondsToSelector:@selector(directoryWatcher:subdirectoriesDidChangeForURLs:)]) {
-			[delegate directoryWatcher:self subdirectoriesDidChangeForURLs:URLs];
-		}
-		
-		if (mainDirectoriesWereMoved && [delegate respondsToSelector:@selector(directoryWatcher:mainDirectoriesWereMovedOrDeleted:)]) {
-			[delegate directoryWatcher:self mainDirectoriesWereMovedOrDeleted:URLs];
-		}
-	}
 }
 
 @end
