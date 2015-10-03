@@ -59,7 +59,7 @@ NSString *GLAMainWindowHidesWhenInactive = @"mainWindow.hidesWhenInactive";
 	NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
 	[ud registerDefaults:
 	 @{
-	   GLAMainWindowHidesWhenInactive: @YES
+	   GLAMainWindowHidesWhenInactive: @NO
 	   }
 	 ];
 	
