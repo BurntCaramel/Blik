@@ -576,7 +576,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
 	CollectionItemTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
-	(cellView.canDrawSubviewsIntoLayer) = YES;
+	//(cellView.canDrawSubviewsIntoLayer) = YES;
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	

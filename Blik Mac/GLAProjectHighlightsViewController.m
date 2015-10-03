@@ -730,7 +730,7 @@
 	NSString *name = @"Loading…";
 	
 	(cellView.backgroundStyle) = NSBackgroundStyleDark;
-	(cellView.canDrawSubviewsIntoLayer) = YES;
+	//(cellView.canDrawSubviewsIntoLayer) = YES;
 	(cellView.alphaValue) = 1.0;
 	
 	if (row < (highlightedItems.count)) {
