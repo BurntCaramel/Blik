@@ -22,7 +22,7 @@
 
 #if TRIAL
 	#import <Paddle/Paddle.h>
-#else
+#elif GLA_ENABLE_PADDLE_SDK
 	#import <Paddle-MAS/Paddle.h>
 #endif
 
@@ -82,11 +82,12 @@
 	(self.creatorThoughtsAssistant) = [[CreatorThoughtsAssistant alloc] initWithMenu:(self.creatorThoughtsMenu)];
 	(self.helpGuidesAssistant) = [[GuideArticlesAssistant alloc] initWithPlaceholderMenuItem:(self.helpGuidesPlaceholderMenuItem)];
 	
-	
+#if TRIAL || GLA_ENABLE_PADDLE_SDK
 	Paddle *paddle = [Paddle sharedInstance];
 	[paddle setProductId:@"499457"];
 	[paddle setVendorId:@"8725"];
 	[paddle setApiKey:@"ab5bb78fc07545f6f78772d2255bce71"];
+#endif
 	
 	
 #if DO_FOLDER_QUERY_TEST
