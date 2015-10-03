@@ -46,6 +46,8 @@
 	NSWindow *window = (self.window);
 	(window.movableByWindowBackground) = YES;
 	
+	(window.appearance) = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
+	
 	//(window.level) = CGWindowLevelForKey(kCGDesktopIconWindowLevelKey) - 1;
 	
 	//(window.excludedFromWindowsMenu) = NO;
