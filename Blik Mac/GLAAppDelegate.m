@@ -67,6 +67,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+	[[NSUserDefaults standardUserDefaults] registerDefaults:@{ @"NSApplicationCrashOnExceptions": @YES }];
 	[Fabric with:@[CrashlyticsKit]];
 	
 	[self showMainWindow];
