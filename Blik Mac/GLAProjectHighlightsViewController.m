@@ -696,10 +696,10 @@
 
 - (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
 {
-	NSArray *highlightedItems = (self.highlightedItems);
+	NSUInteger highlightedItemsCount = (self.highlightedItems.count);
 	
 	// <= Less than or equal to allow dragging to bottom of highlighted items.
-	if (row <= (highlightedItems.count)) {
+	if (row <= highlightedItemsCount) {
 		return [(self.tableDraggingHelper) tableView:tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
 	}
 	else {

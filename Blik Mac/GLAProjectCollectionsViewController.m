@@ -499,8 +499,10 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 
 - (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
 {
-	if (row >= (self.collections.count)) {
-		[tableView setDropRow:(self.collections.count) dropOperation:NSTableViewDropOn];
+	NSUInteger collectionsCount = (self.collections.count);
+	
+	if (row >= collectionsCount) {
+		[tableView setDropRow:collectionsCount dropOperation:NSTableViewDropAbove];
 	}
 	
 	NSPasteboard *pboard = (info.draggingPasteboard);
