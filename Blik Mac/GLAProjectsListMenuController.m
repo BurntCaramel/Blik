@@ -11,6 +11,7 @@
 #import "GLAMainSectionNavigator.h"
 #import "GLAProjectMenuController.h"
 #import "GLAUIStyle.h"
+#import "Blik-Swift.h"
 
 
 @interface GLAProjectsListMenuController ()
@@ -104,7 +105,7 @@
 {
 #if 1
 	GLAUIStyle *style = [GLAUIStyle activeStyle];
-	(menu.font) = (style.menuFont);
+	(menu.font) = (style.launcherMenuFont);
 #endif
 	
 	id<GLALoadableArrayUsing> allProjectsUser = [self useAllProjects];

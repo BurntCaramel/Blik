@@ -424,7 +424,7 @@ DQ
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" hidden="YES" id="jzY-mI-7mm"/>
-                            <menuItem title="Make File from Clipboard" hidden="YES" keyEquivalent="I" id="MpW-K2-aFF"/>
+                            <menuItem title="Add from Clipboard…" hidden="YES" keyEquivalent="I" id="MpW-K2-aFF"/>
                             <menuItem title="Change Designated File Destinations…" hidden="YES" id="myY-lt-LeI">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>

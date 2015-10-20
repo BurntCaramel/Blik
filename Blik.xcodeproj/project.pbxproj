@@ -314,6 +314,8 @@
 		B2D0331919FFA3E600C396FB /* GLACollectionIndicationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B2D0331819FFA3E600C396FB /* GLACollectionIndicationButton.m */; };
 		B2D0331C19FFA69000C396FB /* GLAHighlightsTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = B2D0331B19FFA69000C396FB /* GLAHighlightsTableCellView.m */; };
 		B2D40B0A1BC01A8D001ACEBF /* BurntFoundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB28E1B08334800E57532 /* BurntFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B2D40B2F1BD6430E001ACEBF /* GLAUIStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D40B2E1BD6430E001ACEBF /* GLAUIStyle.swift */; settings = {ASSET_TAGS = (); }; };
+		B2D40B301BD64312001ACEBF /* GLAUIStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D40B2E1BD6430E001ACEBF /* GLAUIStyle.swift */; settings = {ASSET_TAGS = (); }; };
 		B2D9D87A1B247ACA00217300 /* Paddle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2D9D8791B247ACA00217300 /* Paddle.framework */; };
 		B2D9D87E1B247BBC00217300 /* Paddle-MAS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2D9D87D1B247BBC00217300 /* Paddle-MAS.framework */; };
 		B2D9D87F1B247D2600217300 /* Paddle-MAS.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B2D9D87D1B247BBC00217300 /* Paddle-MAS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -644,6 +646,7 @@
 		B2D0331819FFA3E600C396FB /* GLACollectionIndicationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLACollectionIndicationButton.m; sourceTree = "<group>"; };
 		B2D0331A19FFA69000C396FB /* GLAHighlightsTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAHighlightsTableCellView.h; sourceTree = "<group>"; };
 		B2D0331B19FFA69000C396FB /* GLAHighlightsTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAHighlightsTableCellView.m; sourceTree = "<group>"; };
+		B2D40B2E1BD6430E001ACEBF /* GLAUIStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLAUIStyle.swift; sourceTree = "<group>"; };
 		B2D9D8791B247ACA00217300 /* Paddle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Paddle.framework; sourceTree = "<group>"; };
 		B2D9D87D1B247BBC00217300 /* Paddle-MAS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "Paddle-MAS.framework"; sourceTree = "<group>"; };
 		B2D9EE591AD3B0B400F5F34E /* GLAOverlaidBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAOverlaidBarView.h; sourceTree = "<group>"; };
@@ -881,6 +884,7 @@
 			children = (
 				B219DAB4196AD698007900DF /* GLAUIStyle.h */,
 				B219DAB5196AD698007900DF /* GLAUIStyle.m */,
+				B2D40B2E1BD6430E001ACEBF /* GLAUIStyle.swift */,
 				B26659ED19A37C3C003C4EA4 /* NSColor+GLAExtras.h */,
 				B26659EE19A37C3C003C4EA4 /* NSColor+GLAExtras.m */,
 			);
@@ -1893,6 +1897,7 @@
 				B20DB2E31B0C8ACA00E57532 /* NSObject+PGWSNotificationObserving.m in Sources */,
 				B20DB2E41B0C8ACA00E57532 /* GLAPreferencesSectionNavigator.m in Sources */,
 				B20DB2E51B0C8ACA00E57532 /* GLAArrayTableDraggingHelper.m in Sources */,
+				B2D40B301BD64312001ACEBF /* GLAUIStyle.swift in Sources */,
 				B20DB2E61B0C8ACA00E57532 /* GLAMainSection.m in Sources */,
 				B20DB3771B0DB1EA00E57532 /* GLAProjectManager+Convenience.swift in Sources */,
 				B20DB2E71B0C8ACA00E57532 /* main.m in Sources */,
@@ -2034,6 +2039,7 @@
 				B2CCF8E91A370C7D00EC7703 /* NSObject+PGWSNotificationObserving.m in Sources */,
 				B2E39B641A89B642000A9A12 /* GLAPreferencesSectionNavigator.m in Sources */,
 				B207633F1A114AC9003C5922 /* GLAArrayTableDraggingHelper.m in Sources */,
+				B2D40B2F1BD6430E001ACEBF /* GLAUIStyle.swift in Sources */,
 				B2F0DBC11992607B001AB5EE /* GLAMainSection.m in Sources */,
 				B20DB3761B0DB1EA00E57532 /* GLAProjectManager+Convenience.swift in Sources */,
 				B2ADDBDE1963DA2E0014EF84 /* main.m in Sources */,
