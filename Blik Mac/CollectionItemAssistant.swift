@@ -12,12 +12,15 @@ import BurntCocoaUI
 
 private enum Item: Int {
 	case RenameOrRecolor
+	case GroupInHighlights
 	case Delete
 	
 	var title: String {
 		switch self {
 		case .RenameOrRecolor:
 			return "Rename or Recolor Collection…"
+		case .GroupInHighlights:
+			return "Group in Highlights"
 		case .Delete:
 			return "Delete Collection…"
 		}
@@ -27,6 +30,8 @@ private enum Item: Int {
 		switch self {
 		case .RenameOrRecolor:
 			return "renameOrRecolorCollection:"
+		case .GroupInHighlights:
+			return "toggleGroupInHighlightsForCollection:"
 		case .Delete:
 			return "deleteCollection:"
 		}
@@ -43,6 +48,9 @@ extension Item: UIChoiceRepresentative {
 
 @objc public protocol CollectionItemAssistantDelegate: class {
 	func editDetailsOfCollection(collection: GLACollection, atRow collectionRow: Int)
+	
+	func toggleGroupInHighlightsForCollection(collection: GLACollection, atRow collectionRow: Int)
+	
 	func deleteCollection(collection: GLACollection, atRow collectionRow: Int)
 	
 	func renameClickedCollection(sender: AnyObject?)
@@ -66,12 +74,23 @@ public class CollectionItemAssistant: NSObject {
 	
 	public var collectionAndRow: (collection: GLACollection, row: Int)? {
 		didSet {
-			if collectionAndRow != nil {
+			if let (collection, _) = collectionAndRow {
 				menuAssistant.menuItemRepresentatives = [
 					.RenameOrRecolor,
 					nil,
+					.GroupInHighlights,
+					nil,
 					.Delete
 				]
+				
+				menuAssistant.customization.state = { item in
+					switch item {
+					case .GroupInHighlights:
+						return collection.highlighted ? NSOnState : NSOffState
+					default:
+						return NSOffState
+					}
+				}
 			}
 			else {
 				menuAssistant.menuItemRepresentatives = []
@@ -83,8 +102,13 @@ public class CollectionItemAssistant: NSObject {
 	
 	@IBAction public func renameOrRecolorCollection(menuItem: NSMenuItem) {
 		if let (collection, row) = collectionAndRow {
-			print("row \(row)")
 			delegate?.editDetailsOfCollection(collection, atRow: row)
+		}
+	}
+	
+	@IBAction public func toggleGroupInHighlightsForCollection(menuItem: NSMenuItem) {
+		if let (collection, row) = collectionAndRow {
+			delegate?.toggleGroupInHighlightsForCollection(collection, atRow: row)
 		}
 	}
 	

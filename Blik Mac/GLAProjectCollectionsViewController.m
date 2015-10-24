@@ -248,13 +248,21 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 
 #pragma mark -
 
+- (void)editCollection:(GLACollection *)collection using:(void(^)(id<GLACollectionEditing>editor))collectionEditingBlock
+{
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	[projectManager editCollectionsOfProject:(self.project) usingBlock:^(id<GLAArrayEditing>  _Nonnull collectionListEditor) {
+		[collectionListEditor replaceFirstChildWhoseKey:@"UUID" hasValue:(collection.UUID) usingChangeBlock:^GLACollection * _Nonnull(GLACollection * _Nonnull originalObject) {
+			return [originalObject copyWithChangesFromEditing:collectionEditingBlock];
+		}];
+	}];
+}
+
 - (void)changeName:(NSString *)name forCollection:(GLACollection *)collection
 {
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	
 	[projectManager renameCollection:collection inProject:(self.project) toString:name];
-	
-	[self reloadCollections];
 }
 
 - (void)changeColor:(GLACollectionColor *)color forCollection:(GLACollection *)collection
@@ -262,8 +270,6 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
 	
 	[projectManager changeColorOfCollection:collection inProject:(self.project) toColor:color];
-	
-	[self reloadCollections];
 }
 
 #pragma mark -
@@ -318,6 +324,13 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 		// Show underneath.
 		[popover showRelativeToRect:rowRect ofView:tableView preferredEdge:NSMaxXEdge];
 	}
+}
+
+- (void)toggleGroupInHighlightsForCollection:(GLACollection *)collection atRow:(NSInteger)collectionRow
+{
+	[self editCollection:collection using:^(id<GLACollectionEditing> editor) {
+		(editor.highlighted) = !(editor.highlighted);
+	}];
 }
 
 - (void)deleteCollection:(GLACollection *)collection atRow:(NSInteger)collectionRow
