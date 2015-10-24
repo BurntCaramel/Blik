@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAFileCollectionViewController">
@@ -27,7 +26,8 @@
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="180" id="vI6-dh-AsF"/>
                         <constraint firstAttribute="height" constant="40" id="viZ-ab-IXg"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" title="Add File or Folder" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0Gz-4H-Jna" customClass="GLAButtonCell">
+                    <animations/>
+                    <buttonCell key="cell" type="square" title="Add File or Folder…" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0Gz-4H-Jna" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
                     </buttonCell>
@@ -56,6 +56,7 @@
                                 <constraint firstAttribute="height" constant="24" id="Gds-ce-hgj"/>
                                 <constraint firstAttribute="width" constant="100" id="tR2-fz-grp"/>
                             </constraints>
+                            <animations/>
                             <popUpButtonCell key="cell" type="roundTextured" title="Open in" bezelStyle="texturedRounded" alignment="left" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="ci5-IG-xe3" id="AVJ-zS-B9M" customClass="GLAPopUpButtonCell">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -85,6 +86,7 @@
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="BPb-Hy-U0G"/>
                             </constraints>
+                            <animations/>
                             <buttonCell key="cell" type="square" title="Add to Highlights" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jvS-DL-Osp" customClass="GLAButtonCell">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -113,6 +115,7 @@
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="cOK-RH-2x6"/>
                             </constraints>
+                            <animations/>
                             <buttonCell key="cell" type="square" title="Share" bezelStyle="shadowlessSquare" image="NSShareTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0aF-yY-RYE" customClass="GLAButtonCell">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -148,6 +151,7 @@
                         <constraint firstItem="PNP-Jb-j8k" firstAttribute="top" secondItem="WPC-xk-zpe" secondAttribute="top" id="fMO-Gu-VFW"/>
                         <constraint firstItem="PNP-Jb-j8k" firstAttribute="leading" secondItem="vuN-TK-s4w" secondAttribute="trailing" id="xIM-53-9yo"/>
                     </constraints>
+                    <animations/>
                 </customView>
                 <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pgR-Oo-r29" customClass="GLATopDownScrollView">
                     <rect key="frame" x="0.0" y="40" width="480" height="234"/>
@@ -157,19 +161,24 @@
                         <subviews>
                             <stackView orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="250" verticalStackHuggingPriority="250" horizontalClippingResistancePriority="750" verticalClippingResistancePriority="750" horizontalHuggingPriority="249" verticalHuggingPriority="249" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xja-7H-QQk">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="224"/>
+                                <animations/>
                             </stackView>
                         </subviews>
+                        <animations/>
                     </clipView>
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="CXf-fm-v4f"/>
                     </constraints>
+                    <animations/>
                     <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="aHN-u0-fkY">
-                        <rect key="frame" x="1" y="80" width="166" height="15"/>
+                        <rect key="frame" x="0.0" y="218" width="480" height="16"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </scroller>
                     <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="4Ik-Qz-F5T">
-                        <rect key="frame" x="167" y="1" width="15" height="79"/>
+                        <rect key="frame" x="464" y="0.0" width="16" height="234"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </scroller>
                 </scrollView>
             </subviews>
@@ -184,6 +193,7 @@
                 <constraint firstItem="pgR-Oo-r29" firstAttribute="leading" secondItem="RnZ-xC-chF" secondAttribute="leading" id="nXh-Hx-Nkp"/>
                 <constraint firstAttribute="trailing" secondItem="pgR-Oo-r29" secondAttribute="trailing" id="zCp-Ag-vVv"/>
             </constraints>
+            <animations/>
             <point key="canvasLocation" x="448" y="376"/>
         </customView>
     </objects>

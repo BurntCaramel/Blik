@@ -66,6 +66,13 @@
 	return allProjectsUser;
 }
 
+- (NSUUID * __nullable)nowProjectUUID
+{
+	GLAProjectManager *pm = (self.projectManager);
+	[pm loadNowProjectIfNeeded];
+	return (pm.nowProject.UUID);
+}
+
 #pragma mark Actions
 
 - (void)activateApplication
@@ -109,6 +116,7 @@
 #endif
 	
 	id<GLALoadableArrayUsing> allProjectsUser = [self useAllProjects];
+	NSUUID *__nullable nowProjectUUID = (self.nowProjectUUID);
 	
 	if (allProjectsUser.finishedLoading) {
 		[menu removeAllItems];
@@ -142,6 +150,10 @@
 			}
 			else {
 				(item.submenu) = [[NSMenu alloc] initWithTitle:(project.name)];
+			}
+			
+			if ([projectUUID isEqual:nowProjectUUID]) {
+				(item.state) = NSOnState;
 			}
 			
 			[menu addItem:item];

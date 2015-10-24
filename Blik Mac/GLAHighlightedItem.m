@@ -13,10 +13,11 @@
 
 @property(readwrite, copy, nonatomic) NSUUID *projectUUID;
 
+@property(readwrite, copy, nonatomic) NSString * __nullable customName;
+
 @end
 
 @interface GLAHighlightedItem (GLAHighlightedItemEditing) <GLAHighlightedItemEditing>
-
 @end
 
 @implementation GLAHighlightedItem
@@ -68,7 +69,6 @@
 @end
 
 @interface GLAHighlightedCollectedFile (GLAHighlightedCollectedFileEditing) <GLAHighlightedCollectedFileEditing>
-
 @end
 
 @implementation GLAHighlightedCollectedFile

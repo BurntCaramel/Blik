@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
         <capability name="box content view" minToolsVersion="7.0"/>
     </dependencies>
@@ -29,6 +28,7 @@
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="UEp-w1-nFb"/>
                     </constraints>
+                    <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Select master folders:" id="Nno-84-tcb">
                         <font key="font" size="13" name="AvenirNext-MediumItalic"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -40,16 +40,19 @@
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="81" id="nVi-wi-79e"/>
                     </constraints>
+                    <animations/>
                 </customView>
                 <box autoresizesSubviews="NO" title="Box" boxType="custom" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="uxU-pM-Rmk" customClass="GLADividerView">
                     <rect key="frame" x="0.0" y="139" width="480" height="1"/>
                     <view key="contentView" id="NbE-v9-wz7">
                         <rect key="frame" x="1" y="1" width="478" height="0.0"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
                     </view>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="XuW-UF-jEQ"/>
                     </constraints>
+                    <animations/>
                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <userDefinedRuntimeAttributes>
@@ -61,10 +64,12 @@
                     <view key="contentView" id="rCs-46-Dxc">
                         <rect key="frame" x="1" y="1" width="478" height="0.0"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
                     </view>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="ZXt-Ut-AwH"/>
                     </constraints>
+                    <animations/>
                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <userDefinedRuntimeAttributes>
@@ -76,7 +81,8 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="27" id="7DM-xf-3W6"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" title="Add Folders" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="3Uc-Tn-Fyh" customClass="GLAButtonCell">
+                    <animations/>
+                    <buttonCell key="cell" type="square" title="Add Folders…" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="3Uc-Tn-Fyh" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
                     </buttonCell>
@@ -116,6 +122,7 @@
                 <constraint firstItem="jgN-rn-UPv" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="ra4-vW-a2c"/>
                 <constraint firstItem="qHs-AR-359" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="tx8-rf-usd"/>
             </constraints>
+            <animations/>
             <point key="canvasLocation" x="191" y="274.5"/>
         </customView>
         <viewController id="gMM-aO-7LN" customClass="GLAViewController">
@@ -133,6 +140,7 @@
                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnResizing="NO" autosaveColumns="NO" rowHeight="32" viewBased="YES" id="68W-60-bLs">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="0.0"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                         <size key="intercellSpacing" width="3" height="2"/>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -159,6 +167,7 @@
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wKQ-dp-GEz">
                                                         <rect key="frame" x="34" y="2" width="95" height="23"/>
+                                                        <animations/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="OBY-e6-RfY">
                                                             <font key="font" size="13" name="AvenirNext-Medium"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -171,6 +180,7 @@
                                                             <constraint firstAttribute="height" constant="16" id="SaV-ee-POy"/>
                                                             <constraint firstAttribute="width" constant="16" id="qrG-oW-yFR"/>
                                                         </constraints>
+                                                        <animations/>
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="a8O-3Q-d8l"/>
                                                     </imageView>
                                                 </subviews>
@@ -182,6 +192,7 @@
                                                     <constraint firstItem="i7T-ir-hiH" firstAttribute="leading" secondItem="Mot-h1-Eoz" secondAttribute="leading" constant="12" id="foV-GB-lTM"/>
                                                     <constraint firstItem="wKQ-dp-GEz" firstAttribute="centerY" secondItem="i7T-ir-hiH" secondAttribute="centerY" constant="-2" id="xCR-4V-Wbl"/>
                                                 </constraints>
+                                                <animations/>
                                             </customView>
                                         </subviews>
                                         <constraints>
@@ -191,6 +202,7 @@
                                             <constraint firstAttribute="centerX" secondItem="Mot-h1-Eoz" secondAttribute="centerX" id="gRT-c8-9l7"/>
                                             <constraint firstAttribute="bottom" secondItem="Mot-h1-Eoz" secondAttribute="bottom" id="lmu-fG-jMw"/>
                                         </constraints>
+                                        <animations/>
                                         <connections>
                                             <outlet property="imageView" destination="i7T-ir-hiH" id="BLn-FO-w3I"/>
                                             <outlet property="textField" destination="wKQ-dp-GEz" id="WYL-Wm-Kaj"/>
@@ -199,20 +211,25 @@
                                     <customView identifier="NSTableViewRowViewKey" id="FbK-Iq-kpo" customClass="GLATableContentRowView">
                                         <rect key="frame" x="1" y="30" width="297" height="39"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <animations/>
                                     </customView>
                                 </prototypeCellViews>
                             </tableColumn>
                         </tableColumns>
                     </tableView>
                 </subviews>
+                <animations/>
                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
             </clipView>
+            <animations/>
             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="MSO-eY-r33">
                 <rect key="frame" x="-100" y="-100" width="223" height="15"/>
                 <autoresizingMask key="autoresizingMask"/>
+                <animations/>
             </scroller>
             <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="hJy-sP-Olc">
                 <autoresizingMask key="autoresizingMask"/>
+                <animations/>
             </scroller>
             <point key="canvasLocation" x="211" y="490.5"/>
         </scrollView>
@@ -249,6 +266,7 @@
                     <constraints>
                         <constraint firstAttribute="width" constant="210" id="B8V-0t-X5e"/>
                     </constraints>
+                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Permit Blik to keep up to date as files within your project change. Choose the top-level folders of your project." id="fOQ-zs-pEH">
                         <font key="font" size="13" name="AvenirNext-MediumItalic"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -260,6 +278,7 @@
                 <constraint firstAttribute="centerX" secondItem="Jdc-YU-pLl" secondAttribute="centerX" constant="7" id="hou-ne-SDR"/>
                 <constraint firstAttribute="centerY" secondItem="Jdc-YU-pLl" secondAttribute="centerY" constant="0.5" id="noW-es-hNG"/>
             </constraints>
+            <animations/>
             <point key="canvasLocation" x="-154" y="492"/>
         </customView>
     </objects>

@@ -196,6 +196,13 @@
 		if (highlightedCollectedFile) {
 			[menu addItem:[NSMenuItem separatorItem]];
 			
+			SEL changeCustomNameHighlightsAction = (self.changeCustomNameHighlightsAction);
+			NSMenuItem *changeCustomNameHighlightsMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Use Custom Name…", @"Change custom name highlights menu title") action:changeCustomNameHighlightsAction keyEquivalent:@""];
+			(changeCustomNameHighlightsMenuItem.target) = target;
+			[menu addItem:changeCustomNameHighlightsMenuItem];
+			
+			[menu addItem:[NSMenuItem separatorItem]];
+			
 			SEL removeFromHighlightsAction = (self.removeFromHighlightsAction);
 			
 			NSMenuItem *removeFromHighlightsMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove from Highlights", @"Remove highlighted file from highlights menu title") action:removeFromHighlightsAction keyEquivalent:@""];

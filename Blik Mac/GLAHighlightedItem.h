@@ -10,16 +10,21 @@
 #import "GLACollection.h"
 #import "GLACollectedFile.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol GLAHighlightedItemEditing <NSObject>
 
 @property(readwrite, copy, nonatomic) NSUUID *projectUUID;
+
+@property(readwrite, copy, nonatomic) NSString * _Nullable customName;
 
 @end
 
 @interface GLAHighlightedItem : GLAModel
 
 @property(readonly, copy, nonatomic) NSUUID *projectUUID;
+
+@property(readonly, copy, nonatomic) NSString * _Nullable customName;
 
 - (instancetype)initByEditing:(void(^)(id<GLAHighlightedItemEditing> editor))editingBlock;
 
@@ -47,7 +52,7 @@
 
 @property(readwrite, nonatomic) NSUUID *collectedFileUUID;
 
-@property(readwrite, nonatomic) GLACollectedFile *applicationToOpenFile;
+@property(readwrite, nonatomic) GLACollectedFile *_Nullable applicationToOpenFile;
 
 @end
 
@@ -55,10 +60,12 @@
 
 @property(readonly, nonatomic) NSUUID *collectedFileUUID;
 
-@property(readonly, nonatomic) GLACollectedFile *applicationToOpenFile;
+@property(readonly, nonatomic) GLACollectedFile * _Nullable applicationToOpenFile;
 
 - (instancetype)initByEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock;
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAHighlightedCollectedFileEditing> editor))editingBlock;
 
 @end
+
+NS_ASSUME_NONNULL_END

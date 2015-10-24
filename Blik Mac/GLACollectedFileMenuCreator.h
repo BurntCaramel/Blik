@@ -32,6 +32,7 @@ typedef NS_ENUM(NSUInteger, GLACollectedFileMenuContext) {
 @property(nonatomic) SEL openInApplicationAction;
 @property(nonatomic) SEL changePreferredOpenerApplicationAction;
 @property(nonatomic) SEL showInFinderAction;
+@property(nonatomic) SEL changeCustomNameHighlightsAction;
 @property(nonatomic) SEL removeFromHighlightsAction;
 
 - (void)updateMenu:(NSMenu *)menu;

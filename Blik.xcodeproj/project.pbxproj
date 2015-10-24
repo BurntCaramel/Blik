@@ -225,6 +225,10 @@
 		B2302ED81A554B7F00E6AFBA /* GLAArrayMantleJSONStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB850E1A39C4AB00BF186C /* GLAArrayMantleJSONStore.m */; };
 		B23515331973BEAB00883FB3 /* GLAButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B23515321973BEAB00883FB3 /* GLAButton.m */; };
 		B23966DE1ACB983B00C6A420 /* GLASegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = B23966DD1ACB983B00C6A420 /* GLASegmentedControl.m */; };
+		B23E7F9B1BDB79CB008460C8 /* HighlightCustomNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23E7F991BDB79CA008460C8 /* HighlightCustomNameViewController.swift */; };
+		B23E7F9C1BDB79CB008460C8 /* HighlightCustomNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23E7F991BDB79CA008460C8 /* HighlightCustomNameViewController.swift */; };
+		B23E7F9D1BDB79CB008460C8 /* HighlightCustomNameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B23E7F9A1BDB79CB008460C8 /* HighlightCustomNameViewController.xib */; };
+		B23E7F9E1BDB79CB008460C8 /* HighlightCustomNameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B23E7F9A1BDB79CB008460C8 /* HighlightCustomNameViewController.xib */; };
 		B245E83F1A395D9D002ED636 /* GLAMainSectionNavigator.m in Sources */ = {isa = PBXBuildFile; fileRef = B245E83E1A395D9D002ED636 /* GLAMainSectionNavigator.m */; };
 		B24ADB2C1AD784E0007214C2 /* GLACollectedFolderContentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B24ADB2A1AD784E0007214C2 /* GLACollectedFolderContentsViewController.xib */; };
 		B24ADB321AD81939007214C2 /* GLAArrangedDirectoryChildren.m in Sources */ = {isa = PBXBuildFile; fileRef = B24ADB311AD81939007214C2 /* GLAArrangedDirectoryChildren.m */; };
@@ -257,10 +261,10 @@
 		B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */ = {isa = PBXBuildFile; fileRef = B2841B3219809E15005BB6A3 /* GLAProject.m */; };
 		B284D5621978EC1F00157126 /* GLACollection.m in Sources */ = {isa = PBXBuildFile; fileRef = B284D5611978EC1F00157126 /* GLACollection.m */; };
 		B28518271BB42D2C00135E5C /* BurntFoundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB28E1B08334800E57532 /* BurntFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B285182C1BB60D7600135E5C /* GuideArticles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182B1BB60D7600135E5C /* GuideArticles.swift */; settings = {ASSET_TAGS = (); }; };
-		B285182D1BB60D7600135E5C /* GuideArticles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182B1BB60D7600135E5C /* GuideArticles.swift */; settings = {ASSET_TAGS = (); }; };
-		B28518301BB62C1300135E5C /* CollectionItemAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182F1BB62C1300135E5C /* CollectionItemAssistant.swift */; settings = {ASSET_TAGS = (); }; };
-		B28518311BB62C1300135E5C /* CollectionItemAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182F1BB62C1300135E5C /* CollectionItemAssistant.swift */; settings = {ASSET_TAGS = (); }; };
+		B285182C1BB60D7600135E5C /* GuideArticles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182B1BB60D7600135E5C /* GuideArticles.swift */; };
+		B285182D1BB60D7600135E5C /* GuideArticles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182B1BB60D7600135E5C /* GuideArticles.swift */; };
+		B28518301BB62C1300135E5C /* CollectionItemAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182F1BB62C1300135E5C /* CollectionItemAssistant.swift */; };
+		B28518311BB62C1300135E5C /* CollectionItemAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285182F1BB62C1300135E5C /* CollectionItemAssistant.swift */; };
 		B28927531A6B1F64007238D6 /* GLACollectedFileListHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927521A6B1F64007238D6 /* GLACollectedFileListHelper.m */; };
 		B28927571A6BA433007238D6 /* NSTableView+GLAActionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927561A6BA433007238D6 /* NSTableView+GLAActionHelpers.m */; };
 		B289275A1A6BDCDB007238D6 /* GLADividerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B28927591A6BDCDB007238D6 /* GLADividerView.m */; };
@@ -314,8 +318,8 @@
 		B2D0331919FFA3E600C396FB /* GLACollectionIndicationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B2D0331819FFA3E600C396FB /* GLACollectionIndicationButton.m */; };
 		B2D0331C19FFA69000C396FB /* GLAHighlightsTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = B2D0331B19FFA69000C396FB /* GLAHighlightsTableCellView.m */; };
 		B2D40B0A1BC01A8D001ACEBF /* BurntFoundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB28E1B08334800E57532 /* BurntFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B2D40B2F1BD6430E001ACEBF /* GLAUIStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D40B2E1BD6430E001ACEBF /* GLAUIStyle.swift */; settings = {ASSET_TAGS = (); }; };
-		B2D40B301BD64312001ACEBF /* GLAUIStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D40B2E1BD6430E001ACEBF /* GLAUIStyle.swift */; settings = {ASSET_TAGS = (); }; };
+		B2D40B2F1BD6430E001ACEBF /* GLAUIStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D40B2E1BD6430E001ACEBF /* GLAUIStyle.swift */; };
+		B2D40B301BD64312001ACEBF /* GLAUIStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D40B2E1BD6430E001ACEBF /* GLAUIStyle.swift */; };
 		B2D9D87A1B247ACA00217300 /* Paddle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2D9D8791B247ACA00217300 /* Paddle.framework */; };
 		B2D9D87E1B247BBC00217300 /* Paddle-MAS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2D9D87D1B247BBC00217300 /* Paddle-MAS.framework */; };
 		B2D9D87F1B247D2600217300 /* Paddle-MAS.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B2D9D87D1B247BBC00217300 /* Paddle-MAS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -496,6 +500,8 @@
 		B23515321973BEAB00883FB3 /* GLAButton.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = GLAButton.m; sourceTree = "<group>"; tabWidth = 4; usesTabs = 1; wrapsLines = 1; };
 		B23966DC1ACB983B00C6A420 /* GLASegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLASegmentedControl.h; sourceTree = "<group>"; };
 		B23966DD1ACB983B00C6A420 /* GLASegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLASegmentedControl.m; sourceTree = "<group>"; };
+		B23E7F991BDB79CA008460C8 /* HighlightCustomNameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighlightCustomNameViewController.swift; sourceTree = "<group>"; };
+		B23E7F9A1BDB79CB008460C8 /* HighlightCustomNameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HighlightCustomNameViewController.xib; sourceTree = "<group>"; };
 		B245E83D1A395D9D002ED636 /* GLAMainSectionNavigator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainSectionNavigator.h; sourceTree = "<group>"; };
 		B245E83E1A395D9D002ED636 /* GLAMainSectionNavigator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainSectionNavigator.m; sourceTree = "<group>"; };
 		B24ADB2A1AD784E0007214C2 /* GLACollectedFolderContentsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLACollectedFolderContentsViewController.xib; sourceTree = "<group>"; };
@@ -903,7 +909,6 @@
 				B2ED54391A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.h */,
 				B2ED543A1A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.m */,
 				B2ED543B1A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.xib */,
-				B2CCF8EB1A37133A00EC7703 /* Edit Collection Details */,
 				B2CCF8EC1A37138300EC7703 /* Add Collected Files Choice */,
 			);
 			name = "Collection Creating";
@@ -916,6 +921,15 @@
 				B22E80C3198CAE38005C4108 /* GLACollectedFile.m */,
 			);
 			name = "Collected File";
+			sourceTree = "<group>";
+		};
+		B23E7F9F1BDB79D1008460C8 /* Highlight Details */ = {
+			isa = PBXGroup;
+			children = (
+				B23E7F991BDB79CA008460C8 /* HighlightCustomNameViewController.swift */,
+				B23E7F9A1BDB79CB008460C8 /* HighlightCustomNameViewController.xib */,
+			);
+			name = "Highlight Details";
 			sourceTree = "<group>";
 		};
 		B24B3604196D1F4D0094FA1F /* MODEL */ = {
@@ -996,6 +1010,8 @@
 				B219DAAF196AD462007900DF /* GLAProjectViewController.h */,
 				B219DAB0196AD462007900DF /* GLAProjectViewController.m */,
 				B219DAB1196AD462007900DF /* GLAProjectViewController.xib */,
+				B23E7F9F1BDB79D1008460C8 /* Highlight Details */,
+				B2CCF8EB1A37133A00EC7703 /* Edit Collection Details */,
 			);
 			name = Project;
 			sourceTree = "<group>";
@@ -1670,6 +1686,7 @@
 				B20DB3571B0C8ACA00E57532 /* GLAFilteredFolderCollectionViewController.xib in Resources */,
 				B20DB3581B0C8ACA00E57532 /* Credits.rtf in Resources */,
 				B20DB3591B0C8ACA00E57532 /* GLAMainWindowController.xib in Resources */,
+				B23E7F9E1BDB79CB008460C8 /* HighlightCustomNameViewController.xib in Resources */,
 				B20DB35A1B0C8ACA00E57532 /* GLAEditCollectionDetailsViewController.xib in Resources */,
 				B20DB35B1B0C8ACA00E57532 /* GLACollectedFolderContentsViewController.xib in Resources */,
 				B20DB35C1B0C8ACA00E57532 /* GLAAddNewCollectionChooseNameAndColorViewController.xib in Resources */,
@@ -1705,6 +1722,7 @@
 				B2ED54421A955D0C00F6B4FA /* GLAFilteredFolderCollectionViewController.xib in Resources */,
 				B2ADDBE21963DA2E0014EF84 /* Credits.rtf in Resources */,
 				B219DAA3196AB65D007900DF /* GLAMainWindowController.xib in Resources */,
+				B23E7F9D1BDB79CB008460C8 /* HighlightCustomNameViewController.xib in Resources */,
 				B208E3F219F51551000EF97B /* GLAEditCollectionDetailsViewController.xib in Resources */,
 				B24ADB2C1AD784E0007214C2 /* GLACollectedFolderContentsViewController.xib in Resources */,
 				B2214E1919D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.xib in Resources */,
@@ -1870,6 +1888,7 @@
 				B20DB2CA1B0C8ACA00E57532 /* GLAFolderQuery.m in Sources */,
 				B20DB2CB1B0C8ACA00E57532 /* GLAProjectHighlightsViewController.m in Sources */,
 				B20DB2CC1B0C8ACA00E57532 /* GLAReminderManager.m in Sources */,
+				B23E7F9C1BDB79CB008460C8 /* HighlightCustomNameViewController.swift in Sources */,
 				B20DB2CD1B0C8ACA00E57532 /* GLAEmptyAllProjectsViewController.m in Sources */,
 				B20DB2CE1B0C8ACA00E57532 /* GLAPreferencesSection.m in Sources */,
 				B20DB2CF1B0C8ACA00E57532 /* GLAChooseRemindersViewController.m in Sources */,
@@ -2012,6 +2031,7 @@
 				B2ED54271A9183D400F6B4FA /* GLAFolderQuery.m in Sources */,
 				B208E3FD19F90CFA000EF97B /* GLAProjectHighlightsViewController.m in Sources */,
 				B29F8DDD1981139300F58F59 /* GLAReminderManager.m in Sources */,
+				B23E7F9B1BDB79CB008460C8 /* HighlightCustomNameViewController.swift in Sources */,
 				B2A8FCB71A2672E50002108E /* GLAEmptyAllProjectsViewController.m in Sources */,
 				B2E39B5A1A8981E6000A9A12 /* GLAPreferencesSection.m in Sources */,
 				B2F0DBC619936321001AB5EE /* GLAChooseRemindersViewController.m in Sources */,

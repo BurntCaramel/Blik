@@ -165,7 +165,7 @@
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="st1-uY-7GX"/>
                                     </constraints>
                                     <animations/>
-                                    <buttonCell key="cell" type="square" title="Add File or Folder" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Sit-FH-MdQ" customClass="GLAButtonCell">
+                                    <buttonCell key="cell" type="square" title="Add File or Folder…" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Sit-FH-MdQ" customClass="GLAButtonCell">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" size="13" name="AvenirNext-Medium"/>
                                     </buttonCell>

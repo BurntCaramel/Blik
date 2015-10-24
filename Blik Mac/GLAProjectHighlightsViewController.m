@@ -7,6 +7,8 @@
 //
 
 #import "GLAProjectHighlightsViewController.h"
+#import "Blik-Swift.h"
+@import BurntFoundation;
 // VIEW
 #import "GLAProjectViewController.h"
 #import "GLAUIStyle.h"
@@ -38,6 +40,8 @@
 @property(nonatomic) GLAArrayTableDraggingHelper *tableDraggingHelper;
 
 @property(nonatomic) GLACollectedFileMenuCreator *collectedFileMenuCreator;
+
+@property(nonatomic) GLAHighlightedItem *itemWithDetailsBeingEdited;
 
 @end
 
@@ -481,13 +485,9 @@
 - (IBAction)removedClickedItem:(id)sender
 {
 	NSTableView *tableView = (self.tableView);
-	NSInteger clickedRow = (tableView.clickedRow);
-	if (clickedRow == -1) {
-		return;
-	}
-	
 	GLAHighlightedItem *clickedItem = (self.clickedHighlightedItem);
 	if (clickedItem) {
+		NSInteger clickedRow = (tableView.clickedRow);
 		GLAProjectManager *projectManager = (self.projectManager);
 		
 		[projectManager editHighlightsOfProject:(self.project) usingBlock:^(id<GLAArrayEditing> highlightsEditor) {
@@ -586,6 +586,17 @@
 	[self openObject:object behaviour:GLAOpenBehaviourShowInFinder];
 }
 
+- (IBAction)changeCustomNameOfClickedItem:(id)sender
+{
+	GLAHighlightedItem *highlightedItem = (self.clickedHighlightedItem);
+	if (!highlightedItem) {
+		return;
+	}
+	
+	NSInteger clickedRow = (self.tableView.clickedRow);
+	[self chooseCustomNameForHighlightedItem:highlightedItem atRow:clickedRow];
+}
+
 #pragma mark Notifications
 
 - (void)openerApplicationCombinerDidChangeNotification:(NSNotification *)note
@@ -596,6 +607,68 @@
 - (void)collectedFileMenuCreatorNeedsUpdateNotification:(NSNotification *)note
 {
 	[self menuNeedsUpdate:(self.contextualMenu)];
+}
+
+#pragma mark Custom Name
+
+- (void)changeCustomName:(NSString *)name forHighlightedItem:(GLAHighlightedItem *)highlightedItem
+{
+	name = [name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	
+	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
+	
+	[projectManager editHighlightsOfProjectWithUUID:(self.project.UUID) usingBlock:^(id<GLAArrayEditing>  _Nonnull highlightsEditor) {
+		[highlightsEditor replaceFirstChildWhoseKey:@"UUID" hasValue:(highlightedItem.UUID) usingChangeBlock:^GLAHighlightedItem * _Nonnull(GLAHighlightedItem *  _Nonnull originalItem) {
+			return [originalItem copyWithChangesFromEditing:^(id<GLAHighlightedItemEditing> _Nonnull editor) {
+				if ([name isEqualToString:@""]) {
+					editor.customName = nil;
+				}
+				else {
+					editor.customName = name;
+				}
+			}];
+		}];
+	}];
+	
+	//[self reloadCollections];
+}
+
+- (void)customNamePopoverChosenNameDidChangeNotification:(NSNotification *)note
+{	
+	HighlightCustomNamePopover *popover = (note.object);
+	NSString *name = (popover.chosenCustomName);
+	[self changeCustomName:name forHighlightedItem:(self.itemWithDetailsBeingEdited)];
+}
+
+- (void)customNamePopoverDidCloseNotification:(NSNotification *)note
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc removeObserver:self name:nil object:[HighlightCustomNamePopover sharedPopover]];
+	
+	(self.itemWithDetailsBeingEdited) = nil;
+}
+
+- (void)chooseCustomNameForHighlightedItem:(GLAHighlightedItem *)highlightedItem atRow:(NSInteger)itemRow
+{
+	(self.itemWithDetailsBeingEdited) = highlightedItem;
+	
+	HighlightCustomNamePopover *popover = [HighlightCustomNamePopover sharedPopover];
+	
+	if (popover.isShown) {
+		[popover close];
+	}
+	else {
+		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+		[nc addObserver:self selector:@selector(customNamePopoverChosenNameDidChangeNotification:) name:[HighlightCustomNamePopover CustomNameDidChangeNotification] object:popover];
+		[nc addObserver:self selector:@selector(customNamePopoverDidCloseNotification:) name:NSPopoverDidCloseNotification object:popover];
+		
+		[popover setUpWithHighlightedItem:highlightedItem];
+		
+		NSTableView *tableView = (self.tableView);
+		NSRect rowRect = [tableView rectOfRow:itemRow];
+		// Show underneath.
+		[popover showRelativeToRect:rowRect ofView:tableView preferredEdge:NSMaxYEdge];
+	}
 }
 
 #pragma mark -
@@ -748,7 +821,10 @@
 					name = NSLocalizedString(@"(Gone)", @"Display name for empty collected file");
 				}
 				else {
-					NSString *displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+					NSString *displayName = (highlightedItem.customName);
+					if (!displayName) {
+						displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+					}
 					if (displayName) {
 						name = displayName;
 					}
@@ -861,6 +937,7 @@
 		(collectedFileMenuCreator.openInApplicationAction) = @selector(openWithChosenApplication:);
 		(collectedFileMenuCreator.changePreferredOpenerApplicationAction) = @selector(changePreferredOpenerApplication:);
 		(collectedFileMenuCreator.showInFinderAction) = @selector(showItemInFinder:);
+		(collectedFileMenuCreator.changeCustomNameHighlightsAction) = @selector(changeCustomNameOfClickedItem:);
 		(collectedFileMenuCreator.removeFromHighlightsAction) = @selector(removedClickedItem:);
 		
 		id<NSObject> object = (self.clickedObject);

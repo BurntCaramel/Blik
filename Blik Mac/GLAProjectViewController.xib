@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9059" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9059"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -408,6 +408,10 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="gvF-3d-HKU"/>
+                <menuItem title="Use Custom Name…" id="MwX-Qz-UsF">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="QeI-dU-QyN"/>
                 <menuItem title="Remove from Highlights" id="CCv-nW-cRP">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
@@ -417,11 +421,11 @@
             </items>
             <point key="canvasLocation" x="985" y="28.5"/>
         </menu>
-        <customView identifier="collectionsListInstructions" id="Idz-io-wKr" userLabel="Collections Instructions">
+        <customView identifier="collectionsListInstructions" misplaced="YES" id="Idz-io-wKr" userLabel="Collections Instructions">
             <rect key="frame" x="0.0" y="0.0" width="217" height="199"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="chl-Vp-HVE">
+                <textField misplaced="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="chl-Vp-HVE">
                     <rect key="frame" x="18" y="65" width="201" height="69"/>
                     <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Collect similar files &amp; folders together, even from separate locations or cloud folders." id="Pd7-v0-Fcz">
@@ -430,7 +434,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OSI-F3-63a">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OSI-F3-63a">
                     <rect key="frame" x="18" y="142" width="81" height="25"/>
                     <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Collections" id="47t-aB-xfq">

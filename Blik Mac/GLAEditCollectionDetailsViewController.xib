@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9059" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9059"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAEditCollectionDetailsViewController">
@@ -26,12 +25,14 @@
                         <constraint firstAttribute="height" constant="160" id="LNe-02-05e"/>
                         <constraint firstAttribute="width" constant="208" id="p08-as-Ml2"/>
                     </constraints>
+                    <animations/>
                 </customView>
                 <textField wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" placeholderIntrinsicWidth="312" placeholderIntrinsicHeight="29" translatesAutoresizingMaskIntoConstraints="NO" id="WQ4-fa-rFb" customClass="GLATextField">
                     <rect key="frame" x="8" y="207" width="192" height="32"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="32" id="ddO-Nc-B5M"/>
                     </constraints>
+                    <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Collection name text field" placeholderString="" id="1uK-p7-zZg">
                         <font key="font" size="16" name="AvenirNext-Medium"/>
                         <color key="textColor" red="0.98812824489999995" green="0.98829692599999996" blue="0.98811751599999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -46,6 +47,7 @@
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="Q4m-vH-eRd"/>
                     </constraints>
+                    <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Enter the collection’s name:" id="rAv-2e-soe">
                         <font key="font" size="13" name="AvenirNext-Medium"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -57,6 +59,7 @@
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="0ao-hG-aGV"/>
                     </constraints>
+                    <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Pick a color:" id="xH6-hC-0vJ">
                         <font key="font" size="13" name="AvenirNext-Medium"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -78,6 +81,7 @@
                 <constraint firstAttribute="centerX" secondItem="gNO-Hr-r2l" secondAttribute="centerX" id="ffv-BF-XLZ"/>
                 <constraint firstAttribute="bottom" secondItem="Toz-Zb-YEd" secondAttribute="bottom" id="pSX-Zd-bp6"/>
             </constraints>
+            <animations/>
             <point key="canvasLocation" x="139" y="361"/>
         </customView>
     </objects>
