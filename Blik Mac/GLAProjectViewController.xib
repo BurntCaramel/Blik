@@ -91,12 +91,9 @@
         </viewController>
         <viewController title="Highlights View Controller" id="aDf-pc-aeE" customClass="GLAProjectHighlightsViewController">
             <connections>
-                <outlet property="contextualMenu" destination="Vkd-RN-V0D" id="99Y-nb-wbQ"/>
                 <outlet property="instructionsViewController" destination="bNf-jR-Sti" id="Tir-3F-xV0"/>
                 <outlet property="openAllHighlightsButton" destination="LJn-o5-zPf" id="pxM-EH-1uH"/>
-                <outlet property="openerApplicationMenu" destination="gy9-Mo-SHK" id="CqZ-Wu-YgD"/>
                 <outlet property="parentViewController" destination="-2" id="kAI-Y6-LNm"/>
-                <outlet property="preferredOpenerApplicationMenu" destination="bqf-4d-QNw" id="D7f-kU-wlf"/>
                 <outlet property="tableView" destination="dqI-ZC-qqF" id="aGC-Jl-wGI"/>
                 <outlet property="view" destination="NA8-Ro-OD1" id="bkO-EW-Be5"/>
             </connections>
@@ -378,49 +375,6 @@
             </constraints>
             <animations/>
         </customView>
-        <menu title="Highlighted Item Menu" id="Vkd-RN-V0D">
-            <items>
-                <menuItem title="Open With" id="g7T-tV-92P">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Open With" id="gy9-Mo-SHK">
-                        <items>
-                            <menuItem title="Loading…" id="e75-xR-iFE">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
-                <menuItem title="Prefer to Open With" id="Q2d-RN-ASf">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Prefer to Open With" id="bqf-4d-QNw">
-                        <items>
-                            <menuItem title="Loading…" id="NnZ-5l-oAr">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
-                <menuItem isSeparatorItem="YES" id="Ya3-rJ-738"/>
-                <menuItem title="Show in Finder…" id="ung-bt-hSl">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="showItemInFinder:" target="aDf-pc-aeE" id="E86-TR-DlG"/>
-                    </connections>
-                </menuItem>
-                <menuItem isSeparatorItem="YES" id="gvF-3d-HKU"/>
-                <menuItem title="Use Custom Name…" id="MwX-Qz-UsF">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem isSeparatorItem="YES" id="QeI-dU-QyN"/>
-                <menuItem title="Remove from Highlights" id="CCv-nW-cRP">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="removedClickedItem:" target="aDf-pc-aeE" id="KGO-Tx-rSu"/>
-                    </connections>
-                </menuItem>
-            </items>
-            <point key="canvasLocation" x="985" y="28.5"/>
-        </menu>
         <customView identifier="collectionsListInstructions" misplaced="YES" id="Idz-io-wKr" userLabel="Collections Instructions">
             <rect key="frame" x="0.0" y="0.0" width="217" height="199"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>

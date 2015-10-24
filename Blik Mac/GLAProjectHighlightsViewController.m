@@ -72,12 +72,6 @@
 	
 	[self prepareScrollView];
 	
-	NSMenu *openerApplicationMenu = (self.openerApplicationMenu);
-	(openerApplicationMenu.delegate) = self;
-	
-	NSMenu *preferredOpenerApplicationMenu = (self.preferredOpenerApplicationMenu);
-	(preferredOpenerApplicationMenu.delegate) = self;
-	
 	(self.tableDraggingHelper) = [[GLAArrayTableDraggingHelper alloc] initWithDelegate:self];
 	
 	[self setUpFileHelpersIfNeeded];
@@ -108,12 +102,6 @@
 	GLACollectedFileMenuCreator *collectedFileMenuCreator = [GLACollectedFileMenuCreator new];
 	[nc addObserver:self selector:@selector(collectedFileMenuCreatorNeedsUpdateNotification:) name:GLACollectedFileMenuCreatorNeedsUpdateNotification object:collectedFileMenuCreator];
 	_collectedFileMenuCreator = collectedFileMenuCreator;
-	
-#if 0
-	GLAFileOpenerApplicationFinder *openerApplicationCombiner = [GLAFileOpenerApplicationFinder new];
-	[nc addObserver:self selector:@selector(openerApplicationCombinerDidChangeNotification:) name:GLAFileURLOpenerApplicationCombinerDidChangeNotification object:openerApplicationCombiner];
-	(self.openerApplicationCombiner) = openerApplicationCombiner;
-#endif
 }
 
 - (void)dealloc
@@ -427,59 +415,6 @@
 	return (accessedFile.filePathURL);
 }
 
-- (void)updateOpenerApplicationsUIMenu
-{
-	GLAFileOpenerApplicationFinder *openerApplicationCombiner = (self.openerApplicationCombiner);
-	
-	id<NSObject> object = (self.clickedObject);
-	
-	GLAHighlightedCollectedFile *highlightedCollectedFile = nil;
-	if ([object isKindOfClass:[GLAHighlightedCollectedFile class]]) {
-		highlightedCollectedFile = (GLAHighlightedCollectedFile *)object;
-	}
-	
-	
-	NSURL *fileURL = [self fileURLForObject:object];
-	if (fileURL) {
-		(openerApplicationCombiner.fileURLs) = [NSSet setWithObject:fileURL];
-	}
-	else {
-		(openerApplicationCombiner.fileURLs) = nil;
-	}
-	
-	
-	
-	NSURL *preferredApplicationURL = nil;
-	
-	if (highlightedCollectedFile) {
-		GLACollectedFile *collectedFileForPreferredApplication = (highlightedCollectedFile.applicationToOpenFile);
-		if (collectedFileForPreferredApplication) {
-			GLAAccessedFileInfo *preferredApplicationAccessedFile = [collectedFileForPreferredApplication accessFile];
-			preferredApplicationURL = (preferredApplicationAccessedFile.filePathURL);
-		}
-	}
-	
-	NSMenu *contextualMenu = (self.contextualMenu);
-
-	NSMenu *openerApplicationMenu = (self.openerApplicationMenu);
-	[openerApplicationCombiner updateOpenerApplicationsMenu:openerApplicationMenu target:self action:@selector(openWithChosenApplication:) preferredApplicationURL:preferredApplicationURL];
-	
-	
-	NSMenu *preferredOpenerApplicationMenu = (self.preferredOpenerApplicationMenu);
-	NSMenuItem *preferredOpenerApplicationMenuItem = [contextualMenu itemAtIndex:[contextualMenu indexOfItemWithSubmenu:preferredOpenerApplicationMenu]];
-	
-	if (highlightedCollectedFile) {
-		(preferredOpenerApplicationMenuItem.enabled) = YES;
-		[openerApplicationCombiner updatePreferredOpenerApplicationsChoiceMenu:preferredOpenerApplicationMenu target:self action:@selector(changePreferredOpenerApplication:) chosenPreferredApplicationURL:preferredApplicationURL];
-	}
-	else {
-		(preferredOpenerApplicationMenuItem.enabled) = NO;
-		[preferredOpenerApplicationMenu removeAllItems];
-	}
-	
-	[contextualMenu update];
-}
-
 #pragma mark Actions
 
 - (IBAction)removedClickedItem:(id)sender
@@ -598,11 +533,6 @@
 }
 
 #pragma mark Notifications
-
-- (void)openerApplicationCombinerDidChangeNotification:(NSNotification *)note
-{
-	[self updateOpenerApplicationsUIMenu];
-}
 
 - (void)collectedFileMenuCreatorNeedsUpdateNotification:(NSNotification *)note
 {
@@ -953,10 +883,6 @@
 		(collectedFileMenuCreator.fileURL) = fileURL;
 		
 		[collectedFileMenuCreator updateMenu:menu];
-	}
-	
-	if ((menu == (self.openerApplicationMenu)) || (menu == (self.preferredOpenerApplicationMenu))) {
-		[self updateOpenerApplicationsUIMenu];
 	}
 }
 
