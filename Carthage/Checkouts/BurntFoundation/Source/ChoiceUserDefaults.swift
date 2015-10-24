@@ -10,7 +10,8 @@ import Foundation
 
 
 public protocol UserDefaultsChoiceRepresentable: RawRepresentable {
-	static var defaultsKey: String { get }
+	static var identifier: String { get }
+	static var defaultValue: Self { get }
 }
 
 
@@ -18,49 +19,49 @@ public extension NSUserDefaults {
 	
 	// MARK: Int
 	
-	public func intChoiceWithFallback<T: UserDefaultsChoiceRepresentable where T.RawValue == Int>(fallbackChoice: T) -> T {
-		if let value = T(rawValue: integerForKey(T.defaultsKey)) {
+	public func choice<T: UserDefaultsChoiceRepresentable where T.RawValue == Int>(choiceType: T.Type) -> T {
+		if let value = T(rawValue: integerForKey(T.identifier)) {
 			return value
 		}
 		else {
-			return fallbackChoice
+			return T.defaultValue
 		}
 	}
 	
-	// Int
-	public func setIntChoice<T: UserDefaultsChoiceRepresentable where T.RawValue == Int>(choice: T) {
-		setInteger(choice.rawValue, forKey: T.defaultsKey)
-	}
-	
-	// Int
-	public func registerDefaultForIntChoice<T: UserDefaultsChoiceRepresentable where T.RawValue == Int>(defaultChoice: T) {
-		registerDefaults([
-			T.defaultsKey: defaultChoice.rawValue
-			])
+	public func setChoice<T: UserDefaultsChoiceRepresentable where T.RawValue == Int>(choice: T) {
+		setInteger(choice.rawValue, forKey: T.identifier)
 	}
 	
 	// MARK: String
 	
-	public func stringChoiceWithFallback<T: UserDefaultsChoiceRepresentable where T.RawValue == String>(fallbackChoice: T) -> T {
+	public func choice<T: UserDefaultsChoiceRepresentable where T.RawValue == String>(choiceType: T.Type) -> T {
 		if let
-			stringValue = stringForKey(T.defaultsKey),
-			value = T(rawValue: stringValue) {
+			stringValue = stringForKey(T.identifier),
+			value = T(rawValue: stringValue)
+		{
 			return value
 		}
 		else {
-			return fallbackChoice
+			return T.defaultValue
 		}
 	}
 	
-	// String
-	public func setStringChoice<T: UserDefaultsChoiceRepresentable where T.RawValue == String>(choice: T) {
-		setObject(choice.rawValue, forKey: T.defaultsKey)
+	public func setChoice<T: UserDefaultsChoiceRepresentable where T.RawValue == String>(choice: T) {
+		setObject(choice.rawValue, forKey: T.identifier)
 	}
 	
-	// String
-	public func registerDefaultForStringChoice<T: UserDefaultsChoiceRepresentable where T.RawValue == String>(defaultChoice: T) {
-		registerDefaults([
-			T.defaultsKey: defaultChoice.rawValue
-		])
+	// MARK: Bool
+	
+	public func choice<T: UserDefaultsChoiceRepresentable where T.RawValue == Bool>(choiceType: T.Type) -> T {
+		if let value = T(rawValue: boolForKey(T.identifier)) {
+			return value
+		}
+		else {
+			return T.defaultValue
+		}
+	}
+	
+	public func setChoice<T: UserDefaultsChoiceRepresentable where T.RawValue == Bool>(choice: T) {
+		setBool(choice.rawValue, forKey: T.identifier)
 	}
 }

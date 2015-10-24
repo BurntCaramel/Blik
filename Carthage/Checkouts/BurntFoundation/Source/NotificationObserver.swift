@@ -13,9 +13,11 @@ public protocol NotificationObserverType {
 	typealias NotificationIdentifier
 	typealias Notification
 	
-	mutating func addObserver(notificationIdentifier: NotificationIdentifier, block: (Notification) -> Void)
-	mutating func removeObserver(notificationIdentifier: NotificationIdentifier)
-	mutating func removeAllObservers()
+	mutating func observe(notificationIdentifier: NotificationIdentifier, block: (Notification) -> ())
+	mutating func observeAll(block: (NotificationIdentifier, Notification) -> ())
+	mutating func stopObserving(notificationIdentifier: NotificationIdentifier)
+	mutating func stopObservingAll()
+	mutating func stopObserving()
 }
 
 
@@ -28,6 +30,7 @@ public class NotificationObserver<I: RawRepresentable where I.RawValue == String
 	public let operationQueue: NSOperationQueue
 	
 	private var observers = [NotificationIdentifier: AnyObject]()
+	private var allObserver: AnyObject?
 	
 	public init(object: AnyObject, notificationCenter: NSNotificationCenter, queue: NSOperationQueue = NSOperationQueue.mainQueue()) {
 		self.object = object
@@ -39,27 +42,47 @@ public class NotificationObserver<I: RawRepresentable where I.RawValue == String
 		self.init(object: object, notificationCenter: NSNotificationCenter.defaultCenter())
 	}
 	
-	public func addObserver(notificationIdentifier: NotificationIdentifier, block: (Notification) -> Void) {
-		let observer = notificationCenter.addObserverForName(notificationIdentifier.rawValue, object: object, queue: operationQueue, usingBlock: block)
-		observers[notificationIdentifier] = observer
+	public func observe(notificationIdentifier: NotificationIdentifier, block: (Notification) -> ()) {
+		assert(observers[notificationIdentifier] == nil, "Existing observer for \(notificationIdentifier) must be removed first")
+		
+		observers[notificationIdentifier] = notificationCenter.addObserverForName(notificationIdentifier.rawValue, object: object, queue: operationQueue, usingBlock: block)
 	}
 	
-	public func removeObserver(notificationIdentifier: NotificationIdentifier) {
-		if let observer: AnyObject = observers[notificationIdentifier] {
-			notificationCenter.removeObserver(observer)
-			observers.removeValueForKey(notificationIdentifier)
+	public func observeAll(block: (NotificationIdentifier, Notification) -> ()) {
+		assert(allObserver == nil, "Existing observer for all must be removed first")
+		
+		allObserver = notificationCenter.addObserverForName(nil, object: object, queue: operationQueue) { notification in
+			guard let notificationIdentifier = NotificationIdentifier(rawValue: notification.name) else { return }
+			
+			block(notificationIdentifier, notification)
 		}
 	}
 	
-	public func removeAllObservers() {
+	public func stopObserving(notificationIdentifier: NotificationIdentifier) {
+		guard let observer = observers[notificationIdentifier] else { return }
+		
+		notificationCenter.removeObserver(observer)
+		observers[notificationIdentifier] = nil
+	}
+	
+	public func stopObservingAll() {
+		guard let observer = allObserver else { return }
+		
+		notificationCenter.removeObserver(observer)
+		allObserver = nil
+	}
+	
+	public func stopObserving() {
 		for (_, observer) in observers {
 			notificationCenter.removeObserver(observer)
 		}
 		observers.removeAll()
+		
+		stopObservingAll()
 	}
 	
 	 deinit {
-		removeAllObservers()
+		stopObserving()
 	}
 }
 
@@ -96,16 +119,26 @@ public class AnyNotificationObserver: NotificationObserverType {
 		self.init(object: object, notificationCenter: NSNotificationCenter.defaultCenter())
 	}
 	
-	public func addObserver(notificationIdentifier: NotificationIdentifier, block: (NSNotification!) -> Void) {
-		underlyingObserver.addObserver(AnyStringNotificationIdentifier(string: notificationIdentifier), block: block)
+	public func observe(notificationIdentifier: NotificationIdentifier, block: (NSNotification!) -> Void) {
+		underlyingObserver.observe(AnyStringNotificationIdentifier(string: notificationIdentifier), block: block)
 	}
 	
-	public func removeObserver(notificationIdentifier: NotificationIdentifier) {
-		underlyingObserver.removeObserver(AnyStringNotificationIdentifier(string: notificationIdentifier))
+	public func observeAll(block: (NotificationIdentifier, Notification) -> ()) {
+		underlyingObserver.observeAll { notificationIdentifier, notification in
+			block(notificationIdentifier.rawValue, notification)
+		}
 	}
 	
-	public func removeAllObservers() {
-		underlyingObserver.removeAllObservers()
+	public func stopObserving(notificationIdentifier: NotificationIdentifier) {
+		underlyingObserver.stopObserving(AnyStringNotificationIdentifier(string: notificationIdentifier))
+	}
+	
+	public func stopObservingAll() {
+		underlyingObserver.stopObservingAll()
+	}
+	
+	public func stopObserving() {
+		underlyingObserver.stopObserving()
 	}
 }
 

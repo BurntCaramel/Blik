@@ -17,7 +17,8 @@ class UserDefaultsTests: XCTestCase {
 		case Two = 2
 		case Three = 3
 		
-		static var defaultsKey: String = "exampleInt"
+		static var identifier: String = "exampleInt"
+		static var defaultValue = ExampleIntChoice.One
 	}
 	
 	enum ExampleStringChoice: String, UserDefaultsChoiceRepresentable {
@@ -25,7 +26,8 @@ class UserDefaultsTests: XCTestCase {
 		case Banana = "banana"
 		case Carrot = "carrot"
 		
-		static var defaultsKey: String = "exampleString"
+		static var identifier: String = "exampleString"
+		static var defaultValue = ExampleStringChoice.Apple
 	}
 	
     override func setUp() {
@@ -41,21 +43,21 @@ class UserDefaultsTests: XCTestCase {
     func testIntChoice() {
 		let ud = NSUserDefaults()
 		
-		ud.setInteger(3, forKey: ExampleIntChoice.defaultsKey)
-		XCTAssertEqual(ud.intChoiceWithFallback(ExampleIntChoice.One), ExampleIntChoice.Three, "Set integer, get choice")
+		ud.setInteger(3, forKey: ExampleIntChoice.identifier)
+		XCTAssertEqual(ud.choice(ExampleIntChoice), ExampleIntChoice.Three, "Set integer, get choice")
 		
-		ud.setIntChoice(ExampleIntChoice.Two)
-		XCTAssertEqual(ud.integerForKey(ExampleIntChoice.defaultsKey), 2, "Set choice, get integer")
+		ud.setChoice(ExampleIntChoice.Two)
+		XCTAssertEqual(ud.integerForKey(ExampleIntChoice.identifier), 2, "Set choice, get integer")
     }
 	
 	func testStringChoice() {
 		let ud = NSUserDefaults()
 		
-		ud.setObject("banana", forKey: ExampleStringChoice.defaultsKey)
-		XCTAssertEqual(ud.stringChoiceWithFallback(ExampleStringChoice.Apple), ExampleStringChoice.Banana, "Set string, get choice")
+		ud.setObject("banana", forKey: ExampleStringChoice.identifier)
+		XCTAssertEqual(ud.choice(ExampleStringChoice), ExampleStringChoice.Banana, "Set string, get choice")
 		
-		ud.setStringChoice(ExampleStringChoice.Carrot)
-		XCTAssertEqual(ud.stringForKey(ExampleStringChoice.defaultsKey)!, "carrot", "Set choice, get string")
+		ud.setChoice(ExampleStringChoice.Carrot)
+		XCTAssertEqual(ud.stringForKey(ExampleStringChoice.identifier)!, "carrot", "Set choice, get string")
 	}
 	
 }

@@ -12,7 +12,8 @@ enum ExampleIntChoice: Int, UserDefaultsChoiceRepresentable {
 	case Three = 3
 	
 	// The key that will be used with NSUserDefaults
-	static var defaultsKey: String = "exampleInt"
+	static var identifier: String = "exampleInt"
+	static var defaultValue = ExampleIntChoice.One
 }
 ```
 
@@ -23,7 +24,7 @@ Setting:
 ud.setInteger(3, forKey: "exampleInt")
 
 // After:
-ud.setIntChoice(ExampleIntChoice.Three)
+ud.setChoice(ExampleIntChoice.Three)
 ```
 
 Getting:
@@ -33,7 +34,7 @@ Getting:
 let intValue = ud.integerForKey("exampleInt")
 
 // After:
-let intChoice = ud.intChoiceWithFallback(ExampleIntChoice.One)
+let intChoice = ud.choice(ExampleIntChoice)
 
 ```
 
@@ -55,7 +56,7 @@ class Example {
 
 let example = Example()
 let notificationObserver = NotificationObserver<Example.Notification>(object: example)
-notificationObserver.addObserver(.DidUpdate) { notification in
+notificationObserver.observe(.DidUpdate) { notification in
 	// Observe the notification
 }
 ```
@@ -65,5 +66,5 @@ notificationObserver.addObserver(.DidUpdate) { notification in
 To integrate BurntFoundation into your Xcode project using Carthage, specify it in your Cartfile:
 
 ```
-github "BurntCaramel/BurntFoundation" >= 0.1
+github "BurntCaramel/BurntFoundation" >= 0.3
 ```
