@@ -33,6 +33,7 @@ extern NSString *GLACollectionViewModeExpanded;
 
 @property(readwrite, copy, nonatomic) NSString *name;
 @property(readwrite, nonatomic) GLACollectionColor *color;
+@property(readwrite, nonatomic) BOOL highlighted;
 @property(readwrite, copy, nonatomic) NSString *viewMode;
 
 @end
@@ -46,6 +47,7 @@ extern NSString *GLACollectionViewModeExpanded;
 
 @property(readonly, copy, nonatomic) NSString *name;
 @property(readonly, nonatomic) GLACollectionColor *color;
+@property(readonly, nonatomic) BOOL highlighted;
 @property(readonly, copy, nonatomic) NSString *viewMode;
 
 - (instancetype)initWithType:(NSString *)collectionType creatingFromEditing:(void(^)(id<GLACollectionEditing> editor))editingBlock;
