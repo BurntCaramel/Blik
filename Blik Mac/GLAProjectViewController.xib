@@ -80,7 +80,6 @@
         </customView>
         <viewController title="Collections View Controller" id="raF-W4-b8E" customClass="GLAProjectCollectionsViewController">
             <connections>
-                <outlet property="contextualMenu" destination="GiZ-xZ-qxO" id="HrY-Ve-era"/>
                 <outlet property="editingActionsView" destination="xFc-GO-dGI" id="rrU-hh-ceJ"/>
                 <outlet property="instructionsViewController" destination="5dd-3O-WRK" id="TIN-OS-jb5"/>
                 <outlet property="makeNewCollectionButton" destination="zdL-Rb-okh" id="aJA-O9-qb4"/>
@@ -324,24 +323,6 @@
                 <outlet property="view" destination="OZm-di-0Uz" id="jOR-Lo-xCd"/>
             </connections>
         </viewController>
-        <menu title="Collection Menu" id="GiZ-xZ-qxO">
-            <items>
-                <menuItem title="Rename or Recolor Collection…" id="5AV-kD-8fd">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="renameClickedCollection:" target="-1" id="age-ex-OHl"/>
-                    </connections>
-                </menuItem>
-                <menuItem isSeparatorItem="YES" id="UPi-eN-JLm"/>
-                <menuItem title="Delete Collection…" id="B9A-Yw-QEs">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="permanentlyDeleteClickedCollection:" target="-1" id="HgF-41-zuW"/>
-                    </connections>
-                </menuItem>
-            </items>
-            <point key="canvasLocation" x="331.5" y="-216.5"/>
-        </menu>
         <customView placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="30" id="xFc-GO-dGI" customClass="GLAView">
             <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>

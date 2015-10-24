@@ -31,7 +31,6 @@
 @property(weak, nonatomic) id<GLAAddCollectedFilesChoiceActionsDelegate> addCollectedFilesChoiceActionsDelegate;
 
 @property(nonatomic) IBOutlet NSTableView *tableView;
-@property(strong, nonatomic) IBOutlet NSMenu *contextualMenu;
 
 @property(weak) IBOutlet GLAProjectViewController *parentViewController;
 

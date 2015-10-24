@@ -56,12 +56,10 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 	(tableView.target) = self;
 	(tableView.action) = @selector(tableViewWasClicked:);
 	
-	//(tableView.menu) = (self.contextualMenu);
-	
 	[tableView registerForDraggedTypes:
   @[
-	[GLACollection objectJSONPasteboardType],
-	(__bridge NSString *)kUTTypeFileURL
+		[GLACollection objectJSONPasteboardType],
+		(__bridge NSString *)kUTTypeFileURL
 	]];
 	
 	// I think Apple (from a WWDC video) says this is better for scrolling performance.
@@ -590,13 +588,9 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 		
 		(cellView.textField.textColor) = [uiStyle colorForCollectionColor:(collection.color)];
 		
-		//NSMenu *menu = (self.contextualMenu);
-		//CollectionItemAssistant *collectionItemAssistant = [[CollectionItemAssistant alloc] initWithDelegate:self]
-		//[collectionItemAssistant setActiveCollection:collection row:row];
 		[cellView setCollection:collection row:row];
 		(cellView.delegate) = self;
 		(cellView.menu) = (cellView.contextualMenu);
-		//(cellView.nextResponder) = self;
 	}
 	else {
 		(cellView.textField.stringValue) = NSLocalizedString(@"Master Folders", @"Collection name for master folders");
