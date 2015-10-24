@@ -41,8 +41,8 @@ func changeViewValues<T: NSView>(views: [T], animate: Bool, viewBlock: (view: NS
 			
 			if let selectionAssistant = selectionAssistant {
 				let selectionAssistantNotificationObserver = NotificationObserver<FileCollectionSelectionAssistant.Notification>(object: selectionAssistant)
-				selectionAssistantNotificationObserver.addObserver(.DidUpdate, block: { [unowned self] notification in
-					self.update()
+				selectionAssistantNotificationObserver.observe(.DidUpdate, block: { [weak self] notification in
+					self?.update()
 				})
 				
 				self.selectionAssistantNotificationObserver = selectionAssistantNotificationObserver
@@ -67,7 +67,7 @@ func changeViewValues<T: NSView>(views: [T], animate: Bool, viewBlock: (view: NS
 				openerApplicationCombinerNotificationObserver = AnyNotificationObserver(object: selectionAssistant.openerApplicationCombiner)
 			}
 			
-			openerApplicationCombinerNotificationObserver.addObserver(GLAFileURLOpenerApplicationCombinerDidChangeNotification) { [weak self] note in
+			openerApplicationCombinerNotificationObserver.observe(GLAFileURLOpenerApplicationCombinerDidChangeNotification) { [weak self] note in
 				self?.setNeedsToUpdateOpenerApplicationsUI()
 			}
 		}

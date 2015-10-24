@@ -34,9 +34,9 @@ import BurntFoundation
 	}
 	
 	private func observeProject() {
-		projectObserver.addObserver(GLAProjectHighlightsDidChangeNotification, block: { [unowned self] notification in
-			self.update()
-		})
+		projectObserver.observe(GLAProjectHighlightsDidChangeNotification) { [weak self] notification in
+			self?.update()
+		}
 	}
 	
 	enum Notification: String {

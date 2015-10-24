@@ -70,8 +70,9 @@ class HighlightCustomNamePopover: NSPopover {
 	private func setUpViewControllerNotificationObserver() {
 		let no = NotificationObserver<Notification>(object: highlightCustomNameViewController!)
 		let nc = NSNotificationCenter.defaultCenter()
-		no.addObserver(.CustomNameDidChange) { _ in
-			nc.postNotification(Notification.CustomNameDidChange, object: self)
+		// Forward notifications from view controller
+		no.observeAll { notificationIdentifier, _ in
+			nc.postNotification(notificationIdentifier, object: self)
 		}
 		
 		viewControllerNotificationObserver = no
@@ -79,9 +80,9 @@ class HighlightCustomNamePopover: NSPopover {
 	
 	func setUpWithHighlightedItem(item: GLAHighlightedItem) {
 		let viewController = highlightCustomNameViewController!
-		_ = viewController.view
+		_ = viewController.view // Yippee!
 		
-		viewController.customNameLabel.stringValue = item.customName ?? ""
+		viewController.customNameField.stringValue = item.customName ?? ""
 	}
 	
 	var chosenCustomName: String {
@@ -93,6 +94,4 @@ extension HighlightCustomNamePopover {
 	static func CustomNameDidChangeNotification() -> String {
 		return Notification.CustomNameDidChange.rawValue
 	}
-	
-	//static var CustomNameDidChangeNotification = Notification.CustomNameDidChange.rawValue
 }
