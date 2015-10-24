@@ -23,7 +23,7 @@
 {
 	self = [super init];
 	if (self) {
-		_identifier = identifier;
+		_identifier = [identifier copy];
 	}
 	return self;
 }
