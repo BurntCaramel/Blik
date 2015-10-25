@@ -52,6 +52,8 @@
 
 @optional
 
+- (NSIndexSet *)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper outputIndexesForTableRows:(NSIndexSet *)rowIndexes;
+
 // Only implement if you support copying.
 - (NSArray *)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper makeCopiesOfObjects:(NSArray *)objectsToCopy;
 
