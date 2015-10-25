@@ -21,8 +21,6 @@
 @property(nonatomic) IBOutlet NSTableView *tableView;
 @property(nonatomic) IBOutlet NSLayoutConstraint *scrollLeadingConstraint;
 
-@property(nonatomic) NSMenu *contextualMenu;
-
 @property(nonatomic) IBOutlet GLAButton *openAllHighlightsButton;
 
 @property(weak) IBOutlet GLAProjectViewController *parentViewController;

@@ -25,6 +25,8 @@
 
 @interface GLAProjectHighlightsViewController () <GLACollectedFileListHelperDelegate, GLAArrayTableDraggingHelperDelegate>
 
+@property(nonatomic) NSMenu *contextualMenu;
+
 @property(nonatomic) BOOL doNotUpdateViews;
 
 @property(nonatomic) GLACollectedFileListHelper *fileListHelper;
@@ -132,7 +134,7 @@
 		(self.highlightedItemsUser) = nil;
 		(self.primaryFoldersUser) = nil;
 		
-		[self reloadHighlightedItems];
+		[self reloadItems];
 	}
 }
 
@@ -205,7 +207,7 @@
 	(self.tableView.enclosingScrollView.hidden) = YES;
 }
 
-- (void)reloadHighlightedItems
+- (void)reloadItems
 {
 	if (self.doNotUpdateViews) {
 		return;
@@ -226,7 +228,7 @@
 		(highlightedItemsUser.changeCompletionBlock) = ^(id<GLAArrayInspecting> collectionsInspector) {
 			__strong GLAProjectHighlightsViewController *self = weakSelf;
 			if (self) {
-				[self reloadHighlightedItems];
+				[self reloadItems];
 			}
 		};
 		
@@ -244,7 +246,7 @@
 		(primaryFoldersUser.changeCompletionBlock) = ^(id<GLAArrayInspecting> collectionsInspector) {
 			__strong GLAProjectHighlightsViewController *self = weakSelf;
 			if (self) {
-				[self reloadHighlightedItems];
+				[self reloadItems];
 			}
 		};
 		
@@ -263,6 +265,7 @@
 		primaryFolders = @[];
 	}
 	(self.primaryFolders) = primaryFolders;
+	
 	
 	[self stopCollectionObserving];
 	[self startCollectionObserving];
@@ -299,7 +302,7 @@
 
 - (void)collectionOrCollectionsListDidChangeNotification:(NSNotification *)note
 {
-	[self reloadHighlightedItems];
+	[self reloadItems];
 }
 
 - (void)viewWillTransitionIn
@@ -308,7 +311,7 @@
 	
 	(self.doNotUpdateViews) = NO;
 	
-	[self reloadHighlightedItems];
+	[self reloadItems];
 }
 
 - (void)viewWillTransitionOut
@@ -607,7 +610,7 @@
 
 - (void)collectedFileListHelperDidInvalidate:(GLACollectedFileListHelper *)helper
 {
-	[self reloadHighlightedItems];
+	[self reloadItems];
 }
 
 - (void)collectedFileListHelper:(GLACollectedFileListHelper *)helper didLoadInfoForCollectedFiles:(NSArray *)collectedFiles

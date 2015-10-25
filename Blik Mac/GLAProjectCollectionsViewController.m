@@ -593,6 +593,7 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	
+	// Collection
 	if (row < (self.collections.count)) {
 		GLACollection *collection = (self.collections)[row];
 		NSString *title = (collection.name);
@@ -605,8 +606,9 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 		(cellView.delegate) = self;
 		(cellView.menu) = (cellView.contextualMenu);
 	}
+	// Master Folders
 	else {
-		(cellView.textField.stringValue) = NSLocalizedString(@"Master Folders", @"Collection name for master folders");
+		(cellView.textField.stringValue) = NSLocalizedString(@"Master Folders", @"Collection list name for master folders");
 		(cellView.textField.textColor) = (uiStyle.primaryFoldersItemColor);
 		
 		[cellView clearCollection];
