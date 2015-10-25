@@ -111,8 +111,6 @@ public class SymlinkCreator {
 	}
 	
 	private func createLinksForProjectWithUUID(projectUUID: NSUUID, inDirectoryURL holdingDirectoryURL: NSURL) {
-		var error: NSError?
-		
 		let pm = projectManager
 		let project = pm.projectWithUUID(projectUUID)!
 		
