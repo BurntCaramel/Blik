@@ -34,6 +34,10 @@
 @property(nonatomic) id<GLALoadableArrayUsing> highlightedItemsUser;
 @property(nonatomic) NSArray *highlightedItems;
 
+@property(nonatomic) id<GLALoadableArrayUsing> collectionsUser;
+@property(nonatomic) NSArray *collections;
+@property(nonatomic) NSArray *collectionsToGroupInHighlights;
+
 @property(nonatomic) id<GLALoadableArrayUsing> primaryFoldersUser;
 @property(nonatomic) NSArray *primaryFolders;
 
@@ -207,12 +211,8 @@
 	(self.tableView.enclosingScrollView.hidden) = YES;
 }
 
-- (void)reloadItems
+- (void)createLoadersIfNeeded
 {
-	if (self.doNotUpdateViews) {
-		return;
-	}
-	
 	GLAProject *project = (self.project);
 	if (!project) {
 		return;
@@ -225,7 +225,7 @@
 		highlightedItemsUser = [projectManager useHighlightsForProject:project];
 		
 		__weak GLAProjectHighlightsViewController *weakSelf = self;
-		(highlightedItemsUser.changeCompletionBlock) = ^(id<GLAArrayInspecting> collectionsInspector) {
+		(highlightedItemsUser.changeCompletionBlock) = ^(id<GLAArrayInspecting> itemsInspector) {
 			__strong GLAProjectHighlightsViewController *self = weakSelf;
 			if (self) {
 				[self reloadItems];
@@ -235,15 +235,27 @@
 		(self.highlightedItemsUser) = highlightedItemsUser;
 	}
 	
-	NSArray *highlightedItems = [highlightedItemsUser copyChildrenLoadingIfNeeded];
-	
+	id<GLALoadableArrayUsing> collectionsUser = (self.collectionsUser);
+	if (!collectionsUser) {
+		collectionsUser = [projectManager useCollectionsForProject:project];
+		
+		__weak GLAProjectHighlightsViewController *weakSelf = self;
+		(collectionsUser.changeCompletionBlock) = ^(id<GLAArrayInspecting> collectionsInspector) {
+			__strong GLAProjectHighlightsViewController *self = weakSelf;
+			if (self) {
+				[self reloadItems];
+			}
+		};
+		
+		(self.collectionsUser) = collectionsUser;
+	}
 	
 	id<GLALoadableArrayUsing> primaryFoldersUser = (self.primaryFoldersUser);
 	if (!primaryFoldersUser) {
 		primaryFoldersUser = [projectManager usePrimaryFoldersForProject:project];
 		
 		__weak GLAProjectHighlightsViewController *weakSelf = self;
-		(primaryFoldersUser.changeCompletionBlock) = ^(id<GLAArrayInspecting> collectionsInspector) {
+		(primaryFoldersUser.changeCompletionBlock) = ^(id<GLAArrayInspecting> primaryFoldersInspector) {
 			__strong GLAProjectHighlightsViewController *self = weakSelf;
 			if (self) {
 				[self reloadItems];
@@ -252,8 +264,23 @@
 		
 		(self.primaryFoldersUser) = primaryFoldersUser;
 	}
+}
+
+- (void)reloadItems
+{
+	if (self.doNotUpdateViews) {
+		return;
+	}
 	
-	NSArray *primaryFolders = [primaryFoldersUser copyChildrenLoadingIfNeeded];
+	GLAProject *project = (self.project);
+	if (!project) {
+		return;
+	}
+	
+	[self createLoadersIfNeeded];
+	
+	NSArray *highlightedItems = [(self.highlightedItemsUser) copyChildrenLoadingIfNeeded];
+	NSArray *primaryFolders = [(self.primaryFoldersUser) copyChildrenLoadingIfNeeded];
 	
 	
 	if (!highlightedItems) {
@@ -270,7 +297,7 @@
 	[self stopCollectionObserving];
 	[self startCollectionObserving];
 	
-	if ((highlightedItems.count) > 0 || (primaryFolders.count) > 0) {
+	if ((highlightedItems.count + primaryFolders.count) > 0) {
 		[self showTable];
 		[self hideInstructions];
 		
