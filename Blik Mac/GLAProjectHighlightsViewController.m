@@ -33,10 +33,12 @@
 
 @property(nonatomic) id<GLALoadableArrayUsing> highlightedItemsUser;
 @property(nonatomic) NSArray *highlightedItems;
+@property(nonatomic) NSArray *highlightedItemsUnfiltered;
 
 @property(nonatomic) id<GLALoadableArrayUsing> collectionsUser;
 @property(nonatomic) NSArray *collections;
-@property(nonatomic) NSArray *collectionsToGroupInHighlights;
+@property(nonatomic) NSArray *groupedCollections;
+@property(nonatomic) NSSet *groupedCollectionUUIDs;
 
 @property(nonatomic) id<GLALoadableArrayUsing> primaryFoldersUser;
 @property(nonatomic) NSArray *primaryFolders;
@@ -136,6 +138,7 @@
 	
 	if (!isSameProject) {
 		(self.highlightedItemsUser) = nil;
+		(self.collectionsUser) = nil;
 		(self.primaryFoldersUser) = nil;
 		
 		[self reloadItems];
@@ -279,14 +282,40 @@
 	
 	[self createLoadersIfNeeded];
 	
-	NSArray *highlightedItems = [(self.highlightedItemsUser) copyChildrenLoadingIfNeeded];
+	NSArray *highlightedItemsUnfiltered = [(self.highlightedItemsUser) copyChildrenLoadingIfNeeded];
+	NSArray *collections = [(self.collectionsUser) copyChildrenLoadingIfNeeded];
 	NSArray *primaryFolders = [(self.primaryFoldersUser) copyChildrenLoadingIfNeeded];
 	
 	
-	if (!highlightedItems) {
-		highlightedItems = @[];
+	if (!collections) {
+		collections = @[];
 	}
-	(self.highlightedItems) = highlightedItems;
+	NSMutableArray *groupedCollections = [NSMutableArray new];
+	NSMutableSet *groupedCollectionUUIDs = [NSMutableSet new];
+	for (GLACollection *collection in collections) {
+		if (collection.highlighted) {
+			[groupedCollections addObject:collection];
+			[groupedCollectionUUIDs addObject:(collection.UUID)];
+		}
+	}
+	(self.groupedCollections) = groupedCollections;
+	(self.groupedCollectionUUIDs) = groupedCollectionUUIDs;
+	
+	if (!highlightedItemsUnfiltered) {
+		highlightedItemsUnfiltered = @[];
+	}
+	NSMutableArray *groupedHighlightedItems = [NSMutableArray new];
+	NSMutableArray *ungroupedHighlightedItems = [NSMutableArray new];
+	for (GLAHighlightedItem *highlightedItem in highlightedItemsUnfiltered) {
+		if ([self highlightedItemIsGrouped:highlightedItem]) {
+			[groupedHighlightedItems addObject:highlightedItem];
+		}
+		else {
+			[ungroupedHighlightedItems addObject:highlightedItem];
+		}
+	}
+	(self.highlightedItems) = ungroupedHighlightedItems;
+	(self.highlightedItemsUnfiltered) = highlightedItemsUnfiltered;
 	
 	if (!primaryFolders) {
 		primaryFolders = @[];
@@ -297,25 +326,25 @@
 	[self stopCollectionObserving];
 	[self startCollectionObserving];
 	
-	if ((highlightedItems.count + primaryFolders.count) > 0) {
+	if ((highlightedItemsUnfiltered.count + primaryFolders.count) > 0) {
 		[self showTable];
 		[self hideInstructions];
 		
-		NSMutableArray *collectedFiles = [NSMutableArray new];
-		for (GLAHighlightedItem *highlightedItem in highlightedItems) {
+		NSMutableArray *allCollectedFiles = [NSMutableArray new];
+		for (GLAHighlightedItem *highlightedItem in highlightedItemsUnfiltered) {
 			GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
 			if (collectedFile) {
-				[collectedFiles addObject:collectedFile];
+				[allCollectedFiles addObject:collectedFile];
 			}
 		}
 		
-		[collectedFiles addObjectsFromArray:primaryFolders];
+		[allCollectedFiles addObjectsFromArray:primaryFolders];
 		
-		(self.fileListHelper.collectedFiles) = collectedFiles;
+		(self.fileListHelper.collectedFiles) = allCollectedFiles;
 		
 		[(self.tableView) reloadData];
 		
-		(self.openAllHighlightsButton.enabled) = YES;
+		(self.openAllHighlightsButton.enabled) = (highlightedItemsUnfiltered.count > 0);
 	}
 	else {
 		[self showInstructions];
@@ -631,6 +660,20 @@
 	}
 }
 
+#pragma mark Collection Grouping
+
+- (BOOL)highlightedItemIsGrouped:(GLAHighlightedItem *)highlightedItem
+{
+	if (highlightedItem == nil || ![highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+		return NO;
+	}
+	GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
+	
+	NSUUID *collectionUUID = (highlightedCollectedFile.holdingCollectionUUID);
+	NSLog(@"highlightedItemIsGrouped %@ in %@", collectionUUID, (self.groupedCollectionUUIDs));
+	return [(self.groupedCollectionUUIDs) containsObject:collectionUUID];
+}
+
 #pragma mark -
 
 #pragma mark Collected File List Helper Delegate
@@ -675,6 +718,21 @@
 - (void)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper makeChangesUsingEditingBlock:(GLAArrayEditingBlock)editBlock
 {
 	[(self.highlightedItemsUser) editChildrenUsingBlock:editBlock];
+}
+
+- (NSIndexSet *)arrayEditorTableDraggingHelper:(GLAArrayTableDraggingHelper *)tableDraggingHelper outputIndexesForTableRows:(NSIndexSet *)rowIndexes
+{
+	NSMutableIndexSet *mutableIndexes = [rowIndexes mutableCopy];
+	NSInteger itemIndex = 0;
+	for (GLAHighlightedItem *highlightedItem in (self.highlightedItemsUnfiltered)) {
+		if ([self highlightedItemIsGrouped:highlightedItem]) {
+			[mutableIndexes shiftIndexesStartingAtIndex:itemIndex by:1];
+		}
+		
+		itemIndex++;
+	}
+	
+	return mutableIndexes;
 }
 
 #pragma mark Table View Data Source
