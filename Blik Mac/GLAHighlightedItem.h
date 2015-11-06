@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol GLAHighlightedItemEditing <NSObject>
 
 @property(readwrite, copy, nonatomic) NSUUID *projectUUID;
+@property(readwrite, nonatomic) NSUUID *holdingCollectionUUID;
 
 @property(readwrite, copy, nonatomic) NSString * _Nullable customName;
 
@@ -23,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GLAHighlightedItem : GLAModel
 
 @property(readonly, copy, nonatomic) NSUUID *projectUUID;
+@property(readonly, nonatomic) NSUUID *holdingCollectionUUID;
 
 @property(readonly, copy, nonatomic) NSString * _Nullable customName;
 
@@ -41,8 +43,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @protocol GLAHighlightedCollectedItemEditing <GLAHighlightedItemEditing>
-
-@property(readwrite, nonatomic) NSUUID *holdingCollectionUUID;
 
 @end
 

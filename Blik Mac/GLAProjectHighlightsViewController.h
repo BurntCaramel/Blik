@@ -12,11 +12,12 @@
 #import "GLAHighlightedItem.h"
 #import "GLAFileOpenerApplicationFinder.h"
 #import "GLAButton.h"
+//#import "Blik-Swift.h"
 
 @class GLAProjectViewController;
 
 
-@interface GLAProjectHighlightsViewController : GLAViewController <NSTableViewDelegate, NSTableViewDataSource, NSMenuDelegate>
+@interface GLAProjectHighlightsViewController2 : GLAViewController <NSTableViewDelegate, NSMenuDelegate>
 
 @property(nonatomic) IBOutlet NSTableView *tableView;
 @property(nonatomic) IBOutlet NSLayoutConstraint *scrollLeadingConstraint;
@@ -28,6 +29,8 @@
 @property(strong, nonatomic) IBOutlet GLAInstructionsViewController *instructionsViewController;
 
 @property(nonatomic) GLAProject *project;
+
+//@property(nonatomic) ProjectHighlightsAssistant *assistant;
 
 @property(nonatomic) GLAFileOpenerApplicationFinder *openerApplicationCombiner;
 

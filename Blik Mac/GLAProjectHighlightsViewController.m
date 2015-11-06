@@ -6,9 +6,10 @@
 //  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
+@import BurntFoundation;
+
 #import "GLAProjectHighlightsViewController.h"
 #import "Blik-Swift.h"
-@import BurntFoundation;
 // VIEW
 #import "GLAProjectViewController.h"
 #import "GLAUIStyle.h"
@@ -23,7 +24,7 @@
 #import "GLACollectedFileMenuCreator.h"
 
 
-@interface GLAProjectHighlightsViewController () <GLACollectedFileListHelperDelegate, GLAArrayTableDraggingHelperDelegate>
+@interface GLAProjectHighlightsViewController2 () <GLACollectedFileListHelperDelegate, GLAArrayTableDraggingHelperDelegate>
 
 @property(nonatomic) NSMenu *contextualMenu;
 
@@ -37,8 +38,10 @@
 
 @property(nonatomic) id<GLALoadableArrayUsing> collectionsUser;
 @property(nonatomic) NSArray *collections;
-@property(nonatomic) NSArray *groupedCollections;
 @property(nonatomic) NSSet *groupedCollectionUUIDs;
+@property(nonatomic) NSDictionary *groupedCollectionUUIDsToItems;
+//@property(nonatomic) NSUInteger groupedItemCount;
+//@property(nonatomic) NSDictionary *groupedCollectionUUIDsToUsers;
 
 @property(nonatomic) id<GLALoadableArrayUsing> primaryFoldersUser;
 @property(nonatomic) NSArray *primaryFolders;
@@ -53,7 +56,7 @@
 
 @end
 
-@implementation GLAProjectHighlightsViewController
+@implementation GLAProjectHighlightsViewController2
 
 - (void)prepareView
 {
@@ -75,8 +78,7 @@
 	// I think Apple says this is better for scrolling performance.
 	(scrollView.wantsLayer) = YES;
 	
-	NSTableColumn *mainColumn = (tableView.tableColumns)[0];
-	(self.measuringTableCellView) = [tableView makeViewWithIdentifier:(mainColumn.identifier) owner:nil];
+	(self.measuringTableCellView) = [tableView makeViewWithIdentifier:@"highlightedItem" owner:nil];
 	
 	[self prepareScrollView];
 	
@@ -110,10 +112,6 @@
 	GLACollectedFileMenuCreator *collectedFileMenuCreator = [GLACollectedFileMenuCreator new];
 	[nc addObserver:self selector:@selector(collectedFileMenuCreatorNeedsUpdateNotification:) name:GLACollectedFileMenuCreatorNeedsUpdateNotification object:collectedFileMenuCreator];
 	_collectedFileMenuCreator = collectedFileMenuCreator;
-}
-
-- (void)dealloc
-{
 }
 
 - (GLAProjectManager *)projectManager
@@ -227,9 +225,9 @@
 	if (!highlightedItemsUser) {
 		highlightedItemsUser = [projectManager useHighlightsForProject:project];
 		
-		__weak GLAProjectHighlightsViewController *weakSelf = self;
+		__weak GLAProjectHighlightsViewController2 *weakSelf = self;
 		(highlightedItemsUser.changeCompletionBlock) = ^(id<GLAArrayInspecting> itemsInspector) {
-			__strong GLAProjectHighlightsViewController *self = weakSelf;
+			__strong GLAProjectHighlightsViewController2 *self = weakSelf;
 			if (self) {
 				[self reloadItems];
 			}
@@ -242,9 +240,9 @@
 	if (!collectionsUser) {
 		collectionsUser = [projectManager useCollectionsForProject:project];
 		
-		__weak GLAProjectHighlightsViewController *weakSelf = self;
+		__weak GLAProjectHighlightsViewController2 *weakSelf = self;
 		(collectionsUser.changeCompletionBlock) = ^(id<GLAArrayInspecting> collectionsInspector) {
-			__strong GLAProjectHighlightsViewController *self = weakSelf;
+			__strong GLAProjectHighlightsViewController2 *self = weakSelf;
 			if (self) {
 				[self reloadItems];
 			}
@@ -257,9 +255,9 @@
 	if (!primaryFoldersUser) {
 		primaryFoldersUser = [projectManager usePrimaryFoldersForProject:project];
 		
-		__weak GLAProjectHighlightsViewController *weakSelf = self;
+		__weak GLAProjectHighlightsViewController2 *weakSelf = self;
 		(primaryFoldersUser.changeCompletionBlock) = ^(id<GLAArrayInspecting> primaryFoldersInspector) {
-			__strong GLAProjectHighlightsViewController *self = weakSelf;
+			__strong GLAProjectHighlightsViewController2 *self = weakSelf;
 			if (self) {
 				[self reloadItems];
 			}
@@ -290,16 +288,17 @@
 	if (!collections) {
 		collections = @[];
 	}
-	NSMutableArray *groupedCollections = [NSMutableArray new];
 	NSMutableSet *groupedCollectionUUIDs = [NSMutableSet new];
+	//NSMutableDictionary *groupedCollectionUUIDsToUsers = [NSMutableDictionary new];
+	//GLAProjectManager *projectManager = (self.projectManager);
 	for (GLACollection *collection in collections) {
 		if (collection.highlighted) {
-			[groupedCollections addObject:collection];
 			[groupedCollectionUUIDs addObject:(collection.UUID)];
+			//groupedCollectionUUIDsToUsers[(collection.UUID)] = [projectManager useFilesListForCollection:collection];
 		}
 	}
-	(self.groupedCollections) = groupedCollections;
 	(self.groupedCollectionUUIDs) = groupedCollectionUUIDs;
+	//(self.groupedCollectionUUIDsToUsers) = groupedCollectionUUIDsToUsers;
 	
 	if (!highlightedItemsUnfiltered) {
 		highlightedItemsUnfiltered = @[];
@@ -316,6 +315,21 @@
 	}
 	(self.highlightedItems) = ungroupedHighlightedItems;
 	(self.highlightedItemsUnfiltered) = highlightedItemsUnfiltered;
+	
+	NSMutableDictionary *groupedCollectionUUIDsToItems = [NSMutableDictionary new];
+	for (GLAHighlightedItem *highlightedItem in (self.highlightedItemsUnfiltered)) {
+		NSUUID *collectionUUID = (highlightedItem.holdingCollectionUUID);
+		if ([groupedCollectionUUIDs containsObject:collectionUUID]) {
+			NSMutableArray *groupItems = groupedCollectionUUIDsToItems[collectionUUID];
+			if (!groupItems) {
+				groupItems = [NSMutableArray new];
+				groupedCollectionUUIDsToItems[collectionUUID] = groupItems;
+			}
+			[groupItems addObject:highlightedItem];
+		}
+	}
+	(self.groupedCollectionUUIDsToItems) = groupedCollectionUUIDsToItems;
+	
 	
 	if (!primaryFolders) {
 		primaryFolders = @[];
@@ -445,9 +459,7 @@
 	GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
 	
 	GLAProjectManager *pm = (self.projectManager);
-	GLACollectedFile *collectedFile = [pm collectedFileForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
-	
-	return collectedFile;
+	return [pm collectedFileForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
 }
 
 - (NSURL *)fileURLForObject:(id<NSObject>)object
@@ -737,12 +749,18 @@
 
 #pragma mark Table View Data Source
 
+#if 0
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	NSUInteger count = 0;
 	
-	count += (self.highlightedItems.count);
+	//count += (self.highlightedItems.count);
+	count += (self.highlightedItemsUnfiltered.count);
 	count += (self.primaryFolders.count);
+	
+	NSDictionary *groupedCollectionUUIDsToItems = (self.groupedCollectionUUIDsToItems);
+	// For collection group headers
+	count += (groupedCollectionUUIDsToItems.count);
 	
 	return count;
 }
@@ -757,10 +775,12 @@
 		return highlightedItem;
 	}
 	else {
-		GLACollectedFile *collectedFolder = primaryFolders[row - (highlightedItems.count)];
-		return collectedFolder;
+		return @(row);
+		//GLACollectedFile *collectedFolder = primaryFolders[row - (highlightedItems.count)];
+		//return collectedFolder;
 	}
 }
+#endif
 
 - (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row
 {
@@ -810,10 +830,92 @@
 	return NO;
 }
 
+- (BOOL)tableView:(NSTableView *)tableView isGroupRow:(NSInteger)row
+{
+	NSUInteger ungroupedItemCount = (self.highlightedItems.count);
+	
+	if (row >= ungroupedItemCount) {
+		NSUInteger groupedItemRow = ungroupedItemCount;
+		NSArray *collections = (self.collections);
+		NSDictionary *groupedCollectionUUIDsToItems = (self.groupedCollectionUUIDsToItems);
+		for (GLACollection *collection in collections) {
+			if (!collection.highlighted) {
+				continue;
+			}
+			
+			if (row == groupedItemRow) {
+				return YES;
+			}
+			
+			NSArray *groupItems = groupedCollectionUUIDsToItems[collection.UUID];
+			groupedItemRow += (groupItems.count) + 1;
+		}
+		
+		//return YES;
+	}
+	
+	return NO;
+}
+
+- (void)setUpTableCellView:(GLAHighlightsTableCellView *)cellView forHighlightedItem:(GLAHighlightedItem *)highlightedItem
+{
+	GLAProjectManager *pm = (self.projectManager);
+	GLACollectedFileListHelper *fileListHelper = (self.fileListHelper);
+	GLACollectedFilesSetting *collectedFilesSetting = (fileListHelper.collectedFilesSetting);
+	
+	NSString *name = @"Loading…";
+	
+	(cellView.backgroundStyle) = NSBackgroundStyleDark;
+	//(cellView.canDrawSubviewsIntoLayer) = YES;
+	(cellView.alphaValue) = 1.0;
+	
+	(cellView.objectValue) = highlightedItem;
+	
+	if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
+		GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
+		
+		GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
+		BOOL isFolder = NO;
+		
+		if (collectedFile) {
+			if (collectedFile.empty) {
+				name = NSLocalizedString(@"(Gone)", @"Display name for empty collected file");
+			}
+			else {
+				NSString *displayName = (highlightedItem.customName);
+				if (!displayName) {
+					displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
+				}
+				if (displayName) {
+					name = displayName;
+				}
+				
+				NSNumber *isDirectoryValue = [collectedFilesSetting copyValueForURLResourceKey:NSURLIsDirectoryKey forCollectedFile:collectedFile];
+				NSNumber *isPackageValue = [collectedFilesSetting copyValueForURLResourceKey:NSURLIsPackageKey forCollectedFile:collectedFile];
+				
+				if (isDirectoryValue && isPackageValue) {
+					isFolder = [@YES isEqual:isDirectoryValue] && [@NO isEqual:isPackageValue];
+				}
+			}
+		}
+		
+		GLACollection *holdingCollection = [pm collectionForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
+		
+		GLACollectionIndicationButton *collectionIndicationButton = (cellView.collectionIndicationButton);
+		(collectionIndicationButton.collection) = holdingCollection;
+		(collectionIndicationButton.isFolder) = isFolder;
+		//(collectionIndicationButton.isFolder) = YES;
+	}
+	else {
+		NSAssert(NO, @"highlightedItem not a valid class.");
+	}
+}
+
 - (void)setUpTableCellView:(GLAHighlightsTableCellView *)cellView forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
 	GLAProjectManager *pm = (self.projectManager);
 	NSArray *highlightedItems = (self.highlightedItems);
+	NSUInteger ungroupedItemCount = (highlightedItems.count);
 	NSArray *primaryFolders = (self.primaryFolders);
 	GLACollectedFileListHelper *fileListHelper = (self.fileListHelper);
 	GLACollectedFilesSetting *collectedFilesSetting = (fileListHelper.collectedFilesSetting);
@@ -826,59 +928,53 @@
 	
 	if (row < (highlightedItems.count)) {
 		GLAHighlightedItem *highlightedItem = highlightedItems[row];
-		(cellView.objectValue) = highlightedItem;
-		
-		if ([highlightedItem isKindOfClass:[GLAHighlightedCollectedFile class]]) {
-			GLAHighlightedCollectedFile *highlightedCollectedFile = (GLAHighlightedCollectedFile *)highlightedItem;
-			
-			GLACollectedFile *collectedFile = [self collectedFileForHighlightedItem:highlightedItem];
-			BOOL isFolder = NO;
-			
-			if (collectedFile) {
-				if (collectedFile.empty) {
-					name = NSLocalizedString(@"(Gone)", @"Display name for empty collected file");
-				}
-				else {
-					NSString *displayName = (highlightedItem.customName);
-					if (!displayName) {
-						displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFile];
-					}
-					if (displayName) {
-						name = displayName;
-					}
-					
-					NSNumber *isDirectoryValue = [collectedFilesSetting copyValueForURLResourceKey:NSURLIsDirectoryKey forCollectedFile:collectedFile];
-					NSNumber *isPackageValue = [collectedFilesSetting copyValueForURLResourceKey:NSURLIsPackageKey forCollectedFile:collectedFile];
-					
-					if (isDirectoryValue && isPackageValue) {
-						isFolder = [@YES isEqual:isDirectoryValue] && [@NO isEqual:isPackageValue];
-					}
-				}
-			}
-			
-			GLACollection *holdingCollection = [pm collectionForHighlightedCollectedFile:highlightedCollectedFile loadIfNeeded:YES];
-			
-			GLACollectionIndicationButton *collectionIndicationButton = (cellView.collectionIndicationButton);
-			(collectionIndicationButton.collection) = holdingCollection;
-			(collectionIndicationButton.isFolder) = isFolder;
-			//(collectionIndicationButton.isFolder) = YES;
-		}
-		else {
-			NSAssert(NO, @"highlightedItem not a valid class.");
-		}
+		[self setUpTableCellView:cellView forHighlightedItem:highlightedItem];
 	}
 	else {
-		GLACollectedFile *collectedFolder = primaryFolders[row - (highlightedItems.count)];
-		(cellView.objectValue) = collectedFolder;
-		
-		NSString *displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFolder];
-		if (displayName) {
-			name = displayName;
+		NSUInteger groupedItemRow = ungroupedItemCount;
+		NSArray *collections = (self.collections);
+		NSDictionary *groupedCollectionUUIDsToItems = (self.groupedCollectionUUIDsToItems);
+		for (GLACollection *collection in collections) {
+			if (!collection.highlighted) {
+				continue;
+			}
+			
+			// Collection heading
+			if (row == groupedItemRow) {
+				(cellView.textField.stringValue) = (collection.name);
+				return;
+			}
+			
+			groupedItemRow++;
+			
+			NSArray *groupItems = groupedCollectionUUIDsToItems[collection.UUID];
+			if (row < (groupedItemRow + groupItems.count)) {
+				GLAHighlightedItem *highlightedItem = highlightedItems[groupedItemRow - row];
+				[self setUpTableCellView:cellView forHighlightedItem:highlightedItem];
+				return;
+			}
+			groupedItemRow += (groupItems.count);
 		}
 		
-		GLACollectionIndicationButton *collectionIndicationButton = (cellView.collectionIndicationButton);
-		(collectionIndicationButton.collection) = nil;
-		(collectionIndicationButton.isFolder) = YES;
+		
+		NSLog(@"Primary folder row:%@; groupedItemRow:%@; primary folder: %@", @(row), @(groupedItemRow), @(row - groupedItemRow));
+		return;
+		if (row <= groupedItemRow) {
+			
+		}
+		else {
+			GLACollectedFile *collectedFolder = primaryFolders[row - groupedItemRow];
+			(cellView.objectValue) = collectedFolder;
+			
+			NSString *displayName = [collectedFilesSetting copyValueForURLResourceKey:NSURLLocalizedNameKey forCollectedFile:collectedFolder];
+			if (displayName) {
+				name = displayName;
+			}
+			
+			GLACollectionIndicationButton *collectionIndicationButton = (cellView.collectionIndicationButton);
+			(collectionIndicationButton.collection) = nil;
+			(collectionIndicationButton.isFolder) = YES;
+		}
 	}
 	
 	
@@ -886,7 +982,7 @@
 	
 	GLAUIStyle *activeStyle = [GLAUIStyle activeStyle];
 	
-	NSFont *titleFont = (activeStyle.smallReminderFont);
+	NSFont *titleFont = (activeStyle.highlightItemFont);
 	
 	NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
 	(paragraphStyle.alignment) = NSRightTextAlignment;
@@ -936,11 +1032,32 @@
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	GLAHighlightsTableCellView *cellView = [tableView makeViewWithIdentifier:(tableColumn.identifier) owner:nil];
+	NSUInteger ungroupedItemCount = (self.highlightedItems.count);
+	if (row >= ungroupedItemCount) {
+		NSUInteger groupedItemRow = ungroupedItemCount;
+		NSArray *collections = (self.collections);
+		NSDictionary *groupedCollectionUUIDsToItems = (self.groupedCollectionUUIDsToItems);
+		for (GLACollection *collection in collections) {
+			if (!collection.highlighted) {
+				continue;
+			}
+			
+			if (row == groupedItemRow) {
+				NSTableCellView *cellView = [tableView makeViewWithIdentifier:@"collectionGroup" owner:nil];
+				(cellView.textField.stringValue) = @"Development";
+			}
+			
+			NSArray *groupItems = groupedCollectionUUIDsToItems[collection.UUID];
+			groupedItemRow += (groupItems.count) + 1;
+		}
+		
+		/*NSTableCellView *cellView = [tableView makeViewWithIdentifier:@"collectionGroup" owner:nil];
+		(cellView.textField.stringValue) = @"Development";
+		return cellView;*/
+	}
+	
+	GLAHighlightsTableCellView *cellView = [tableView makeViewWithIdentifier:@"highlightedItem" owner:nil];
 	[self setUpTableCellView:cellView forTableColumn:tableColumn row:row];
-	
-	//(cellView.menu) = (self.contextualMenu);
-	
 	return cellView;
 }
 

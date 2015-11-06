@@ -299,6 +299,12 @@
 		B2ADDBFA1963DA2E0014EF84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B2ADDBF81963DA2E0014EF84 /* InfoPlist.strings */; };
 		B2B466711B29B88A001C4BC0 /* SymlinkCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B466701B29B88A001C4BC0 /* SymlinkCreator.swift */; };
 		B2B466721B29B88A001C4BC0 /* SymlinkCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B466701B29B88A001C4BC0 /* SymlinkCreator.swift */; };
+		B2B717E91BE4421E00D3E7B1 /* ProjectHighlightsAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B717E81BE4421E00D3E7B1 /* ProjectHighlightsAssistant.swift */; };
+		B2B717EA1BE4421E00D3E7B1 /* ProjectHighlightsAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B717E81BE4421E00D3E7B1 /* ProjectHighlightsAssistant.swift */; };
+		B2B717EC1BE4A44600D3E7B1 /* ProjectHighlightsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B717EB1BE4A44600D3E7B1 /* ProjectHighlightsViewController.swift */; };
+		B2B717ED1BE4A44600D3E7B1 /* ProjectHighlightsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B717EB1BE4A44600D3E7B1 /* ProjectHighlightsViewController.swift */; };
+		B2B717EF1BEB842100D3E7B1 /* GLAProjectManager+OpeningFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B717EE1BEB842100D3E7B1 /* GLAProjectManager+OpeningFiles.swift */; };
+		B2B717F01BEB842100D3E7B1 /* GLAProjectManager+OpeningFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B717EE1BEB842100D3E7B1 /* GLAProjectManager+OpeningFiles.swift */; };
 		B2BB85151A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85141A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m */; };
 		B2BB85181A3F095B00BF186C /* GLAMainContentManners.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85171A3F095B00BF186C /* GLAMainContentManners.m */; };
 		B2C154401A00D7BB00912AB1 /* GLAModelUUIDMap.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C1543F1A00D7BB00912AB1 /* GLAModelUUIDMap.m */; };
@@ -615,6 +621,9 @@
 		B2ADDBF71963DA2E0014EF84 /* BlikTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BlikTests-Info.plist"; sourceTree = "<group>"; };
 		B2ADDBF91963DA2E0014EF84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B2B466701B29B88A001C4BC0 /* SymlinkCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SymlinkCreator.swift; sourceTree = "<group>"; };
+		B2B717E81BE4421E00D3E7B1 /* ProjectHighlightsAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectHighlightsAssistant.swift; sourceTree = "<group>"; };
+		B2B717EB1BE4A44600D3E7B1 /* ProjectHighlightsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectHighlightsViewController.swift; sourceTree = "<group>"; };
+		B2B717EE1BEB842100D3E7B1 /* GLAProjectManager+OpeningFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GLAProjectManager+OpeningFiles.swift"; sourceTree = "<group>"; };
 		B2BB850D1A39C4AB00BF186C /* GLAArrayMantleJSONStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAArrayMantleJSONStore.h; sourceTree = "<group>"; };
 		B2BB850E1A39C4AB00BF186C /* GLAArrayMantleJSONStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAArrayMantleJSONStore.m; sourceTree = "<group>"; };
 		B2BB85131A3BE97A00BF186C /* PGWSQueuedBlockConvenience.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGWSQueuedBlockConvenience.h; sourceTree = "<group>"; };
@@ -1007,6 +1016,8 @@
 				B26B6F4819EBDB0100D17ECD /* GLAProjectPlanViewController.m */,
 				B208E3FB19F90CFA000EF97B /* GLAProjectHighlightsViewController.h */,
 				B208E3FC19F90CFA000EF97B /* GLAProjectHighlightsViewController.m */,
+				B2B717EB1BE4A44600D3E7B1 /* ProjectHighlightsViewController.swift */,
+				B2B717E81BE4421E00D3E7B1 /* ProjectHighlightsAssistant.swift */,
 				B219DAAF196AD462007900DF /* GLAProjectViewController.h */,
 				B219DAB0196AD462007900DF /* GLAProjectViewController.m */,
 				B219DAB1196AD462007900DF /* GLAProjectViewController.xib */,
@@ -1175,6 +1186,7 @@
 				B2C5FD2B1988AB0200AEFBAF /* GLAProjectManager.h */,
 				B2C5FD2C1988AB0200AEFBAF /* GLAProjectManager.m */,
 				B20DB3751B0DB1EA00E57532 /* GLAProjectManager+Convenience.swift */,
+				B2B717EE1BEB842100D3E7B1 /* GLAProjectManager+OpeningFiles.swift */,
 				B292F4721AD65A9A0041E7A1 /* GLAProjectManager+GLAOpeningFiles.h */,
 				B292F4731AD65A9A0041E7A1 /* GLAProjectManager+GLAOpeningFiles.m */,
 				B29F8DDB1981139300F58F59 /* GLAReminderManager.h */,
@@ -1936,6 +1948,7 @@
 				B20DB2F51B0C8ACA00E57532 /* GLALauncherWindow.m in Sources */,
 				B20DB2F61B0C8ACA00E57532 /* GLAArrayMantleJSONStore.m in Sources */,
 				B20DB2F71B0C8ACA00E57532 /* GLAInstructionsViewController.m in Sources */,
+				B2B717F01BEB842100D3E7B1 /* GLAProjectManager+OpeningFiles.swift in Sources */,
 				B20DB2F81B0C8ACA00E57532 /* GLACollectedItemContentHolderView.m in Sources */,
 				B20DB2F91B0C8ACA00E57532 /* GLATableView.m in Sources */,
 				B20DB37A1B0DBC9600E57532 /* WindowFirstResponderAssistant.swift in Sources */,
@@ -1994,6 +2007,7 @@
 				B20DB32C1B0C8ACA00E57532 /* GLAEditCollectionDetailsPopover.m in Sources */,
 				B20DB32D1B0C8ACA00E57532 /* GLACollectionIndicationButton.m in Sources */,
 				B285182D1BB60D7600135E5C /* GuideArticles.swift in Sources */,
+				B2B717EA1BE4421E00D3E7B1 /* ProjectHighlightsAssistant.swift in Sources */,
 				B20DB32E1B0C8ACA00E57532 /* GLAProjectManager+GLAOpeningFiles.m in Sources */,
 				B20DB32F1B0C8ACA00E57532 /* GLADividerView.m in Sources */,
 				B20DB3301B0C8ACA00E57532 /* GLAProjectManager.m in Sources */,
@@ -2006,6 +2020,7 @@
 				B20DB3361B0C8ACA00E57532 /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.m in Sources */,
 				B20DB3371B0C8ACA00E57532 /* GLAPluckedCollectedFilesList.m in Sources */,
 				B20DB3381B0C8ACA00E57532 /* GLACollectedFolderContentsViewController.swift in Sources */,
+				B2B717ED1BE4A44600D3E7B1 /* ProjectHighlightsViewController.swift in Sources */,
 				B20DB3391B0C8ACA00E57532 /* GLAProjectsListMenuController.m in Sources */,
 				B20DB33A1B0C8ACA00E57532 /* GLACollection.m in Sources */,
 				B20DB33B1B0C8ACA00E57532 /* GLAProjectMenuController.m in Sources */,
@@ -2079,6 +2094,7 @@
 				B2E94D461AA6AED2008850B6 /* GLALauncherWindow.m in Sources */,
 				B2302ED81A554B7F00E6AFBA /* GLAArrayMantleJSONStore.m in Sources */,
 				B20362C81A0A3D2E007169C2 /* GLAInstructionsViewController.m in Sources */,
+				B2B717EF1BEB842100D3E7B1 /* GLAProjectManager+OpeningFiles.swift in Sources */,
 				B2D9EE5E1AD3B34F00F5F34E /* GLACollectedItemContentHolderView.m in Sources */,
 				B26B6F5019EBE3C800D17ECD /* GLATableView.m in Sources */,
 				B20DB3791B0DBC9600E57532 /* WindowFirstResponderAssistant.swift in Sources */,
@@ -2137,6 +2153,7 @@
 				B208E3F619F518D5000EF97B /* GLAEditCollectionDetailsPopover.m in Sources */,
 				B2D0331919FFA3E600C396FB /* GLACollectionIndicationButton.m in Sources */,
 				B285182C1BB60D7600135E5C /* GuideArticles.swift in Sources */,
+				B2B717E91BE4421E00D3E7B1 /* ProjectHighlightsAssistant.swift in Sources */,
 				B292F4741AD65A9A0041E7A1 /* GLAProjectManager+GLAOpeningFiles.m in Sources */,
 				B289275A1A6BDCDB007238D6 /* GLADividerView.m in Sources */,
 				B2C5FD2D1988AB0200AEFBAF /* GLAProjectManager.m in Sources */,
@@ -2149,6 +2166,7 @@
 				B2ED543C1A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.m in Sources */,
 				B28927641A7256A4007238D6 /* GLAPluckedCollectedFilesList.m in Sources */,
 				B21B6E621B063916001B8430 /* GLACollectedFolderContentsViewController.swift in Sources */,
+				B2B717EC1BE4A44600D3E7B1 /* ProjectHighlightsViewController.swift in Sources */,
 				B2D9EE621AD4D27D00F5F34E /* GLAProjectsListMenuController.m in Sources */,
 				B284D5621978EC1F00157126 /* GLACollection.m in Sources */,
 				B2D9EE651AD4EEAE00F5F34E /* GLAProjectMenuController.m in Sources */,

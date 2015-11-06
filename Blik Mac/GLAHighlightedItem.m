@@ -12,6 +12,7 @@
 @interface GLAHighlightedItem ()
 
 @property(readwrite, copy, nonatomic) NSUUID *projectUUID;
+@property(readwrite, nonatomic) NSUUID *holdingCollectionUUID;
 
 @property(readwrite, copy, nonatomic) NSString * __nullable customName;
 
@@ -61,7 +62,6 @@
 
 @interface GLAHighlightedCollectedFile ()
 
-@property(readwrite, nonatomic) NSUUID *holdingCollectionUUID;
 @property(readwrite, nonatomic) NSUUID *collectedFileUUID;
 
 @property(readwrite, nonatomic) GLACollectedFile *applicationToOpenFile;

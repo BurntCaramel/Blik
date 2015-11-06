@@ -17,10 +17,14 @@
 
 #import "GLAUIStyle.h"
 #import "GLAViewController.h"
+#import "GLAProjectHighlightsViewController.h"
+#import "GLACollectedFileMenuCreator.h"
 #import "GLAQuickLookPreviewHelper.h"
+#import "GLAArrayTableDraggingHelper.h"
 
 #import "GLAButton.h"
 #import "GLATableHeaderCell.h"
+#import "GLAHighlightsTableCellView.h"
 
 
 #import "GLAAppDelegate.h"

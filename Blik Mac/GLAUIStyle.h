@@ -100,6 +100,9 @@
 
 @property(nonatomic) NSFont *collectionFont;
 
+@property(nonatomic) NSFont *highlightItemFont;
+@property(nonatomic) NSFont *highlightGroupFont;
+
 @property(nonatomic) NSFont *smallReminderFont;
 @property(nonatomic) NSFont *smallReminderDueDateFont;
 

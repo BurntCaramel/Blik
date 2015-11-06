@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9059" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9059"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -513,13 +513,13 @@
             </scroller>
             <point key="canvasLocation" x="-296" y="611"/>
         </scrollView>
-        <scrollView identifier="Highlights List" verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="41" horizontalPageScroll="10" verticalLineScroll="41" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="Ycp-cg-NFY" userLabel="Highlights List Scroll">
+        <scrollView identifier="Highlights List" verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="38" horizontalPageScroll="10" verticalLineScroll="38" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="Ycp-cg-NFY" userLabel="Highlights List Scroll">
             <rect key="frame" x="0.0" y="0.0" width="290" height="174"/>
             <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="QRp-oz-4iV">
                 <rect key="frame" x="0.0" y="0.0" width="300" height="175"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="39" rowSizeStyle="automatic" viewBased="YES" id="dqI-ZC-qqF">
+                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="36" rowSizeStyle="automatic" viewBased="YES" id="dqI-ZC-qqF">
                         <rect key="frame" x="0.0" y="0.0" width="290" height="0.0"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <animations/>
@@ -540,27 +540,27 @@
                                 </textFieldCell>
                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
                                 <prototypeCellViews>
-                                    <tableCellView placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="fxr-Bd-KTK" customClass="GLAHighlightsTableCellView">
+                                    <tableCellView identifier="highlightedItem" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="F8Z-3j-ofZ" userLabel="Highlighted Item" customClass="GLAHighlightsTableCellView">
                                         <rect key="frame" x="1" y="1" width="297" height="36"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <textField verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wvd-37-nRU">
+                                            <textField verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iJR-GK-rtq">
                                                 <rect key="frame" x="-2" y="7" width="249" height="23"/>
                                                 <animations/>
-                                                <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="3JX-zC-0E5">
+                                                <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="W2T-o6-43Q">
                                                     <font key="font" size="13" name="AvenirNext-Medium"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
                                             </textField>
-                                            <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZXO-0g-NsT" customClass="GLACollectionIndicationButton">
+                                            <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HQJ-ax-GGn" customClass="GLACollectionIndicationButton">
                                                 <rect key="frame" x="257" y="0.0" width="10" height="36"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="36" id="gab-hy-nzN"/>
-                                                    <constraint firstAttribute="width" constant="10" id="rLO-DY-XPr"/>
+                                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="36" id="IMc-PF-JEO"/>
+                                                    <constraint firstAttribute="width" constant="10" id="Iui-WU-8Aq"/>
                                                 </constraints>
                                                 <animations/>
-                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="oCK-Gt-UZ3">
+                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="T1a-HO-r31">
                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
@@ -575,21 +575,46 @@
                                             </button>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstItem="wvd-37-nRU" firstAttribute="leading" secondItem="fxr-Bd-KTK" secondAttribute="leading" id="CSp-lD-VDA"/>
-                                            <constraint firstItem="ZXO-0g-NsT" firstAttribute="leading" secondItem="wvd-37-nRU" secondAttribute="trailing" constant="12" id="I4R-ik-hlo"/>
-                                            <constraint firstItem="wvd-37-nRU" firstAttribute="top" secondItem="fxr-Bd-KTK" secondAttribute="top" priority="750" constant="6" id="M1u-gN-6nS"/>
-                                            <constraint firstAttribute="trailing" secondItem="ZXO-0g-NsT" secondAttribute="trailing" constant="20" id="TSq-0R-S7p"/>
-                                            <constraint firstAttribute="centerY" secondItem="wvd-37-nRU" secondAttribute="centerY" id="inZ-WJ-Li6"/>
-                                            <constraint firstItem="ZXO-0g-NsT" firstAttribute="centerY" secondItem="wvd-37-nRU" secondAttribute="centerY" id="sGf-Np-VYJ"/>
+                                            <constraint firstItem="HQJ-ax-GGn" firstAttribute="leading" secondItem="iJR-GK-rtq" secondAttribute="trailing" constant="12" id="80U-Mx-Gtx"/>
+                                            <constraint firstAttribute="centerY" secondItem="iJR-GK-rtq" secondAttribute="centerY" id="A4O-r3-fen"/>
+                                            <constraint firstItem="HQJ-ax-GGn" firstAttribute="centerY" secondItem="iJR-GK-rtq" secondAttribute="centerY" id="b5r-y7-66I"/>
+                                            <constraint firstAttribute="trailing" secondItem="HQJ-ax-GGn" secondAttribute="trailing" constant="20" id="b9K-VP-IU6"/>
+                                            <constraint firstItem="iJR-GK-rtq" firstAttribute="leading" secondItem="F8Z-3j-ofZ" secondAttribute="leading" id="oO5-u1-9IJ"/>
+                                            <constraint firstItem="iJR-GK-rtq" firstAttribute="top" secondItem="F8Z-3j-ofZ" secondAttribute="top" priority="750" constant="6" id="ueb-D0-ld7"/>
                                         </constraints>
                                         <animations/>
                                         <connections>
-                                            <outlet property="collectionIndicationButton" destination="ZXO-0g-NsT" id="ord-2U-Ah9"/>
+                                            <outlet property="collectionIndicationButton" destination="HQJ-ax-GGn" id="VkW-zu-i4N"/>
+                                            <outlet property="textField" destination="iJR-GK-rtq" id="L2a-ME-0uC"/>
+                                        </connections>
+                                    </tableCellView>
+                                    <tableCellView identifier="collectionGroup" misplaced="YES" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="fxr-Bd-KTK" userLabel="Collection Group">
+                                        <rect key="frame" x="1" y="39" width="287" height="36"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <subviews>
+                                            <textField verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" misplaced="YES" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wvd-37-nRU">
+                                                <rect key="frame" x="-2" y="7" width="271" height="19"/>
+                                                <animations/>
+                                                <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="3JX-zC-0E5">
+                                                    <font key="font" size="11" name="AvenirNext-Medium"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="wvd-37-nRU" firstAttribute="leading" secondItem="fxr-Bd-KTK" secondAttribute="leading" id="CSp-lD-VDA"/>
+                                            <constraint firstItem="wvd-37-nRU" firstAttribute="top" secondItem="fxr-Bd-KTK" secondAttribute="top" priority="750" constant="6" id="M1u-gN-6nS"/>
+                                            <constraint firstAttribute="trailing" secondItem="wvd-37-nRU" secondAttribute="trailing" constant="20" symbolic="YES" id="XKL-MC-r1I"/>
+                                            <constraint firstAttribute="centerY" secondItem="wvd-37-nRU" secondAttribute="centerY" id="inZ-WJ-Li6"/>
+                                        </constraints>
+                                        <animations/>
+                                        <connections>
                                             <outlet property="textField" destination="wvd-37-nRU" id="SAU-iG-6y0"/>
                                         </connections>
                                     </tableCellView>
                                     <customView identifier="NSTableViewRowViewKey" id="bZu-r8-Vl6" customClass="GLATableProjectRowView">
-                                        <rect key="frame" x="1" y="39" width="287" height="39"/>
+                                        <rect key="frame" x="1" y="77" width="287" height="39"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <animations/>
                                     </customView>
