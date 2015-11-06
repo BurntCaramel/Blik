@@ -86,10 +86,10 @@ private func attributedStringForCollectionGroup(collection: GLACollection) -> NS
 				self.assistant = nil
 				
 				let assistant = ProjectHighlightsAssistant(project: project, projectManager: GLAProjectManager.sharedProjectManager())
+				assistant.reloadItems()
 				assistant.changesNotifier = { [weak self] in
 					self?.reloadViews()
 				}
-				assistant.reloadItems()
 				
 				tableDraggingHelper = GLAArrayTableDraggingHelper(delegate: assistant)
 				

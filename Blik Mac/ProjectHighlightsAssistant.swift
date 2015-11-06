@@ -53,6 +53,7 @@ public enum HighlightItemDetails {
 		primaryFoldersUser = projectManager.usePrimaryFoldersForProject(project)
 		
 		collectedFilesSetting = GLACollectedFilesSetting()
+		collectedFilesSetting.defaultURLResourceKeysToRequest = [NSURLLocalizedNameKey, NSURLIsDirectoryKey, NSURLIsPackageKey]
 		collectedFilesSettingObserver = AnyNotificationObserver(object: collectedFilesSetting)
 		
 		super.init()
@@ -123,10 +124,8 @@ public enum HighlightItemDetails {
 		
 		
 		var allCollectedFiles = [GLACollectedFile]()
-		allCollectedFiles.appendContentsOf(
-			allHighlightedItems.lazy.map({ self.collectedFileForHighlightedItem($0) }).filter({ $0 != nil }).map({ $0! })
-		)
-		allCollectedFiles.appendContentsOf(primaryFolders)
+		allCollectedFiles += allHighlightedItems.lazy.map(collectedFileForHighlightedItem).filter({ $0 != nil }).map({ $0! })
+		allCollectedFiles += primaryFolders
 		
 		collectedFilesSetting.startAccessingCollectedFilesStoppingRemainders(allCollectedFiles)
 		
@@ -142,9 +141,9 @@ public enum HighlightItemDetails {
 		let nc = NSNotificationCenter.defaultCenter()
 		var collectionObservers = [AnyObject]()
 		
-		let collectionUUIDs = Set<NSUUID>(ungroupedHighlightedItems.lazy.map({ $0.holdingCollectionUUID }))
+		let collectionUUIDs = Set<NSUUID>(allHighlightedItems.lazy.map({ $0.holdingCollectionUUID }))
 		
-		let notificationBlock: (NSNotification) -> () = { [weak self] _ in
+		let notificationBlock: (NSNotification) -> () = { [weak self] notification in
 			self?.reloadItems()
 		}
 		func addObserverForName(name: String, object: AnyObject) {
@@ -160,7 +159,7 @@ public enum HighlightItemDetails {
 			addObserverForName(GLACollectionFilesListDidChangeNotification, object: collectionNotifier)
 		}
 		
-		//addObserverForName(GLAProjectCollectionsDidChangeNotification, object: pm.notificationObjectForProjectUUID(project.UUID))
+		addObserverForName(GLAProjectCollectionsDidChangeNotification, object: pm.notificationObjectForProjectUUID(project.UUID))
 		
 		self.collectionObservers = collectionObservers
 	}
@@ -214,7 +213,7 @@ public enum HighlightItemDetails {
 					if let
 						isDirectoryValue = collectedFilesSetting.copyValueForURLResourceKey(NSURLIsDirectoryKey, forCollectedFile: collectedFile) as? NSNumber,
 						isPackageValue = collectedFilesSetting.copyValueForURLResourceKey(NSURLIsPackageKey, forCollectedFile: collectedFile) as? NSNumber {
-							isFolder = (true == isDirectoryValue && false == isPackageValue)
+							isFolder = (isDirectoryValue.boolValue && !isPackageValue.boolValue)
 					}
 				}
 			}
