@@ -143,7 +143,7 @@ private func attributedStringForCollectionGroup(collection: GLACollection) -> NS
 		let nc = NSNotificationCenter.defaultCenter()
 		
 		nc.addObserverForName(GLACollectedFileMenuCreatorNeedsUpdateNotification, object: collectedFileMenuCreator, queue: nil) { _ in
-			// TODO:
+			self.updateMenu(self.contextualMenu)
 		}
 		self.collectedFileMenuCreator = collectedFileMenuCreator
 		
@@ -264,10 +264,8 @@ extension ProjectHighlightsViewController {
 		guard let source = clickedItem else { return }
 		
 		switch source {
-		case let .Item(highlightedItem, _):
-			if let highlightedCollectedFile = highlightedItem as? GLAHighlightedCollectedFile {
-				projectManager.openHighlightedCollectedFile(highlightedCollectedFile, behaviour: behaviour)
-			}
+		case let .Item(highlightedCollectedFile as GLAHighlightedCollectedFile, _):
+			projectManager.openHighlightedCollectedFile(highlightedCollectedFile, behaviour: behaviour)
 		case let .MasterFolder(collectedFolder):
 			projectManager.openCollectedFile(collectedFolder, behaviour: behaviour)
 		default:
@@ -292,6 +290,24 @@ extension ProjectHighlightsViewController {
 		GLAFileOpenerApplicationFinder.openFileURLs([fileURL], withApplicationURL: applicationURL, useSecurityScope: true)
 	}
 	
+	@IBAction func changePreferredOpenerApplication(menuItem: NSMenuItem) {
+		guard let applicationURL = menuItem.representedObject as? NSURL? else { return }
+	
+		guard let
+			source = clickedItem,
+			case let HighlightItemSource.Item(highlightedCollectedFile as GLAHighlightedCollectedFile, _) = source
+			else { return }
+		
+		projectManager.editHighlightedCollectedFile(highlightedCollectedFile) { editor in
+			if let applicationURL = applicationURL {
+				editor.applicationToOpenFile = GLACollectedFile(fileURL: applicationURL)
+			}
+			else {
+				editor.applicationToOpenFile = nil;
+			}
+		}
+	}
+	
 	@IBAction func showItemInFinder(menuItem: NSMenuItem) {
 		openClickedItemWithBehaviour(.ShowInFinder)
 	}
@@ -299,15 +315,11 @@ extension ProjectHighlightsViewController {
 	@IBAction func changeCustomNameOfClickedItem(sender: AnyObject?) {
 		guard let
 			row = clickedRow,
-			source = clickedItem
+			source = clickedItem,
+			case let HighlightItemSource.Item(highlightedItem, _) = source
 			else { return }
 		
-		switch source {
-		case let .Item(highlightedItem, _):
-			chooseCustomNameForHighlightedItem(highlightedItem, atRow: row)
-		default:
-			break
-		}
+		chooseCustomNameForHighlightedItem(highlightedItem, atRow: row)
 	}
 	
 	private func chooseCustomNameForHighlightedItem(highlightedItem: GLAHighlightedItem, atRow row: Int) {
