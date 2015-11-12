@@ -15,7 +15,7 @@
 #import "GLAUIStyle.h"
 
 
-@interface GLAProjectMenuController () <GLACollectedFileListHelperDelegate>
+@interface GLAProjectMenuController () <GLACollectedFileListHelperDelegate, NSMenuDelegate>
 
 @property(nonatomic) id<GLALoadableArrayUsing> highlightsUser;
 @property(nonatomic) id<GLALoadableArrayUsing> primaryFoldersUser;

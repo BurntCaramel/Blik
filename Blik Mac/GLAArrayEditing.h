@@ -61,8 +61,8 @@ typedef __nullable id (^ GLAArrayChildVisitorBlock)(id child);
 
 @property(readonly, nonatomic) BOOL finishedLoading;
 
-- (NSArray *)copyChildrenLoadingIfNeeded;
-- (id<GLAArrayInspecting>)inspectLoadingIfNeeded;
+- (NSArray * _Nullable)copyChildrenLoadingIfNeeded;
+- (id<GLAArrayInspecting> _Nullable)inspectLoadingIfNeeded;
 - (void)whenLoaded:(void (^)(id<GLAArrayInspecting>))block; // completion:( void (^ __nullable )())completitionBlock;
 
 // finishedLoading must be true before calling this method:

@@ -504,6 +504,54 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 			return cellView
 		}
 	}
+	
+	public func tableView(tableView: NSTableView, pasteboardWriterForRow row:Int) -> NSPasteboardWriting? {
+		guard let assistant = assistant else { return nil }
+		
+		switch assistant[row] {
+		case let .Item(highlightedItem, isGrouped: false):
+			return highlightedItem
+		default:
+			return nil
+		}
+	}
+	
+	public func tableView(tableView: NSTableView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forRowIndexes rowIndexes: NSIndexSet) {
+		tableDraggingHelper?.tableView(tableView, draggingSession: session, willBeginAtPoint: screenPoint, forRowIndexes: rowIndexes)
+	}
+	
+	public func tableView(tableView: NSTableView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
+		tableDraggingHelper?.tableView(tableView, draggingSession: session, endedAtPoint: screenPoint, operation: operation)
+	}
+	
+	public func tableView(tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: NSInteger, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+		guard let
+			assistant = assistant,
+			tableDraggingHelper = tableDraggingHelper
+			else { return .None }
+		
+		switch assistant[row] {
+		case .Item(_, isGrouped: false):
+			// FIXME:
+			// <= Less than or equal to allow dragging to bottom of highlighted items.
+			return tableDraggingHelper.tableView(tableView, validateDrop: info, proposedRow: row, proposedDropOperation: dropOperation)
+		default:
+			break
+		}
+		
+		guard row > 0 else { return .None }
+		
+		switch assistant[row - 1] {
+		case .Item(_, isGrouped: false):
+			return tableDraggingHelper.tableView(tableView, validateDrop: info, proposedRow: row, proposedDropOperation: dropOperation)
+		default:
+			return .None
+		}
+	}
+	
+	public func tableView(tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: NSInteger, dropOperation: NSTableViewDropOperation) -> Bool {
+	return tableDraggingHelper!.tableView(tableView, acceptDrop: info, row: row, dropOperation: dropOperation)
+	}
 }
 
 extension ProjectHighlightsViewController: NSMenuDelegate {

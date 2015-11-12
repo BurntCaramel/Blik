@@ -87,7 +87,7 @@
 	return arrayEditor;
 }
 
-- (NSArray *)copyChildrenLoadingIfNeeded
+- (NSArray * _Nullable)copyChildrenLoadingIfNeeded
 {
 	GLAArrayEditor *arrayEditor = [self loadArrayEditor];
 	if (!arrayEditor) {
@@ -97,7 +97,7 @@
 	return [arrayEditor copyChildren];
 }
 
-- (id<GLAArrayInspecting>)inspectLoadingIfNeeded
+- (id<GLAArrayInspecting> _Nullable)inspectLoadingIfNeeded
 {
 	GLAArrayEditor *arrayEditor = [self loadArrayEditor];
 	if (!arrayEditor) {

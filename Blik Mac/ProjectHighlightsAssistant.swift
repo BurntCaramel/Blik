@@ -16,10 +16,36 @@ public enum HighlightItemSource {
 	case MasterFolder(GLACollectedFile)
 }
 
+extension HighlightItemSource {
+	var UUID: NSUUID {
+		switch self {
+		case let .Item(item, _):
+			return item.UUID
+		case let .GroupedCollectionHeading(collection):
+			return collection.UUID
+		case let .MasterFolder(folder):
+			return folder.UUID
+		}
+	}
+}
+
 public enum HighlightItemDetails {
 	case Item(isGrouped: Bool, displayName: String?, isFolder: Bool?, collection: GLACollection?)
 	case GroupedCollectionHeading(GLACollection)
 	case MasterFolder(displayName: String?)
+}
+
+extension HighlightItemDetails {
+	var displayName: String? {
+		switch self {
+		case let .Item(_, displayName, _, _):
+			return displayName
+		case let .GroupedCollectionHeading(collection):
+			return collection.name
+		case let .MasterFolder(displayName):
+			return displayName
+		}
+	}
 }
 
 @objc public class ProjectHighlightsAssistant: NSObject {
@@ -330,14 +356,11 @@ extension ProjectHighlightsAssistant: GLAArrayTableDraggingHelperDelegate {
 		return GLAHighlightedCollectedFile.canCopyObjectsFromPasteboard(draggingPasteboard)
 	}
 	
-	public func arrayEditorTableDraggingHelper(tableDraggingHelper: GLAArrayTableDraggingHelper, makeChangesUsingEditingBlock editBlock: GLAArrayEditingBlock) {
-		highlightedItemsUser.editChildrenUsingBlock(editBlock)
-	}
-	
 	public func arrayEditorTableDraggingHelper(tableDraggingHelper: GLAArrayTableDraggingHelper, outputIndexesForTableRows rowIndexes: NSIndexSet) -> NSIndexSet {
 		let mutableIndexes = rowIndexes.mutableCopy() as! NSMutableIndexSet
 		var itemIndex = 0;
 		for highlightedItem in allHighlightedItems {
+			// Advance over grouped items
 			if highlightedItemIsGrouped(highlightedItem) {
 				mutableIndexes.shiftIndexesStartingAtIndex(itemIndex, by: 1)
 			}
@@ -346,5 +369,9 @@ extension ProjectHighlightsAssistant: GLAArrayTableDraggingHelperDelegate {
 		}
 		
 		return mutableIndexes
+	}
+	
+	public func arrayEditorTableDraggingHelper(tableDraggingHelper: GLAArrayTableDraggingHelper, makeChangesUsingEditingBlock editBlock: GLAArrayEditingBlock) {
+		highlightedItemsUser.editChildrenUsingBlock(editBlock)
 	}
 }

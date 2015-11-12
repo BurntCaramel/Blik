@@ -8,7 +8,12 @@
 
 #import "GLAStatusItemController.h"
 #import "GLAProjectsListMenuController.h"
+#import "GLAProjectManager.h"
+#import "GLAMainSectionNavigator.h"
+#import "Blik-Swift.h"
 
+
+#define USE_OLD_CONTROLLER 0
 
 NSString *GLAStatusItemShowsItem = @"statusItem.showsItem";
 
@@ -17,7 +22,11 @@ NSString *GLAStatusItemShowsItem = @"statusItem.showsItem";
 
 @property(readwrite, nonatomic) BOOL showsItem;
 
+#if USE_OLD_CONTROLLER
 @property(nonatomic) GLAProjectsListMenuController *menuController;
+#else
+@property(nonatomic) LauncherMenuController *menuController;
+#endif
 
 @end
 
@@ -95,8 +104,13 @@ NSString *GLAStatusItemShowsItem = @"statusItem.showsItem";
 	[statusItem sendActionOn:NSLeftMouseUpMask];
 	
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Projects"];
-	_menuController = [[GLAProjectsListMenuController alloc] initWithMenu:menu];
 	(statusItem.menu) = menu;
+	
+#if USE_OLD_CONTROLLER
+	_menuController = [[GLAProjectsListMenuController alloc] initWithMenu:menu];
+#else
+	_menuController = [[LauncherMenuController alloc] initWithMenu:menu projectManager:[GLAProjectManager sharedProjectManager] navigator:[GLAMainSectionNavigator sharedMainSectionNavigator]];
+#endif
 	
 	(self.statusItem) = statusItem;
 }

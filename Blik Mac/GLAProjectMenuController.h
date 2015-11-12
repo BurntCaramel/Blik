@@ -10,7 +10,7 @@
 #import "GLAProject.h"
 
 
-@interface GLAProjectMenuController : NSObject <NSMenuDelegate>
+@interface GLAProjectMenuController : NSObject
 
 - (instancetype)initWithMenu:(NSMenu *)menu project:(GLAProject *)project;
 
