@@ -40,6 +40,30 @@ extension Item: UIChoiceRepresentative {
 		}
 	}
 	
+	var attributes: [String: AnyObject]? {
+		switch self {
+		/*case let .Highlight(.GroupedCollectionHeading(collection), _):
+			let style = GLAUIStyle.activeStyle()
+			return [
+				//NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleThick.rawValue,
+				//NSUnderlineColorAttributeName: style.colorForCollectionColor(collection.color),
+				NSFontAttributeName: style.highlightGroupFont
+			]*/
+		case let .Highlight(itemSource, _):
+			switch itemSource {
+			case .GroupedCollectionHeading, .MasterFoldersHeading:
+				let style = GLAUIStyle.activeStyle()
+				return [
+					NSFontAttributeName: style.highlightGroupFont
+				]
+			default:
+				return nil
+			}
+		default:
+			return nil
+		}
+	}
+	
 	var enabled: Bool {
 		switch self {
 		case let .Highlight(_, details):
@@ -101,6 +125,12 @@ public class LauncherProjectMenuController: NSObject {
 			}
 			
 			return (action, self)
+		}
+		
+		menuAssistant.customization.additionalSetUp = { item, menuItem in
+			if let attributes = item.attributes {
+				menuItem.attributedTitle = NSAttributedString(string: item.title.uppercaseString, attributes: attributes)
+			}
 		}
 	}
 	
