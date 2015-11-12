@@ -60,7 +60,7 @@ public class LauncherMenuController: NSObject {
 		
 		menu.delegate = self
 		
-		menuAssistant.customization.actionAndTarget = { item in
+		menuAssistant.customization.actionAndTarget = { [weak self] (item) in
 			let action: Selector
 			
 			switch item {
@@ -154,7 +154,7 @@ extension LauncherMenuController: NSMenuDelegate {
 			}()
 			
 			let menuController = projectMenuControllerCache.objectForKey(project.UUID) as! LauncherProjectMenuController? ?? {
-				let menuController = LauncherProjectMenuController(menu: submenu, project: project, projectManager: projectManager)
+				let menuController = LauncherProjectMenuController(menu: submenu, project: project, projectManager: projectManager, navigator: navigator)
 				projectMenuControllerCache.setObject(menuController, forKey: project.UUID)
 				return menuController
 			}()

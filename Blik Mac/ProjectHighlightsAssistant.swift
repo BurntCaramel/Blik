@@ -30,20 +30,31 @@ extension HighlightItemSource {
 }
 
 public enum HighlightItemDetails {
-	case Item(isGrouped: Bool, displayName: String?, isFolder: Bool?, collection: GLACollection?)
+	case Item(isGrouped: Bool, displayName: String?, isFolder: Bool?, icon: NSImage?, collection: GLACollection?)
 	case GroupedCollectionHeading(GLACollection)
-	case MasterFolder(displayName: String?)
+	case MasterFolder(displayName: String?, icon: NSImage?)
 }
 
 extension HighlightItemDetails {
 	var displayName: String? {
 		switch self {
-		case let .Item(_, displayName, _, _):
+		case let .Item(_, displayName, _, _, _):
 			return displayName
 		case let .GroupedCollectionHeading(collection):
 			return collection.name
-		case let .MasterFolder(displayName):
+		case let .MasterFolder(displayName, _):
 			return displayName
+		}
+	}
+	
+	var icon: NSImage? {
+		switch self {
+		case let .Item(_, _, _, icon, _):
+			return icon
+		case let .MasterFolder(_, icon):
+			return icon
+		default:
+			return nil
 		}
 	}
 }
@@ -51,6 +62,7 @@ extension HighlightItemDetails {
 @objc public class ProjectHighlightsAssistant: NSObject {
 	let project: GLAProject
 	let projectManager: GLAProjectManager
+	let wantsIcons: Bool
 	
 	private let collectedFilesSetting: GLACollectedFilesSetting
 	private let collectedFilesSettingObserver: AnyNotificationObserver
@@ -71,15 +83,21 @@ extension HighlightItemDetails {
 	
 	public var changesNotifier: (() -> ())?
 	
-	init(project: GLAProject, projectManager: GLAProjectManager) {
+	init(project: GLAProject, projectManager: GLAProjectManager, wantsIcons: Bool = false) {
 		self.project = project
 		self.projectManager = projectManager
+		self.wantsIcons = wantsIcons
+		
 		highlightedItemsUser = projectManager.useHighlightsForProject(project)
 		collectionsUser = projectManager.useCollectionsForProject(project)
 		primaryFoldersUser = projectManager.usePrimaryFoldersForProject(project)
 		
 		collectedFilesSetting = GLACollectedFilesSetting()
-		collectedFilesSetting.defaultURLResourceKeysToRequest = [NSURLLocalizedNameKey, NSURLIsDirectoryKey, NSURLIsPackageKey]
+		var keysToRequest = [NSURLLocalizedNameKey, NSURLIsDirectoryKey, NSURLIsPackageKey]
+		if wantsIcons {
+			keysToRequest.append(NSURLEffectiveIconKey)
+		}
+		collectedFilesSetting.defaultURLResourceKeysToRequest = keysToRequest
 		collectedFilesSettingObserver = AnyNotificationObserver(object: collectedFilesSetting)
 		
 		super.init()
@@ -223,6 +241,7 @@ extension HighlightItemDetails {
 	private func detailsForHighlightedItem(highlightedItem: GLAHighlightedItem, isGrouped: Bool) -> HighlightItemDetails {
 		var displayName: String?
 		var isFolder: Bool?
+		var icon: NSImage?
 		var collection: GLACollection?
 		
 		if let highlightedCollectedFile = highlightedItem as? GLAHighlightedCollectedFile {
@@ -241,6 +260,8 @@ extension HighlightItemDetails {
 						isPackageValue = collectedFilesSetting.copyValueForURLResourceKey(NSURLIsPackageKey, forCollectedFile: collectedFile) as? NSNumber {
 							isFolder = (isDirectoryValue.boolValue && !isPackageValue.boolValue)
 					}
+					
+					icon = wantsIcons ? collectedFilesSetting.copyValueForURLResourceKey(NSURLEffectiveIconKey, forCollectedFile: collectedFile) as? NSImage : nil
 				}
 			}
 		}
@@ -248,7 +269,7 @@ extension HighlightItemDetails {
 			fatalError("Unknown GLAHighlightedItem type \(highlightedItem)")
 		}
 		
-		return .Item(isGrouped: isGrouped, displayName: displayName, isFolder: isFolder, collection: collection)
+		return .Item(isGrouped: isGrouped, displayName: displayName, isFolder: isFolder, icon: icon, collection: collection)
 	}
 	
 	public subscript(index: Int) -> HighlightItemSource {
@@ -297,8 +318,9 @@ extension HighlightItemDetails {
 			return .GroupedCollectionHeading(collection)
 		case let .MasterFolder(collectedFolder):
 			let displayName = self.collectedFilesSetting.copyValueForURLResourceKey(NSURLLocalizedNameKey, forCollectedFile: collectedFolder) as? String
+			let icon = wantsIcons ? collectedFilesSetting.copyValueForURLResourceKey(NSURLEffectiveIconKey, forCollectedFile: collectedFolder) as? NSImage : nil
 			
-			return .MasterFolder(displayName: displayName)
+			return .MasterFolder(displayName: displayName, icon: icon)
 		}
 	}
 	
@@ -320,7 +342,7 @@ extension HighlightItemDetails {
 	}
 	
 	var details: AnyRandomAccessCollection<HighlightItemDetails> {
-		return AnyRandomAccessCollection(self.lazy.map {
+		return AnyRandomAccessCollection(lazy.map {
 			switch $0 {
 			case let .Item(highlightedItem, isGrouped):
 				return self.detailsForHighlightedItem(highlightedItem, isGrouped: isGrouped)
@@ -328,8 +350,9 @@ extension HighlightItemDetails {
 				return .GroupedCollectionHeading(collection)
 			case let .MasterFolder(collectedFolder):
 				let displayName = self.collectedFilesSetting.copyValueForURLResourceKey(NSURLLocalizedNameKey, forCollectedFile: collectedFolder) as? String
+				let icon = self.wantsIcons ? self.collectedFilesSetting.copyValueForURLResourceKey(NSURLEffectiveIconKey, forCollectedFile: collectedFolder) as? NSImage : nil
 				
-				return .MasterFolder(displayName: displayName)
+				return .MasterFolder(displayName: displayName, icon: icon)
 			}
 		})
 	}

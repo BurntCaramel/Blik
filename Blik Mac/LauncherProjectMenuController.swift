@@ -48,19 +48,37 @@ extension Item: UIChoiceRepresentative {
 			return true
 		}
 	}
+	
+	var icon: NSImage? {
+		switch self {
+		case let .Highlight(_, details):
+			return details.icon.map { image in
+				image.size = NSSize(width: 16, height: 16)
+				return image
+			}
+		default:
+			return nil
+		}
+	}
 }
 
-public class LauncherProjectMenuController {
+public class LauncherProjectMenuController: NSObject {
 	public let project: GLAProject
+	private let projectManager: GLAProjectManager
+	private let navigator: GLAMainSectionNavigator
 	private let highlightsAssistant: ProjectHighlightsAssistant
 	private let menuAssistant: MenuAssistant<Item>
 	
-	public init(menu: NSMenu, project: GLAProject, projectManager: GLAProjectManager) {
+	public init(menu: NSMenu, project: GLAProject, projectManager: GLAProjectManager, navigator: GLAMainSectionNavigator) {
 		self.project = project
+		self.projectManager = projectManager
+		self.navigator = navigator
 		
-		highlightsAssistant = ProjectHighlightsAssistant(project: project, projectManager: projectManager)
+		highlightsAssistant = ProjectHighlightsAssistant(project: project, projectManager: projectManager, wantsIcons: true)
 		
 		menuAssistant = MenuAssistant(menu: menu)
+		
+		super.init()
 		
 		highlightsAssistant.reloadItems()
 		highlightsAssistant.changesNotifier = { [weak self] in
@@ -68,6 +86,22 @@ public class LauncherProjectMenuController {
 		}
 		
 		menuAssistant.customization.enabled = { $0.enabled }
+		menuAssistant.customization.image = { $0.icon }
+		
+		menuAssistant.customization.actionAndTarget = { [weak self] (item) in
+			let action: Selector
+			
+			switch item {
+			case .Highlight:
+				action = "openHighlight:"
+			case .Collection:
+				action = "openCollection:"
+			case .WorkOnNow:
+				action = "workOnNow:"
+			}
+			
+			return (action, self)
+		}
 	}
 	
 	public var menu: NSMenu {
@@ -92,5 +126,46 @@ public class LauncherProjectMenuController {
 	
 	public func update() {
 		reloadMenu()
+	}
+}
+
+extension LauncherProjectMenuController {
+	private func activateApplication() {
+		NSApp.activateIgnoringOtherApps(true)
+	}
+	
+	@IBAction func openHighlight(menuItem: NSMenuItem) {
+		guard let
+			item = menuAssistant.itemRepresentativeForMenuItem(menuItem),
+			case let .Highlight(highlightSource, _) = item
+			else { return }
+		
+		switch highlightSource {
+		case let .Item(highlightedCollectedFile as GLAHighlightedCollectedFile, _):
+			projectManager.openHighlightedCollectedFile(highlightedCollectedFile, behaviour: OpeningBehaviour(modifierFlags: NSEvent.modifierFlags()))
+		case let .GroupedCollectionHeading(collection):
+			navigator.goToCollection(collection)
+			
+			activateApplication()
+		case let .MasterFolder(collectedFolder):
+			projectManager.openCollectedFile(collectedFolder, behaviour: OpeningBehaviour(modifierFlags: NSEvent.modifierFlags()))
+		default:
+			NSBeep()
+		}
+	}
+	
+	@IBAction func openCollection(menuItem: NSMenuItem) {
+		guard let
+			item = menuAssistant.itemRepresentativeForMenuItem(menuItem),
+			case let .Collection(collection) = item
+			else { return }
+	
+		navigator.goToCollection(collection)
+	
+		activateApplication()
+	}
+	
+	@IBAction func workOnNow(menuItem: NSMenuItem) {
+		projectManager.changeNowProject(project)
 	}
 }

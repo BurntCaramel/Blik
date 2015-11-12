@@ -253,7 +253,7 @@ extension ProjectHighlightsViewController {
 	}
 	
 	var clickedItemDetails: HighlightItemDetails? {
-		return clickedRow.flatMap({ assistant?.detailsAtIndex($0) })
+		return clickedRow.flatMap({ assistant?.details[AnyRandomAccessIndex($0)] })
 	}
 	
 	var clickedFileURL: NSURL? {
@@ -435,8 +435,8 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 		autoreleasepool {
 			let cellView: NSTableCellView
 			
-			switch assistant!.detailsAtIndex(row) {
-			case let .Item(_, displayName, isFolder, collection):
+			switch assistant!.details[AnyRandomAccessIndex(row)] {
+			case let .Item(_, displayName, isFolder, _, collection):
 				measuringHighlightTableCellView.removeFromSuperview()
 				
 				setUpTableCellView(measuringHighlightTableCellView, displayName: displayName, isFolder: isFolder, collection: collection)
@@ -445,7 +445,7 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 			case .GroupedCollectionHeading(_):
 				height = collectionGroupHeight
 				return
-			case let .MasterFolder(displayName):
+			case let .MasterFolder(displayName, _):
 				measuringHighlightTableCellView.removeFromSuperview()
 				
 				setUpTableCellView(measuringHighlightTableCellView, displayName: displayName, isFolder: true, collection: nil)
@@ -483,8 +483,8 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 	}
 	
 	public func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: NSInteger) -> NSView? {
-		switch assistant!.detailsAtIndex(row) {
-		case let .Item(_, displayName, isFolder, collection):
+		switch assistant!.details[AnyRandomAccessIndex(row)] {
+		case let .Item(_, displayName, isFolder, _, collection):
 			let cellView = tableView.makeViewWithIdentifier("highlightedItem", owner: nil) as! GLAHighlightsTableCellView
 			
 			setUpTableCellView(cellView, displayName: displayName, isFolder: isFolder, collection: collection)
@@ -496,7 +496,7 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 			cellView.textField!.attributedStringValue = attributedStringForCollectionGroup(collection)
 			
 			return cellView
-		case let .MasterFolder(displayName):
+		case let .MasterFolder(displayName, _):
 			let cellView = tableView.makeViewWithIdentifier("highlightedItem", owner: nil) as! GLAHighlightsTableCellView
 			
 			setUpTableCellView(cellView, displayName: displayName, isFolder: true, collection: nil)
