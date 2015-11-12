@@ -13,8 +13,11 @@ import BurntFoundation
 public enum HighlightItemSource {
 	case Item(item: GLAHighlightedItem, isGrouped: Bool)
 	case GroupedCollectionHeading(GLACollection)
+	case MasterFoldersHeading
 	case MasterFolder(GLACollectedFile)
 }
+
+private let masterFoldersHeadingUUID = NSUUID()
 
 extension HighlightItemSource {
 	var UUID: NSUUID {
@@ -23,6 +26,8 @@ extension HighlightItemSource {
 			return item.UUID
 		case let .GroupedCollectionHeading(collection):
 			return collection.UUID
+		case .MasterFoldersHeading:
+			return masterFoldersHeadingUUID
 		case let .MasterFolder(folder):
 			return folder.UUID
 		}
@@ -32,6 +37,7 @@ extension HighlightItemSource {
 public enum HighlightItemDetails {
 	case Item(isGrouped: Bool, displayName: String?, isFolder: Bool?, icon: NSImage?, collection: GLACollection?)
 	case GroupedCollectionHeading(GLACollection)
+	case MasterFoldersHeading
 	case MasterFolder(displayName: String?, icon: NSImage?)
 }
 
@@ -42,6 +48,8 @@ extension HighlightItemDetails {
 			return displayName
 		case let .GroupedCollectionHeading(collection):
 			return collection.name
+		case .MasterFoldersHeading:
+			return NSLocalizedString("Master Folders", comment: "Display name for Master Folders heading")
 		case let .MasterFolder(displayName, _):
 			return displayName
 		}
@@ -226,10 +234,12 @@ extension HighlightItemDetails {
 		var count: Int = 0
 		
 		count += allHighlightedItems.count
-		count += primaryFolders?.count ?? 0
 		
-		// For collection group headers
+		// For collection group headings
 		count += groupedCollectionUUIDsToItems.count
+		
+		// Add master folders with heading
+		count += (primaryFolders?.count).map({ $0 + 1 }) ?? 0
 		
 		return count
 	}
@@ -304,6 +314,12 @@ extension HighlightItemDetails {
 			}
 		}
 		
+		if index == groupedItemIndex {
+			return .MasterFoldersHeading
+		}
+		
+		groupedItemIndex++
+		
 		// Master folders
 		let masterFolderIndex = index - groupedItemIndex
 		let collectedFolder = primaryFolders![masterFolderIndex]
@@ -316,6 +332,8 @@ extension HighlightItemDetails {
 			return self.detailsForHighlightedItem(highlightedItem, isGrouped: isGrouped)
 		case let .GroupedCollectionHeading(collection):
 			return .GroupedCollectionHeading(collection)
+		case .MasterFoldersHeading:
+			return .MasterFoldersHeading
 		case let .MasterFolder(collectedFolder):
 			let displayName = self.collectedFilesSetting.copyValueForURLResourceKey(NSURLLocalizedNameKey, forCollectedFile: collectedFolder) as? String
 			let icon = wantsIcons ? collectedFilesSetting.copyValueForURLResourceKey(NSURLEffectiveIconKey, forCollectedFile: collectedFolder) as? NSImage : nil
@@ -348,6 +366,8 @@ extension HighlightItemDetails {
 				return self.detailsForHighlightedItem(highlightedItem, isGrouped: isGrouped)
 			case let .GroupedCollectionHeading(collection):
 				return .GroupedCollectionHeading(collection)
+			case .MasterFoldersHeading:
+				return .MasterFoldersHeading
 			case let .MasterFolder(collectedFolder):
 				let displayName = self.collectedFilesSetting.copyValueForURLResourceKey(NSURLLocalizedNameKey, forCollectedFile: collectedFolder) as? String
 				let icon = self.wantsIcons ? self.collectedFilesSetting.copyValueForURLResourceKey(NSURLEffectiveIconKey, forCollectedFile: collectedFolder) as? NSImage : nil

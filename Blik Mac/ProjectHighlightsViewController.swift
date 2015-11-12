@@ -32,6 +32,28 @@ private func attributedStringForName(name: String) -> NSAttributedString {
 	return NSAttributedString(string: name, attributes: titleAttributes)
 }
 
+private func attributedStringForMasterFoldersHeading() -> NSAttributedString {
+	let activeStyle = GLAUIStyle.activeStyle()
+	
+	let titleFont = activeStyle.highlightGroupFont
+	
+	let paragraphStyle = NSMutableParagraphStyle()
+	paragraphStyle.alignment = NSRightTextAlignment
+	paragraphStyle.maximumLineHeight = collectionGroupHeight
+	
+	let textColor = activeStyle.primaryFoldersItemColor
+	
+	let titleAttributes = [
+		NSFontAttributeName: titleFont,
+		NSParagraphStyleAttributeName: paragraphStyle,
+		NSForegroundColorAttributeName: textColor
+	];
+	
+	let displayName = NSLocalizedString("Master Folders", comment: "Display name for Master Folders heading")
+	
+	return NSAttributedString(string: displayName.uppercaseString, attributes: titleAttributes)
+}
+
 private func attributedStringForCollectionGroup(collection: GLACollection) -> NSAttributedString {
 	let activeStyle = GLAUIStyle.activeStyle()
 	
@@ -442,7 +464,7 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 				setUpTableCellView(measuringHighlightTableCellView, displayName: displayName, isFolder: isFolder, collection: collection)
 				
 				cellView = measuringHighlightTableCellView
-			case .GroupedCollectionHeading(_):
+			case .GroupedCollectionHeading(_), .MasterFoldersHeading:
 				height = collectionGroupHeight
 				return
 			case let .MasterFolder(displayName, _):
@@ -494,6 +516,12 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 			let cellView = tableView.makeViewWithIdentifier("collectionGroup", owner: nil) as! NSTableCellView
 			
 			cellView.textField!.attributedStringValue = attributedStringForCollectionGroup(collection)
+			
+			return cellView
+		case .MasterFoldersHeading:
+			let cellView = tableView.makeViewWithIdentifier("collectionGroup", owner: nil) as! NSTableCellView
+			
+			cellView.textField!.attributedStringValue = attributedStringForMasterFoldersHeading()
 			
 			return cellView
 		case let .MasterFolder(displayName, _):
