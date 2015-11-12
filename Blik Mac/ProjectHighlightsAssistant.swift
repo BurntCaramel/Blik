@@ -239,7 +239,7 @@ extension HighlightItemDetails {
 		count += groupedCollectionUUIDsToItems.count
 		
 		// Add master folders with heading
-		count += (primaryFolders?.count).map({ $0 + 1 }) ?? 0
+		count += (primaryFolders?.count).map({ ($0 > 0) ? ($0 + 1) : 0 }) ?? 0
 		
 		return count
 	}
@@ -314,7 +314,7 @@ extension HighlightItemDetails {
 			}
 		}
 		
-		if index == groupedItemIndex {
+		if index == groupedItemIndex && primaryFolders?.count > 0 {
 			return .MasterFoldersHeading
 		}
 		
