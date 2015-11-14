@@ -68,32 +68,34 @@ extension HighlightItemDetails {
 }
 
 @objc public class ProjectHighlightsAssistant: NSObject {
-	let project: GLAProject
-	let projectManager: GLAProjectManager
-	let wantsIcons: Bool
+	private var project: GLAProject
+	private let projectManager: GLAProjectManager
+	private let navigator: GLAMainSectionNavigator
+	private let wantsIcons: Bool
+	
+	public var changesNotifier: (() -> ())?
 	
 	private let collectedFilesSetting: GLACollectedFilesSetting
 	private let collectedFilesSettingObserver: AnyNotificationObserver
 	
-	let highlightedItemsUser: GLALoadableArrayUsing!
-	var ungroupedHighlightedItems: [GLAHighlightedItem]!
-	var allHighlightedItems: [GLAHighlightedItem]!
+	private let highlightedItemsUser: GLALoadableArrayUsing!
+	private var ungroupedHighlightedItems: [GLAHighlightedItem]!
+	private var allHighlightedItems: [GLAHighlightedItem]!
 	
-	let collectionsUser: GLALoadableArrayUsing!
-	var collections: [GLACollection]!
-	var groupedCollectionUUIDs: Set<NSUUID>!
-	var groupedCollectionUUIDsToItems: [NSUUID: [GLAHighlightedItem]]!
+	private let collectionsUser: GLALoadableArrayUsing!
+	private var collections: [GLACollection]!
+	private var groupedCollectionUUIDs: Set<NSUUID>!
+	private var groupedCollectionUUIDsToItems: [NSUUID: [GLAHighlightedItem]]!
 	
-	let primaryFoldersUser: GLALoadableArrayUsing!
-	var primaryFolders: [GLACollectedFile]?
+	private let primaryFoldersUser: GLALoadableArrayUsing!
+	private var primaryFolders: [GLACollectedFile]?
 	
 	private var collectionObservers: [AnyObject]?
 	
-	public var changesNotifier: (() -> ())?
-	
-	init(project: GLAProject, projectManager: GLAProjectManager, wantsIcons: Bool = false) {
+	init(project: GLAProject, projectManager: GLAProjectManager, navigator: GLAMainSectionNavigator, wantsIcons: Bool = false) {
 		self.project = project
 		self.projectManager = projectManager
+		self.navigator = navigator
 		self.wantsIcons = wantsIcons
 		
 		highlightedItemsUser = projectManager.useHighlightsForProject(project)
@@ -137,13 +139,20 @@ extension HighlightItemDetails {
 	}
 	
 	func reloadItems() {
+		guard let project = projectManager.projectWithUUID(project.UUID) else { return }
+		self.project = project
+		
 		let allHighlightedItems = highlightedItemsUser.copyChildrenLoadingIfNeeded() as? [GLAHighlightedItem] ?? []
 		let collections = collectionsUser.copyChildrenLoadingIfNeeded() as? [GLACollection] ?? []
 		let primaryFolders = primaryFoldersUser.copyChildrenLoadingIfNeeded() as? [GLACollectedFile] ?? []
 		
 		self.collections = collections
 		
-		let groupedCollectionUUIDs = Set<NSUUID>(collections.lazy.filter({ $0.highlighted }).map({ $0.UUID }))
+		//let groupedCollectionUUIDs = Set<NSUUID>(collections.lazy.filter({ $0.highlighted }).map({ $0.UUID }))
+		var groupedCollectionUUIDs = Set<NSUUID>()
+		if project.groupHighlights {
+			groupedCollectionUUIDs.unionInPlace(collections.lazy.map({ $0.UUID }))
+		}
 		self.groupedCollectionUUIDs = groupedCollectionUUIDs
 		
 		var groupedHighlightedItems = [GLAHighlightedItem]()
@@ -209,6 +218,7 @@ extension HighlightItemDetails {
 			
 			addObserverForName(GLACollectionDidChangeNotification, object: collectionNotifier)
 			addObserverForName(GLACollectionFilesListDidChangeNotification, object: collectionNotifier)
+			addObserverForName(GLAProjectManagerAllProjectsDidChangeNotification, object: pm)
 		}
 		
 		addObserverForName(GLAProjectCollectionsDidChangeNotification, object: pm.notificationObjectForProjectUUID(project.UUID))
@@ -238,8 +248,13 @@ extension HighlightItemDetails {
 		// For collection group headings
 		count += groupedCollectionUUIDsToItems.count
 		
-		// Add master folders with heading
-		count += (primaryFolders?.count).map({ ($0 > 0) ? ($0 + 1) : 0 }) ?? 0
+		if let masterFolderCount = primaryFolders?.count where masterFolderCount > 0 {
+			count += masterFolderCount
+			// Add master folders with heading
+			if project.groupHighlights {
+				count += 1
+			}
+		}
 		
 		return count
 	}
@@ -294,7 +309,10 @@ extension HighlightItemDetails {
 		// Grouped into collections
 		var groupedItemIndex = ungroupedItemCount;
 		for collection in collections {
-			if !collection.highlighted {
+			/*if !collection.highlighted {
+				continue;
+			}*/
+			if !project.groupHighlights {
 				continue;
 			}
 			
@@ -314,11 +332,13 @@ extension HighlightItemDetails {
 			}
 		}
 		
-		if index == groupedItemIndex && primaryFolders?.count > 0 {
-			return .MasterFoldersHeading
+		if project.groupHighlights {
+			if index == groupedItemIndex && primaryFolders?.count > 0 {
+				return .MasterFoldersHeading
+			}
+			
+			groupedItemIndex++
 		}
-		
-		groupedItemIndex++
 		
 		// Master folders
 		let masterFolderIndex = index - groupedItemIndex
@@ -416,5 +436,48 @@ extension ProjectHighlightsAssistant: GLAArrayTableDraggingHelperDelegate {
 	
 	public func arrayEditorTableDraggingHelper(tableDraggingHelper: GLAArrayTableDraggingHelper, makeChangesUsingEditingBlock editBlock: GLAArrayEditingBlock) {
 		highlightedItemsUser.editChildrenUsingBlock(editBlock)
+	}
+}
+
+extension ProjectHighlightsAssistant {
+	func openItem(item: HighlightItemSource, withBehaviour behaviour: OpeningBehaviour, activateIfNeeded: Bool = false) {
+		var needsActivation = false
+		
+		switch item {
+		case let .Item(highlightedCollectedFile as GLAHighlightedCollectedFile, _):
+			projectManager.openHighlightedCollectedFile(highlightedCollectedFile, behaviour: behaviour)
+		case let .GroupedCollectionHeading(collection):
+			navigator.goToCollection(collection)
+			
+			needsActivation = activateIfNeeded
+		case .MasterFoldersHeading:
+			navigator.editPrimaryFoldersOfProject(project)
+			
+			needsActivation = activateIfNeeded
+		case let .MasterFolder(collectedFolder):
+			projectManager.openCollectedFile(collectedFolder, behaviour: behaviour)
+		default:
+			break
+		}
+		
+		if needsActivation {
+			NSApp.activateIgnoringOtherApps(true)
+		}
+	}
+	
+	func openItem(atIndex index: Index, withBehaviour behaviour: OpeningBehaviour, activateIfNeeded: Bool = false) {
+		openItem(self[index], withBehaviour: behaviour, activateIfNeeded: activateIfNeeded)
+	}
+	
+	public var canOpenAllHighlights: Bool {
+		return allHighlightedItems.count > 0
+	}
+	
+	public func openAllHighlights(behaviour: OpeningBehaviour = .Default) {
+		for highlightedItem in allHighlightedItems {
+			if let highlightedCollectedFile = highlightedItem as? GLAHighlightedCollectedFile {
+				projectManager.openHighlightedCollectedFile(highlightedCollectedFile, behaviour: behaviour)
+			}
+		}
 	}
 }

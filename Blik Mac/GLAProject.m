@@ -17,6 +17,7 @@
 @property(readwrite, nonatomic) NSDate *dateCreated;
 
 @property(readwrite, nonatomic) BOOL hideFromLauncherMenu;
+@property(readwrite, nonatomic) BOOL groupHighlights;
 
 @end
 

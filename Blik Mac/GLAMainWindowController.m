@@ -321,7 +321,7 @@
 	}
 }
 
-- (BOOL)canEditPrimaryFoldersOfViewedProject
+- (BOOL)hasViewedProject
 {
 	GLAMainSection *currentSection = (self.currentSection);
 	return ((currentSection.isEditProject) || (currentSection.isNowAndHasProject));
@@ -329,7 +329,7 @@
 
 - (IBAction)editPrimaryFoldersOfViewedProject:(id)sender
 {
-	if (!(self.canEditPrimaryFoldersOfViewedProject)) {
+	if (!(self.hasViewedProject)) {
 		return;
 	}
 	
@@ -339,15 +339,24 @@
 	[(self.mainSectionNavigator) editPrimaryFoldersOfProject:project];
 }
 
-- (BOOL)canDeleteViewedProject
+- (IBAction)toggleSeparateHighlightsIntoGroupsForViewedProject:(id)sender
 {
-	GLAMainSection *currentSection = (self.currentSection);
-	return ((currentSection.isEditProject) || (currentSection.isNowAndHasProject));
+	if (!(self.hasViewedProject)) {
+		return;
+	}
+	
+	GLAEditProjectSection *editProjectSection = (id)(self.currentSection);
+	GLAProject *project = (editProjectSection.project);
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	
+	[pm editProject:project withBlock:^(id<GLAProjectEditing>  _Nonnull projectEditor) {
+		(projectEditor.groupHighlights) = !(projectEditor.groupHighlights);
+	}];
 }
 
 - (IBAction)deleteViewedProject:(id)sender
 {
-	if ([self canDeleteViewedProject]) {
+	if ([self hasViewedProject]) {
 		GLAMainSection *currentSection = (self.currentSection);
 		if ([currentSection isKindOfClass:[GLAEditProjectSection class]]) {
 			GLAEditProjectSection *editProjectSection = (id)currentSection;
@@ -369,10 +378,10 @@
 		return [self canWorkOnEditedProjectNow];
 	}
 	else if (sel_isEqual(@selector(editPrimaryFoldersOfViewedProject:), action)) {
-		return [self canEditPrimaryFoldersOfViewedProject];
+		return [self hasViewedProject];
 	}
 	else if (sel_isEqual(@selector(deleteViewedProject:), action)) {
-		return [self canDeleteViewedProject];
+		return [self hasViewedProject];
 	}
 	else if (sel_isEqual(@selector(addNewCollectedFilesCollection:), action)) {
 		return [self canAddNewCollection];
@@ -383,6 +392,7 @@
 	
 	if ([(NSObject *)anItem isKindOfClass:[NSMenuItem class]]) {
 		NSMenuItem *menuItem = (NSMenuItem *)anItem;
+		BOOL enabled = YES;
 		BOOL stateAsBool = NO;
 		GLAMainSection *currentSection = (self.mainNavigationBarController.currentSection);
 		
@@ -392,8 +402,27 @@
 		else if (sel_isEqual(@selector(goToNowProject:), action)) {
 			stateAsBool = (currentSection.isNow);
 		}
+		else if (sel_isEqual(@selector(toggleSeparateHighlightsIntoGroupsForViewedProject:), action)) {
+			if ((currentSection.isEditProject) || (currentSection.isNowAndHasProject)) {
+				GLAEditProjectSection *editProjectSection = (id)(self.currentSection);
+				NSUUID *projectUUID = (editProjectSection.project.UUID);
+				GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+				GLAProject *project = [pm projectWithUUID:projectUUID];
+				if (project) {
+					stateAsBool = (project.groupHighlights);
+				}
+				else {
+					enabled = NO;
+				}
+			}
+			else {
+				enabled = NO;
+			}
+		}
 		
 		(menuItem.state) = stateAsBool ? NSOnState : NSOffState;
+		
+		return enabled;
 	}
 	
 	return YES;

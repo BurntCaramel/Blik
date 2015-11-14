@@ -17,6 +17,7 @@
 @property(copy, nonatomic) NSString *name;
 
 @property(nonatomic) BOOL hideFromLauncherMenu;
+@property(nonatomic) BOOL groupHighlights;
 
 @end
 
@@ -30,6 +31,7 @@
 @property(readonly, copy, nonatomic) NSString *name;
 
 @property(readonly, nonatomic) BOOL hideFromLauncherMenu;
+@property(readonly, nonatomic) BOOL groupHighlights;
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAProjectEditing> editor))editingBlock;
 

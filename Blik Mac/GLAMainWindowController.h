@@ -68,6 +68,8 @@
 - (BOOL)canEditPrimaryFoldersOfViewedProject;
 - (IBAction)editPrimaryFoldersOfViewedProject:(id)sender;
 
+- (IBAction)toggleSeparateHighlightsIntoGroupsForViewedProject:(id)sender;
+
 - (BOOL)canDeleteViewedProject;
 - (IBAction)deleteViewedProject:(id)sender;
 

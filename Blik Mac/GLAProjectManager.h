@@ -49,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)permanentlyDeleteProject:(GLAProject *)project;
 
+- (GLAProject *)editProject:(GLAProject *)project withBlock:( void( ^ )(id<GLAProjectEditing> projectEditor) )editingBlock;
+
 
 #pragma mark Now Project
 

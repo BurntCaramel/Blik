@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9060"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -125,19 +125,17 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="SmP-nQ-mkB"/>
-                            <menuItem title="Work on Now" id="3Gh-mI-doL">
-                                <string key="keyEquivalent" base64-UTF8="YES">
-DQ
-</string>
-                                <connections>
-                                    <action selector="workOnEditedProjectNow:" target="-1" id="vVn-lX-HWC"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="YWM-TE-tpN"/>
                             <menuItem title="Choose Master Folders…" id="IXk-fU-xTp">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="editPrimaryFoldersOfViewedProject:" target="-1" id="jkh-NZ-qED"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="9r7-9v-hpZ"/>
+                            <menuItem title="Separate Highlights into Groups" id="kkW-ZB-GJN">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleSeparateHighlightsIntoGroupsForViewedProject:" target="-1" id="YkT-0y-jSd"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" hidden="YES" id="yQi-bD-hRx"/>
@@ -152,13 +150,22 @@ DQ
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="7gd-3B-k1s"/>
-                            <menuItem title="Delete Project Permanently…" id="K4Z-7H-ScL">
+                            <menuItem title="Delete Project…" id="K4Z-7H-ScL">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="deleteViewedProject:" target="-1" id="Riz-cy-UXC"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="4t1-vK-tMY"/>
+                            <menuItem title="Work on Now" id="3Gh-mI-doL">
+                                <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                                <connections>
+                                    <action selector="workOnEditedProjectNow:" target="-1" id="vVn-lX-HWC"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="YWM-TE-tpN"/>
                             <menuItem title="All Projects" keyEquivalent="9" id="lyC-ZA-xy1">
                                 <connections>
                                     <action selector="goToAll:" target="-1" id="ccn-5J-0qi"/>

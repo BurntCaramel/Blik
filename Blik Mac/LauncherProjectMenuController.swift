@@ -98,7 +98,7 @@ public class LauncherProjectMenuController: NSObject {
 		self.projectManager = projectManager
 		self.navigator = navigator
 		
-		highlightsAssistant = ProjectHighlightsAssistant(project: project, projectManager: projectManager, wantsIcons: true)
+		highlightsAssistant = ProjectHighlightsAssistant(project: project, projectManager: projectManager, navigator: navigator, wantsIcons: true)
 		
 		menuAssistant = MenuAssistant(menu: menu)
 		
@@ -170,18 +170,7 @@ extension LauncherProjectMenuController {
 			case let .Highlight(highlightSource, _) = item
 			else { return }
 		
-		switch highlightSource {
-		case let .Item(highlightedCollectedFile as GLAHighlightedCollectedFile, _):
-			projectManager.openHighlightedCollectedFile(highlightedCollectedFile, behaviour: OpeningBehaviour(modifierFlags: NSEvent.modifierFlags()))
-		case let .GroupedCollectionHeading(collection):
-			navigator.goToCollection(collection)
-			
-			activateApplication()
-		case let .MasterFolder(collectedFolder):
-			projectManager.openCollectedFile(collectedFolder, behaviour: OpeningBehaviour(modifierFlags: NSEvent.modifierFlags()))
-		default:
-			NSBeep()
-		}
+		highlightsAssistant.openItem(highlightSource, withBehaviour: OpeningBehaviour(modifierFlags: NSEvent.modifierFlags()), activateIfNeeded: true)
 	}
 	
 	@IBAction func openCollection(menuItem: NSMenuItem) {

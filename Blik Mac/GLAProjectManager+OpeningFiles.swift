@@ -9,7 +9,7 @@
 import Foundation
 
 
-enum OpeningBehaviour: Int {
+public enum OpeningBehaviour: Int {
 	case Default = 0
 	case ShowInFinder = 1
 	case Edit = 2

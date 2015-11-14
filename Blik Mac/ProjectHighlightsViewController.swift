@@ -107,7 +107,7 @@ private func attributedStringForCollectionGroup(collection: GLACollection) -> NS
 			if let project = project {
 				self.assistant = nil
 				
-				let assistant = ProjectHighlightsAssistant(project: project, projectManager: GLAProjectManager.sharedProjectManager())
+				let assistant = ProjectHighlightsAssistant(project: project, projectManager: GLAProjectManager.sharedProjectManager(), navigator: GLAMainSectionNavigator.sharedMainSectionNavigator())
 				assistant.reloadItems()
 				assistant.changesNotifier = { [weak self] in
 					self?.reloadViews()
@@ -221,7 +221,7 @@ private func attributedStringForCollectionGroup(collection: GLACollection) -> NS
 			
 			tableView.reloadData()
 			
-			openAllHighlightsButton.enabled = assistant.hasUngroupedItems
+			openAllHighlightsButton.enabled = assistant.canOpenAllHighlights
 		}
 		else {
 			showInstructions()
@@ -283,16 +283,8 @@ extension ProjectHighlightsViewController {
 	}
 	
 	func openClickedItemWithBehaviour(behaviour: OpeningBehaviour) {
-		guard let source = clickedItem else { return }
-		
-		switch source {
-		case let .Item(highlightedCollectedFile as GLAHighlightedCollectedFile, _):
-			projectManager.openHighlightedCollectedFile(highlightedCollectedFile, behaviour: behaviour)
-		case let .MasterFolder(collectedFolder):
-			projectManager.openCollectedFile(collectedFolder, behaviour: behaviour)
-		default:
-			return
-		}
+		guard let clickedRow = clickedRow else { return }
+		assistant?.openItem(atIndex: clickedRow, withBehaviour: behaviour)
 	}
 	
 	@IBAction func openClickedItem(sender: AnyObject?) {
@@ -300,7 +292,7 @@ extension ProjectHighlightsViewController {
 	}
 	
 	@IBAction func openAllItems(sender: AnyObject?) {
-		
+		assistant?.openAllHighlights()
 	}
 	
 	@IBAction func openWithChosenApplication(menuItem: NSMenuItem) {
@@ -411,13 +403,14 @@ extension ProjectHighlightsViewController {
 
 extension ProjectHighlightsViewController {
 	public func updateMenu(menu: NSMenu) {
-		guard let fileURL = clickedFileURL else { return }
+		guard let fileURL = clickedFileURL else {
+			menu.removeAllItems()
+			return
+		}
 		let highlightedCollectedFile: GLAHighlightedCollectedFile? = clickedItem.flatMap {
 			switch $0 {
-			case let .Item(highlightedItem, _):
-				return highlightedItem as? GLAHighlightedCollectedFile
-			default:
-				return nil
+			case let .Item(highlightedItem as GLAHighlightedCollectedFile, _): return highlightedItem
+			default: return nil
 			}
 		}
 
@@ -558,13 +551,15 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 			tableDraggingHelper = tableDraggingHelper
 			else { return .None }
 		
-		switch assistant[row] {
-		case .Item(_, isGrouped: false):
-			// FIXME:
-			// <= Less than or equal to allow dragging to bottom of highlighted items.
-			return tableDraggingHelper.tableView(tableView, validateDrop: info, proposedRow: row, proposedDropOperation: dropOperation)
-		default:
-			break
+		if row < assistant.count {
+			switch assistant[row] {
+			case .Item(_, isGrouped: false):
+				// FIXME:
+				// <= Less than or equal to allow dragging to bottom of highlighted items.
+				return tableDraggingHelper.tableView(tableView, validateDrop: info, proposedRow: row, proposedDropOperation: dropOperation)
+			default:
+				break
+			}
 		}
 		
 		guard row > 0 else { return .None }

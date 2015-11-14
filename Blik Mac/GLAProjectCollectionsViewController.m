@@ -326,13 +326,6 @@ NSString *GLAProjectCollectionsViewControllerDidClickPrimaryFoldersNotification 
 	}
 }
 
-- (void)toggleGroupInHighlightsForCollection:(GLACollection *)collection atRow:(NSInteger)collectionRow
-{
-	[self editCollection:collection using:^(id<GLACollectionEditing> editor) {
-		(editor.highlighted) = !(editor.highlighted);
-	}];
-}
-
 - (void)deleteCollection:(GLACollection *)collection atRow:(NSInteger)collectionRow
 {
 	GLAMainContentManners *manners = [GLAMainContentManners sharedManners];
