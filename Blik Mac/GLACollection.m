@@ -20,8 +20,6 @@
 @property(readwrite, nonatomic) GLACollectionColor *color;
 @property(readwrite, nonatomic) NSString *colorIdentifier;
 
-@property(readwrite, nonatomic) BOOL highlighted;
-
 @property(readwrite, copy, nonatomic) NSString *viewMode;
 
 @end

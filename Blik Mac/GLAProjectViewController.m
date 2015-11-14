@@ -9,9 +9,7 @@
 @import QuartzCore;
 #import "GLAProjectViewController.h"
 #import "GLAProjectCollectionsViewController.h"
-#import "GLAProjectHighlightsViewController.h"
 #import "GLAInstructionsViewController.h"
-//#import "GLAProjectPlanViewController.h"
 #import "GLAUIStyle.h"
 #import "GLAProjectManager.h"
 #import "GLAReminderManager.h"
