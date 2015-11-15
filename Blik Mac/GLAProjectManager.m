@@ -273,30 +273,19 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 		}];
 	}];
 	
+	GLAProjectManagerStore *store = (self.store);
+	if ([(changedProject.UUID) isEqual:(store.nowProjectUUID)]) {
+		[store requestSaveNowProject];
+	}
+	
 	return changedProject;
 }
 
 - (GLAProject *)renameProject:(GLAProject *)project toName:(NSString *)name
 {
-#if 1
 	return [self editProject:project withBlock:^(id<GLAProjectEditing> projectEditor) {
 		(projectEditor.name) = name;
 	}];
-#else
-	__block GLAProject *changedProject = nil;
-	
-	GLAProject *(^ projectReplacer)(GLAProject *project) = ^GLAProject *(GLAProject *originalProject) {
-		return [originalProject copyWithChangesFromEditing:^(id<GLAProjectEditing> editor) {
-			(editor.name) = name;
-		}];
-	};
-	
-	[self editAllProjectsUsingBlock:^(id<GLAArrayEditing> allProjectsEditor) {
-		changedProject = [allProjectsEditor replaceFirstChildWhoseKey:@"UUID" hasValue:(project.UUID) usingChangeBlock:projectReplacer];
-	}];
-	
-	return changedProject;
-#endif
 }
 
 - (GLAProject *)setProject:(GLAProject *)project hidesFromLauncherMenu:(BOOL)hidesFromLauncherMenu
@@ -320,7 +309,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	return (self.store.nowProject);
 }
 
-- (void)changeNowProject:(GLAProject __nullable *)project
+- (void)changeNowProject:(GLAProject * _Nullable)project
 {
 	GLAProjectManagerStore *store = (self.store);
 	
@@ -995,7 +984,10 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
+	
 	for (GLAProject *project in projects) {
+		
+		
 		[nc postNotificationName:GLAProjectDidChangeNotification object:[self notificationObjectForProject:project]];
 	}
 }
