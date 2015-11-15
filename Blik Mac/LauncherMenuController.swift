@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import BurntFoundation
 import BurntCocoaUI
 
 
@@ -47,6 +48,7 @@ public class LauncherMenuController: NSObject {
 	private let allProjectsUser: GLALoadableArrayUsing
 	private let menuAssistant: MenuAssistant<Item>
 	private let projectMenuControllerCache = NSCache()
+	private let projectManagerObserver: AnyNotificationObserver
 	
 	public init(menu: NSMenu, projectManager: GLAProjectManager, navigator: GLAMainSectionNavigator) {
 		self.projectManager = projectManager
@@ -55,6 +57,8 @@ public class LauncherMenuController: NSObject {
 		allProjectsUser = projectManager.useAllProjects()
 		
 		menuAssistant = MenuAssistant(menu: menu)
+		
+		projectManagerObserver = AnyNotificationObserver(object: projectManager)
 		
 		super.init()
 		
@@ -75,6 +79,18 @@ public class LauncherMenuController: NSObject {
 			return (action, self)
 		}
 		
+		menuAssistant.customization.state = { (item) in
+			switch item {
+			case let .Project(project):
+				if project.UUID == projectManager.nowProject?.UUID {
+					return NSOnState
+				}
+			default: break
+			}
+			
+			return NSOffState
+		}
+		
 		menuAssistant.customization.additionalSetUp = { item, menuItem in
 			if case .Project = item {
 				if menuItem.submenu == nil {
@@ -83,7 +99,11 @@ public class LauncherMenuController: NSObject {
 			}
 		}
 		
-		allProjectsUser.changeCompletionBlock = { [weak self] (inspector) in
+		allProjectsUser.changeCompletionBlock = { [weak self] _ in
+			self?.reloadMenu()
+		}
+		
+		projectManagerObserver.observe(GLAProjectManagerNowProjectDidChangeNotification) { [weak self] _ in
 			self?.reloadMenu()
 		}
 		
@@ -106,6 +126,8 @@ public class LauncherMenuController: NSObject {
 	}
 	
 	private func reloadMenu() {
+		projectManager.loadNowProjectIfNeeded()
+		
 		menuAssistant.menuItemRepresentatives = items
 		menuAssistant.update()
 	}
