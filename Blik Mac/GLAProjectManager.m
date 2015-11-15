@@ -254,7 +254,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (GLAProject *)createNewProjectWithName:(NSString *)name
 {
-	GLAProject *project = [[GLAProject alloc] initWithName:name dateCreated:nil];
+	GLAProject *project = [[GLAProject alloc] initWithName:name dateCreated:nil groupHighlights:YES];
 	
 	[self editAllProjectsUsingBlock:^(id<GLAArrayEditing> allProjectsEditor) {
 		[allProjectsEditor addChildren:@[project]];
@@ -1091,7 +1091,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 + (GLAProject *)newDummyProjectWithName:(NSString *)name
 {
-	GLAProject *project = [[GLAProject alloc] initWithName:name dateCreated:[NSDate date]];
+	GLAProject *project = [[GLAProject alloc] initWithName:name dateCreated:[NSDate date] groupHighlights:YES];
 	
 	return project;
 }

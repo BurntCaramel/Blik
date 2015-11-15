@@ -25,7 +25,7 @@
 @interface GLAProject : GLAModel
 
 // Designated init
-- (instancetype)initWithName:(NSString *)name dateCreated:(NSDate *)dateCreated;
+- (instancetype)initWithName:(NSString *)name dateCreated:(NSDate *)dateCreated groupHighlights:(BOOL)groupHighlights;
 
 @property(readonly, nonatomic) NSDate *dateCreated;
 @property(readonly, copy, nonatomic) NSString *name;

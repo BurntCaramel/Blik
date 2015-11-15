@@ -37,7 +37,7 @@
 	return [NSValueTransformer valueTransformerForName:GLADateRFC3339ValueTransformerName];
 }
 
-- (instancetype)initWithName:(NSString *)name dateCreated:(NSDate *)dateCreated
+- (instancetype)initWithName:(NSString *)name dateCreated:(NSDate *)dateCreated groupHighlights:(BOOL)groupHighlights
 {
 	self = [super init];
 	if (self) {
@@ -47,13 +47,14 @@
 		
 		_name = name;
 		_dateCreated = dateCreated;
+		_groupHighlights = groupHighlights;
 	}
 	return self;
 }
 
 - (instancetype)init
 {
-	return [self initWithName:nil dateCreated:nil];
+	return [self initWithName:nil dateCreated:nil groupHighlights:NO];
 }
 
 - (instancetype)copyWithChangesFromEditing:(void(^)(id<GLAProjectEditing> editor))editingBlock
