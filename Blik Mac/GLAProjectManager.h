@@ -35,8 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // All of these may be nil until they are loaded.
 // Use the notifications below to react to when they are ready.
-- (NSArray *)copyAllProjects;
-- (GLAProject * __nullable)projectWithUUID:(NSUUID *)projectUUID;
+- (NSArray * _Nullable)copyAllProjects;
+- (GLAProject * _Nullable)projectWithUUID:(NSUUID *)projectUUID;
 
 - (BOOL)editAllProjectsUsingBlock:(void (^)(id<GLAArrayEditing> allProjectsEditor))block;
 
@@ -78,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)loadCollectionsForProjectIfNeeded:(GLAProject *)project;
 - (NSArray *)copyCollectionsForProject:(GLAProject *)project;
 
-- (GLACollection * __nullable)collectionWithUUID:(NSUUID *)collectionUUID inProjectWithUUID:(NSUUID *)projectUUID;
+- (GLACollection * _Nullable)collectionWithUUID:(NSUUID *)collectionUUID inProjectWithUUID:(NSUUID *)projectUUID;
 
 - (BOOL)editCollectionsOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectionListEditor))block;
 
@@ -115,7 +115,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)hasLoadedFilesForCollection:(GLACollection *)filesListCollection;
 - (void)loadFilesListForCollectionIfNeeded:(GLACollection *)filesListCollection;
 
-- (NSArray *)copyFilesListForCollection:(GLACollection *)filesListCollection;
+- (NSArray * _Nullable)copyFilesListForCollection:(GLACollection *)filesListCollection;
 
 - (NSArray *)filterFileURLs:(NSArray *)fileURLs notInFilesListCollectionWithUUID:(NSUUID *)filesListCollectionUUID;
 

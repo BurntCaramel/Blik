@@ -157,8 +157,16 @@ extension HighlightItemDetails {
 		
 		var groupedHighlightedItems = [GLAHighlightedItem]()
 		var ungroupedHighlightedItems = [GLAHighlightedItem]()
+		var groupedCollectionUUIDsToItems = [NSUUID: [GLAHighlightedItem]]()
+		
 		for highlightedItem in allHighlightedItems {
-			if highlightedItemIsGrouped(highlightedItem) {
+			let collectionUUID = highlightedItem.holdingCollectionUUID
+			if groupedCollectionUUIDs.contains(collectionUUID) {
+				var groupItems = groupedCollectionUUIDsToItems[collectionUUID] ?? [GLAHighlightedItem]()
+				groupedCollectionUUIDsToItems[collectionUUID] = nil
+				groupItems.append(highlightedItem)
+				groupedCollectionUUIDsToItems[collectionUUID] = groupItems
+				
 				groupedHighlightedItems.append(highlightedItem)
 			}
 			else {
@@ -168,16 +176,17 @@ extension HighlightItemDetails {
 		self.ungroupedHighlightedItems = ungroupedHighlightedItems
 		self.allHighlightedItems = allHighlightedItems
 		
-		var groupedCollectionUUIDsToItems = [NSUUID: [GLAHighlightedItem]]()
-		for highlightedItem in allHighlightedItems {
-			let collectionUUID = highlightedItem.holdingCollectionUUID
-			if groupedCollectionUUIDs.contains(collectionUUID) {
-				var groupItems = groupedCollectionUUIDsToItems[collectionUUID] ?? [GLAHighlightedItem]()
-				groupedCollectionUUIDsToItems[collectionUUID] = nil
-				groupItems.append(highlightedItem)
-				groupedCollectionUUIDsToItems[collectionUUID] = groupItems
+		/*let orderedGroupedItems = groupedCollectionUUIDsToItems.keys.map { collectionUUID in
+			var items = groupedCollectionUUIDsToItems[collectionUUID]!
+			
+			guard let collection = projectManager.collectionWithUUID(collectionUUID, inProjectWithUUID: project.UUID) where collection.type == GLACollectionTypeFilesList else { return items }
+			
+			let orderedCollectedFiles = projectManager.copyFilesListForCollection(collection) as! [GLACollection]?
+			
+			items.sort { (highlightedItem1, highlightedItem2) -> Bool in
+				
 			}
-		}
+		}*/
 		self.groupedCollectionUUIDsToItems = groupedCollectionUUIDsToItems
 		
 		
