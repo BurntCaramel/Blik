@@ -12,12 +12,14 @@ import BurntCocoaUI
 
 private enum Link: String {
 	case OrganizingYourMacsFiles = "https://medium.com/burnt-caramel-apps/how-to-organize-your-mac-s-files-with-blik-4f3d28faa7cd"
+	case WhatsNew = "https://medium.com/@concreteniche/what-s-new-in-blik-for-mac-5e210ea8b9e0"
 	
 	var title: String {
 		switch self {
 		case .OrganizingYourMacsFiles:
 			return "A guide to organizing your Mac’s files with Blik"
-			
+		case .WhatsNew:
+			return "What’s new in Blik?"
 		}
 	}
 	
@@ -27,6 +29,7 @@ private enum Link: String {
 	
 	static var chosenLinks: [Link] {
 		return [
+			.WhatsNew,
 			.OrganizingYourMacsFiles
 		]
 	}
