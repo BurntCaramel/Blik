@@ -147,7 +147,7 @@
 		(style.collectionFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:16.0];
 		
 		(style.highlightItemFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
-		(style.highlightGroupFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:10.0];
+		(style.highlightGroupFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:11.0];
 		
 		(style.smallReminderFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:13.0];
 		(style.smallReminderDueDateFont) = [NSFont fontWithName:fontNameAvenirNextMedium size:11.0];

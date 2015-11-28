@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9059"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9060"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -356,11 +356,11 @@
             </constraints>
             <animations/>
         </customView>
-        <customView identifier="collectionsListInstructions" misplaced="YES" id="Idz-io-wKr" userLabel="Collections Instructions">
+        <customView identifier="collectionsListInstructions" id="Idz-io-wKr" userLabel="Collections Instructions">
             <rect key="frame" x="0.0" y="0.0" width="217" height="199"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <textField misplaced="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="chl-Vp-HVE">
+                <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="chl-Vp-HVE">
                     <rect key="frame" x="18" y="65" width="201" height="69"/>
                     <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Collect similar files &amp; folders together, even from separate locations or cloud folders." id="Pd7-v0-Fcz">
@@ -369,7 +369,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OSI-F3-63a">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OSI-F3-63a">
                     <rect key="frame" x="18" y="142" width="81" height="25"/>
                     <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Collections" id="47t-aB-xfq">
@@ -593,9 +593,9 @@
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <textField verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wvd-37-nRU">
-                                                <rect key="frame" x="-2" y="6" width="271" height="19"/>
+                                                <rect key="frame" x="18" y="6" width="251" height="19"/>
                                                 <animations/>
-                                                <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="3JX-zC-0E5">
+                                                <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="left" title="Table View Cell" id="3JX-zC-0E5">
                                                     <font key="font" size="11" name="AvenirNext-Medium"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -603,7 +603,7 @@
                                             </textField>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstItem="wvd-37-nRU" firstAttribute="leading" secondItem="fxr-Bd-KTK" secondAttribute="leading" id="CSp-lD-VDA"/>
+                                            <constraint firstItem="wvd-37-nRU" firstAttribute="leading" secondItem="fxr-Bd-KTK" secondAttribute="leading" constant="20" symbolic="YES" id="CSp-lD-VDA"/>
                                             <constraint firstItem="wvd-37-nRU" firstAttribute="top" secondItem="fxr-Bd-KTK" secondAttribute="top" priority="750" constant="6" id="M1u-gN-6nS"/>
                                             <constraint firstAttribute="trailing" secondItem="wvd-37-nRU" secondAttribute="trailing" constant="20" symbolic="YES" id="XKL-MC-r1I"/>
                                             <constraint firstAttribute="centerY" secondItem="wvd-37-nRU" secondAttribute="centerY" id="inZ-WJ-Li6"/>

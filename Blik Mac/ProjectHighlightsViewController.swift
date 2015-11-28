@@ -11,6 +11,7 @@ import BurntFoundation
 
 
 private let collectionGroupHeight: CGFloat = 18.0
+private let collectionGroupAlignment = NSLeftTextAlignment
 
 private func attributedStringForName(name: String) -> NSAttributedString {
 	let activeStyle = GLAUIStyle.activeStyle()
@@ -32,13 +33,37 @@ private func attributedStringForName(name: String) -> NSAttributedString {
 	return NSAttributedString(string: name, attributes: titleAttributes)
 }
 
+private func tranformGroupName(name: String) -> String {
+	return name
+}
+
+private func attributedStringForCollectionGroup(collection: GLACollection) -> NSAttributedString {
+	let activeStyle = GLAUIStyle.activeStyle()
+	
+	let titleFont = activeStyle.highlightGroupFont
+	
+	let paragraphStyle = NSMutableParagraphStyle()
+	paragraphStyle.alignment = collectionGroupAlignment
+	paragraphStyle.maximumLineHeight = collectionGroupHeight
+	
+	let textColor = activeStyle.colorForCollectionColor(collection.color)
+	
+	let titleAttributes = [
+		NSFontAttributeName: titleFont,
+		NSParagraphStyleAttributeName: paragraphStyle,
+		NSForegroundColorAttributeName: textColor
+	];
+	
+	return NSAttributedString(string: tranformGroupName(collection.name), attributes: titleAttributes)
+}
+
 private func attributedStringForMasterFoldersHeading() -> NSAttributedString {
 	let activeStyle = GLAUIStyle.activeStyle()
 	
 	let titleFont = activeStyle.highlightGroupFont
 	
 	let paragraphStyle = NSMutableParagraphStyle()
-	paragraphStyle.alignment = NSRightTextAlignment
+	paragraphStyle.alignment = collectionGroupAlignment
 	paragraphStyle.maximumLineHeight = collectionGroupHeight
 	
 	let textColor = activeStyle.primaryFoldersItemColor
@@ -51,27 +76,7 @@ private func attributedStringForMasterFoldersHeading() -> NSAttributedString {
 	
 	let displayName = NSLocalizedString("Master Folders", comment: "Display name for Master Folders heading")
 	
-	return NSAttributedString(string: displayName.uppercaseString, attributes: titleAttributes)
-}
-
-private func attributedStringForCollectionGroup(collection: GLACollection) -> NSAttributedString {
-	let activeStyle = GLAUIStyle.activeStyle()
-	
-	let titleFont = activeStyle.highlightGroupFont
-	
-	let paragraphStyle = NSMutableParagraphStyle()
-	paragraphStyle.alignment = NSRightTextAlignment
-	paragraphStyle.maximumLineHeight = collectionGroupHeight
-	
-	let textColor = activeStyle.colorForCollectionColor(collection.color)
-	
-	let titleAttributes = [
-		NSFontAttributeName: titleFont,
-		NSParagraphStyleAttributeName: paragraphStyle,
-		NSForegroundColorAttributeName: textColor
-	];
-	
-	return NSAttributedString(string: collection.name.uppercaseString, attributes: titleAttributes)
+	return NSAttributedString(string: tranformGroupName(displayName), attributes: titleAttributes)
 }
 
 
