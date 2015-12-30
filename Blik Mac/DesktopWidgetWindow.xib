@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="GLADesktopWidgetWindowController">
+            <connections>
+                <outlet property="mainViewController" destination="g8e-c2-oC7" id="Wz7-eI-CFz"/>
+                <outlet property="window" destination="QvC-M9-y7g" id="SyH-MR-P62"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Desktop Widget" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="240" width="480" height="270"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <view key="contentView" id="EiT-Mj-1SZ">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="hyw-cG-PfG">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <subviews>
+                            <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Khy-z2-i4v" customClass="GLAPopUpButton">
+                                <rect key="frame" x="18" y="17" width="445" height="26"/>
+                                <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="6dn-hS-WiM" id="CLj-Fi-VcQ" customClass="GLAPopUpButtonCell">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="menu"/>
+                                    <menu key="menu" id="Dfq-qJ-fc7">
+                                        <items>
+                                            <menuItem title="Item 1" state="on" id="6dn-hS-WiM"/>
+                                            <menuItem title="Item 2" id="Zce-ps-WRZ"/>
+                                            <menuItem title="Item 3" id="R2t-4R-0aK"/>
+                                        </items>
+                                    </menu>
+                                </popUpButtonCell>
+                                <connections>
+                                    <action selector="selectProject:" target="g8e-c2-oC7" id="LiE-Th-Eim"/>
+                                </connections>
+                            </popUpButton>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="Khy-z2-i4v" secondAttribute="bottom" constant="20" id="JDJ-mF-0k7"/>
+                            <constraint firstItem="Khy-z2-i4v" firstAttribute="leading" secondItem="hyw-cG-PfG" secondAttribute="leading" constant="20" id="R36-Xj-EqN"/>
+                            <constraint firstAttribute="trailing" secondItem="Khy-z2-i4v" secondAttribute="trailing" constant="20" id="vWD-u6-9E3"/>
+                        </constraints>
+                    </customView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="hyw-cG-PfG" secondAttribute="bottom" id="A3I-b6-ccI"/>
+                    <constraint firstAttribute="trailing" secondItem="hyw-cG-PfG" secondAttribute="trailing" id="Ewn-aE-PbC"/>
+                    <constraint firstItem="hyw-cG-PfG" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="gUQ-oH-n7w"/>
+                    <constraint firstItem="hyw-cG-PfG" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" id="zsi-XW-DbV"/>
+                </constraints>
+            </view>
+        </window>
+        <viewController id="g8e-c2-oC7" customClass="DesktopWidgetMainViewController" customModule="Blik" customModuleProvider="target">
+            <connections>
+                <outlet property="projectPopUpButton" destination="Khy-z2-i4v" id="n2K-hq-VVd"/>
+                <outlet property="view" destination="hyw-cG-PfG" id="2Q4-j7-mZs"/>
+            </connections>
+        </viewController>
+    </objects>
+</document>
