@@ -405,6 +405,21 @@ extension HighlightItemDetails {
 			}
 		})
 	}
+	
+	public func outputIndexesForTableRows(rowIndexes: NSIndexSet) -> NSIndexSet {
+		let mutableIndexes = rowIndexes.mutableCopy() as! NSMutableIndexSet
+		var itemIndex = 0;
+		for highlightedItem in allHighlightedItems {
+			// Advance over grouped items
+			if highlightedItemIsGrouped(highlightedItem) {
+				mutableIndexes.shiftIndexesStartingAtIndex(itemIndex, by: 1)
+			}
+			
+			itemIndex++
+		}
+		
+		return mutableIndexes
+	}
 }
 
 extension ProjectHighlightsAssistant: CollectionType {
@@ -429,18 +444,7 @@ extension ProjectHighlightsAssistant: GLAArrayTableDraggingHelperDelegate {
 	}
 	
 	public func arrayEditorTableDraggingHelper(tableDraggingHelper: GLAArrayTableDraggingHelper, outputIndexesForTableRows rowIndexes: NSIndexSet) -> NSIndexSet {
-		let mutableIndexes = rowIndexes.mutableCopy() as! NSMutableIndexSet
-		var itemIndex = 0;
-		for highlightedItem in allHighlightedItems {
-			// Advance over grouped items
-			if highlightedItemIsGrouped(highlightedItem) {
-				mutableIndexes.shiftIndexesStartingAtIndex(itemIndex, by: 1)
-			}
-			
-			itemIndex++
-		}
-		
-		return mutableIndexes
+		return outputIndexesForTableRows(rowIndexes)
 	}
 	
 	public func arrayEditorTableDraggingHelper(tableDraggingHelper: GLAArrayTableDraggingHelper, makeChangesUsingEditingBlock editBlock: GLAArrayEditingBlock) {

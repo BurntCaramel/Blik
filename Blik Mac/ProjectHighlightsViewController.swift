@@ -270,6 +270,12 @@ extension ProjectHighlightsViewController {
 		return clickedRow
 	}
 	
+	var clickedIndex: Int? {
+		return clickedRow.flatMap { row in
+			return assistant?.outputIndexesForTableRows(NSIndexSet(index: row)).firstIndex
+		}
+	}
+	
 	var clickedItem: HighlightItemSource? {
 		return clickedRow.flatMap({ assistant?[$0] })
 	}
@@ -392,11 +398,11 @@ extension ProjectHighlightsViewController {
 	@IBAction func removedClickedItem(sender: AnyObject?) {
 		guard let
 			project = project,
-			row = clickedRow
+			index = clickedIndex
 			else { return }
 		
 		projectManager.editHighlightsOfProject(project) { highlightsEditor in
-			highlightsEditor.removeChildrenAtIndexes(NSIndexSet(index: row))
+			highlightsEditor.removeChildrenAtIndexes(NSIndexSet(index: index))
 		}
 	}
 }
