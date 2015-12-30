@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9059"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -23,7 +23,6 @@
             <subviews>
                 <customView placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="8vi-0s-ZAk" customClass="GLAView">
                     <rect key="frame" x="0.0" y="0.0" width="669" height="30"/>
-                    <animations/>
                     <connections>
                         <outlet property="delegate" destination="fD5-0A-qdK" id="OPS-R4-6E8"/>
                     </connections>
@@ -33,7 +32,6 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="32" id="Yz5-N8-tKB"/>
                     </constraints>
-                    <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Project With Big Long Name That Goes On" placeholderString="Enter a project name" id="Dnf-Ks-NXt">
                         <font key="font" size="16" name="AvenirNext-DemiBold"/>
                         <color key="textColor" red="0.98812824489999995" green="0.98829692599999996" blue="0.98811751599999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -48,14 +46,12 @@
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="Hnn-sF-Gd8"/>
                     </constraints>
-                    <animations/>
                 </customView>
                 <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NA8-Ro-OD1">
                     <rect key="frame" x="277" y="38" width="391" height="174"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="290" id="zC6-7U-5ej"/>
                     </constraints>
-                    <animations/>
                 </customView>
             </subviews>
             <constraints>
@@ -75,7 +71,6 @@
                 <constraint firstItem="NA8-Ro-OD1" firstAttribute="bottom" secondItem="yM7-GZ-JQa" secondAttribute="bottom" id="qat-zh-ltU"/>
                 <constraint firstItem="uUN-fG-dyR" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="15" id="xJ9-mw-q1z"/>
             </constraints>
-            <animations/>
             <point key="canvasLocation" x="-285.5" y="253.5"/>
         </customView>
         <viewController title="Collections View Controller" id="raF-W4-b8E" customClass="GLAProjectCollectionsViewController">
@@ -117,7 +112,6 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="27" id="t1S-Ar-dx9"/>
                     </constraints>
-                    <animations/>
                     <buttonCell key="cell" type="square" title="New Collection" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jeG-IQ-I3W" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -146,7 +140,6 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="27" id="RyI-AQ-d6Q"/>
                     </constraints>
-                    <animations/>
                     <buttonCell key="cell" type="square" title="Edit Collections" bezelStyle="shadowlessSquare" alignment="left" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="XD0-q2-jL3" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -168,7 +161,6 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="27" id="5cN-UO-SF9"/>
                     </constraints>
-                    <animations/>
                     <buttonCell key="cell" type="square" title="Open All Highlights" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5q1-uw-bIu" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -204,7 +196,6 @@
                 <constraint firstItem="LJn-o5-zPf" firstAttribute="bottom" secondItem="m3I-Co-wZM" secondAttribute="bottom" id="fHM-KM-7fr"/>
                 <constraint firstItem="m3I-Co-wZM" firstAttribute="top" secondItem="8EB-qb-bNQ" secondAttribute="top" id="zkI-9z-aem"/>
             </constraints>
-            <animations/>
         </customView>
         <customView placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="30" id="eQO-U4-biO" customClass="GLANavigationBar">
             <rect key="frame" x="0.0" y="0.0" width="500" height="30"/>
@@ -212,7 +203,6 @@
             <subviews>
                 <button placeholderIntrinsicWidth="140" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="dcZ-cK-qd4" customClass="GLAButton">
                     <rect key="frame" x="0.0" y="0.0" width="500" height="30"/>
-                    <animations/>
                     <buttonCell key="cell" type="square" title="Finish Editing Collections" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Rab-Rf-U7k" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -232,7 +222,6 @@
                 <constraint firstItem="dcZ-cK-qd4" firstAttribute="top" secondItem="eQO-U4-biO" secondAttribute="top" id="dMX-Fs-uXi"/>
                 <constraint firstItem="dcZ-cK-qd4" firstAttribute="leading" secondItem="eQO-U4-biO" secondAttribute="leading" id="gxd-xe-7jZ"/>
             </constraints>
-            <animations/>
         </customView>
         <customView placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="30" id="s2J-94-MlT" customClass="GLANavigationBar">
             <rect key="frame" x="0.0" y="0.0" width="500" height="30"/>
@@ -240,7 +229,6 @@
             <subviews>
                 <button placeholderIntrinsicWidth="140" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="c85-1L-Qdb" customClass="GLAButton">
                     <rect key="frame" x="0.0" y="0.0" width="500" height="30"/>
-                    <animations/>
                     <buttonCell key="cell" type="square" title="Finish Editing Highlights" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="UHM-eY-8iR" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -257,7 +245,6 @@
                 <constraint firstItem="c85-1L-Qdb" firstAttribute="top" secondItem="s2J-94-MlT" secondAttribute="top" id="dcz-Dw-euk"/>
                 <constraint firstItem="c85-1L-Qdb" firstAttribute="leading" secondItem="s2J-94-MlT" secondAttribute="leading" id="dki-yk-U58"/>
             </constraints>
-            <animations/>
         </customView>
         <customView placeholderIntrinsicWidth="500" placeholderIntrinsicHeight="30" id="kYy-Eb-3WH" customClass="GLAView">
             <rect key="frame" x="0.0" y="0.0" width="300" height="70"/>
@@ -268,7 +255,6 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="UPi-9v-z2P"/>
                     </constraints>
-                    <animations/>
                     <buttonCell key="cell" type="square" title="Choose Existing Reminders" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="wxn-uc-vPn" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -285,7 +271,6 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="cw3-6l-doZ"/>
                     </constraints>
-                    <animations/>
                     <buttonCell key="cell" type="square" title="New Reminder" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="IfQ-og-t9s" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -307,7 +292,6 @@
                 <constraint firstAttribute="trailing" secondItem="HFX-tx-bsh" secondAttribute="trailing" id="fKn-6i-9GL"/>
                 <constraint firstAttribute="bottom" relation="lessThanOrEqual" secondItem="gya-ze-oT1" secondAttribute="bottom" id="vFh-jk-2QI"/>
             </constraints>
-            <animations/>
         </customView>
         <viewController title="Collections List Instructions" id="5dd-3O-WRK" customClass="GLAInstructionsViewController">
             <connections>
@@ -332,7 +316,6 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="f7W-py-dpQ"/>
                     </constraints>
-                    <animations/>
                     <buttonCell key="cell" type="square" title="New Collection" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="V2L-27-qLK" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -354,24 +337,21 @@
                 <constraint firstAttribute="bottom" relation="lessThanOrEqual" secondItem="zdL-Rb-okh" secondAttribute="bottom" id="giN-zJ-OhF"/>
                 <constraint firstAttribute="trailing" secondItem="zdL-Rb-okh" secondAttribute="trailing" id="lgr-gK-eUq"/>
             </constraints>
-            <animations/>
         </customView>
-        <customView identifier="collectionsListInstructions" misplaced="YES" id="Idz-io-wKr" userLabel="Collections Instructions">
+        <customView identifier="collectionsListInstructions" id="Idz-io-wKr" userLabel="Collections Instructions">
             <rect key="frame" x="0.0" y="0.0" width="217" height="199"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <textField misplaced="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="chl-Vp-HVE">
+                <textField setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="chl-Vp-HVE">
                     <rect key="frame" x="18" y="65" width="201" height="69"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Collect similar files &amp; folders together, even from separate locations or cloud folders." id="Pd7-v0-Fcz">
                         <font key="font" size="13" name="AvenirNext-MediumItalic"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OSI-F3-63a">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OSI-F3-63a">
                     <rect key="frame" x="18" y="142" width="81" height="25"/>
-                    <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Collections" id="47t-aB-xfq">
                         <font key="font" size="15" name="AvenirNext-MediumItalic"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -386,7 +366,6 @@
                 <constraint firstItem="chl-Vp-HVE" firstAttribute="top" secondItem="OSI-F3-63a" secondAttribute="bottom" constant="8" id="OEg-P6-iTz"/>
                 <constraint firstItem="OSI-F3-63a" firstAttribute="leading" secondItem="Idz-io-wKr" secondAttribute="leading" constant="20" id="qo4-qf-cl1"/>
             </constraints>
-            <animations/>
             <point key="canvasLocation" x="46.5" y="-209.5"/>
         </customView>
         <customView identifier="highlightsListInstructions" id="OZm-di-0Uz" userLabel="Highlights Instructions">
@@ -398,7 +377,6 @@
                     <constraints>
                         <constraint firstAttribute="width" constant="210" id="OhI-J3-OPk"/>
                     </constraints>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Highlights are the most important items from collections that you need quick access to." id="kVx-69-vmP">
                         <font key="font" size="13" name="AvenirNext-MediumItalic"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -407,7 +385,6 @@
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="M4I-tR-hcL">
                     <rect key="frame" x="157" y="142" width="75" height="25"/>
-                    <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Highlights" id="qb6-Ko-72d">
                         <font key="font" size="15" name="AvenirNext-MediumItalic"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -422,7 +399,6 @@
                 <constraint firstItem="kal-bU-mMW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="OZm-di-0Uz" secondAttribute="leading" constant="20" id="bMe-hd-luO"/>
                 <constraint firstAttribute="trailing" secondItem="kal-bU-mMW" secondAttribute="trailing" constant="20" symbolic="YES" id="e3h-pu-8iC"/>
             </constraints>
-            <animations/>
             <point key="canvasLocation" x="760" y="-209.5"/>
         </customView>
         <scrollView identifier="Collections List" verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="YLn-7g-05l" userLabel="Collections List Scroll">
@@ -434,7 +410,6 @@
                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="none" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="32" viewBased="YES" id="QbG-kD-SIR" customClass="TableView" customModule="Blik" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="200" height="0.0"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                         <size key="intercellSpacing" width="3" height="2"/>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -461,7 +436,6 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="32" id="r0A-4c-sM2"/>
                                                 </constraints>
-                                                <animations/>
                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="XEO-Y0-aU0">
                                                     <font key="font" size="16" name="AvenirNext-Medium"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -475,7 +449,6 @@
                                             <constraint firstItem="lgO-Iy-LU1" firstAttribute="top" secondItem="73t-iT-KXT" secondAttribute="top" id="fkn-dO-bAV"/>
                                             <constraint firstAttribute="bottom" secondItem="lgO-Iy-LU1" secondAttribute="bottom" id="osi-k2-TKR"/>
                                         </constraints>
-                                        <animations/>
                                         <connections>
                                             <outlet property="textField" destination="lgO-Iy-LU1" id="rNx-Qn-FNK"/>
                                         </connections>
@@ -483,7 +456,6 @@
                                     <customView identifier="NSTableViewRowViewKey" id="Dln-AN-FVo" customClass="GLATableProjectRowView">
                                         <rect key="frame" x="1" y="35" width="197" height="39"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <animations/>
                                     </customView>
                                 </prototypeCellViews>
                             </tableColumn>
@@ -494,22 +466,18 @@
                         </connections>
                     </tableView>
                 </subviews>
-                <animations/>
                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
             </clipView>
             <constraints>
                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="163" id="5bf-m3-ymF"/>
             </constraints>
-            <animations/>
             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="cey-3m-TbP">
                 <rect key="frame" x="-100" y="-100" width="223" height="15"/>
                 <autoresizingMask key="autoresizingMask"/>
-                <animations/>
             </scroller>
             <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="FCQ-lM-Kyp">
                 <rect key="frame" x="224" y="17" width="15" height="102"/>
                 <autoresizingMask key="autoresizingMask"/>
-                <animations/>
             </scroller>
             <point key="canvasLocation" x="-296" y="611"/>
         </scrollView>
@@ -522,7 +490,6 @@
                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="36" rowSizeStyle="automatic" viewBased="YES" id="dqI-ZC-qqF">
                         <rect key="frame" x="0.0" y="0.0" width="290" height="0.0"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                         <size key="intercellSpacing" width="3" height="2"/>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -546,7 +513,6 @@
                                         <subviews>
                                             <textField verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iJR-GK-rtq">
                                                 <rect key="frame" x="-2" y="7" width="249" height="23"/>
-                                                <animations/>
                                                 <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="W2T-o6-43Q">
                                                     <font key="font" size="13" name="AvenirNext-Medium"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -559,7 +525,6 @@
                                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="36" id="IMc-PF-JEO"/>
                                                     <constraint firstAttribute="width" constant="10" id="Iui-WU-8Aq"/>
                                                 </constraints>
-                                                <animations/>
                                                 <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="T1a-HO-r31">
                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                     <font key="font" metaFont="system"/>
@@ -582,7 +547,6 @@
                                             <constraint firstItem="iJR-GK-rtq" firstAttribute="leading" secondItem="F8Z-3j-ofZ" secondAttribute="leading" id="oO5-u1-9IJ"/>
                                             <constraint firstItem="iJR-GK-rtq" firstAttribute="top" secondItem="F8Z-3j-ofZ" secondAttribute="top" priority="750" constant="6" id="ueb-D0-ld7"/>
                                         </constraints>
-                                        <animations/>
                                         <connections>
                                             <outlet property="collectionIndicationButton" destination="HQJ-ax-GGn" id="VkW-zu-i4N"/>
                                             <outlet property="textField" destination="iJR-GK-rtq" id="L2a-ME-0uC"/>
@@ -594,7 +558,6 @@
                                         <subviews>
                                             <textField verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wvd-37-nRU">
                                                 <rect key="frame" x="-2" y="6" width="271" height="19"/>
-                                                <animations/>
                                                 <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="3JX-zC-0E5">
                                                     <font key="font" size="11" name="AvenirNext-Medium"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -608,7 +571,6 @@
                                             <constraint firstAttribute="trailing" secondItem="wvd-37-nRU" secondAttribute="trailing" constant="20" symbolic="YES" id="XKL-MC-r1I"/>
                                             <constraint firstAttribute="centerY" secondItem="wvd-37-nRU" secondAttribute="centerY" id="inZ-WJ-Li6"/>
                                         </constraints>
-                                        <animations/>
                                         <connections>
                                             <outlet property="textField" destination="wvd-37-nRU" id="SAU-iG-6y0"/>
                                         </connections>
@@ -616,7 +578,6 @@
                                     <customView identifier="NSTableViewRowViewKey" id="bZu-r8-Vl6" customClass="GLATableProjectRowView">
                                         <rect key="frame" x="1" y="77" width="287" height="39"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <animations/>
                                     </customView>
                                 </prototypeCellViews>
                             </tableColumn>
@@ -628,22 +589,18 @@
                         </connections>
                     </tableView>
                 </subviews>
-                <animations/>
                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
             </clipView>
             <constraints>
                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="163" id="wUq-Hz-z9g"/>
             </constraints>
-            <animations/>
             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Cog-hb-51E">
                 <rect key="frame" x="-100" y="-100" width="223" height="15"/>
                 <autoresizingMask key="autoresizingMask"/>
-                <animations/>
             </scroller>
             <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="ghz-jC-bs8">
                 <rect key="frame" x="224" y="17" width="15" height="102"/>
                 <autoresizingMask key="autoresizingMask"/>
-                <animations/>
             </scroller>
             <point key="canvasLocation" x="10" y="610"/>
         </scrollView>

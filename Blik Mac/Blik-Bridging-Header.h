@@ -17,13 +17,16 @@
 
 #import "GLAUIStyle.h"
 #import "GLAViewController.h"
+#import "GLAMainWindowController.h"
+#import "GLAStatusItemController.h"
 #import "GLACollectedFileMenuCreator.h"
 #import "GLAQuickLookPreviewHelper.h"
 #import "GLAArrayTableDraggingHelper.h"
+#import "GLAInstructionsViewController.h"
+#import "GLAMainSectionNavigator.h"
+#import "GLACollectedFileListHelper.h"
 
 #import "GLAButton.h"
 #import "GLATableHeaderCell.h"
 #import "GLAHighlightsTableCellView.h"
-
-
-#import "GLAAppDelegate.h"
+#import "GLATextField.h"

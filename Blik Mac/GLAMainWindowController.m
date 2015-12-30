@@ -41,7 +41,7 @@
 
 - (void)windowDidLoad
 {
-    [super windowDidLoad];
+	[super windowDidLoad];
 	
 	NSWindow *window = (self.window);
 	(window.movableByWindowBackground) = YES;

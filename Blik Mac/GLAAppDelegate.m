@@ -6,14 +6,13 @@
 //  Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
-#import "GLAAppDelegate.h"
+#import "Blik-Swift.h"
 #import <objc/runtime.h>
 #import "GLAProjectManager.h"
 #import "GLAPreferencesWindowController.h"
 #import "GLAApplicationSettingsManager.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
-#import "Blik-Swift.h"
 
 #define DO_FOLDER_QUERY_TEST 0 && DEBUG
 
@@ -26,35 +25,14 @@
 	#import <Paddle-MAS/Paddle.h>
 #endif
 
-
-@interface GLAAppDelegate ()
-
-@property(nonatomic) BOOL hasPrepared;
-
-@property(nonatomic) CreatorThoughtsAssistant *creatorThoughtsAssistant;
-@property(nonatomic) GuideArticlesAssistant *helpGuidesAssistant;
-
-#if DO_FOLDER_QUERY_TEST
-@property(nonatomic) GLAFolderQueryResults *folderQueryResults;
-#endif
+@interface GLAAppDelegate (Objc) <NSUserInterfaceValidations>
 
 @end
 
-@implementation GLAAppDelegate
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-		//[self prepareIfNeeded];
-    }
-    return self;
-}
+@implementation GLAAppDelegate (Objc)
 
 - (void)awakeFromNib
 {
-	[super awakeFromNib];
-	
 	[self prepareIfNeeded];
 }
 
@@ -71,11 +49,7 @@
 	[Fabric with:@[CrashlyticsKit]];
 	
 	[self showMainWindow];
-	
-#if 0
-	GLAProjectManager *projectManager = [GLAProjectManager sharedProjectManager];
-	(projectManager.shouldLoadTestProjects) = YES;
-#endif
+	[self showDesktopWidget];
 	
 	[[GLAApplicationSettingsManager sharedApplicationSettingsManager] ensureAccessToPermittedApplicationsFolders];
 	
@@ -152,31 +126,6 @@
 	}
 }
 
-- (void)createMainWindowController
-{
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		(self.mainWindowController) = [[GLAMainWindowController alloc] initWithWindowNibName:@"GLAMainWindowController"];
-	});
-}
-
-- (void)showMainWindow
-{
-	[self createMainWindowController];
-	
-	[(self.mainWindowController.window) makeKeyAndOrderFront:self];
-}
-
-- (void)hideMainWindow
-{
-	[(self.mainWindowController.window) close];
-}
-
-- (BOOL)isShowingMainWindowController
-{
-	return [self isShowingWindowController:(self.mainWindowController)];
-}
-
 #pragma mark Actions
 
 - (IBAction)toggleShowingMainWindow:(id)sender
@@ -193,7 +142,7 @@
 {
 	NSApplication *app = NSApp;
 	
-	BOOL isShowing = (self.isShowingMainWindowController);
+	BOOL isShowing = (self.showingMainWindowController);
 	if (toggleApplicationHidden) {
 		isShowing = isShowing && (app.isActive);
 	}

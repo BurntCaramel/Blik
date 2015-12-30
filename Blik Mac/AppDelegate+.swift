@@ -12,7 +12,7 @@ import Cocoa
 var global_symlinkCreator: SymlinkCreator?
 
 
-extension GLAAppDelegate {
+extension AppDelegate {
 	var hidesMainWindowWhenInactive: Bool {
 		let settings = GLAApplicationSettingsManager.sharedApplicationSettingsManager()
 		return settings.hidesMainWindowWhenInactive
