@@ -7,19 +7,39 @@
 //
 
 import Cocoa
+import QuartzCore
+import BurntFoundation
 
 
-@objc(GLADesktopWidgetWindowController) class DesktopWidgetWindowController: NSWindowController {
+class DesktopWidgetWindow: NSWindow {
+	/*override func sendEvent(theEvent: NSEvent) {
+		Swift.print("\(theEvent)")
+		
+		super.sendEvent(theEvent)
+	}*/
+}
+
+private let activeWindowLevel = CGWindowLevelForKey(.DesktopIconWindowLevelKey) + 1
+private let inactiveWindowLevel = CGWindowLevelForKey(.DesktopIconWindowLevelKey) + 0
+
+@objc(GLADesktopWidgetWindowController) class DesktopWidgetWindowController: NSWindowController, NSWindowDelegate {
 	@IBOutlet private var mainViewController: DesktopWidgetMainViewController!
 	
 	override func windowDidLoad() {
 		let window = self.window!
 		window.movableByWindowBackground = true
+		window.acceptsMouseMovedEvents = true
 		
 		window.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
 		
+		/*
+		let childWindow = NSWindow(contentViewController: mainViewController)
+		childWindow.level = Int(CGWindowLevelForKey(.DesktopIconWindowLevelKey) + 1)
+		window.addChildWindow(childWindow, ordered: .Above)
+*/
+		
 		window.title = NSLocalizedString("Blik Desktop Widget", comment: "Title for main window as it appears in Mission Control")
-		//(window.level) = CGWindowLevelForKey(kCGDesktopIconWindowLevelKey) - 1;
+		window.level = Int(inactiveWindowLevel)
 		
 		NSApp.addWindowsItem(window, title: NSLocalizedString("Desktop Widget", comment: "Title for desktop widget as it appears in the Windows menu"), filename: false)
 		
@@ -30,5 +50,13 @@ import Cocoa
 		let contentView = mainViewController.view
 		contentView.wantsLayer = true
 		contentView.layer!.backgroundColor = GLAUIStyle.activeStyle().contentBackgroundColor.CGColor
+	}
+	
+	func windowDidBecomeKey(notification: NSNotification) {
+		window!.level = Int(activeWindowLevel)
+	}
+	
+	func windowDidResignKey(notification: NSNotification) {
+		window!.level = Int(inactiveWindowLevel)
 	}
 }
