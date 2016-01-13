@@ -39,7 +39,7 @@ class NowWidgetViewController: GLAViewController {
 		view.frame = NSRect(origin: .zero, size: preferredContentSize)
 		
 		view.wantsLayer = true
-		//view.layer!.backgroundColor = GLAUIStyle.activeStyle().contentBackgroundColor.CGColor
+		view.layer!.backgroundColor = GLAUIStyle.activeStyle().contentBackgroundColor.CGColor
 	}
 	
 	private var projectManager: GLAProjectManager { return GLAProjectManager.sharedProjectManager() }

@@ -153,6 +153,9 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 		tableView.setDataSource(self)
 		tableView.setDelegate(self)
 		
+		tableView.target = self
+		tableView.action = "openClickedItem:"
+		
 		let collectedFileMenuCreator = GLACollectedFileMenuCreator()
 		collectedFileMenuCreator.context = .InHighlights
 		collectedFileMenuCreator.target = self
@@ -269,9 +272,13 @@ extension ProjectHighlightsViewController: GLACollectedFileListHelperDelegate {
 extension ProjectHighlightsViewController {
 	var clickedRow: Int? {
 		let clickedRow = tableView.clickedRow
-		guard clickedRow != -1 else { return nil }
 		
-		return clickedRow
+		switch clickedRow {
+		case -1:
+			return nil
+		default:
+			return clickedRow
+		}
 	}
 	
 	var clickedIndex: Int? {
@@ -297,15 +304,15 @@ extension ProjectHighlightsViewController {
 		assistant?.openItem(atIndex: clickedRow, withBehaviour: behaviour)
 	}
 	
-	@IBAction func openClickedItem(sender: AnyObject?) {
+	@IBAction public func openClickedItem(sender: AnyObject?) {
 		openClickedItemWithBehaviour(OpeningBehaviour(modifierFlags: NSEvent.modifierFlags()))
 	}
 	
-	@IBAction func openAllItems(sender: AnyObject?) {
+	@IBAction public func openAllItems(sender: AnyObject?) {
 		assistant?.openAllHighlights()
 	}
 	
-	@IBAction func openWithChosenApplication(menuItem: NSMenuItem) {
+	@IBAction public func openWithChosenApplication(menuItem: NSMenuItem) {
 		guard let
 			applicationURL = menuItem.representedObject as? NSURL,
 			fileURL = clickedFileURL
@@ -314,7 +321,7 @@ extension ProjectHighlightsViewController {
 		GLAFileOpenerApplicationFinder.openFileURLs([fileURL], withApplicationURL: applicationURL, useSecurityScope: true)
 	}
 	
-	@IBAction func changePreferredOpenerApplication(menuItem: NSMenuItem) {
+	@IBAction public func changePreferredOpenerApplication(menuItem: NSMenuItem) {
 		guard let applicationURL = menuItem.representedObject as? NSURL? else { return }
 	
 		guard let

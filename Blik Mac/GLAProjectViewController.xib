@@ -583,7 +583,6 @@
                             </tableColumn>
                         </tableColumns>
                         <connections>
-                            <action selector="openClickedItem:" target="aDf-pc-aeE" id="pLE-Xc-QmG"/>
                             <outlet property="dataSource" destination="aDf-pc-aeE" id="OLC-4y-5QH"/>
                             <outlet property="delegate" destination="aDf-pc-aeE" id="1Ix-KD-e58"/>
                         </connections>
