@@ -106,10 +106,17 @@
 	//[super drawBackgroundInRect:dirtyRect];
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
+	NSMenuItem *enclosingMenuItem = (self.enclosingMenuItem);
 		
 	if ((self.enabled) && (self.mouseIsInside)) {
-		[(uiStyle.projectTableRowHoverBackgroundColor) setFill];
-		NSRectFillUsingOperation(dirtyRect, NSCompositeSourceOver);
+		if (enclosingMenuItem) {
+			[[NSColor selectedMenuItemColor] setFill];
+			NSRectFill(dirtyRect);
+		}
+		else {
+			[(uiStyle.projectTableRowHoverBackgroundColor) setFill];
+			NSRectFillUsingOperation(dirtyRect, NSCompositeSourceOver);
+		}
 	}
 	
 	if (self.showsDividers) {
