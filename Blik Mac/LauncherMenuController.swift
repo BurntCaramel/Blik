@@ -12,6 +12,7 @@ import BurntCocoaUI
 
 
 private enum Item {
+	case NowProject
 	case Project(GLAProject)
 	case AllProjects
 	case NewProject
@@ -21,6 +22,8 @@ extension Item: UIChoiceRepresentative {
 	typealias UniqueIdentifier = String
 	var uniqueIdentifier: UniqueIdentifier {
 		switch self {
+		case .NowProject:
+			return "now"
 		case let .Project(project):
 			return "project.\(project.UUID)"
 		case .AllProjects:
@@ -32,6 +35,8 @@ extension Item: UIChoiceRepresentative {
 	
 	var title: String {
 		switch self {
+		case .NowProject:
+			return "Now"
 		case let .Project(project):
 			return project.name
 		case .AllProjects:
@@ -49,6 +54,7 @@ public class LauncherMenuController: NSObject {
 	private let menuAssistant: MenuAssistant<Item>
 	private let projectMenuControllerCache = NSCache()
 	private let projectManagerObserver: AnyNotificationObserver
+	private let nowWidgetViewController: NowWidgetViewController
 	
 	public init(menu: NSMenu, projectManager: GLAProjectManager, navigator: GLAMainSectionNavigator) {
 		self.projectManager = projectManager
@@ -60,6 +66,8 @@ public class LauncherMenuController: NSObject {
 		
 		projectManagerObserver = AnyNotificationObserver(object: projectManager)
 		
+		nowWidgetViewController = NowWidgetViewController()
+		
 		super.init()
 		
 		menu.delegate = self
@@ -68,6 +76,8 @@ public class LauncherMenuController: NSObject {
 			let action: Selector
 			
 			switch item {
+			case .NowProject:
+				action = nil
 			case .Project:
 				action = "openProject:"
 			case .AllProjects:
@@ -92,10 +102,15 @@ public class LauncherMenuController: NSObject {
 		}
 		
 		menuAssistant.customization.additionalSetUp = { item, menuItem in
-			if case .Project = item {
+			switch item {
+			case .NowProject:
+				menuItem.view = self.nowWidgetViewController.view
+			case .Project:
 				if menuItem.submenu == nil {
 					menuItem.submenu = NSMenu()
 				}
+			default:
+				break
 			}
 		}
 		
@@ -115,8 +130,14 @@ public class LauncherMenuController: NSObject {
 	}
 	
 	private var items: [Item?] {
+		var items = [Item?]()
+		
+		items.append(Item.NowProject)
+		items.append(nil)
+		
 		let projects = (allProjectsUser.copyChildrenLoadingIfNeeded() as! [GLAProject]?) ?? []
-		var items: [Item?] = projects.filter({ !$0.hideFromLauncherMenu }).map(Item.Project)
+		let projectItems: [Item?] = projects.filter({ !$0.hideFromLauncherMenu }).map(Item.Project)
+		items += projectItems
 		
 		items.append(nil)
 		items.append(Item.AllProjects)

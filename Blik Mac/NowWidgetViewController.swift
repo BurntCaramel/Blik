@@ -1,5 +1,5 @@
 //
-//  DesktopWidgetMainViewController.swift
+//  NowWidgetViewController.swift
 //  Blik
 //
 //  Created by Patrick Smith on 30/12/2015.
@@ -20,18 +20,26 @@ struct ProjectChoice: UIChoiceRepresentative {
 }
 
 
-class DesktopWidgetMainViewController: GLAViewController {
-	@IBOutlet var projectPopUpButton: NSPopUpButton!
+class NowWidgetViewController: GLAViewController {
+	@IBOutlet var projectPopUpButton: NSPopUpButton?
+	@IBOutlet var highlightsViewController: ProjectHighlightsViewController!
 	
-	private var projectButtonAssistant: PopUpButtonAssistant<ProjectChoice>!
-	//private var highlightsViewController: ProjectHighlightsViewController!
+	private var projectButtonAssistant: PopUpButtonAssistant<ProjectChoice>?
 	
 	override func prepareView() {
 		super.prepareView()
 		
-		projectButtonAssistant = PopUpButtonAssistant(popUpButton: projectPopUpButton)
+		if let projectPopUpButton = projectPopUpButton {
+			projectButtonAssistant = PopUpButtonAssistant(popUpButton: projectPopUpButton)
+		}
 		
 		inspectModel()
+		
+		preferredContentSize = NSSize(width: 250, height: 140)
+		view.frame = NSRect(origin: .zero, size: preferredContentSize)
+		
+		view.wantsLayer = true
+		//view.layer!.backgroundColor = GLAUIStyle.activeStyle().contentBackgroundColor.CGColor
 	}
 	
 	private var projectManager: GLAProjectManager { return GLAProjectManager.sharedProjectManager() }
@@ -48,8 +56,8 @@ class DesktopWidgetMainViewController: GLAViewController {
 		allProjectsUser.changeCompletionBlock = { projectInspector in
 			let projects = projectInspector.copyChildren() as! [GLAProject]
 			print("PROJECTS \(projects)")
-			self.projectButtonAssistant.menuItemRepresentatives = projects.map { ProjectChoice(project: $0) }
-			self.projectButtonAssistant.update()
+			self.projectButtonAssistant?.menuItemRepresentatives = projects.map { ProjectChoice(project: $0) }
+			self.projectButtonAssistant?.update()
 		}
 
 		allProjectsUser.inspectLoadingIfNeeded()
@@ -57,18 +65,25 @@ class DesktopWidgetMainViewController: GLAViewController {
 		// Now Project
 		
 		projectManagerObserver.observe(GLAProjectManagerNowProjectDidChangeNotification) { notification in
-			self.projectButtonAssistant.selectedUniqueIdentifier = pm.nowProject?.UUID
+			guard let nowProject = pm.nowProject else { return }
+			
+			self.projectButtonAssistant?.selectedUniqueIdentifier = nowProject.UUID
+			self.highlightsViewController.project = nowProject
 		}
 		
 		pm.loadNowProjectIfNeeded()
-		projectButtonAssistant.selectedUniqueIdentifier = pm.nowProject?.UUID
+		
+		if let nowProject = pm.nowProject {
+			projectButtonAssistant?.selectedUniqueIdentifier = nowProject.UUID
+			highlightsViewController.project = nowProject
+		}
 		
 		self.allProjectsUser = allProjectsUser
 		self.projectManagerObserver = projectManagerObserver
 	}
 	
 	@IBAction func selectProject(sender: NSPopUpButton) {
-		if let project = projectButtonAssistant.selectedItemRepresentative?.project {
+		if let project = projectButtonAssistant?.selectedItemRepresentative?.project {
 			projectManager.changeNowProject(project)
 		}
 	}

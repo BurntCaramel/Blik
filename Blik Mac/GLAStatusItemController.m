@@ -56,10 +56,10 @@ NSString *GLAStatusItemShowsItem = @"statusItem.showsItem";
 {
     self = [super init];
     if (self) {
-		_showsItem = NO;
-		
-		[self loadSettings];
-    }
+			_showsItem = NO;
+			
+			[self loadSettings];
+		}
     return self;
 }
 
@@ -105,6 +105,8 @@ NSString *GLAStatusItemShowsItem = @"statusItem.showsItem";
 	
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Projects"];
 	(statusItem.menu) = menu;
+	
+	//(statusItem.button.appearance) = [NSAppearance appearanceNamed: NSAppearanceNameVibrantDark];
 	
 #if USE_OLD_CONTROLLER
 	_menuController = [[GLAProjectsListMenuController alloc] initWithMenu:menu];

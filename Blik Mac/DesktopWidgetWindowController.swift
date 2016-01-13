@@ -23,7 +23,7 @@ private let activeWindowLevel = CGWindowLevelForKey(.DesktopIconWindowLevelKey) 
 private let inactiveWindowLevel = CGWindowLevelForKey(.DesktopIconWindowLevelKey) + 0
 
 @objc(GLADesktopWidgetWindowController) class DesktopWidgetWindowController: NSWindowController, NSWindowDelegate {
-	@IBOutlet private var mainViewController: DesktopWidgetMainViewController!
+	@IBOutlet private var mainViewController: NowWidgetViewController!
 	
 	override func windowDidLoad() {
 		let window = self.window!

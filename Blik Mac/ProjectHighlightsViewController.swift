@@ -77,10 +77,10 @@ private func attributedStringForCollectionGroup(collection: GLACollection) -> NS
 
 @objc(GLAProjectHighlightsViewController) public class ProjectHighlightsViewController: GLAViewController {
 	@IBOutlet public var tableView: NSTableView!
-	@IBOutlet public var scrollLeadingConstraint: NSLayoutConstraint!
+	//@IBOutlet public var scrollLeadingConstraint: NSLayoutConstraint!
 	
-	@IBOutlet public var openAllHighlightsButton: GLAButton!
-	@IBOutlet public var instructionsViewController: GLAInstructionsViewController!
+	@IBOutlet public var openAllHighlightsButton: GLAButton?
+	@IBOutlet public var instructionsViewController: GLAInstructionsViewController?
 	
 	var contextualMenu = NSMenu()
 	
@@ -190,6 +190,8 @@ private func attributedStringForCollectionGroup(collection: GLACollection) -> NS
 	}
 	
 	func showInstructions() {
+		guard let instructionsViewController = instructionsViewController else { return }
+		
 		let instructionsView = instructionsViewController.view
 		if instructionsView.superview == nil {
 			fillViewWithChildView(instructionsView)
@@ -200,6 +202,8 @@ private func attributedStringForCollectionGroup(collection: GLACollection) -> NS
 	}
 	
 	func hideInstructions() {
+		guard let instructionsViewController = instructionsViewController else { return }
+		
 		let instructionsView = instructionsViewController.view
 		if instructionsView.superview != nil {
 			instructionsView.hidden = true
@@ -221,13 +225,13 @@ private func attributedStringForCollectionGroup(collection: GLACollection) -> NS
 			
 			tableView.reloadData()
 			
-			openAllHighlightsButton.enabled = assistant.canOpenAllHighlights
+			openAllHighlightsButton?.enabled = assistant.canOpenAllHighlights
 		}
 		else {
 			showInstructions()
 			hideTable()
 			
-			openAllHighlightsButton.enabled = false
+			openAllHighlightsButton?.enabled = false
 		}
 	}
 	
@@ -482,7 +486,8 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 			let textField = cellView.textField!
 			textField.preferredMaxLayoutWidth = textField.bounds.width
 			
-			let extraPadding: CGFloat = 13.0
+			//let extraPadding: CGFloat = 13.0
+			let extraPadding: CGFloat = 10.0
 			
 			height = textField.intrinsicContentSize.height + extraPadding
 		}

@@ -258,10 +258,10 @@
 		B27B31A91B3FC1E600ACC214 /* AppDelegate+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27B31A71B3FC1E600ACC214 /* AppDelegate+.swift */; };
 		B27FB6411C33DBF800DA7F00 /* DesktopWidgetWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27FB6401C33DBF800DA7F00 /* DesktopWidgetWindowController.swift */; };
 		B27FB6421C33DBF800DA7F00 /* DesktopWidgetWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27FB6401C33DBF800DA7F00 /* DesktopWidgetWindowController.swift */; };
-		B27FB6441C33DC1F00DA7F00 /* DesktopWidgetMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27FB6431C33DC1F00DA7F00 /* DesktopWidgetMainViewController.swift */; };
-		B27FB6451C33DC1F00DA7F00 /* DesktopWidgetMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27FB6431C33DC1F00DA7F00 /* DesktopWidgetMainViewController.swift */; };
-		B27FB6471C34062700DA7F00 /* DesktopWidgetWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B27FB6461C34062700DA7F00 /* DesktopWidgetWindow.xib */; };
-		B27FB6481C34062700DA7F00 /* DesktopWidgetWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B27FB6461C34062700DA7F00 /* DesktopWidgetWindow.xib */; };
+		B27FB6441C33DC1F00DA7F00 /* NowWidgetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27FB6431C33DC1F00DA7F00 /* NowWidgetViewController.swift */; };
+		B27FB6451C33DC1F00DA7F00 /* NowWidgetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27FB6431C33DC1F00DA7F00 /* NowWidgetViewController.swift */; };
+		B27FB6471C34062700DA7F00 /* NowWidgetViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B27FB6461C34062700DA7F00 /* NowWidgetViewController.xib */; };
+		B27FB6481C34062700DA7F00 /* NowWidgetViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B27FB6461C34062700DA7F00 /* NowWidgetViewController.xib */; };
 		B27FB64A1C3407BA00DA7F00 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27FB6491C3407BA00DA7F00 /* AppDelegate.swift */; };
 		B27FB64B1C3407BA00DA7F00 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27FB6491C3407BA00DA7F00 /* AppDelegate.swift */; };
 		B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */ = {isa = PBXBuildFile; fileRef = B2841B3219809E15005BB6A3 /* GLAProject.m */; };
@@ -570,8 +570,8 @@
 		B2711F3B1A69D41D001CB4AF /* GLAProjectEditPrimaryFoldersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLAProjectEditPrimaryFoldersViewController.xib; sourceTree = "<group>"; };
 		B27B31A71B3FC1E600ACC214 /* AppDelegate+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppDelegate+.swift"; sourceTree = "<group>"; };
 		B27FB6401C33DBF800DA7F00 /* DesktopWidgetWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DesktopWidgetWindowController.swift; sourceTree = "<group>"; };
-		B27FB6431C33DC1F00DA7F00 /* DesktopWidgetMainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DesktopWidgetMainViewController.swift; sourceTree = "<group>"; };
-		B27FB6461C34062700DA7F00 /* DesktopWidgetWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DesktopWidgetWindow.xib; sourceTree = "<group>"; };
+		B27FB6431C33DC1F00DA7F00 /* NowWidgetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowWidgetViewController.swift; sourceTree = "<group>"; };
+		B27FB6461C34062700DA7F00 /* NowWidgetViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NowWidgetViewController.xib; sourceTree = "<group>"; };
 		B27FB6491C3407BA00DA7F00 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B2841B3119809E15005BB6A3 /* GLAProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProject.h; sourceTree = "<group>"; };
 		B2841B3219809E15005BB6A3 /* GLAProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProject.m; sourceTree = "<group>"; };
@@ -1058,8 +1058,8 @@
 			isa = PBXGroup;
 			children = (
 				B27FB6401C33DBF800DA7F00 /* DesktopWidgetWindowController.swift */,
-				B27FB6431C33DC1F00DA7F00 /* DesktopWidgetMainViewController.swift */,
-				B27FB6461C34062700DA7F00 /* DesktopWidgetWindow.xib */,
+				B27FB6431C33DC1F00DA7F00 /* NowWidgetViewController.swift */,
+				B27FB6461C34062700DA7F00 /* NowWidgetViewController.xib */,
 			);
 			name = "Desktop Widget";
 			sourceTree = "<group>";
@@ -1728,7 +1728,7 @@
 				B20DB3581B0C8ACA00E57532 /* Credits.rtf in Resources */,
 				B20DB3591B0C8ACA00E57532 /* GLAMainWindowController.xib in Resources */,
 				B23E7F9E1BDB79CB008460C8 /* HighlightCustomNameViewController.xib in Resources */,
-				B27FB6481C34062700DA7F00 /* DesktopWidgetWindow.xib in Resources */,
+				B27FB6481C34062700DA7F00 /* NowWidgetViewController.xib in Resources */,
 				B20DB35A1B0C8ACA00E57532 /* GLAEditCollectionDetailsViewController.xib in Resources */,
 				B20DB35B1B0C8ACA00E57532 /* GLACollectedFolderContentsViewController.xib in Resources */,
 				B20DB35C1B0C8ACA00E57532 /* GLAAddNewCollectionChooseNameAndColorViewController.xib in Resources */,
@@ -1766,7 +1766,7 @@
 				B2ADDBE21963DA2E0014EF84 /* Credits.rtf in Resources */,
 				B219DAA3196AB65D007900DF /* GLAMainWindowController.xib in Resources */,
 				B23E7F9D1BDB79CB008460C8 /* HighlightCustomNameViewController.xib in Resources */,
-				B27FB6471C34062700DA7F00 /* DesktopWidgetWindow.xib in Resources */,
+				B27FB6471C34062700DA7F00 /* NowWidgetViewController.xib in Resources */,
 				B208E3F219F51551000EF97B /* GLAEditCollectionDetailsViewController.xib in Resources */,
 				B24ADB2C1AD784E0007214C2 /* GLACollectedFolderContentsViewController.xib in Resources */,
 				B2214E1919D6848200DE2C71 /* GLAAddNewCollectionChooseNameAndColorViewController.xib in Resources */,
@@ -2017,7 +2017,7 @@
 				B20DB3161B0C8ACA00E57532 /* GLAModel.m in Sources */,
 				B20DB3171B0C8ACA00E57532 /* GLAFileInfoRetriever.m in Sources */,
 				B20DB3181B0C8ACA00E57532 /* GLACollectedFolderStackItemViewController.m in Sources */,
-				B27FB6451C33DC1F00DA7F00 /* DesktopWidgetMainViewController.swift in Sources */,
+				B27FB6451C33DC1F00DA7F00 /* NowWidgetViewController.swift in Sources */,
 				B27FB64B1C3407BA00DA7F00 /* AppDelegate.swift in Sources */,
 				B20DB3191B0C8ACA00E57532 /* GLAArrayEditorUser.m in Sources */,
 				B20DB31A1B0C8ACA00E57532 /* GLAMainWindow.m in Sources */,
@@ -2167,7 +2167,7 @@
 				B208E40319F91B66000EF97B /* GLAModel.m in Sources */,
 				B22E80CB198F8971005C4108 /* GLAFileInfoRetriever.m in Sources */,
 				B22B7D7B1AC134BD0026AEDB /* GLACollectedFolderStackItemViewController.m in Sources */,
-				B27FB6441C33DC1F00DA7F00 /* DesktopWidgetMainViewController.swift in Sources */,
+				B27FB6441C33DC1F00DA7F00 /* NowWidgetViewController.swift in Sources */,
 				B27FB64A1C3407BA00DA7F00 /* AppDelegate.swift in Sources */,
 				B2ED538D1A8D6E2B00F6B4FA /* GLAArrayEditorUser.m in Sources */,
 				B2C7F2921970D5D3005780B4 /* GLAMainWindow.m in Sources */,
