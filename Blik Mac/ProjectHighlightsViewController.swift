@@ -12,13 +12,13 @@ import BurntFoundation
 
 private let collectionGroupHeight: CGFloat = 18.0
 
-private func attributedStringForName(name: String) -> NSAttributedString {
+private func attributedStringForName(name: String, textAlignment: NSTextAlignment = NSRightTextAlignment) -> NSAttributedString {
 	let activeStyle = GLAUIStyle.activeStyle()
 	
 	let titleFont = activeStyle.highlightItemFont
 	
 	let paragraphStyle = NSMutableParagraphStyle()
-	paragraphStyle.alignment = NSRightTextAlignment
+	paragraphStyle.alignment = textAlignment
 	paragraphStyle.maximumLineHeight = 18.0
 	
 	let textColor = activeStyle.lightTextColor
@@ -32,13 +32,13 @@ private func attributedStringForName(name: String) -> NSAttributedString {
 	return NSAttributedString(string: name, attributes: titleAttributes)
 }
 
-private func attributedStringForMasterFoldersHeading() -> NSAttributedString {
+private func attributedStringForMasterFoldersHeading(textAlignment textAlignment: NSTextAlignment = NSRightTextAlignment) -> NSAttributedString {
 	let activeStyle = GLAUIStyle.activeStyle()
 	
 	let titleFont = activeStyle.highlightGroupFont
 	
 	let paragraphStyle = NSMutableParagraphStyle()
-	paragraphStyle.alignment = NSRightTextAlignment
+	paragraphStyle.alignment = textAlignment
 	paragraphStyle.maximumLineHeight = collectionGroupHeight
 	
 	let textColor = activeStyle.primaryFoldersItemColor
@@ -54,13 +54,13 @@ private func attributedStringForMasterFoldersHeading() -> NSAttributedString {
 	return NSAttributedString(string: displayName.uppercaseString, attributes: titleAttributes)
 }
 
-private func attributedStringForCollectionGroup(collection: GLACollection) -> NSAttributedString {
+private func attributedStringForCollectionGroup(collection: GLACollection, textAlignment: NSTextAlignment = NSRightTextAlignment) -> NSAttributedString {
 	let activeStyle = GLAUIStyle.activeStyle()
 	
 	let titleFont = activeStyle.highlightGroupFont
 	
 	let paragraphStyle = NSMutableParagraphStyle()
-	paragraphStyle.alignment = NSRightTextAlignment
+	paragraphStyle.alignment = textAlignment
 	paragraphStyle.maximumLineHeight = collectionGroupHeight
 	
 	let textColor = activeStyle.colorForCollectionColor(collection.color)
@@ -460,11 +460,14 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 		autoreleasepool {
 			let cellView: NSTableCellView
 			
+			let inMenuItem = tableView.enclosingMenuItem != nil
+			let textAlignment = inMenuItem ? NSLeftTextAlignment : NSRightTextAlignment
+			
 			switch assistant!.details[AnyRandomAccessIndex(row)] {
 			case let .Item(_, displayName, isFolder, _, collection):
 				measuringHighlightTableCellView.removeFromSuperview()
 				
-				setUpTableCellView(measuringHighlightTableCellView, displayName: displayName, isFolder: isFolder, collection: collection)
+				setUpTableCellView(measuringHighlightTableCellView, textAlignment: textAlignment, displayName: displayName, isFolder: isFolder, collection: collection)
 				
 				cellView = measuringHighlightTableCellView
 			case .GroupedCollectionHeading(_), .MasterFoldersHeading:
@@ -473,7 +476,7 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 			case let .MasterFolder(displayName, _):
 				measuringHighlightTableCellView.removeFromSuperview()
 				
-				setUpTableCellView(measuringHighlightTableCellView, displayName: displayName, isFolder: true, collection: nil)
+				setUpTableCellView(measuringHighlightTableCellView, textAlignment: textAlignment, displayName: displayName, isFolder: true, collection: nil)
 				
 				cellView = measuringHighlightTableCellView
 			}
@@ -487,7 +490,7 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 			textField.preferredMaxLayoutWidth = textField.bounds.width
 			
 			//let extraPadding: CGFloat = 13.0
-			let extraPadding: CGFloat = 10.0
+			let extraPadding: CGFloat = inMenuItem ? 6.0 : 10.0
 			
 			height = textField.intrinsicContentSize.height + extraPadding
 		}
@@ -495,11 +498,11 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 		return height
 	}
 	
-	public func setUpTableCellView(cellView: GLAHighlightsTableCellView, displayName: String?, isFolder: Bool?, collection: GLACollection?) {
+	public func setUpTableCellView(cellView: GLAHighlightsTableCellView, textAlignment: NSTextAlignment, displayName: String?, isFolder: Bool?, collection: GLACollection?) {
 		cellView.backgroundStyle = .Dark
 		cellView.alphaValue = 1.0
 		
-		cellView.textField!.attributedStringValue = attributedStringForName(displayName ?? "Loading…")
+		cellView.textField!.attributedStringValue = attributedStringForName(displayName ?? "Loading…", textAlignment: textAlignment)
 		
 		let collectionIndicationButton = cellView.collectionIndicationButton
 		collectionIndicationButton.collection = collection
@@ -509,29 +512,32 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 	}
 	
 	public func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: NSInteger) -> NSView? {
+		let inMenuItem = tableView.enclosingMenuItem != nil
+		let textAlignment = inMenuItem ? NSLeftTextAlignment : NSRightTextAlignment
+		
 		switch assistant!.details[AnyRandomAccessIndex(row)] {
 		case let .Item(_, displayName, isFolder, _, collection):
 			let cellView = tableView.makeViewWithIdentifier("highlightedItem", owner: nil) as! GLAHighlightsTableCellView
 			
-			setUpTableCellView(cellView, displayName: displayName, isFolder: isFolder, collection: collection)
+			setUpTableCellView(cellView, textAlignment: textAlignment, displayName: displayName, isFolder: isFolder, collection: collection)
 			
 			return cellView
 		case let .GroupedCollectionHeading(collection):
 			let cellView = tableView.makeViewWithIdentifier("collectionGroup", owner: nil) as! NSTableCellView
 			
-			cellView.textField!.attributedStringValue = attributedStringForCollectionGroup(collection)
+			cellView.textField!.attributedStringValue = attributedStringForCollectionGroup(collection, textAlignment: textAlignment)
 			
 			return cellView
 		case .MasterFoldersHeading:
 			let cellView = tableView.makeViewWithIdentifier("collectionGroup", owner: nil) as! NSTableCellView
 			
-			cellView.textField!.attributedStringValue = attributedStringForMasterFoldersHeading()
+			cellView.textField!.attributedStringValue = attributedStringForMasterFoldersHeading(textAlignment: textAlignment)
 			
 			return cellView
 		case let .MasterFolder(displayName, _):
 			let cellView = tableView.makeViewWithIdentifier("highlightedItem", owner: nil) as! GLAHighlightsTableCellView
 			
-			setUpTableCellView(cellView, displayName: displayName, isFolder: true, collection: nil)
+			setUpTableCellView(cellView, textAlignment: textAlignment, displayName: displayName, isFolder: true, collection: nil)
 			
 			return cellView
 		}

@@ -69,16 +69,8 @@
                                         <rect key="frame" x="1" y="1" width="297" height="36"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <textField verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="136-9Z-cEZ">
-                                                <rect key="frame" x="-2" y="7" width="249" height="23"/>
-                                                <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="ryD-ZV-Mk7">
-                                                    <font key="font" size="13" name="AvenirNext-Medium"/>
-                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                </textFieldCell>
-                                            </textField>
                                             <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wrA-yL-cvW" customClass="GLACollectionIndicationButton">
-                                                <rect key="frame" x="257" y="0.0" width="10" height="36"/>
+                                                <rect key="frame" x="17" y="0.0" width="10" height="36"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="36" id="WfO-cn-rWg"/>
                                                     <constraint firstAttribute="width" constant="10" id="hWr-EQ-ceD"/>
@@ -96,14 +88,22 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </button>
+                                            <textField verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" misplaced="YES" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="136-9Z-cEZ">
+                                                <rect key="frame" x="33" y="7" width="237" height="23"/>
+                                                <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="ryD-ZV-Mk7">
+                                                    <font key="font" size="13" name="AvenirNext-Medium"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
                                         </subviews>
                                         <constraints>
+                                            <constraint firstItem="136-9Z-cEZ" firstAttribute="leading" secondItem="wrA-yL-cvW" secondAttribute="trailing" constant="12" id="GHN-ZC-eRo"/>
                                             <constraint firstItem="wrA-yL-cvW" firstAttribute="centerY" secondItem="136-9Z-cEZ" secondAttribute="centerY" id="TX5-Fs-8hM"/>
-                                            <constraint firstItem="wrA-yL-cvW" firstAttribute="leading" secondItem="136-9Z-cEZ" secondAttribute="trailing" constant="12" id="UH3-sd-Zi9"/>
                                             <constraint firstItem="136-9Z-cEZ" firstAttribute="top" secondItem="kI3-bF-oFi" secondAttribute="top" priority="750" constant="6" id="bZd-Tf-jj1"/>
-                                            <constraint firstAttribute="trailing" secondItem="wrA-yL-cvW" secondAttribute="trailing" constant="20" id="hH8-6W-fWV"/>
-                                            <constraint firstItem="136-9Z-cEZ" firstAttribute="leading" secondItem="kI3-bF-oFi" secondAttribute="leading" id="mLk-jx-mrV"/>
+                                            <constraint firstAttribute="trailing" secondItem="136-9Z-cEZ" secondAttribute="trailing" constant="12" id="i9l-oe-eb9"/>
                                             <constraint firstAttribute="centerY" secondItem="136-9Z-cEZ" secondAttribute="centerY" id="sQu-iK-w8X"/>
+                                            <constraint firstItem="wrA-yL-cvW" firstAttribute="leading" secondItem="kI3-bF-oFi" secondAttribute="leading" constant="20" id="uDb-pk-sr8"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="collectionIndicationButton" destination="wrA-yL-cvW" id="eaI-ZV-6iL"/>
@@ -115,7 +115,7 @@
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <textField verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" alphaValue="0.80000000000000004" allowsExpansionToolTips="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0ss-JT-2F3">
-                                                <rect key="frame" x="-2" y="6" width="271" height="19"/>
+                                                <rect key="frame" x="18" y="6" width="259" height="19"/>
                                                 <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="Vrl-88-hCM">
                                                     <font key="font" size="11" name="AvenirNext-Medium"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -124,9 +124,9 @@
                                             </textField>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstItem="0ss-JT-2F3" firstAttribute="leading" secondItem="HUR-ab-hUX" secondAttribute="leading" id="0C7-EQ-IFZ"/>
                                             <constraint firstItem="0ss-JT-2F3" firstAttribute="top" secondItem="HUR-ab-hUX" secondAttribute="top" priority="750" constant="6" id="0iq-4P-rwQ"/>
-                                            <constraint firstAttribute="trailing" secondItem="0ss-JT-2F3" secondAttribute="trailing" constant="20" symbolic="YES" id="Mbc-d2-iA3"/>
+                                            <constraint firstAttribute="trailing" secondItem="0ss-JT-2F3" secondAttribute="trailing" constant="12" id="Mbc-d2-iA3"/>
+                                            <constraint firstItem="0ss-JT-2F3" firstAttribute="leading" secondItem="HUR-ab-hUX" secondAttribute="leading" constant="20" id="nZa-By-Pqx"/>
                                             <constraint firstAttribute="centerY" secondItem="0ss-JT-2F3" secondAttribute="centerY" id="yiG-XP-ntF"/>
                                         </constraints>
                                         <connections>
