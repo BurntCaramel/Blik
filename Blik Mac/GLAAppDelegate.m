@@ -49,7 +49,7 @@
 	[Fabric with:@[CrashlyticsKit]];
 	
 	[self showMainWindow];
-	[self showDesktopWidget];
+	//[self showDesktopWidget];
 	
 	[[GLAApplicationSettingsManager sharedApplicationSettingsManager] ensureAccessToPermittedApplicationsFolders];
 	
