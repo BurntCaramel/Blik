@@ -222,11 +222,13 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 	}
 	
 	func reloadViews() {
+		// Always reload table so it knows how many items there are, even if it gets hidden.
+		// Resolves an out-of-bounds exception.
+		tableView.reloadData()
+		
 		if let assistant = assistant where assistant.itemCount > 0 {
 			showTable()
 			hideInstructions()
-			
-			tableView.reloadData()
 			
 			openAllHighlightsButton?.enabled = assistant.canOpenAllHighlights
 		}
