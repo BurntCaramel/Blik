@@ -9,6 +9,7 @@
                 <outlet property="contextualMenu" destination="twI-F8-TmJ" id="ptn-ea-Olj"/>
                 <outlet property="hasContentView" destination="Hz6-mo-xeY" id="4e7-B5-dh5"/>
                 <outlet property="hideFromLauncherMenuItem" destination="T4w-NY-d9D" id="q0x-6E-Ojv"/>
+                <outlet property="nameSearchField" destination="2p8-Wa-JAg" id="u8O-xy-hgE"/>
                 <outlet property="tableView" destination="GZN-Pm-4Iy" id="BGr-Fc-fHq"/>
                 <outlet property="view" destination="agp-xA-26G" id="Db5-mf-cQ0"/>
             </connections>
@@ -16,16 +17,16 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY">
-            <rect key="frame" x="0.0" y="0.0" width="500" height="272"/>
+            <rect key="frame" x="0.0" y="0.0" width="500" height="257"/>
             <subviews>
                 <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="43" horizontalPageScroll="10" verticalLineScroll="43" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="W9B-ly-3lZ">
-                    <rect key="frame" x="0.0" y="0.0" width="500" height="264"/>
+                    <rect key="frame" x="0.0" y="35" width="500" height="214"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="0Gp-HR-yte">
-                        <rect key="frame" x="0.0" y="0.0" width="500" height="264"/>
+                        <rect key="frame" x="0.0" y="0.0" width="500" height="214"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="none" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="41" rowSizeStyle="automatic" viewBased="YES" id="GZN-Pm-4Iy">
-                                <rect key="frame" x="0.0" y="0.0" width="500" height="0.0"/>
+                                <rect key="frame" x="0.0" y="0.0" width="500" height="214"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -88,7 +89,7 @@
                                                             <constraint firstAttribute="height" constant="29" id="aJt-Ph-Pba"/>
                                                         </constraints>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="4" id="jik-Hq-6ng">
-                                                            <font key="font" size="17" name="AvenirNext-Medium"/>
+                                                            <font key="font" size="17" name="AvenirNext-MediumItalic"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
@@ -112,7 +113,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <customView identifier="NSTableViewRowViewKey" id="scR-OX-ZYE" customClass="GLATableProjectRowView">
-                                                <rect key="frame" x="1" y="72" width="497" height="39"/>
+                                                <rect key="frame" x="1" y="44" width="497" height="39"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="showsDividers" value="YES"/>
@@ -139,10 +140,23 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                 </scrollView>
+                <searchField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2p8-Wa-JAg">
+                    <rect key="frame" x="20" y="8" width="200" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="200" id="sCQ-U8-eN7"/>
+                    </constraints>
+                    <searchFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" id="47J-UO-Z5p">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </searchFieldCell>
+                </searchField>
             </subviews>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="W9B-ly-3lZ" secondAttribute="bottom" id="0mu-UW-ale"/>
+                <constraint firstItem="2p8-Wa-JAg" firstAttribute="top" secondItem="W9B-ly-3lZ" secondAttribute="bottom" constant="8" symbolic="YES" id="Fas-nS-AEK"/>
                 <constraint firstItem="W9B-ly-3lZ" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="GAA-QZ-0os"/>
+                <constraint firstAttribute="bottom" secondItem="2p8-Wa-JAg" secondAttribute="bottom" constant="8" id="ekV-6b-sHW"/>
+                <constraint firstItem="2p8-Wa-JAg" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" symbolic="YES" id="jHC-Ww-ChL"/>
                 <constraint firstItem="W9B-ly-3lZ" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="8" id="ncd-VM-poZ"/>
                 <constraint firstAttribute="trailing" secondItem="W9B-ly-3lZ" secondAttribute="trailing" id="tQx-Ip-kPC"/>
             </constraints>

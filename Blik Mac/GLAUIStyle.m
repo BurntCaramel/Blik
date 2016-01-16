@@ -287,6 +287,9 @@
 
 - (void)prepareOutlinedTextField:(NSTextField *)textField
 {
+	(textField.bordered) = NO;
+	(textField.bezeled) = NO;
+	
 	(textField.wantsLayer) = YES;
 	CALayer *layer = (textField.layer);
 	
@@ -294,6 +297,15 @@
 	(layer.borderColor) = [NSColor colorWithCalibratedWhite:0.32 alpha:1.0].CGColor;
 	(layer.cornerRadius) = 4.0;
 	//[textField noteFocusRingMaskChanged];
+}
+
+- (void)prepareSearchField:(NSSearchField *)searchField
+{
+	/*[self prepareOutlinedTextField:searchField];
+	
+	CALayer *layer = (searchField.layer);
+	
+	(layer.cornerRadius) = 12.0;*/
 }
 
 - (void)prepareContentTableView:(NSTableView *)tableView

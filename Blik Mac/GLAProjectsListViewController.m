@@ -48,6 +48,9 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	(tableView.enclosingScrollView.backgroundColor) = (uiStyle.contentBackgroundColor);
 	//(tableView.draggingDestinationFeedbackStyle) = NSTableViewDraggingDestinationFeedbackStyleGap;
 	
+	NSSearchField *nameSearchField = (self.nameSearchField);
+	[uiStyle prepareSearchField:nameSearchField];
+	
 	NSMenu *contextualMenu = (self.contextualMenu);
 	(contextualMenu.delegate) = self;
 	(tableView.menu) = contextualMenu;
@@ -278,7 +281,7 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
 	GLAProject *project = (self.projects)[row];
-	return project;
+	return project.name;
 }
 
 - (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row
@@ -371,6 +374,11 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 #endif
 	
 	return cellView;
+}
+
+- (BOOL)tableView:(NSTableView *)tableView shouldTypeSelectForEvent:(NSEvent *)event withCurrentSearchString:(NSString *)searchString
+{
+	return YES;
 }
 
 #pragma mark NSMenuDelegate

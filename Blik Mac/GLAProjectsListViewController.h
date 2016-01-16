@@ -17,6 +17,8 @@
 
 @property(nonatomic) IBOutlet NSTableView *tableView;
 
+@property(nonatomic) IBOutlet NSSearchField *nameSearchField;
+
 @property(nonatomic) IBOutlet NSMenu *contextualMenu;
 @property(nonatomic) IBOutlet NSMenuItem *hideFromLauncherMenuItem;
 

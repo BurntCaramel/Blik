@@ -30,3 +30,5 @@
 #import "GLATableHeaderCell.h"
 #import "GLAHighlightsTableCellView.h"
 #import "GLATextField.h"
+
+#import "GLAProjectsListViewController.h"

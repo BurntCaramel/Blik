@@ -266,6 +266,8 @@
 		B27FB64B1C3407BA00DA7F00 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27FB6491C3407BA00DA7F00 /* AppDelegate.swift */; };
 		B2800A1F1C4A1BFE00BE3874 /* TopProjectsAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2800A1E1C4A1BFE00BE3874 /* TopProjectsAssistant.swift */; };
 		B2800A201C4A1BFE00BE3874 /* TopProjectsAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2800A1E1C4A1BFE00BE3874 /* TopProjectsAssistant.swift */; };
+		B2800A221C4A331F00BE3874 /* ProjectsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2800A211C4A331F00BE3874 /* ProjectsListViewController.swift */; };
+		B2800A231C4A331F00BE3874 /* ProjectsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2800A211C4A331F00BE3874 /* ProjectsListViewController.swift */; };
 		B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */ = {isa = PBXBuildFile; fileRef = B2841B3219809E15005BB6A3 /* GLAProject.m */; };
 		B284D5621978EC1F00157126 /* GLACollection.m in Sources */ = {isa = PBXBuildFile; fileRef = B284D5611978EC1F00157126 /* GLACollection.m */; };
 		B28518271BB42D2C00135E5C /* BurntFoundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB28E1B08334800E57532 /* BurntFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -576,6 +578,7 @@
 		B27FB6461C34062700DA7F00 /* NowWidgetViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NowWidgetViewController.xib; sourceTree = "<group>"; };
 		B27FB6491C3407BA00DA7F00 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B2800A1E1C4A1BFE00BE3874 /* TopProjectsAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopProjectsAssistant.swift; sourceTree = "<group>"; };
+		B2800A211C4A331F00BE3874 /* ProjectsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectsListViewController.swift; sourceTree = "<group>"; };
 		B2841B3119809E15005BB6A3 /* GLAProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProject.h; sourceTree = "<group>"; };
 		B2841B3219809E15005BB6A3 /* GLAProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProject.m; sourceTree = "<group>"; };
 		B284D5601978EC1F00157126 /* GLACollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLACollection.h; sourceTree = "<group>"; };
@@ -1323,6 +1326,7 @@
 			children = (
 				B2C7F288197023EF005780B4 /* GLAProjectsListViewController.h */,
 				B2C7F289197023EF005780B4 /* GLAProjectsListViewController.m */,
+				B2800A211C4A331F00BE3874 /* ProjectsListViewController.swift */,
 				B2C7F28A197023EF005780B4 /* GLAProjectsListViewController.xib */,
 				B2C7F28D19704A2C005780B4 /* GLAProjectOverviewTableCellView.h */,
 				B2C7F28E19704A2C005780B4 /* GLAProjectOverviewTableCellView.m */,
@@ -1999,6 +2003,7 @@
 				B20DB2FB1B0C8ACA00E57532 /* GLAFileCollectionViewController.m in Sources */,
 				B20DB2FC1B0C8ACA00E57532 /* GLAArrayEditor.m in Sources */,
 				B20DB2FD1B0C8ACA00E57532 /* GLACollectedFile.m in Sources */,
+				B2800A231C4A331F00BE3874 /* ProjectsListViewController.swift in Sources */,
 				B20DB2FE1B0C8ACA00E57532 /* GLAColorChoiceView.m in Sources */,
 				B20DB2FF1B0C8ACA00E57532 /* GLAFilteredFolderCollectionViewController.m in Sources */,
 				B20DB3001B0C8ACA00E57532 /* PGWSQueuedBlockConvenience.m in Sources */,
@@ -2150,6 +2155,7 @@
 				B226E9591988D00C00D607CC /* GLAFileCollectionViewController.m in Sources */,
 				B22E80C7198F654E005C4108 /* GLAArrayEditor.m in Sources */,
 				B22E80C4198CAE38005C4108 /* GLACollectedFile.m in Sources */,
+				B2800A221C4A331F00BE3874 /* ProjectsListViewController.swift in Sources */,
 				B255920119C84E4B0039D2AC /* GLAColorChoiceView.m in Sources */,
 				B2ED54411A955D0C00F6B4FA /* GLAFilteredFolderCollectionViewController.m in Sources */,
 				B2BB85151A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m in Sources */,
