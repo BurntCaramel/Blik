@@ -331,6 +331,12 @@ NSString *GLAProjectListsViewControllerDidPerformWorkOnProjectNowNotification = 
 	(cellView.objectValue) = displayName;
 	(cellView.textField.stringValue) = displayName;
 	
+	if (row < 6) {
+		(cellView.shortcutField.integerValue) = (row + 1); // 0 to 1 based
+	} else {
+		(cellView.shortcutField.stringValue) = @"";
+	}
+	
 	NSTextField *plannedDateTextField = (cellView.plannedDateTextField);
 	(plannedDateTextField.textColor) = (activeStyle.lightTextDisabledColor);
 	

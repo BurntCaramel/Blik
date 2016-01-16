@@ -13,5 +13,6 @@
 
 @property(weak, nonatomic) IBOutlet GLANavigationButton *workOnNowButton;
 @property(weak, nonatomic) IBOutlet NSTextField *plannedDateTextField;
+@property(weak, nonatomic) IBOutlet NSTextField *shortcutField;
 
 @end

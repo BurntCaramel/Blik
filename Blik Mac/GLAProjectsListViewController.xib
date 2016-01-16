@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAProjectsListViewController">
@@ -49,7 +49,7 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UnQ-Ry-Bvo">
-                                                        <rect key="frame" x="18" y="6" width="364" height="29"/>
+                                                        <rect key="frame" x="18" y="6" width="331" height="29"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="29" id="Ayg-4M-gxk"/>
                                                         </constraints>
@@ -59,15 +59,8 @@
                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QmR-yf-C99">
-                                                        <rect key="frame" x="1" y="44" width="48" height="48"/>
-                                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Igr-ir-nEn">
-                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                    </button>
                                                     <button horizontalHuggingPriority="300" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RUk-GO-gyx" customClass="GLAButton">
-                                                        <rect key="frame" x="388" y="0.0" width="95" height="41"/>
+                                                        <rect key="frame" x="355" y="0.0" width="95" height="41"/>
                                                         <buttonCell key="cell" type="square" title="Work On Now" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eD0-2P-IqQ" customClass="GLAButtonCell">
                                                             <behavior key="behavior" lightByContents="YES"/>
                                                             <font key="font" size="13" name="AvenirNext-Medium"/>
@@ -88,17 +81,32 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </button>
+                                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ERN-20-6if">
+                                                        <rect key="frame" x="456" y="6" width="24" height="29"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="20" id="Cmw-EJ-XlO"/>
+                                                            <constraint firstAttribute="height" constant="29" id="aJt-Ph-Pba"/>
+                                                        </constraints>
+                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="4" id="jik-Hq-6ng">
+                                                            <font key="font" size="17" name="AvenirNext-Medium"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="UnQ-Ry-Bvo" firstAttribute="top" secondItem="LCw-fj-f7m" secondAttribute="top" constant="6" id="22V-nJ-Fuc"/>
                                                     <constraint firstAttribute="bottom" secondItem="UnQ-Ry-Bvo" secondAttribute="bottom" constant="6" id="4Te-Tm-d4E"/>
+                                                    <constraint firstItem="ERN-20-6if" firstAttribute="baseline" secondItem="UnQ-Ry-Bvo" secondAttribute="baseline" id="B59-gB-AYg"/>
                                                     <constraint firstItem="RUk-GO-gyx" firstAttribute="top" secondItem="LCw-fj-f7m" secondAttribute="top" id="Hjh-b0-buq"/>
-                                                    <constraint firstAttribute="trailing" secondItem="RUk-GO-gyx" secondAttribute="trailing" constant="14" id="XvU-v1-5AI"/>
+                                                    <constraint firstItem="ERN-20-6if" firstAttribute="leading" secondItem="RUk-GO-gyx" secondAttribute="trailing" constant="8" id="NXG-0n-fPp"/>
+                                                    <constraint firstAttribute="trailing" secondItem="ERN-20-6if" secondAttribute="trailing" constant="19" id="Z31-ax-nKs"/>
                                                     <constraint firstAttribute="bottom" secondItem="RUk-GO-gyx" secondAttribute="bottom" id="g33-ec-Gd0"/>
                                                     <constraint firstItem="RUk-GO-gyx" firstAttribute="leading" secondItem="UnQ-Ry-Bvo" secondAttribute="trailing" constant="8" id="qZg-fJ-5O9"/>
                                                     <constraint firstItem="UnQ-Ry-Bvo" firstAttribute="leading" secondItem="LCw-fj-f7m" secondAttribute="leading" constant="20" symbolic="YES" id="rDn-CG-94M"/>
                                                 </constraints>
                                                 <connections>
+                                                    <outlet property="shortcutField" destination="ERN-20-6if" id="zjN-Eg-nUX"/>
                                                     <outlet property="textField" destination="UnQ-Ry-Bvo" id="Mh6-f5-4sP"/>
                                                     <outlet property="workOnNowButton" destination="RUk-GO-gyx" id="lzW-2K-hog"/>
                                                 </connections>
@@ -160,7 +168,7 @@
         <customView id="agp-xA-26G" customClass="GLAProjectView">
             <rect key="frame" x="0.0" y="0.0" width="163" height="96"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <point key="canvasLocation" x="383.5" y="12"/>
+            <point key="canvasLocation" x="271.5" y="-99"/>
         </customView>
     </objects>
 </document>
