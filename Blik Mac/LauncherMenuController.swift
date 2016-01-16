@@ -61,10 +61,9 @@ public class LauncherMenuController: NSObject {
 		self.navigator = navigator
 		
 		allProjectsUser = projectManager.useAllProjects()
+		projectManagerObserver = AnyNotificationObserver(object: projectManager)
 		
 		menuAssistant = MenuAssistant(menu: menu)
-		
-		projectManagerObserver = AnyNotificationObserver(object: projectManager)
 		
 		nowWidgetViewController = NowWidgetViewController()
 		
@@ -149,7 +148,7 @@ public class LauncherMenuController: NSObject {
 	private func reloadMenu() {
 		projectManager.loadNowProjectIfNeeded()
 		
-		menuAssistant.menuItemRepresentatives = items
+		menuAssistant.menuItemRepresentatives = self.items
 		menuAssistant.update()
 	}
 }

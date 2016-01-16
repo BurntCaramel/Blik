@@ -16,6 +16,8 @@ import Cocoa
 	
 	var statusItemController: GLAStatusItemController!
 	
+	@IBOutlet var topProjectsPlaceholderMenuItem: NSMenuItem!
+	
 	@IBOutlet var mainHelpMenu: NSMenu!
 	@IBOutlet var helpGuidesPlaceholderMenuItem: NSMenuItem!
 	@IBOutlet var activityStatusMenuItem: NSMenuItem!
@@ -24,10 +26,11 @@ import Cocoa
 	@IBOutlet var buyMacAppStoreMenuItem: NSMenuItem!
 	
 	@IBOutlet var creatorThoughtsMenu: NSMenu!
-	
+
 	
 	var hasPrepared: Bool = false
 	
+	var topProjectsAssistant: TopProjectsAssistant!
 	var creatorThoughtsAssistant: CreatorThoughtsAssistant!
 	var helpGuidesAssistant: GuideArticlesAssistant!
 }

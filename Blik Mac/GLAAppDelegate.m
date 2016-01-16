@@ -53,8 +53,12 @@
 	
 	[[GLAApplicationSettingsManager sharedApplicationSettingsManager] ensureAccessToPermittedApplicationsFolders];
 	
+	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
+	GLAMainSectionNavigator *navigator = [GLAMainSectionNavigator sharedMainSectionNavigator];
+	
 	(self.creatorThoughtsAssistant) = [[CreatorThoughtsAssistant alloc] initWithMenu:(self.creatorThoughtsMenu)];
 	(self.helpGuidesAssistant) = [[GuideArticlesAssistant alloc] initWithPlaceholderMenuItem:(self.helpGuidesPlaceholderMenuItem)];
+	(self.topProjectsAssistant) = [[TopProjectsAssistant alloc] initWithPlaceholderMenuItem:(self.topProjectsPlaceholderMenuItem) projectManager:pm navigator:navigator];
 	
 #if TRIAL || GLA_ENABLE_PADDLE_SDK
 	Paddle *paddle = [Paddle sharedInstance];

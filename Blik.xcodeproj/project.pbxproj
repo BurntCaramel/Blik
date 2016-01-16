@@ -264,6 +264,8 @@
 		B27FB6481C34062700DA7F00 /* NowWidgetViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B27FB6461C34062700DA7F00 /* NowWidgetViewController.xib */; };
 		B27FB64A1C3407BA00DA7F00 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27FB6491C3407BA00DA7F00 /* AppDelegate.swift */; };
 		B27FB64B1C3407BA00DA7F00 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27FB6491C3407BA00DA7F00 /* AppDelegate.swift */; };
+		B2800A1F1C4A1BFE00BE3874 /* TopProjectsAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2800A1E1C4A1BFE00BE3874 /* TopProjectsAssistant.swift */; };
+		B2800A201C4A1BFE00BE3874 /* TopProjectsAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2800A1E1C4A1BFE00BE3874 /* TopProjectsAssistant.swift */; };
 		B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */ = {isa = PBXBuildFile; fileRef = B2841B3219809E15005BB6A3 /* GLAProject.m */; };
 		B284D5621978EC1F00157126 /* GLACollection.m in Sources */ = {isa = PBXBuildFile; fileRef = B284D5611978EC1F00157126 /* GLACollection.m */; };
 		B28518271BB42D2C00135E5C /* BurntFoundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B20DB28E1B08334800E57532 /* BurntFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -573,6 +575,7 @@
 		B27FB6431C33DC1F00DA7F00 /* NowWidgetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowWidgetViewController.swift; sourceTree = "<group>"; };
 		B27FB6461C34062700DA7F00 /* NowWidgetViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NowWidgetViewController.xib; sourceTree = "<group>"; };
 		B27FB6491C3407BA00DA7F00 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B2800A1E1C4A1BFE00BE3874 /* TopProjectsAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopProjectsAssistant.swift; sourceTree = "<group>"; };
 		B2841B3119809E15005BB6A3 /* GLAProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProject.h; sourceTree = "<group>"; };
 		B2841B3219809E15005BB6A3 /* GLAProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAProject.m; sourceTree = "<group>"; };
 		B284D5601978EC1F00157126 /* GLACollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLACollection.h; sourceTree = "<group>"; };
@@ -1064,6 +1067,16 @@
 			name = "Desktop Widget";
 			sourceTree = "<group>";
 		};
+		B2800A1D1C4A1BE200BE3874 /* Main Menu UI */ = {
+			isa = PBXGroup;
+			children = (
+				B20DB38C1B12A7E800E57532 /* CreatorThoughts.swift */,
+				B285182B1BB60D7600135E5C /* GuideArticles.swift */,
+				B2800A1E1C4A1BFE00BE3874 /* TopProjectsAssistant.swift */,
+			);
+			name = "Main Menu UI";
+			sourceTree = "<group>";
+		};
 		B28927541A6B1F69007238D6 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1156,8 +1169,7 @@
 				B27FB6491C3407BA00DA7F00 /* AppDelegate.swift */,
 				B2ADDBE41963DA2E0014EF84 /* GLAAppDelegate.m */,
 				B27B31A71B3FC1E600ACC214 /* AppDelegate+.swift */,
-				B20DB38C1B12A7E800E57532 /* CreatorThoughts.swift */,
-				B285182B1BB60D7600135E5C /* GuideArticles.swift */,
+				B2800A1D1C4A1BE200BE3874 /* Main Menu UI */,
 				B2CCF8EA1A370C8700EC7703 /* Categories */,
 				B2ADDBE61963DA2E0014EF84 /* MainMenu.xib */,
 				B2ADDBE91963DA2E0014EF84 /* Images.xcassets */,
@@ -2001,6 +2013,7 @@
 				B20DB3081B0C8ACA00E57532 /* GLACollectionColorPickerPopover.m in Sources */,
 				B20DB3091B0C8ACA00E57532 /* GLATextField.m in Sources */,
 				B20DB30A1B0C8ACA00E57532 /* NSTableView+GLAActionHelpers.m in Sources */,
+				B2800A201C4A1BFE00BE3874 /* TopProjectsAssistant.swift in Sources */,
 				B20DB30B1B0C8ACA00E57532 /* GLAAddNewProjectViewController.m in Sources */,
 				B20DB30C1B0C8ACA00E57532 /* NSValueTransformer+GLAModel.m in Sources */,
 				B20DB30D1B0C8ACA00E57532 /* GLAHighlightsTableCellView.m in Sources */,
@@ -2151,6 +2164,7 @@
 				B292453519DB5BE100DD30CB /* GLACollectionColorPickerPopover.m in Sources */,
 				B2F0DBCD1994C854001AB5EE /* GLATextField.m in Sources */,
 				B28927571A6BA433007238D6 /* NSTableView+GLAActionHelpers.m in Sources */,
+				B2800A1F1C4A1BFE00BE3874 /* TopProjectsAssistant.swift in Sources */,
 				B26659EB199C60D7003C4EA4 /* GLAAddNewProjectViewController.m in Sources */,
 				B29F8DDA1980D45400F58F59 /* NSValueTransformer+GLAModel.m in Sources */,
 				B2D0331C19FFA69000C396FB /* GLAHighlightsTableCellView.m in Sources */,
