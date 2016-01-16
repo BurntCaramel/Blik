@@ -55,7 +55,6 @@ class NowWidgetViewController: GLAViewController {
 		let allProjectsUser = pm.useAllProjects()
 		allProjectsUser.changeCompletionBlock = { projectInspector in
 			let projects = projectInspector.copyChildren() as! [GLAProject]
-			print("PROJECTS \(projects)")
 			self.projectButtonAssistant?.menuItemRepresentatives = projects.map { ProjectChoice(project: $0) }
 			self.projectButtonAssistant?.update()
 		}
@@ -86,5 +85,27 @@ class NowWidgetViewController: GLAViewController {
 		if let project = projectButtonAssistant?.selectedItemRepresentative?.project {
 			projectManager.changeNowProject(project)
 		}
+	}
+}
+
+public class NowWidgetView: NSView {
+	func ensureWindowIsKey(window: NSWindow?) {
+		if let window = window where !window.keyWindow {
+			window.becomeKeyWindow()
+		}
+		
+		updateTrackingAreas()
+	}
+	
+	override public func viewWillMoveToSuperview(newSuperview: NSView?) {
+		super.viewWillMoveToSuperview(newSuperview)
+		
+		ensureWindowIsKey(newSuperview?.window)
+	}
+	
+	override public func viewWillMoveToWindow(newWindow: NSWindow?) {
+		super.viewWillMoveToWindow(newWindow)
+		
+		ensureWindowIsKey(newWindow)
 	}
 }
