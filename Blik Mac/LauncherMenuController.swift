@@ -131,8 +131,10 @@ public class LauncherMenuController: NSObject {
 	private var items: [Item?] {
 		var items = [Item?]()
 		
-		items.append(Item.NowProject)
-		items.append(nil)
+		if false {
+			items.append(Item.NowProject)
+			items.append(nil)
+		}
 		
 		let projects = (allProjectsUser.copyChildrenLoadingIfNeeded() as! [GLAProject]?) ?? []
 		let projectItems: [Item?] = projects.filter({ !$0.hideFromLauncherMenu }).map(Item.Project)
