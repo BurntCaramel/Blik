@@ -254,8 +254,10 @@ extension HighlightItemDetails {
 		
 		count += allHighlightedItems.count
 		
-		// For collection group headings
-		count += groupedCollectionUUIDsToItems.count
+		if project.groupHighlights {
+			// For collection group headings
+			count += groupedCollectionUUIDsToItems.count
+		}
 		
 		if let masterFolderCount = primaryFolders?.count where masterFolderCount > 0 {
 			count += masterFolderCount
