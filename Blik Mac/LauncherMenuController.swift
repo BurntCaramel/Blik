@@ -12,10 +12,10 @@ import BurntCocoaUI
 
 
 private enum Item {
-	case NowProject
-	case Project(GLAProject)
-	case AllProjects
-	case NewProject
+	case nowProject
+	case project(GLAProject)
+	case allProjects
+	case newProject
 	case showInDock
 	case quit
 }
@@ -24,13 +24,13 @@ extension Item: UIChoiceRepresentative {
 	typealias UniqueIdentifier = String
 	var uniqueIdentifier: UniqueIdentifier {
 		switch self {
-		case .NowProject:
+		case .nowProject:
 			return "now"
-		case let .Project(project):
+		case let .project(project):
 			return "project.\(project.UUID)"
-		case .AllProjects:
+		case .allProjects:
 			return "allProjects"
-		case .NewProject:
+		case .newProject:
 			return "newProject"
 		case .showInDock: return "showInDock"
 		case .quit: return "quit"
@@ -39,13 +39,13 @@ extension Item: UIChoiceRepresentative {
 	
 	var title: String {
 		switch self {
-		case .NowProject:
+		case .nowProject:
 			return "Now"
-		case let .Project(project):
+		case let .project(project):
 			return project.name
-		case .AllProjects:
+		case .allProjects:
 			return NSLocalizedString("All Projects…", comment: "Title for opening All Projects")
-		case .NewProject:
+		case .newProject:
 			return NSLocalizedString("New Project…", comment: "Title for creating a new project")
 		case .showInDock:
 			return NSLocalizedString("Show in Dock", comment: "Title for toggling Dock icon")
@@ -83,13 +83,13 @@ public class LauncherMenuController: NSObject {
 			let action: Selector
 			
 			switch item {
-			case .NowProject:
+			case .nowProject:
 				action = nil
-			case .Project:
+			case .project:
 				action = "openProject:"
-			case .AllProjects:
+			case .allProjects:
 				action = "goToAllProjects:"
-			case .NewProject:
+			case .newProject:
 				action = "createNewProject:"
 			case .showInDock:
 				action = "toggleShowInDock:"
@@ -117,9 +117,9 @@ public class LauncherMenuController: NSObject {
 		
 		menuAssistant.customization.additionalSetUp = { item, menuItem in
 			switch item {
-			case .NowProject:
+			case .nowProject:
 				menuItem.view = self.nowWidgetViewController.view
-			case .Project:
+			case .project:
 				if menuItem.submenu == nil {
 					menuItem.submenu = NSMenu()
 				}
@@ -147,21 +147,21 @@ public class LauncherMenuController: NSObject {
 		var items = [Item?]()
 		
 		if false {
-			items.append(Item.NowProject)
+			items.append(.nowProject)
 			items.append(nil)
 		}
 		
 		let projects = (allProjectsUser.copyChildrenLoadingIfNeeded() as! [GLAProject]?) ?? []
-		let projectItems: [Item?] = projects.filter{ !$0.hideFromLauncherMenu }.map(Item.Project)
+		let projectItems: [Item?] = projects.filter{ !$0.hideFromLauncherMenu }.map(Item.project)
 		items += projectItems
 		
 		items.append(nil)
-		items.append(Item.AllProjects)
-		items.append(Item.NewProject)
+		items.append(.allProjects)
+		items.append(.newProject)
 		
 		items.append(nil)
-		items.append(Item.showInDock)
-		items.append(Item.quit)
+		items.append(.showInDock)
+		items.append(.quit)
 		
 		return items
 	}
@@ -182,7 +182,7 @@ extension LauncherMenuController {
 	@IBAction func openProject(menuItem: NSMenuItem) {
 		guard let
 			item = menuAssistant.itemRepresentativeForMenuItem(menuItem),
-			case let .Project(project) = item
+			case let .project(project) = item
 			else { return }
 		
 		navigator.goToProject(project)
@@ -218,7 +218,7 @@ extension LauncherMenuController: NSMenuDelegate {
 		
 		guard let item = menuAssistant.itemRepresentativeForMenuItem(menuItem) else { return }
 		
-		if case let .Project(project) = item {
+		if case let .project(project) = item {
 			let submenu = menuItem.submenu ?? {
 				let submenu = NSMenu()
 				menuItem.submenu = submenu
@@ -246,7 +246,7 @@ extension LauncherMenuController: NSUserInterfaceValidations {
 		var state = NSOffState
 		
 		switch item {
-		case let .Project(project):
+		case let .project(project):
 			if project.UUID == projectManager.nowProject?.UUID {
 				state = NSOnState
 			}
