@@ -20,7 +20,6 @@
 // MODEL
 #import "GLAProject.h"
 #import "GLACollection.h"
-#import "GLAReminder.h"
 #import "Blik-Swift.h"
 
 @class GLAProjectViewController;

@@ -12,8 +12,6 @@
 #import "GLAInstructionsViewController.h"
 #import "GLAUIStyle.h"
 #import "GLAProjectManager.h"
-#import "GLAReminderManager.h"
-#import "GLAChooseRemindersViewController.h"
 #import <objc/runtime.h>
 
 
