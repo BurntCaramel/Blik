@@ -332,7 +332,7 @@ extension HighlightItemDetails {
 					return .GroupedCollectionHeading(collection)
 				}
 				
-				groupedItemIndex++
+				groupedItemIndex += 1
 				
 				if index < (groupedItemIndex + groupItems.count) {
 					let highlightedItem = groupItems[index - groupedItemIndex]
@@ -348,7 +348,7 @@ extension HighlightItemDetails {
 				return .MasterFoldersHeading
 			}
 			
-			groupedItemIndex++
+			groupedItemIndex += 1
 		}
 		
 		// Master folders
@@ -417,7 +417,7 @@ extension HighlightItemDetails {
 				mutableIndexes.shiftIndexesStartingAtIndex(itemIndex, by: 1)
 			}
 			
-			itemIndex++
+			itemIndex += 1
 		}
 		
 		return mutableIndexes

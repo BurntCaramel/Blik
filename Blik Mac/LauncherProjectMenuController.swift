@@ -117,11 +117,11 @@ public class LauncherProjectMenuController: NSObject {
 			
 			switch item {
 			case .Highlight:
-				action = "openHighlight:"
+				action = #selector(LauncherProjectMenuController.openHighlight(_:))
 			case .Collection:
-				action = "openCollection:"
+				action = #selector(LauncherProjectMenuController.openCollection(_:))
 			case .WorkOnNow:
-				action = "workOnNow:"
+				action = #selector(LauncherProjectMenuController.workOnNow(_:))
 			}
 			
 			return (action, self)

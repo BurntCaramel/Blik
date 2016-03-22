@@ -52,7 +52,7 @@ class GuideArticlesAssistant: NSObject {
 		super.init()
 		
 		menuItemAssistant.customization.actionAndTarget = { [weak self] link in
-			return (action: "openLink:", target: self)
+			return (action: #selector(GuideArticlesAssistant.openLink(_:)), target: self)
 		}
 		
 		menuItemAssistant.menuItemRepresentatives = Link.chosenLinks.map { $0 }

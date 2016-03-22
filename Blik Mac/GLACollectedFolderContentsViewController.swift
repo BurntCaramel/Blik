@@ -143,7 +143,7 @@ extension BrowseChoice: UIChoiceRepresentative {
 		folderContentOutlineView.setDataSource(self)
 		folderContentOutlineView.setDelegate(self)
 		folderContentOutlineView.target = self
-		folderContentOutlineView.doubleAction = "openSelectedFiles:"
+		folderContentOutlineView.doubleAction = #selector(GLACollectedFolderContentsViewController.openSelectedFiles(_:))
 		style.prepareContentTableView(folderContentOutlineView)
 		
 		//browseChoicePopUpButtonAssistant = PopUpButtonAssistant<BrowseChoice>(popUpButton: browseChoicePopUpButton)
@@ -166,7 +166,7 @@ extension BrowseChoice: UIChoiceRepresentative {
 	var sourceDirectoryURL: NSURL! {
 		didSet {
 			// Make sure view has loaded
-			let view = self.view
+			_ = self.view
 			
 			if let sourceDirectoryURL = sourceDirectoryURL {
 				let directoryWatcher = self.directoryWatcher ?? GLADirectoryWatcher(delegate: self, previousStateData: nil)!
@@ -332,11 +332,11 @@ extension GLACollectedFolderContentsViewController {
 			contextualMenuAssistant.customization.actionAndTarget = { [unowned self] choice in
 				switch choice {
 				case .AddToCollection:
-					return (action: "addSelectedFileToCollection:", target: self)
+					return (action: #selector(GLACollectedFolderContentsViewController.addSelectedFileToCollection(_:)), target: self)
 				case .RemoveFromCollection:
-					return (action: "removeSelectedFileFromCollection:", target: self)
+					return (action: #selector(GLACollectedFolderContentsViewController.removeSelectedFileFromCollection(_:)), target: self)
 				case .ShowInFinder:
-					return (action: "showSelectedFileInFinder:", target: self)
+					return (action: #selector(GLACollectedFolderContentsViewController.showSelectedFileInFinder(_:)), target: self)
 				}
 			}
 		}

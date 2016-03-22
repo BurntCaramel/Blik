@@ -97,7 +97,7 @@ func changeViewValues<T: NSView>(views: [T], animate: Bool, viewBlock: (view: NS
 	}
 	
 	func updateOpenerApplicationMenu() {
-		selectionAssistant?.openerApplicationCombiner.updateOpenerApplicationsPullDownPopUpButton(openInApplicationPopUpButton, target: self, action: "openSelectedFilesInChosenApplication:", preferredApplicationURL: nil)
+		selectionAssistant?.openerApplicationCombiner.updateOpenerApplicationsPullDownPopUpButton(openInApplicationPopUpButton, target: self, action: #selector(FileCollectionBarViewController.openSelectedFilesInChosenApplication(_:)), preferredApplicationURL: nil)
 	}
 	
 	func updateAddToHighlightsUI() {
@@ -113,12 +113,12 @@ func changeViewValues<T: NSView>(views: [T], animate: Bool, viewBlock: (view: NS
 					// If all are already highlighted.
 					if selectionIsAllHighlighted {
 						button.title = NSLocalizedString("Remove from Highlights", comment: "Title for 'Remove from Highlights' button when all of the selected collected files are already in the highlights list.");
-						button.action = "removeSelectedFilesFromHighlights:"
+						button.action = #selector(FileCollectionBarViewController.removeSelectedFilesFromHighlights(_:))
 					}
 						// If some or all are not highlighted.
 					else {
 						button.title = NSLocalizedString("Add to Highlights", comment: "Title for 'Add to Highlights' button when some of the selected collected files are not yet in the highlights list.");
-						button.action = "addSelectedFilesToHighlights:"
+						button.action = #selector(FileCollectionBarViewController.addSelectedFilesToHighlights(_:))
 					}
 				}
 				else {
@@ -138,7 +138,7 @@ func changeViewValues<T: NSView>(views: [T], animate: Bool, viewBlock: (view: NS
 				else {
 					button.enabled = true
 					button.title = NSLocalizedString("Add to Collection", comment: "Title for 'Add to Collection' button when some of selected files are not yet in the collection list.");
-					button.action = "addSelectedFilesToCollection:"
+					button.action = #selector(FileCollectionBarViewController.addSelectedFilesToCollection(_:))
 				}
 			}
 		}

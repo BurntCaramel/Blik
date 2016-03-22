@@ -26,9 +26,9 @@ private enum Item: Int {
 	var action: Selector {
 		switch self {
 		case .RenameOrRecolor:
-			return "renameOrRecolorCollection:"
+			return #selector(CollectionItemAssistant.renameOrRecolorCollection(_:))
 		case .Delete:
-			return "deleteCollection:"
+			return #selector(CollectionItemAssistant.deleteCollection(_:))
 		}
 	}
 }

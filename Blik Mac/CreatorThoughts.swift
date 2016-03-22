@@ -71,7 +71,7 @@ class CreatorThoughtsAssistant: NSObject {
 		super.init()
 		
 		menuAssistant.customization.actionAndTarget = { [weak self] link in
-			return (action: "openLink:", target: self)
+			return (action: #selector(CreatorThoughtsAssistant.openLink(_:)), target: self)
 		}
 		
 		menuAssistant.menuItemRepresentatives = Link.chosenLinks.map { $0 }

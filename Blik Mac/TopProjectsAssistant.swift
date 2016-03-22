@@ -44,13 +44,13 @@ class TopProjectsAssistant: NSObject {
 		super.init()
 		
 		menuItemsAssistant.customization.actionAndTarget = { [weak self] _ in
-			return (action: "goToProject:", target: self)
+			return (action: #selector(TopProjectsAssistant.goToProject(_:)), target: self)
 		}
 		
 		menuItemsAssistant.customization.additionalSetUp = { topProject, menuItem in
 			menuItem.keyEquivalent = String(topProject.index + 1)
 			
-			let keyEquivalentModifierMask = NSEventModifierFlags.CommandKeyMask.union(.AlternateKeyMask)
+			let keyEquivalentModifierMask: NSEventModifierFlags = [.CommandKeyMask, .AlternateKeyMask]
 			menuItem.keyEquivalentModifierMask = Int(keyEquivalentModifierMask.rawValue)
 		}
 		
