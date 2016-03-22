@@ -17,6 +17,7 @@
 
 
 NSString *GLAMainWindowHidesWhenInactive = @"mainWindow.hidesWhenInactive";
+NSString *GLAAppHidesDockIcon = @"app.hidesDockIcon";
 
 
 @interface GLAApplicationSettingsManager () <GLAArrayMantleJSONStoreErrorHandler>
@@ -59,11 +60,15 @@ NSString *GLAMainWindowHidesWhenInactive = @"mainWindow.hidesWhenInactive";
 	NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
 	[ud registerDefaults:
 	 @{
-	   GLAMainWindowHidesWhenInactive: @NO
+	   GLAMainWindowHidesWhenInactive: @NO,
+		 GLAAppHidesDockIcon: @NO
 	   }
 	 ];
 	
 	_hidesMainWindowWhenInactive = [ud boolForKey:GLAMainWindowHidesWhenInactive];
+	_hidesDockIcon = [ud boolForKey:GLAAppHidesDockIcon];
+	
+	[self updateForHidesDockIcon];
 }
 
 #pragma mark -
@@ -189,11 +194,35 @@ NSString *GLAMainWindowHidesWhenInactive = @"mainWindow.hidesWhenInactive";
 
 #pragma mark -
 
+- (void)setHidesDockIcon:(BOOL)hidesDockIcon
+{
+	_hidesDockIcon = hidesDockIcon;
+	
+	NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+	[ud setBool:hidesDockIcon forKey:GLAAppHidesDockIcon];
+	[ud synchronize];
+	
+	[self updateForHidesDockIcon];
+}
+
+- (IBAction)toggleHidesDockIcon:(id)sender
+{
+	(self.hidesDockIcon) = !(self.hidesDockIcon);
+}
+
+- (void)updateForHidesDockIcon
+{
+	(NSApp.activationPolicy) = (self.hidesDockIcon) ? NSApplicationActivationPolicyAccessory : NSApplicationActivationPolicyRegular;
+	NSLog(@"updateForHidesDockIcon %@", @(self.hidesDockIcon));
+}
+
 - (void)setHidesMainWindowWhenInactive:(BOOL)hidesMainWindowWhenInactive
 {
 	_hidesMainWindowWhenInactive = hidesMainWindowWhenInactive;
 	
-	[[NSUserDefaults standardUserDefaults] setBool:hidesMainWindowWhenInactive forKey:GLAMainWindowHidesWhenInactive];
+	NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+	[ud setBool:hidesMainWindowWhenInactive forKey:GLAMainWindowHidesWhenInactive];
+	[ud synchronize];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification object:self];
 }

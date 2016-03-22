@@ -26,6 +26,9 @@
 
 #pragma mark -
 
+@property(nonatomic) BOOL hidesDockIcon;
+- (IBAction)toggleHidesDockIcon:(id)sender;
+
 @property(nonatomic) BOOL hidesMainWindowWhenInactive;
 - (IBAction)toggleHidesMainWindowWhenInactive:(id)sender;
 

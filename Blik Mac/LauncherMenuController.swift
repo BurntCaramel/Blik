@@ -16,6 +16,8 @@ private enum Item {
 	case Project(GLAProject)
 	case AllProjects
 	case NewProject
+	case showInDock
+	case quit
 }
 
 extension Item: UIChoiceRepresentative {
@@ -30,6 +32,8 @@ extension Item: UIChoiceRepresentative {
 			return "allProjects"
 		case .NewProject:
 			return "newProject"
+		case .showInDock: return "showInDock"
+		case .quit: return "quit"
 		}
 	}
 	
@@ -43,6 +47,10 @@ extension Item: UIChoiceRepresentative {
 			return NSLocalizedString("All Projects…", comment: "Title for opening All Projects")
 		case .NewProject:
 			return NSLocalizedString("New Project…", comment: "Title for creating a new project")
+		case .showInDock:
+			return NSLocalizedString("Show in Dock", comment: "Title for toggling Dock icon")
+		case .quit:
+			return NSLocalizedString("Quit Blik", comment: "Title for quitting the app")
 		}
 	}
 }
@@ -83,22 +91,29 @@ public class LauncherMenuController: NSObject {
 				action = "goToAllProjects:"
 			case .NewProject:
 				action = "createNewProject:"
+			case .showInDock:
+				action = "toggleShowInDock:"
+			case .quit:
+				action = "terminateApp:"
 			}
 			
 			return (action, self)
 		}
 		
-		menuAssistant.customization.state = { (item) in
+		/*menuAssistant.customization.state = { (item) in
 			switch item {
 			case let .Project(project):
 				if project.UUID == projectManager.nowProject?.UUID {
 					return NSOnState
 				}
+			case .showInDock:
+				let settings = GLAApplicationSettingsManager.sharedApplicationSettingsManager()
+				return settings.hidesDockIcon ? NSOnState : NSOffState
 			default: break
 			}
 			
 			return NSOffState
-		}
+		}*/
 		
 		menuAssistant.customization.additionalSetUp = { item, menuItem in
 			switch item {
@@ -137,12 +152,16 @@ public class LauncherMenuController: NSObject {
 		}
 		
 		let projects = (allProjectsUser.copyChildrenLoadingIfNeeded() as! [GLAProject]?) ?? []
-		let projectItems: [Item?] = projects.filter({ !$0.hideFromLauncherMenu }).map(Item.Project)
+		let projectItems: [Item?] = projects.filter{ !$0.hideFromLauncherMenu }.map(Item.Project)
 		items += projectItems
 		
 		items.append(nil)
 		items.append(Item.AllProjects)
 		items.append(Item.NewProject)
+		
+		items.append(nil)
+		items.append(Item.showInDock)
+		items.append(Item.quit)
 		
 		return items
 	}
@@ -182,6 +201,15 @@ extension LauncherMenuController {
 	
 		activateApplication()
 	}
+	
+	@IBAction func toggleShowInDock(menuItem: NSMenuItem) {
+		let settings = GLAApplicationSettingsManager.sharedApplicationSettingsManager()
+		settings.toggleHidesDockIcon(menuItem)
+	}
+	
+	@IBAction func terminateApp(menuItem: NSMenuItem) {
+		NSApp.terminate(menuItem)
+	}
 }
 
 extension LauncherMenuController: NSMenuDelegate {
@@ -205,5 +233,31 @@ extension LauncherMenuController: NSMenuDelegate {
 			
 			menuController.update()
 		}
+	}
+}
+
+extension LauncherMenuController: NSUserInterfaceValidations {
+	public func validateUserInterfaceItem(anItem: NSValidatedUserInterfaceItem) -> Bool {
+		guard let
+			menuItem = anItem as? NSMenuItem,
+			item = menuAssistant.itemRepresentativeForMenuItem(menuItem)
+			else { return true }
+		
+		var state = NSOffState
+		
+		switch item {
+		case let .Project(project):
+			if project.UUID == projectManager.nowProject?.UUID {
+				state = NSOnState
+			}
+		case .showInDock:
+			let settings = GLAApplicationSettingsManager.sharedApplicationSettingsManager()
+			state = settings.hidesDockIcon ? NSOffState : NSOnState
+		default: break
+		}
+		
+		menuItem.state = state
+		
+		return true
 	}
 }
