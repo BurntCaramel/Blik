@@ -154,16 +154,16 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 		tableView.setDelegate(self)
 		
 		tableView.target = self
-		tableView.action = "openClickedItem:"
+		tableView.action = #selector(ProjectHighlightsViewController.openClickedItem(_:))
 		
 		let collectedFileMenuCreator = GLACollectedFileMenuCreator()
 		collectedFileMenuCreator.context = .InHighlights
 		collectedFileMenuCreator.target = self
-		collectedFileMenuCreator.openInApplicationAction = "openWithChosenApplication:"
-		collectedFileMenuCreator.changePreferredOpenerApplicationAction = "changePreferredOpenerApplication:"
-		collectedFileMenuCreator.showInFinderAction = "showItemInFinder:"
-		collectedFileMenuCreator.changeCustomNameHighlightsAction = "changeCustomNameOfClickedItem:"
-		collectedFileMenuCreator.removeFromHighlightsAction = "removedClickedItem:"
+		collectedFileMenuCreator.openInApplicationAction = #selector(ProjectHighlightsViewController.openWithChosenApplication(_:))
+		collectedFileMenuCreator.changePreferredOpenerApplicationAction = #selector(ProjectHighlightsViewController.changePreferredOpenerApplication(_:))
+		collectedFileMenuCreator.showInFinderAction = #selector(ProjectHighlightsViewController.showItemInFinder(_:))
+		collectedFileMenuCreator.changeCustomNameHighlightsAction = #selector(ProjectHighlightsViewController.changeCustomNameOfClickedItem(_:))
+		collectedFileMenuCreator.removeFromHighlightsAction = #selector(ProjectHighlightsViewController.removedClickedItem(_:))
 		
 		let nc = NSNotificationCenter.defaultCenter()
 		
@@ -387,10 +387,10 @@ extension ProjectHighlightsViewController {
 		}
 	}
 	
-	private func changeCustomName(var name: String, forHighlightedItem highlightedItem: GLAHighlightedItem) {
+	private func changeCustomName(name: String, forHighlightedItem highlightedItem: GLAHighlightedItem) {
 		guard let project = project else { return }
 		
-		name = name.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+		let name = name.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
 		
 		let projectManager = GLAProjectManager.sharedProjectManager()
 		
