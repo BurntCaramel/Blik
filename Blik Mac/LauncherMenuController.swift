@@ -55,6 +55,25 @@ extension Item: UIChoiceRepresentative {
 	}
 }
 
+extension Item {
+	var action: Selector {
+		switch self {
+		case .nowProject:
+			return nil
+		case .project:
+			return #selector(LauncherMenuController.openProject(_:))
+		case .allProjects:
+			return #selector(LauncherMenuController.goToAllProjects(_:))
+		case .newProject:
+			return #selector(LauncherMenuController.createNewProject(_:))
+		case .showInDock:
+			return #selector(LauncherMenuController.toggleShowInDock(_:))
+		case .quit:
+			return #selector(LauncherMenuController.terminateApp(_:))
+		}
+	}
+}
+
 public class LauncherMenuController: NSObject {
 	private let projectManager: GLAProjectManager
 	private let navigator: GLAMainSectionNavigator
@@ -80,24 +99,7 @@ public class LauncherMenuController: NSObject {
 		menu.delegate = self
 		
 		menuAssistant.customization.actionAndTarget = { [weak self] (item) in
-			let action: Selector
-			
-			switch item {
-			case .nowProject:
-				action = nil
-			case .project:
-				action = "openProject:"
-			case .allProjects:
-				action = "goToAllProjects:"
-			case .newProject:
-				action = "createNewProject:"
-			case .showInDock:
-				action = "toggleShowInDock:"
-			case .quit:
-				action = "terminateApp:"
-			}
-			
-			return (action, self)
+			return (item.action, self)
 		}
 		
 		/*menuAssistant.customization.state = { (item) in
