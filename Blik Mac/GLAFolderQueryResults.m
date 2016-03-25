@@ -8,12 +8,11 @@
 
 #import "GLAFolderQueryResults.h"
 #import "GLAFolderQuery.h"
-#import "GLAAccessedFileInfo.h"
 
 
 @interface GLAFolderQueryResults () <GLAFileInfoRetrieverDelegate>
 
-@property(nonatomic) GLAAccessedFileInfo *accessedFolder;
+@property(nonatomic) id<GLAFileAccessing> accessedFolder;
 
 @property(nonatomic) MDQueryRef MDQuery;
 @property(nonatomic) dispatch_queue_t resultsDispatchQueue;
@@ -140,7 +139,7 @@
 	MDQuerySetDispatchQueue(MDQuery, (self.resultsDispatchQueue));
 	
 	GLACollectedFile *collectedFileForFolderURL = (folderQuery.collectedFileForFolderURL);
-	GLAAccessedFileInfo *accessedFolder = [collectedFileForFolderURL accessFile];
+	id<GLAFileAccessing> accessedFolder = [collectedFileForFolderURL accessFile];
 	(self.accessedFolder) = accessedFolder;
 	NSURL *folderURL = (accessedFolder.filePathURL);
 	NSArray *scopeFolderPaths = @[folderURL];

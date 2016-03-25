@@ -468,8 +468,7 @@
 	NSArray *projectFolders = [pm copyPrimaryFoldersForProject:project];
 	NSMutableSet *directoryURLs = [NSMutableSet new];
 	for (GLACollectedFile *collectedFile in projectFolders) {
-		GLAAccessedFileInfo *accessedFileInfo = [collectedFile accessFile];
-		NSURL *directoryURL = (accessedFileInfo.filePathURL);
+		NSURL *directoryURL = ([collectedFile accessFile].filePathURL);
 		[directoryURLs addObject:directoryURL];
 	}
 	(collectedFilesSetting.directoryURLsToWatch) = directoryURLs;
@@ -589,7 +588,7 @@
 	
 	NSMutableArray *URLs = [NSMutableArray new];
 	for (GLACollectedFile *collectedFile in collectedFiles) {
-		GLAAccessedFileInfo *accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
+		id<GLAFileAccessing> accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
 		NSURL *fileURL = (accessedFile.filePathURL);
 		if (fileURL) {
 			[URLs addObject:fileURL];
@@ -605,7 +604,7 @@
 	
 	NSMutableIndexSet *indexes = [NSMutableIndexSet new];
 	[(self.collectedFiles) enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
-		GLAAccessedFileInfo *accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
+		id<GLAFileAccessing> accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
 		if (accessedFile) {
 			if ([fileURLsSet containsObject:(accessedFile.filePathURL)]) {
 				[indexes addIndex:idx];
@@ -664,7 +663,7 @@
 	
 	(source.selectedCollectedFiles) = @[collectedFile];
 	
-	GLAAccessedFileInfo *accessedFile = [(self.collectedFilesSetting) accessedFileInfoForCollectedFile:collectedFile];
+	id<GLAFileAccessing> accessedFile = [(self.collectedFilesSetting) accessedFileInfoForCollectedFile:collectedFile];
 	(source.selectedFileURLs) = @[(accessedFile.filePathURL)];
 	
 	return source;
@@ -1214,7 +1213,7 @@
 	GLACollectedFilesSetting *collectedFilesSetting = (self.collectedFilesSetting);
 	
 	NSIndexSet *indexesToUpdate = [(self.collectedFiles) indexesOfObjectsPassingTest:^BOOL(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
-		GLAAccessedFileInfo *accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
+		id<GLAFileAccessing> accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
 		return [fileURL isEqual:(accessedFile.filePathURL)];
 	}];
 	

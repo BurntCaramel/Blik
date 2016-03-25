@@ -125,8 +125,7 @@
 			continue;
 		}
 		
-		GLAAccessedFileInfo *accessedFileInfo = [collectedFile accessFile];
-		NSURL *directoryURL = (accessedFileInfo.filePathURL);
+		NSURL *directoryURL = ([collectedFile accessFile].filePathURL);
 		[directoryURLs addObject:directoryURL];
 	}
 	(collectedFilesSetting.directoryURLsToWatch) = directoryURLs;
@@ -187,7 +186,7 @@
 	
 	NSArray *allCollectedFiles = (self.collectedFiles);
 	NSUInteger matchingIndex = [allCollectedFiles indexOfObjectPassingTest:^BOOL(GLACollectedFile *collectedFile, NSUInteger idx, BOOL *stop) {
-		GLAAccessedFileInfo *accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
+		id<GLAFileAccessing> accessedFile = [collectedFilesSetting accessedFileInfoForCollectedFile:collectedFile];
 		return [fileURL isEqual:(accessedFile.filePathURL)];
 	}];
 	GLACollectedFile *matchingCollectedFile = allCollectedFiles[matchingIndex];

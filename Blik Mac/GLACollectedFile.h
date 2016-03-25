@@ -27,7 +27,7 @@
 @property(readonly, nonatomic) BOOL empty;
 
 // Retain this if you want this to be cached.
-- (GLAAccessedFileInfo *)accessFile;
+- (id<GLAFileAccessing>)accessFile;
 
 //@property(readonly, nonatomic) NSURL *filePathURL;
 //@property(readonly, nonatomic) NSURL *fileReferenceURL;

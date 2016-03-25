@@ -30,7 +30,7 @@ typedef id (^ GLACollectedFilesSettingFileInfoRetriever)(GLAFileInfoRetriever *f
 @property(nonatomic) id<GLALoadableArrayUsing> sourceCollectedFilesLoadableArray;
 
 // Must call -startAccessing first. Can be nil.
-- (GLAAccessedFileInfo *)accessedFileInfoForCollectedFile:(GLACollectedFile *)collectedFile;
+- (id<GLAFileAccessing>)accessedFileInfoForCollectedFile:(GLACollectedFile *)collectedFile;
 - (NSURL *)filePathURLForCollectedFile:(GLACollectedFile *)collectedFile;
 
 - (void)invalidateAllAccessedFiles;

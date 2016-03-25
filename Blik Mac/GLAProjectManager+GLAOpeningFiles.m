@@ -16,7 +16,7 @@
 {
 	// Stays accessed as long as this exists.
 	// So (accessedFileInfo.filePathURL) is used below, to have a reference.
-	GLAAccessedFileInfo *accessedFileInfo = [collectedFile accessFile];
+	id<GLAFileAccessing> accessedFileInfo = [collectedFile accessFile];
 	
 	// Command shows the file in the Finder
 	if (behaviour == GLAOpenBehaviourShowInFinder) {
@@ -61,7 +61,7 @@
 	
 	// Stays accessed as long as this exists.
 	// So (accessedFileInfo.filePathURL) is used below, to have a reference.
-	GLAAccessedFileInfo *accessedFileInfo = [collectedFile accessFile];
+	id<GLAFileAccessing> accessedFileInfo = [collectedFile accessFile];
 	
 	// Command shows the file in the Finder
 	if (behaviour == GLAOpenBehaviourShowInFinder) {
@@ -90,7 +90,7 @@
 	NSURL *applicationURL = nil;
 	GLACollectedFile *applicationToOpenFileCollected = (highlightedCollectedFile.applicationToOpenFile);
 	if (applicationToOpenFileCollected) {
-		GLAAccessedFileInfo *preferredApplicationAccessedFile = [applicationToOpenFileCollected accessFile];
+		id<GLAFileAccessing> preferredApplicationAccessedFile = [applicationToOpenFileCollected accessFile];
 		applicationURL = (preferredApplicationAccessedFile.filePathURL);
 	}
 	

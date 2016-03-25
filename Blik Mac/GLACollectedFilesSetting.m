@@ -156,7 +156,7 @@
 	
 	if (resolve) {
 		[self runAsyncInBackground:^(GLACollectedFilesSetting *self) {
-			GLAAccessedFileInfo *accessedFileInfo = [collectedFile accessFile];
+			id<GLAFileAccessing> accessedFileInfo = [collectedFile accessFile];
 			NSURL *filePathURL = (accessedFileInfo.filePathURL);
 			if (filePathURL) {
 				[(self.fileInfoRetriever) requestDefaultResourceKeysForURL:filePathURL alwaysNotify:YES];
@@ -352,7 +352,7 @@
 	return collectedFileUUIDMap[collectedFileUUID];
 }
 
-- (GLAAccessedFileInfo *)accessedFileInfoForCollectedFile:(GLACollectedFile *)collectedFile
+- (id<GLAFileAccessing>)accessedFileInfoForCollectedFile:(GLACollectedFile *)collectedFile
 {
 	__block GLAAccessedFileInfo *accessedFileInfo = nil;
 	dispatch_sync((self.inputDispatchQueue), ^{
@@ -364,7 +364,7 @@
 
 - (NSURL *)filePathURLForCollectedFile:(GLACollectedFile *)collectedFile
 {
-	GLAAccessedFileInfo *accessedFileInfo = [self accessedFileInfoForCollectedFile:collectedFile];
+	id<GLAFileAccessing> accessedFileInfo = [self accessedFileInfoForCollectedFile:collectedFile];
 	if (!accessedFileInfo) {
 		return nil;
 	}
@@ -390,7 +390,7 @@
 		}
 		
 		// Get accessed file.
-		GLAAccessedFileInfo *accessedFileInfo = [self input_accessedFileInfoForCollectedFileUUID:collectedFileUUID];
+		id<GLAFileAccessing> accessedFileInfo = [self input_accessedFileInfoForCollectedFileUUID:collectedFileUUID];
 		if (!accessedFileInfo) {
 			return;
 		}

@@ -12,7 +12,7 @@
 
 @interface GLACollectedFilePreviewView ()
 
-@property(nonatomic) GLAAccessedFileInfo *accessedFile;
+@property(nonatomic) id<GLAFileAccessing> accessedFile;
 
 @property(nonatomic) CGImageRef contentImage;
 @property(nonatomic) CGFloat contentImageBackingScale;
@@ -172,7 +172,7 @@
 {
 	CALayer *layer = (self.layer);
 	
-	GLAAccessedFileInfo *accessedFile = (self.accessedFile);
+	id<GLAFileAccessing> accessedFile = (self.accessedFile);
 	if (!accessedFile) {
 		(layer.contents) = nil;
 		return;

@@ -86,9 +86,7 @@
 			if ((fileURLs.count) == 1) {
 				GLACollectedFile *collectedFile = [[GLACollectedFile alloc] initWithFileURL:fileURLs[0]];
 				// Get the name synchronously, just to get it done immediately.
-				GLAAccessedFileInfo *accessedFile = [collectedFile accessFile];
-				
-				fileURL = (accessedFile.filePathURL);
+				fileURL = ([collectedFile accessFile].filePathURL);
 			}
 		}
 	}

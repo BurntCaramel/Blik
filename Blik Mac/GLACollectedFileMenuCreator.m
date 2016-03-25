@@ -155,7 +155,7 @@
 	if (highlightedCollectedFile) {
 		GLACollectedFile *collectedFileForPreferredApplication = (highlightedCollectedFile.applicationToOpenFile);
 		if (collectedFileForPreferredApplication) {
-			GLAAccessedFileInfo *preferredApplicationAccessedFile = [collectedFileForPreferredApplication accessFile];
+			id<GLAFileAccessing> preferredApplicationAccessedFile = [collectedFileForPreferredApplication accessFile];
 			preferredApplicationURL = (preferredApplicationAccessedFile.filePathURL);
 		}
 	}
