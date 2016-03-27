@@ -169,6 +169,7 @@ extension SymlinkCreator {
 		openPanel.canChooseFiles = false
 		openPanel.canCreateDirectories = true
 		openPanel.allowsMultipleSelection = false
+		openPanel.level = Int(CGWindowLevelForKey(CGWindowLevelKey.FloatingWindowLevelKey))
 		
 		openPanel.beginWithCompletionHandler { result in
 			if result == NSFileHandlingPanelOKButton {

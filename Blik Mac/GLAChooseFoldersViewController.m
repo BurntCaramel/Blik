@@ -177,6 +177,7 @@
 	(openPanel.canChooseFiles) = NO;
 	(openPanel.canChooseDirectories) = YES;
 	(openPanel.allowsMultipleSelection) = YES;
+	(openPanel.level) = NSFloatingWindowLevel;
 	
 	NSString *chooseString = NSLocalizedString(@"Choose", @"NSOpenPanel button for choosing folder to add to master folders list.");
 	(openPanel.title) = chooseString;

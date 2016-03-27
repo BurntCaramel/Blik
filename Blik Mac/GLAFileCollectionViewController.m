@@ -745,6 +745,7 @@
 	(openPanel.canChooseFiles) = YES;
 	(openPanel.canChooseDirectories) = YES;
 	(openPanel.allowsMultipleSelection) = YES;
+	(openPanel.level) = NSFloatingWindowLevel;
 	
 	NSString *chooseString = NSLocalizedString(@"Choose", @"NSOpenPanel button for choosing file/folder to add to collected files list.");
 	(openPanel.title) = chooseString;
