@@ -22,6 +22,9 @@
 @property(nonatomic) IBOutlet NSButton *showStatusMenuItemCheckButton;
 - (IBAction)toggleShowStatusMenuItem:(id)sender;
 
+@property(nonatomic) IBOutlet NSButton *showDockIconCheckButton;
+- (IBAction)toggleShowsDockIcon:(id)sender;
+
 @property(nonatomic) IBOutlet NSButton *hideMainWindowWhenInactiveCheckButton;
 - (IBAction)toggleHideMainWindowWhenInactive:(id)sender;
 

@@ -37,11 +37,13 @@
 	[style prepareSecondaryInstructionalTextLabel:(self.editPermittedApplicationFoldersLabel)];
 	
 	[style prepareCheckButton:(self.showStatusMenuItemCheckButton)];
+	[style prepareCheckButton:(self.showDockIconCheckButton)];
 	[style prepareCheckButton:(self.hideMainWindowWhenInactiveCheckButton)];
 	
 	[self setUpNotifications];
 	
 	[self updateUIForShowsStatusMenuItem];
+	[self updateUIForShowsIconInDock];
 	[self updateUIForHidesMainWindowWhenInactive];
 }
 
@@ -50,10 +52,11 @@
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
 	GLAStatusItemController *statusItemController = (self.statusItemController);
-	[nc addObserver:self selector:@selector(statusItemControllerItemShowsItemChangedNotification:) name:GLAStatusItemControllerItemShowsItemChangedNotification object:statusItemController];
+	[nc addObserver:self selector:@selector(updateUIForShowsStatusMenuItem) name:GLAStatusItemControllerItemShowsItemChangedNotification object:statusItemController];
 	
 	GLAApplicationSettingsManager *settingsManager = (self.applicationSettingsManager);
-	[nc addObserver:self selector:@selector(hideMainWindowWhenInactiveSettingDidChangeNotification:) name:GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification object:settingsManager];
+	[nc addObserver:self selector:@selector(updateUIForShowsIconInDock) name:GLAApplicationSettingsManagerHidesDockIconDidChangeNotification object:settingsManager];
+	[nc addObserver:self selector:@selector(updateUIForHidesMainWindowWhenInactive) name:GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification object:settingsManager];
 }
 
 - (void)updateUIForShowsStatusMenuItem
@@ -62,25 +65,26 @@
 	(self.showStatusMenuItemCheckButton.state) = (showsItem ? NSOnState : NSOffState);
 }
 
+- (void)updateUIForShowsIconInDock
+{
+	BOOL showsDockIcon = !(self.applicationSettingsManager.hidesDockIcon);
+	(self.showDockIconCheckButton.state) = (showsDockIcon ? NSOnState : NSOffState);
+}
+
 - (void)updateUIForHidesMainWindowWhenInactive
 {
 	BOOL hidesMainWindowWhenInactive = (self.applicationSettingsManager.hidesMainWindowWhenInactive);
 	(self.hideMainWindowWhenInactiveCheckButton.state) = (hidesMainWindowWhenInactive ? NSOnState : NSOffState);
 }
 
-- (void)statusItemControllerItemShowsItemChangedNotification:(NSNotification *)note
-{
-	[self updateUIForShowsStatusMenuItem];
-}
-
-- (void)hideMainWindowWhenInactiveSettingDidChangeNotification:(NSNotification *)note
-{
-	[self updateUIForHidesMainWindowWhenInactive];
-}
-
 - (IBAction)toggleShowStatusMenuItem:(id)sender
 {
 	[(self.statusItemController) toggleShowingItem:sender];
+}
+
+- (IBAction)toggleShowsDockIcon:(id)sender
+{
+	[(self.applicationSettingsManager) toggleHidesDockIcon:sender];
 }
 
 - (IBAction)toggleHideMainWindowWhenInactive:(id)sender
