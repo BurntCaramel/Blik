@@ -247,4 +247,5 @@ NSString *GLAAppHidesDockIcon = @"app.hidesDockIcon";
 @end
 
 NSString *GLAApplicationSettingsManagerPermittedApplicationFoldersDidChangeNotification = @"GLAApplicationSettingsManagerPermittedApplicationFoldersDidChangeNotification";
+NSString *GLAApplicationSettingsManagerHidesDockIconDidChangeNotification = @"GLAApplicationSettingsManagerHidesDockIconDidChangeNotification";
 NSString *GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification = @"GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification";

@@ -35,4 +35,5 @@
 @end
 
 extern NSString *GLAApplicationSettingsManagerPermittedApplicationFoldersDidChangeNotification;
+extern NSString *GLAApplicationSettingsManagerHidesDockIconDidChangeNotification;
 extern NSString *GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification;
