@@ -26,6 +26,11 @@
 	return sharedPreferencesWindowController;
 }
 
++ (void)showWindow
+{
+	[[self sharedPreferencesWindowController] showWindow:nil];
+}
+
 
 - (void)windowDidLoad
 {
@@ -33,6 +38,8 @@
 
 	NSWindow *window = (self.window);
 	(window.preservesContentDuringLiveResize) = NO;
+	(window.level) = NSFloatingWindowLevel;
+	(window.hidesOnDeactivate) = YES;
 	
 #if 1
 	// TODO: check if this will run on 10.9 ok.
@@ -56,6 +63,13 @@
 	
 	[sectionNavigator goToSectionWithIdentifier:GLAPreferencesSectionChoose];
 }
+
+#if 0
+- (void)showWindow:(id)sender
+{
+	
+}
+#endif
 
 #pragma mark Window Delegate
 

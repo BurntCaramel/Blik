@@ -175,9 +175,7 @@
 
 - (IBAction)showAppPreferences:(id)sender
 {
-	GLAPreferencesWindowController *sharedPreferencesWindowController = [GLAPreferencesWindowController sharedPreferencesWindowController];
-	//[(sharedPreferencesWindowController.window) display];
-	[sharedPreferencesWindowController showWindow:nil];
+	[GLAPreferencesWindowController showWindow];
 }
 
 - (IBAction)showAppInMacAppStore:(id)sender

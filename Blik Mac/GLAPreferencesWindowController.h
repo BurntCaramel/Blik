@@ -17,6 +17,8 @@
 
 + (instancetype)sharedPreferencesWindowController;
 
++ (void)showWindow;
+
 
 @property(nonatomic) GLAPreferencesSectionNavigator *sectionNavigator;
 
