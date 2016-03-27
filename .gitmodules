@@ -1,0 +1,3 @@
+[submodule "Submodules/JSON"]
+	path = Submodules/JSON
+	url = git@github.com:Zewo/JSON.git
