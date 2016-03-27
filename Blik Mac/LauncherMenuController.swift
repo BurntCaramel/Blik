@@ -17,6 +17,7 @@ private enum Item {
 	case allProjects
 	case newProject
 	case showInDock
+	case preferences
 	case quit
 }
 
@@ -33,6 +34,7 @@ extension Item: UIChoiceRepresentative {
 		case .newProject:
 			return "newProject"
 		case .showInDock: return "showInDock"
+		case .preferences: return "preferences"
 		case .quit: return "quit"
 		}
 	}
@@ -49,6 +51,8 @@ extension Item: UIChoiceRepresentative {
 			return NSLocalizedString("New Project…", comment: "Title for creating a new project")
 		case .showInDock:
 			return NSLocalizedString("Show in Dock", comment: "Title for toggling Dock icon")
+		case .preferences:
+			return NSLocalizedString("Preferences…", comment: "Title for opening the preferences")
 		case .quit:
 			return NSLocalizedString("Quit Blik", comment: "Title for quitting the app")
 		}
@@ -68,6 +72,8 @@ extension Item {
 			return #selector(LauncherMenuController.createNewProject(_:))
 		case .showInDock:
 			return #selector(LauncherMenuController.toggleShowInDock(_:))
+		case .preferences:
+			return #selector(LauncherMenuController.showPreferences(_:))
 		case .quit:
 			return #selector(LauncherMenuController.terminateApp(_:))
 		}
@@ -163,6 +169,7 @@ public class LauncherMenuController: NSObject {
 		
 		items.append(nil)
 		items.append(.showInDock)
+		items.append(.preferences)
 		items.append(.quit)
 		
 		return items
@@ -207,6 +214,11 @@ extension LauncherMenuController {
 	@IBAction func toggleShowInDock(menuItem: NSMenuItem) {
 		let settings = GLAApplicationSettingsManager.sharedApplicationSettingsManager()
 		settings.toggleHidesDockIcon(menuItem)
+	}
+	
+	@IBAction func showPreferences(menuItem: NSMenuItem) {
+		GLAPreferencesWindowController.showWindow()
+		activateApplication()
 	}
 	
 	@IBAction func terminateApp(menuItem: NSMenuItem) {
