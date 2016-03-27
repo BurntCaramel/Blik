@@ -10,6 +10,7 @@
                 <outlet property="editPermittedApplicationFoldersButton" destination="cUl-LF-03T" id="2Gf-4G-rc2"/>
                 <outlet property="editPermittedApplicationFoldersLabel" destination="nuV-8B-eaD" id="vGh-aR-Lii"/>
                 <outlet property="hideMainWindowWhenInactiveCheckButton" destination="zKM-1K-Ajh" id="sjo-OY-oHO"/>
+                <outlet property="showDockIconCheckButton" destination="r1c-71-hoJ" id="vip-KA-qOu"/>
                 <outlet property="showStatusMenuItemCheckButton" destination="0AQ-QA-VI6" id="VfP-zV-Yjp"/>
                 <outlet property="view" destination="BUd-m3-8GV" id="0CN-R3-Fyl"/>
             </connections>
@@ -75,6 +76,9 @@
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="toggleShowsDockIcon:" target="-2" id="Usf-Gz-b5n"/>
+                    </connections>
                 </button>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="zKM-1K-Ajh">
                     <rect key="frame" x="138" y="18" width="219" height="18"/>
