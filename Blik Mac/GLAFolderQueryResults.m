@@ -39,7 +39,6 @@
 
 - (void)dealloc
 {
-	[self stopObservingMDQuery];
 	[self clearMDQuery];
 }
 
@@ -258,7 +257,7 @@ void GLAFolderQueryResults_MDQueryDidUpdateNotification(CFNotificationCenterRef 
 	(id)kMDItemFSContentChangeDate
 	]));
 		NSLog(@"Item attributes %@ %@", @(resultIndex), itemAttributes);
-		NSString *path = CFBridgingRelease(MDQueryGetAttributeValueOfResultAtIndex(MDQuery, kMDItemDisplayName, resultIndex));
+		NSString *path = MDQueryGetAttributeValueOfResultAtIndex(MDQuery, kMDItemDisplayName, resultIndex);
 		NSLog(@"Item path %@ %@", @(resultIndex), path);
 #endif
 	}
