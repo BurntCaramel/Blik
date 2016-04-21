@@ -1,9 +1,9 @@
 //
-//  GLAPrototypeBWindowController.m
-//  Blik
+//	GLAPrototypeBWindowController.m
+//	Blik
 //
-//  Created by Patrick Smith on 7/07/2014.
-//  Copyright (c) 2014 Patrick Smith. All rights reserved.
+//	Created by Patrick Smith on 7/07/2014.
+//	Copyright (c) 2014 Patrick Smith. All rights reserved.
 //
 
 #import "GLAMainWindowController.h"
@@ -30,15 +30,6 @@
 
 @implementation GLAMainWindowController
 
-- (id)initWithWindow:(NSWindow *)window
-{
-    self = [super initWithWindow:window];
-    if (self) {
-        
-    }
-    return self;
-}
-
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
@@ -53,7 +44,7 @@
 	
 	[NSApp addWindowsItem:window title:NSLocalizedString(@"Main Window", @"Title for main window as it appears in the Windows menu") filename:NO];
 	
-	[self updateHideMainWindowWhenInactiveSetting];
+	[self updateFromSettings];
 	
 	(self.mainSectionNavigator) = [GLAMainSectionNavigator sharedMainSectionNavigator];
 	
@@ -78,23 +69,20 @@
 
 #pragma mark Setting Up View Controllers
 
+- (void)updateFromSettings
+{
+	GLAApplicationSettingsManager *settingsManager = (self.applicationSettingsManager);
+	(self.window.hidesOnDeactivate) = (settingsManager.hidesMainWindowWhenInactive) || (settingsManager.hidesDockIcon);
+	(self.window.level) = NSNormalWindowLevel;
+}
+
 - (void)setUpNotifications
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	
 	GLAApplicationSettingsManager *settingsManager = (self.applicationSettingsManager);
-	[nc addObserver:self selector:@selector(hideMainWindowWhenInactiveSettingDidChangeNotification:) name:GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification object:settingsManager];
-}
-
-- (void)updateHideMainWindowWhenInactiveSetting
-{
-	GLAApplicationSettingsManager *settingsManager = (self.applicationSettingsManager);
-	(self.window.hidesOnDeactivate) = (settingsManager.hidesMainWindowWhenInactive);
-}
-
-- (void)hideMainWindowWhenInactiveSettingDidChangeNotification:(NSNotification *)note
-{
-	[self updateHideMainWindowWhenInactiveSetting];
+	[nc addObserver:self selector:@selector(updateFromSettings) name:GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification object:settingsManager];
+	[nc addObserver:self selector:@selector(updateFromSettings) name:GLAApplicationSettingsManagerHidesDockIconDidChangeNotification object:settingsManager];
 }
 
 - (void)setUpBaseUI
@@ -349,7 +337,7 @@
 	GLAProject *project = (editProjectSection.project);
 	GLAProjectManager *pm = [GLAProjectManager sharedProjectManager];
 	
-	[pm editProject:project withBlock:^(id<GLAProjectEditing>  _Nonnull projectEditor) {
+	[pm editProject:project withBlock:^(id<GLAProjectEditing> _Nonnull projectEditor) {
 		(projectEditor.groupHighlights) = !(projectEditor.groupHighlights);
 	}];
 }

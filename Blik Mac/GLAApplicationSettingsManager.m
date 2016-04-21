@@ -201,6 +201,8 @@ NSString *GLAAppHidesDockIcon = @"app.hidesDockIcon";
 	NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
 	[ud setBool:hidesDockIcon forKey:GLAAppHidesDockIcon];
 	[ud synchronize];
+  
+  [[NSNotificationCenter defaultCenter] postNotificationName:GLAApplicationSettingsManagerHidesDockIconDidChangeNotification object:self];
 	
 	[self updateForHidesDockIcon];
 }
@@ -213,7 +215,6 @@ NSString *GLAAppHidesDockIcon = @"app.hidesDockIcon";
 - (void)updateForHidesDockIcon
 {
 	(NSApp.activationPolicy) = (self.hidesDockIcon) ? NSApplicationActivationPolicyAccessory : NSApplicationActivationPolicyRegular;
-	NSLog(@"updateForHidesDockIcon %@", @(self.hidesDockIcon));
 }
 
 - (void)setHidesMainWindowWhenInactive:(BOOL)hidesMainWindowWhenInactive
