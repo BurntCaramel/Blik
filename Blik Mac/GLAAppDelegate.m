@@ -8,22 +8,23 @@
 
 #import "Blik-Swift.h"
 #import <objc/runtime.h>
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+
+#if TRIAL
+#import <Paddle/Paddle.h>
+#elif GLA_ENABLE_PADDLE_SDK
+#import <Paddle-MAS/Paddle.h>
+#endif
+
 #import "GLAProjectManager.h"
 #import "GLAPreferencesWindowController.h"
 #import "GLAApplicationSettingsManager.h"
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
 
 #define DO_FOLDER_QUERY_TEST 0 && DEBUG
 
 #import "GLAFolderQuery.h"
 #import "GLAFolderQueryResults.h"
-
-#if TRIAL
-	#import <Paddle/Paddle.h>
-#elif GLA_ENABLE_PADDLE_SDK
-	#import <Paddle-MAS/Paddle.h>
-#endif
 
 @interface GLAAppDelegate (Objc) <NSUserInterfaceValidations>
 
@@ -43,10 +44,15 @@
 }
 #endif
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void)registerCrashDetection
 {
 	[[NSUserDefaults standardUserDefaults] registerDefaults:@{ @"NSApplicationCrashOnExceptions": @YES }];
 	[Fabric with:@[CrashlyticsKit]];
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+	[self registerCrashDetection];
 	
 	[self showMainWindow];
 	//[self showDesktopWidget];
