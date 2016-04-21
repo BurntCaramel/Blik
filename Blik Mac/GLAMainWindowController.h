@@ -65,12 +65,10 @@
 - (BOOL)canWorkOnEditedProjectNow;
 - (IBAction)workOnEditedProjectNow:(id)sender;
 
-- (BOOL)canEditPrimaryFoldersOfViewedProject;
 - (IBAction)editPrimaryFoldersOfViewedProject:(id)sender;
 
 - (IBAction)toggleSeparateHighlightsIntoGroupsForViewedProject:(id)sender;
 
-- (BOOL)canDeleteViewedProject;
 - (IBAction)deleteViewedProject:(id)sender;
 
 - (IBAction)addNewProject:(id)sender;
