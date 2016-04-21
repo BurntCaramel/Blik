@@ -11,14 +11,27 @@
 
 @implementation GLAHighlightsTableCellView
 
-#if 0
-- (void)rightMouseDown:(NSEvent *)theEvent
+- (void)mouseDown:(NSEvent *)theEvent
 {
-#if DEBUG
-	NSLog(@"rightMouseDown");
-#endif
-	[self menuForEvent:theEvent];
+	NSMenuItem *menuItem = self.enclosingMenuItem;
+	if (menuItem) {
+		// Do not pass up to table view as normal
+	}
+	else {
+		[self.nextResponder mouseDown:theEvent];
+	}
 }
-#endif
+
+- (void)mouseUp:(NSEvent *)theEvent
+{
+	NSMenuItem *menuItem = self.enclosingMenuItem;
+	if (menuItem) {
+		// Pass to performClick: handler, which GLATableView implements.
+		[self.nextResponder tryToPerform:@selector(performClick:) with:self];
+	}
+	else {
+		[self.nextResponder mouseUp:theEvent];
+	}
+}
 
 @end

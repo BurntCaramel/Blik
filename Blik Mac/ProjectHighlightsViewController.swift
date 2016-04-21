@@ -301,13 +301,21 @@ extension ProjectHighlightsViewController {
 		return clickedRow.flatMap({ assistant?.fileURLAtIndex($0) })
 	}
 	
-	func openClickedItemWithBehaviour(behaviour: OpeningBehaviour) {
-		guard let clickedRow = clickedRow else { return }
-		assistant?.openItem(atIndex: clickedRow, withBehaviour: behaviour)
+	func clickedRow(forSender sender: AnyObject?) -> Int? {
+		return clickedRow ?? (sender as? NSView).map{ tableView.rowForView($0) }
+	}
+	
+	func openClickedItemWithBehaviour(behaviour: OpeningBehaviour, sender: AnyObject? = nil) {
+		guard let
+			clickedRow = clickedRow(forSender: sender),
+			assistant = self.assistant
+			else { return }
+		
+		assistant.openItem(atIndex: clickedRow, withBehaviour: behaviour)
 	}
 	
 	@IBAction public func openClickedItem(sender: AnyObject?) {
-		openClickedItemWithBehaviour(OpeningBehaviour(modifierFlags: NSEvent.modifierFlags()))
+		openClickedItemWithBehaviour(OpeningBehaviour(modifierFlags: NSEvent.modifierFlags()), sender: sender)
 	}
 	
 	@IBAction public func openAllItems(sender: AnyObject?) {

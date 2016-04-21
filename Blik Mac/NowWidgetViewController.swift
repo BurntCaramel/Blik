@@ -89,8 +89,10 @@ class NowWidgetViewController: GLAViewController {
 }
 
 public class NowWidgetView: NSView {
+	#if false
 	func ensureWindowIsKey(window: NSWindow?) {
-		if let window = window where !window.keyWindow {
+		if let window = window /*where !window.keyWindow*/ {
+			window.resignKeyWindow()
 			window.becomeKeyWindow()
 		}
 		
@@ -108,4 +110,5 @@ public class NowWidgetView: NSView {
 		
 		ensureWindowIsKey(newWindow)
 	}
+	#endif
 }

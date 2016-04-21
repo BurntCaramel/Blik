@@ -11,30 +11,4 @@
 
 @implementation GLATableCellView
 
-#if 0
-
-- (NSView *)hitTest:(NSPoint)aPoint
-{
-	return self;
-}
-
-- (void)mouseDown:(NSEvent *)theEvent
-{
-#if DEBUG
-	NSLog(@"MOUSE DWON");
-#endif
-}
-
-#if 0
-- (void)rightMouseDown:(NSEvent *)theEvent
-{
-#if DEBUG
-	NSLog(@"rightMouseDown");
-#endif
-	[self menuForEvent:theEvent];
-}
-#endif
-
-#endif
-
 @end

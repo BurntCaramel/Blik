@@ -11,4 +11,9 @@
 
 @implementation GLATableView
 
+- (void)performClick:(id)sender
+{
+	[NSApp sendAction:self.action to:self.target from:sender];
+}
+
 @end
