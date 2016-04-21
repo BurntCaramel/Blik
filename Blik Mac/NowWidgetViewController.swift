@@ -40,6 +40,8 @@ class NowWidgetViewController: GLAViewController {
 		
 		view.wantsLayer = true
 		view.layer!.backgroundColor = GLAUIStyle.activeStyle().contentBackgroundColor.CGColor
+		
+		view.layoutSubtreeIfNeeded()
 	}
 	
 	private var projectManager: GLAProjectManager { return GLAProjectManager.sharedProjectManager() }
