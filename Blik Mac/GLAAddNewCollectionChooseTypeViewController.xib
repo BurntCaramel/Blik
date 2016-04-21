@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GLAAddNewCollectionChooseTypeViewController">
@@ -19,12 +18,12 @@
             <rect key="frame" x="0.0" y="0.0" width="481" height="303"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button identifier="chooseSection" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="aAo-2v-yNG" customClass="GLAButton">
-                    <rect key="frame" x="181" y="158" width="120" height="27"/>
+                <button identifier="chooseSection" misplaced="YES" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" translatesAutoresizingMaskIntoConstraints="NO" id="aAo-2v-yNG" customClass="GLAButton">
+                    <rect key="frame" x="181" y="155" width="120" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="27" id="fJr-ix-svg"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" title="New Collected Files Collection" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4z0-bx-fyy" customClass="GLAButtonCell">
+                    <buttonCell key="cell" type="square" title="New Handpicked Files Collection" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4z0-bx-fyy" customClass="GLAButtonCell">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" size="13" name="AvenirNext-Medium"/>
                     </buttonCell>
@@ -52,7 +51,7 @@
                     <constraints>
                         <constraint firstAttribute="width" constant="370" id="2L9-LJ-xCv"/>
                     </constraints>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Whichever files you want." id="8zj-wn-NIK">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Handpick the files you want." id="8zj-wn-NIK">
                         <font key="font" size="13" name="AvenirNext-MediumItalic"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -91,7 +90,7 @@
                     <constraints>
                         <constraint firstAttribute="width" constant="370" id="afo-Ch-8z1"/>
                     </constraints>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Files with a particular tag." id="IJ5-sS-X25">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Search files within a folder." id="IJ5-sS-X25">
                         <font key="font" size="13" name="AvenirNext-MediumItalic"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
