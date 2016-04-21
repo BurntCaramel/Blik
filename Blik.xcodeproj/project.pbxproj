@@ -313,6 +313,13 @@
 		B2B717FD1BF4946100D3E7B1 /* Cartfile in Resources */ = {isa = PBXBuildFile; fileRef = B2B717FB1BF4946100D3E7B1 /* Cartfile */; };
 		B2BB85151A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85141A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m */; };
 		B2BB85181A3F095B00BF186C /* GLAMainContentManners.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BB85171A3F095B00BF186C /* GLAMainContentManners.m */; };
+		B2BEDB351CA56EF600AEC780 /* FileFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BEDB341CA56EF600AEC780 /* FileFilter.swift */; };
+		B2BEDB361CA56EF600AEC780 /* FileFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BEDB341CA56EF600AEC780 /* FileFilter.swift */; };
+		B2BEDB391CA5840400AEC780 /* PGWSCFNotificationObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BEDB381CA5840400AEC780 /* PGWSCFNotificationObserver.m */; };
+		B2BEDB3A1CA5840400AEC780 /* PGWSCFNotificationObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BEDB381CA5840400AEC780 /* PGWSCFNotificationObserver.m */; };
+		B2BEDB3D1CA6366700AEC780 /* Grain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2BEDB3B1CA6366700AEC780 /* Grain.framework */; };
+		B2BEDB3F1CA6367300AEC780 /* Grain.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B2BEDB3B1CA6366700AEC780 /* Grain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B2BEDB401CA6369500AEC780 /* Grain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2BEDB3B1CA6366700AEC780 /* Grain.framework */; };
 		B2C154401A00D7BB00912AB1 /* GLAModelUUIDMap.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C1543F1A00D7BB00912AB1 /* GLAModelUUIDMap.m */; };
 		B2C5FD2D1988AB0200AEFBAF /* GLAProjectManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C5FD2C1988AB0200AEFBAF /* GLAProjectManager.m */; };
 		B2C7F287196FFFDF005780B4 /* GLAView.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C7F286196FFFDF005780B4 /* GLAView.m */; };
@@ -396,6 +403,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				B2BEDB3F1CA6367300AEC780 /* Grain.framework in Copy Frameworks */,
 				B28518271BB42D2C00135E5C /* BurntFoundation.framework in Copy Frameworks */,
 				B20DB1D41B06DBA500E57532 /* BurntCocoaUI.framework in Copy Frameworks */,
 				B2D9D87F1B247D2600217300 /* Paddle-MAS.framework in Copy Frameworks */,
@@ -633,6 +641,10 @@
 		B2BB85141A3BE97A00BF186C /* PGWSQueuedBlockConvenience.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGWSQueuedBlockConvenience.m; sourceTree = "<group>"; };
 		B2BB85161A3F095B00BF186C /* GLAMainContentManners.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAMainContentManners.h; sourceTree = "<group>"; };
 		B2BB85171A3F095B00BF186C /* GLAMainContentManners.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainContentManners.m; sourceTree = "<group>"; };
+		B2BEDB341CA56EF600AEC780 /* FileFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileFilter.swift; sourceTree = "<group>"; };
+		B2BEDB371CA5840400AEC780 /* PGWSCFNotificationObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGWSCFNotificationObserver.h; sourceTree = "<group>"; };
+		B2BEDB381CA5840400AEC780 /* PGWSCFNotificationObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGWSCFNotificationObserver.m; sourceTree = "<group>"; };
+		B2BEDB3B1CA6366700AEC780 /* Grain.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Grain.framework; path = Carthage/Build/Mac/Grain.framework; sourceTree = "<group>"; };
 		B2C1543E1A00D7BB00912AB1 /* GLAModelUUIDMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAModelUUIDMap.h; sourceTree = "<group>"; };
 		B2C1543F1A00D7BB00912AB1 /* GLAModelUUIDMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAModelUUIDMap.m; sourceTree = "<group>"; };
 		B2C5FD2B1988AB0200AEFBAF /* GLAProjectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAProjectManager.h; sourceTree = "<group>"; };
@@ -754,6 +766,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2BEDB3D1CA6366700AEC780 /* Grain.framework in Frameworks */,
 				B20DB33E1B0C8ACA00E57532 /* Cocoa.framework in Frameworks */,
 				B20DB33F1B0C8ACA00E57532 /* libPods-Blik-Mantle.a in Frameworks */,
 				B20DB3401B0C8ACA00E57532 /* libPods-Blik-pop.a in Frameworks */,
@@ -769,6 +782,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2BEDB401CA6369500AEC780 /* Grain.framework in Frameworks */,
 				B2D9D87E1B247BBC00217300 /* Paddle-MAS.framework in Frameworks */,
 				B2ADDBD21963DA2E0014EF84 /* Cocoa.framework in Frameworks */,
 				B2A8FCB21A23BFB00002108E /* libPods-Blik-Mantle.a in Frameworks */,
@@ -1114,6 +1128,7 @@
 				B20DB37F1B0EC63B00E57532 /* Crashlytics.framework */,
 				B20DB28E1B08334800E57532 /* BurntFoundation.framework */,
 				B20DB1D11B06DB9100E57532 /* BurntCocoaUI.framework */,
+				B2BEDB3B1CA6366700AEC780 /* Grain.framework */,
 				B2A8FCB01A23BFB00002108E /* libPods-Blik-Mantle.a */,
 				B2A8FCB11A23BFB00002108E /* libPods-Blik-pop.a */,
 				E240A36F1A0DC6DE0043AE93 /* libPods-BlikTests-Mantle.a */,
@@ -1332,6 +1347,8 @@
 				B28927661A725DF9007238D6 /* NSMutableDictionary+PGWSChecking.m */,
 				B292F46F1AD6546E0041E7A1 /* NSMenu+GLAMenuItemConvenience.h */,
 				B292F4701AD6546E0041E7A1 /* NSMenu+GLAMenuItemConvenience.m */,
+				B2BEDB371CA5840400AEC780 /* PGWSCFNotificationObserver.h */,
+				B2BEDB381CA5840400AEC780 /* PGWSCFNotificationObserver.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1469,6 +1486,7 @@
 		B2ED53951A8F2F5900F6B4FA /* Folder Query */ = {
 			isa = PBXGroup;
 			children = (
+				B2BEDB341CA56EF600AEC780 /* FileFilter.swift */,
 				B2ED53921A8F2F5600F6B4FA /* GLAFolderQuery.h */,
 				B2ED53931A8F2F5600F6B4FA /* GLAFolderQuery.m */,
 				B2ED53961A8F2F7800F6B4FA /* GLAFolderQueryResults.h */,
@@ -1960,6 +1978,7 @@
 				B20DB2F71B0C8ACA00E57532 /* GLAInstructionsViewController.m in Sources */,
 				B2B717F01BEB842100D3E7B1 /* GLAProjectManager+OpeningFiles.swift in Sources */,
 				B20DB2F81B0C8ACA00E57532 /* GLACollectedItemContentHolderView.m in Sources */,
+				B2BEDB361CA56EF600AEC780 /* FileFilter.swift in Sources */,
 				B20DB2F91B0C8ACA00E57532 /* GLATableView.m in Sources */,
 				B20DB37A1B0DBC9600E57532 /* WindowFirstResponderAssistant.swift in Sources */,
 				B20DB2FA1B0C8ACA00E57532 /* GLAQuickLookPreviewHelper.m in Sources */,
@@ -1983,6 +2002,7 @@
 				B2800A201C4A1BFE00BE3874 /* TopProjectsAssistant.swift in Sources */,
 				B20DB30B1B0C8ACA00E57532 /* GLAAddNewProjectViewController.m in Sources */,
 				B20DB30C1B0C8ACA00E57532 /* NSValueTransformer+GLAModel.m in Sources */,
+				B2BEDB3A1CA5840400AEC780 /* PGWSCFNotificationObserver.m in Sources */,
 				B20DB30D1B0C8ACA00E57532 /* GLAHighlightsTableCellView.m in Sources */,
 				B20DB30F1B0C8ACA00E57532 /* GLAEditPermittedApplicationFoldersViewController.m in Sources */,
 				B2B466721B29B88A001C4BC0 /* SymlinkCreator.swift in Sources */,
@@ -2107,6 +2127,7 @@
 				B20362C81A0A3D2E007169C2 /* GLAInstructionsViewController.m in Sources */,
 				B2B717EF1BEB842100D3E7B1 /* GLAProjectManager+OpeningFiles.swift in Sources */,
 				B2D9EE5E1AD3B34F00F5F34E /* GLACollectedItemContentHolderView.m in Sources */,
+				B2BEDB351CA56EF600AEC780 /* FileFilter.swift in Sources */,
 				B26B6F5019EBE3C800D17ECD /* GLATableView.m in Sources */,
 				B20DB3791B0DBC9600E57532 /* WindowFirstResponderAssistant.swift in Sources */,
 				B2ED54331A93EFE000F6B4FA /* GLAQuickLookPreviewHelper.m in Sources */,
@@ -2130,6 +2151,7 @@
 				B2800A1F1C4A1BFE00BE3874 /* TopProjectsAssistant.swift in Sources */,
 				B26659EB199C60D7003C4EA4 /* GLAAddNewProjectViewController.m in Sources */,
 				B29F8DDA1980D45400F58F59 /* NSValueTransformer+GLAModel.m in Sources */,
+				B2BEDB391CA5840400AEC780 /* PGWSCFNotificationObserver.m in Sources */,
 				B2D0331C19FFA69000C396FB /* GLAHighlightsTableCellView.m in Sources */,
 				B2E39B421A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.m in Sources */,
 				B2B466711B29B88A001C4BC0 /* SymlinkCreator.swift in Sources */,
