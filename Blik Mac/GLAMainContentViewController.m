@@ -743,6 +743,7 @@
 - (void)hideChildViewController:(GLAViewController *)vc adjustingConstraint:(NSLayoutConstraint *)constraint toValue:(CGFloat)constraintValue animate:(BOOL)animate associatedSection:(GLAMainSection *)associatedSection
 {
 	NSView *view = (vc.view);
+	BOOL reduceMotion = [GLAViewController reduceMotion];
 	
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 		if (animate) {
@@ -750,7 +751,9 @@
 			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
 			
 			(view.animator.alphaValue) = 0.0;
-			(constraint.animator.constant) = constraintValue;
+			if (!reduceMotion) {
+				(constraint.animator.constant) = constraintValue;
+			}
 		}
 		else {
 			(context.duration) = 0;
@@ -803,6 +806,7 @@
 	NSParameterAssert(vc != nil);
 	
 	NSView *view = (vc.view);
+	BOOL reduceMotion = [GLAViewController reduceMotion];
 	
 	[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 		(view.hidden) = NO;
@@ -814,7 +818,12 @@
 			(context.timingFunction) = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
 			
 			(view.animator.alphaValue) = 1.0;
-			(constraint.animator.constant) = constraintValue;
+			if (reduceMotion) {
+				(constraint.constant) = constraintValue;
+			}
+			else {
+				(constraint.animator.constant) = constraintValue;
+			}
 		}
 		else {
 			(context.duration) = 0;

@@ -28,6 +28,9 @@
 @property(nonatomic) IBOutlet NSButton *hideMainWindowWhenInactiveCheckButton;
 - (IBAction)toggleHideMainWindowWhenInactive:(id)sender;
 
+@property(nonatomic) IBOutlet NSButton *reduceMotionCheckButton;
+- (IBAction)toggleReduceMotion:(id)sender;
+
 @end
 
 

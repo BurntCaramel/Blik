@@ -14,10 +14,12 @@
 #import "GLAArrayEditorUser.h"
 #import "GLACollectedFilesSetting.h"
 #import "GLAWorkingFoldersManager.h"
+#import "GLAViewController.h"
 
 
 NSString *GLAMainWindowHidesWhenInactive = @"mainWindow.hidesWhenInactive";
 NSString *GLAAppHidesDockIcon = @"app.hidesDockIcon";
+NSString *GLAAppReduceMotion = @"app.reduceMotion";
 
 
 @interface GLAApplicationSettingsManager () <GLAArrayMantleJSONStoreErrorHandler>
@@ -67,8 +69,10 @@ NSString *GLAAppHidesDockIcon = @"app.hidesDockIcon";
 	
 	_hidesMainWindowWhenInactive = [ud boolForKey:GLAMainWindowHidesWhenInactive];
 	_hidesDockIcon = [ud boolForKey:GLAAppHidesDockIcon];
+	_reduceMotion = [ud boolForKey:GLAAppReduceMotion];
 	
 	[self updateForHidesDockIcon];
+	[self updateForReduceMotion];
 }
 
 #pragma mark -
@@ -233,6 +237,29 @@ NSString *GLAAppHidesDockIcon = @"app.hidesDockIcon";
 	(self.hidesMainWindowWhenInactive) = !(self.hidesMainWindowWhenInactive);
 }
 
+- (void)setReduceMotion:(BOOL)reduceMotion
+{
+	_reduceMotion = reduceMotion;
+	
+	NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+	[ud setBool:reduceMotion forKey:GLAAppReduceMotion];
+	[ud synchronize];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAApplicationSettingsManagerReduceMotionDidChangeNotification object:self];
+	
+	[self updateForReduceMotion];
+}
+
+- (void)updateForReduceMotion
+{
+	[GLAViewController setReduceMotion:(self.reduceMotion)];
+}
+
+- (IBAction)toggleReduceMotion:(id)sender
+{
+	(self.reduceMotion) = !(self.reduceMotion);
+}
+
 #pragma mark -
 
 - (void)arrayMantleJSONStore:(GLAArrayMantleJSONStore *)store handleError:(NSError *)error
@@ -250,3 +277,4 @@ NSString *GLAAppHidesDockIcon = @"app.hidesDockIcon";
 NSString *GLAApplicationSettingsManagerPermittedApplicationFoldersDidChangeNotification = @"GLAApplicationSettingsManagerPermittedApplicationFoldersDidChangeNotification";
 NSString *GLAApplicationSettingsManagerHidesDockIconDidChangeNotification = @"GLAApplicationSettingsManagerHidesDockIconDidChangeNotification";
 NSString *GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification = @"GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification";
+NSString *GLAApplicationSettingsManagerReduceMotionDidChangeNotification = @"GLAApplicationSettingsManagerReduceMotionDidChangeNotification";

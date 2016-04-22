@@ -45,6 +45,7 @@
 	[self updateUIForShowsStatusMenuItem];
 	[self updateUIForShowsIconInDock];
 	[self updateUIForHidesMainWindowWhenInactive];
+	[self updateUIForReduceMotion];
 }
 
 - (void)setUpNotifications
@@ -57,6 +58,7 @@
 	GLAApplicationSettingsManager *settingsManager = (self.applicationSettingsManager);
 	[nc addObserver:self selector:@selector(updateUIForShowsIconInDock) name:GLAApplicationSettingsManagerHidesDockIconDidChangeNotification object:settingsManager];
 	[nc addObserver:self selector:@selector(updateUIForHidesMainWindowWhenInactive) name:GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification object:settingsManager];
+	[nc addObserver:self selector:@selector(updateUIForReduceMotion) name:GLAApplicationSettingsManagerReduceMotionDidChangeNotification object:settingsManager];
 }
 
 - (void)updateUIForShowsStatusMenuItem
@@ -77,6 +79,12 @@
 	(self.hideMainWindowWhenInactiveCheckButton.state) = (hidesMainWindowWhenInactive ? NSOnState : NSOffState);
 }
 
+- (void)updateUIForReduceMotion
+{
+	BOOL flag = (self.applicationSettingsManager.reduceMotion);
+	(self.reduceMotionCheckButton.state) = (flag ? NSOnState : NSOffState);
+}
+
 - (IBAction)toggleShowStatusMenuItem:(id)sender
 {
 	[(self.statusItemController) toggleShowingItem:sender];
@@ -90,6 +98,11 @@
 - (IBAction)toggleHideMainWindowWhenInactive:(id)sender
 {
 	[(self.applicationSettingsManager) toggleHidesMainWindowWhenInactive:sender];
+}
+
+- (IBAction)toggleReduceMotion:(id)sender
+{
+	[(self.applicationSettingsManager) toggleReduceMotion:sender];
 }
 
 - (void)notifyDelegateToGoToSectionWithIdentifier:(NSString *)sectionIdentifier

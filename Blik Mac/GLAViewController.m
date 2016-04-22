@@ -364,6 +364,20 @@
 	[[NSNotificationCenter defaultCenter] addObserver:observer selector:aSelector name:name object:self];
 }
 
+#pragma mark Reduce Motion
+
+static BOOL _reduceMotion = NO;
+
++ (void)setReduceMotion:(BOOL)reduceMotion
+{
+	_reduceMotion = reduceMotion;
+}
+
++ (BOOL)reduceMotion
+{
+	return _reduceMotion;
+}
+
 @end
 
 

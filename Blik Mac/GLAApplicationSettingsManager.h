@@ -32,8 +32,12 @@
 @property(nonatomic) BOOL hidesMainWindowWhenInactive;
 - (IBAction)toggleHidesMainWindowWhenInactive:(id)sender;
 
+@property(nonatomic) BOOL reduceMotion;
+- (IBAction)toggleReduceMotion:(id)sender;
+
 @end
 
 extern NSString *GLAApplicationSettingsManagerPermittedApplicationFoldersDidChangeNotification;
 extern NSString *GLAApplicationSettingsManagerHidesDockIconDidChangeNotification;
 extern NSString *GLAApplicationSettingsManagerHideMainWindowWhenInactiveDidChangeNotification;
+extern NSString *GLAApplicationSettingsManagerReduceMotionDidChangeNotification;

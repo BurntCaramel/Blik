@@ -59,6 +59,11 @@
 
 - (void)addObserver:(id)observer forNotificationWithName:(NSString *)name selector:(SEL)aSelector;
 
+#pragma mark Reduce Motion
+
++ (BOOL)reduceMotion;
++ (void)setReduceMotion:(BOOL)reduceMotion;
+
 @end
 
 @interface GLAViewController (ViewIdentifiers)
