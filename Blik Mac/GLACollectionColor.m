@@ -143,8 +143,8 @@
 	  [self strongPurple],
 	  [self strongPink],
 	  [self strongRed],
-	  [self strongYellow],
-	  [self strongOrange]
+	  [self strongOrange],
+		[self strongYellow]
 	  ];
 }
 
