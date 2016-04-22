@@ -110,7 +110,7 @@
                                             <outlet property="textField" destination="136-9Z-cEZ" id="YRY-mc-dNv"/>
                                         </connections>
                                     </tableCellView>
-                                    <tableCellView identifier="collectionGroup" misplaced="YES" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="HUR-ab-hUX" userLabel="Collection Group">
+                                    <tableCellView identifier="collectionGroup" misplaced="YES" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="HUR-ab-hUX" userLabel="Collection Group" customClass="GLATableCellView">
                                         <rect key="frame" x="1" y="39" width="287" height="36"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
