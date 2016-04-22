@@ -52,12 +52,30 @@
 		[self addTrackingArea:(self.hoverTrackingArea)];
 	}
 	
-	NSScrollView *scrollView = [self enclosingScrollView];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	
+	NSScrollView *scrollView = self.enclosingScrollView;
 	if (scrollView) {
-		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 		[nc removeObserver:self name:NSScrollViewDidLiveScrollNotification object:nil];
 		[nc addObserver:self selector:@selector(scrollViewDidScroll:) name:NSScrollViewDidLiveScrollNotification object:scrollView];
 	}
+	
+	NSMenu *menu = self.enclosingMenuItem.menu;
+	if (menu) {
+		[nc removeObserver:self name:NSMenuDidEndTrackingNotification object:nil];
+		[nc addObserver:self selector:@selector(menuDidEndTracking:) name:NSMenuDidEndTrackingNotification object:menu];
+	}
+}
+
+- (void)setMouseIsInside:(BOOL)mouseIsInside
+{
+	if (_mouseIsInside == mouseIsInside) {
+		return;
+	}
+	
+	_mouseIsInside = mouseIsInside;
+	
+	(self.needsDisplay) = YES;
 }
 
 - (void)prepareForReuse
@@ -71,31 +89,28 @@
 - (void)mouseEntered:(NSEvent *)theEvent
 {
 	(self.mouseIsInside) = YES;
-	
-	[self setNeedsDisplay:YES];
 }
 
 - (void)mouseExited:(NSEvent *)theEvent
 {
 	(self.mouseIsInside) = NO;
-	
-	[self setNeedsDisplay:YES];
 }
 
 - (void)checkMouseLocationIsInside
 {
 	NSPoint mouseLocation = [(self.window) mouseLocationOutsideOfEventStream];
 	mouseLocation = [self convertPoint:mouseLocation fromView:nil];
-	BOOL mouseIsInside = [self mouse:mouseLocation inRect:[self bounds]];
-	if (mouseIsInside != (self.mouseIsInside)) {
-		(self.mouseIsInside) = mouseIsInside;
-		[self setNeedsDisplay:YES];
-	}
+	(self.mouseIsInside) = [self mouse:mouseLocation inRect:[self bounds]];
 }
 
 - (void)scrollViewDidScroll:(NSNotification *)note
 {
 	[self checkMouseLocationIsInside];
+}
+
+- (void)menuDidEndTracking:(NSNotification *)note
+{
+	(self.mouseIsInside) = NO;
 }
 
 - (void)drawBackgroundInRect:(NSRect)dirtyRect
