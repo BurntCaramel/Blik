@@ -48,7 +48,7 @@
 	[super updateTrackingAreas];
 	
 	if (!(self.hoverTrackingArea)) {
-		(self.hoverTrackingArea) = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:NSTrackingInVisibleRect | NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited owner:self userInfo:nil];
+		(self.hoverTrackingArea) = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:NSTrackingInVisibleRect | NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited | NSTrackingEnabledDuringMouseDrag owner:self userInfo:nil];
 		[self addTrackingArea:(self.hoverTrackingArea)];
 	}
 	
