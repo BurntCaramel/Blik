@@ -507,7 +507,7 @@
                                 </textFieldCell>
                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
                                 <prototypeCellViews>
-                                    <tableCellView identifier="highlightedItem" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="F8Z-3j-ofZ" userLabel="Highlighted Item" customClass="GLAHighlightsTableCellView">
+                                    <tableCellView identifier="highlightedItem" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="F8Z-3j-ofZ" userLabel="Highlighted Item" customClass="GLAHighlightsTableCellView" customModule="Blik" customModuleProvider="target">
                                         <rect key="frame" x="1" y="1" width="297" height="36"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
@@ -552,7 +552,7 @@
                                             <outlet property="textField" destination="iJR-GK-rtq" id="L2a-ME-0uC"/>
                                         </connections>
                                     </tableCellView>
-                                    <tableCellView identifier="collectionGroup" misplaced="YES" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="fxr-Bd-KTK" userLabel="Collection Group">
+                                    <tableCellView identifier="collectionGroup" misplaced="YES" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="fxr-Bd-KTK" userLabel="Collection Group" customClass="GLATableCellView" customModule="Blik" customModuleProvider="target">
                                         <rect key="frame" x="1" y="39" width="287" height="36"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>

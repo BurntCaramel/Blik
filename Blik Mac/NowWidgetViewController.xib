@@ -65,7 +65,7 @@
                                 </textFieldCell>
                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
                                 <prototypeCellViews>
-                                    <tableCellView identifier="highlightedItem" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="kI3-bF-oFi" userLabel="Highlighted Item" customClass="GLAHighlightsTableCellView">
+                                    <tableCellView identifier="highlightedItem" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="kI3-bF-oFi" userLabel="Highlighted Item" customClass="GLAHighlightsTableCellView" customModule="Blik" customModuleProvider="target">
                                         <rect key="frame" x="1" y="1" width="297" height="36"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
@@ -110,7 +110,7 @@
                                             <outlet property="textField" destination="136-9Z-cEZ" id="YRY-mc-dNv"/>
                                         </connections>
                                     </tableCellView>
-                                    <tableCellView identifier="collectionGroup" misplaced="YES" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="HUR-ab-hUX" userLabel="Collection Group" customClass="GLATableCellView">
+                                    <tableCellView identifier="collectionGroup" misplaced="YES" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="HUR-ab-hUX" userLabel="Collection Group" customClass="GLATableCellView" customModule="Blik" customModuleProvider="target">
                                         <rect key="frame" x="1" y="39" width="287" height="36"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
