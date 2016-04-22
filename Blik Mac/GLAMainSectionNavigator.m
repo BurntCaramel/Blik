@@ -124,6 +124,15 @@
 	[self goToSection:[GLAMainSection allProjectsSection]];
 }
 
+- (GLAEditProjectSection *)sectionForProject:(GLAProject *)project
+{
+	GLAProjectManager *projectManager = (self.projectManager);
+	GLAProject *nowProject = (projectManager.nowProject);
+	
+	BOOL isNow = (nowProject != nil) && [(nowProject.UUID) isEqual:(project.UUID)];
+	return [GLAEditProjectSection editProjectSectionWithProject:project previousSection:nil isCurrentlyNow:isNow];
+}
+
 - (void)goToNowProject
 {
 	GLAProjectManager *projectManager = (self.projectManager);
@@ -138,37 +147,14 @@
 {
 	NSParameterAssert(project != nil);
 	
-#if 0
-	GLAMainSection *currentSection = (self.currentSection);
-	GLAMainSection *previousSection = (self.currentSection);
-	if (previousSection.isAddNewProject) {
-		previousSection = nil;
-	}
-#else
-	GLAMainSection *previousSection = nil;
-#endif
-	
-	GLAProjectManager *projectManager = (self.projectManager);
-	GLAProject *nowProject = (projectManager.nowProject);
-	
-	BOOL isNow = (nowProject != nil) && [(nowProject.UUID) isEqual:(project.UUID)];
-	if (isNow) {
-		[self goToNowProject];
-		return;
-	}
-	
-	[self goToSection:[GLAEditProjectSection editProjectSectionWithProject:project previousSection:previousSection isCurrentlyNow:isNow]];
+	[self goToSection:[self sectionForProject:project]];
 }
 
 - (void)editPrimaryFoldersOfProject:(GLAProject *)project
 {
 	NSParameterAssert(project != nil);
 	
-	GLAMainSection *previousSection = (self.currentSection);
-	if (!((previousSection.isEditProject) || (previousSection.isNow))) {
-		previousSection = nil;
-	}
-	
+	GLAMainSection *previousSection = [self sectionForProject:project];
 	[self goToSection:[GLAEditProjectPrimaryFoldersSection editProjectPrimaryFoldersSectionWithProject:project previousSection:previousSection]];
 }
 
