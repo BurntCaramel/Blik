@@ -311,7 +311,7 @@ extension ProjectHighlightsViewController {
 			assistant = self.assistant
 			else { return }
 		
-		assistant.openItem(atIndex: clickedRow, withBehaviour: behaviour)
+		assistant.openItem(atIndex: clickedRow, withBehaviour: behaviour, activateIfNeeded: true)
 	}
 	
 	@IBAction public func openClickedItem(sender: AnyObject?) {
