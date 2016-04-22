@@ -315,6 +315,11 @@ extension ProjectHighlightsViewController {
 	}
 	
 	@IBAction public func openClickedItem(sender: AnyObject?) {
+		if let menu = (sender as? NSView)?.enclosingMenuItem?.menu {
+			// Close launcher menu
+			menu.cancelTracking()
+		}
+
 		openClickedItemWithBehaviour(OpeningBehaviour(modifierFlags: NSEvent.modifierFlags()), sender: sender)
 	}
 	
