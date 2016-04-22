@@ -171,6 +171,8 @@
 		}
 		else if (previousSection.isEditCollection) {
 			if (newSection.isEditCollection) {
+				[self hideButtonsForCurrentCollection];
+				[self showButtonsForCurrentCollection];
 				[self updateUIForCurrentCollection];
 				return;
 			}

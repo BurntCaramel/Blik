@@ -12,7 +12,7 @@
 
 @interface GLANavigationBar ()
 
-@property(nonatomic) CGFloat private_highlightAmount;
+@property(nonatomic) NSUInteger changeCount;
 
 @end
 
@@ -42,14 +42,9 @@
 	}
 }
 
-- (CGFloat)highlightAmount
-{
-	return (self.private_highlightAmount);
-}
-
 - (void)setHighlightAmount:(CGFloat)highlightAmount
 {
-	(self.private_highlightAmount) = highlightAmount;
+	_highlightAmount = highlightAmount;
 	
 	GLAUIStyle *uiStyle = [GLAUIStyle activeStyle];
 	NSRect dirtyRect = [uiStyle drawingRectOfActiveHighlightForBounds:(self.bounds) time:1.0];
@@ -58,6 +53,9 @@
 
 - (void)highlightWithColor:(NSColor *)color animate:(BOOL)animate
 {
+	(self.changeCount) += 1;
+	NSUInteger currentChangeCount = (self.changeCount);
+	
 	if (color) {
 		[NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
 			(context.duration) = 6.0 / 36.0;
@@ -71,11 +69,11 @@
 			(context.duration) = 3.0 / 36.0;
 			(self.animator.highlightAmount) = 0.0;
 		} completionHandler:^ {
-			(self.highlightColor) = nil;
+			if (currentChangeCount == (self.changeCount)) {
+				(self.highlightColor) = nil;
+			}
 		}];
 	}
-	
-	//[self setNeedsDisplay:YES];
 }
 
 - (void)drawRect:(NSRect)dirtyRect
