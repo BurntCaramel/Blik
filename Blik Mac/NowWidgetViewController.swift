@@ -11,7 +11,7 @@ import BurntFoundation
 import BurntCocoaUI
 
 
-struct ProjectChoice: UIChoiceRepresentative {
+struct ProjectChoice : UIChoiceRepresentative {
 	var project: GLAProject
 	
 	var title: String { return project.name }
@@ -20,7 +20,7 @@ struct ProjectChoice: UIChoiceRepresentative {
 }
 
 
-class NowWidgetViewController: GLAViewController {
+class NowWidgetViewController : GLAViewController {
 	@IBOutlet var projectPopUpButton: NSPopUpButton?
 	@IBOutlet var highlightsViewController: ProjectHighlightsViewController!
 	

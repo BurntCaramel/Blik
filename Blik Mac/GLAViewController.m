@@ -17,7 +17,8 @@
 
 + (NSString *)defaultNibName
 {
-	return [self className];
+  // For Swift module names
+	return [[self className] componentsSeparatedByString:@"."].lastObject;
 }
 
 - (instancetype)init
