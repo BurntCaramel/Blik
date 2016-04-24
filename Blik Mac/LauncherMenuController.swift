@@ -154,17 +154,19 @@ public class LauncherMenuController: NSObject {
 	private var items: [Item?] {
 		var items = [Item?]()
 		
-		#if true
+		if projectManager.nowProject != nil {
 			items.append(.nowProject)
 			items.append(nil)
-		#endif
+		}
 		
 		let projects = (allProjectsUser.copyChildrenLoadingIfNeeded() as! [GLAProject]?) ?? []
 		let projectItems: [Item?] = projects.filter{ !$0.hideFromLauncherMenu }.map(Item.project)
 		items += projectItems
 		
 		items.append(nil)
-		items.append(.allProjects)
+		if projects.count > 0 {
+			items.append(.allProjects)
+		}
 		items.append(.newProject)
 		
 		items.append(nil)
