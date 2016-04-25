@@ -11,18 +11,6 @@
 
 @implementation NSObject (PGWSNotificationObserving)
 
-#pragma mark Observing
-
-- (void)pgws_addObserver:(id)observer forNotificationWithName:(NSString *)name selector:(SEL)aSelector
-{
-	[[NSNotificationCenter defaultCenter] addObserver:observer selector:aSelector name:name object:self];
-}
-
-- (void)pgws_removeObserver:(id)observer
-{
-	[[NSNotificationCenter defaultCenter] removeObserver:observer name:nil object:self];
-}
-
 #pragma mark Notifying
 
 - (void)pgws_postNotificationName:(NSString *)notificationName

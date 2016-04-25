@@ -69,7 +69,7 @@
 {
 	GLAEditCollectionDetailsViewController *editCollectionDetailsViewController = (self.editCollectionDetailsViewController);
 	if (editCollectionDetailsViewController) {
-		[editCollectionDetailsViewController pgws_removeObserver:self];
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:editCollectionDetailsViewController];
 	}
 }
 

@@ -7,18 +7,3 @@
 //
 
 import Cocoa
-
-
-extension NSEvent {
-	var burnt_firstCharacter: Character? {
-		if let charactersIgnoringModifiers = charactersIgnoringModifiers {
-			return charactersIgnoringModifiers[charactersIgnoringModifiers.startIndex]
-		}
-		
-		return nil
-	}
-	
-	var burnt_isSpaceKey: Bool {
-		return burnt_firstCharacter == " "
-	}
-}

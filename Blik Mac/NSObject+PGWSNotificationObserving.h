@@ -11,12 +11,6 @@
 
 @interface NSObject (PGWSNotificationObserving)
 
-#pragma mark Observing
-
-- (void)pgws_addObserver:(id)observer forNotificationWithName:(NSString *)name selector:(SEL)aSelector;
-
-- (void)pgws_removeObserver:(id)observer;
-
 #pragma mark Notifying
 
 - (void)pgws_postNotificationName:(NSString *)notificationName;
