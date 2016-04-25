@@ -26,10 +26,12 @@ public enum ExecutionError: ErrorType {
 
 
 extension StageProtocol {
-	public func execute<ExecutionCustomizer: ExecutionCustomizing where ExecutionCustomizer.Stage == Self>(customizer customizer: ExecutionCustomizer, completion: (() throws -> Self) -> ()) {
-		func complete(getStage: (() throws -> Self)) {
+	public func execute<ExecutionCustomizer: ExecutionCustomizing where ExecutionCustomizer.Stage == Self>(customizer customizer: ExecutionCustomizer, completion: (() throws -> Completion) -> ()) {
+		func complete(useStage: (() throws -> Self)) {
 			customizer.completionService.async {
-				completion(getStage)
+				completion({
+					try useStage().requireCompletion()
+				})
 			}
 		}
 		
@@ -64,10 +66,9 @@ extension StageProtocol {
 		runStage(self)
 	}
 	
-	public func taskExecuting<ExecutionCustomizer: ExecutionCustomizing where ExecutionCustomizer.Stage == Self>(customizer customizer: ExecutionCustomizer) -> Task<Self> {
+	public func taskExecuting<ExecutionCustomizer: ExecutionCustomizing where ExecutionCustomizer.Stage == Self>(customizer customizer: ExecutionCustomizer) -> Task<Completion> {
 		return Task.future{ resolve in
 			self.execute(customizer: customizer, completion: resolve)
 		}
 	}
 }
-

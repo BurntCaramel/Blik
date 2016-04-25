@@ -1,5 +1,5 @@
 //
-//  NSEventAdditions.swift
+//  NSEvent.swift
 //  BurntCocoaUI
 //
 //  Created by Patrick Smith on 6/09/2015.
@@ -10,7 +10,7 @@ import Cocoa
 
 
 extension NSEvent {
-	var burnt_firstCharacter: Character? {
+	public var burnt_firstCharacter: Character? {
 		if let charactersIgnoringModifiers = charactersIgnoringModifiers {
 			return charactersIgnoringModifiers[charactersIgnoringModifiers.startIndex]
 		}
@@ -18,7 +18,7 @@ extension NSEvent {
 		return nil
 	}
 	
-	var burnt_isSpaceKey: Bool {
+	public var burnt_isSpaceKey: Bool {
 		return burnt_firstCharacter == " "
 	}
 }

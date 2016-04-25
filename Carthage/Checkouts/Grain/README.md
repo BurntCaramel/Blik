@@ -6,16 +6,17 @@ Associated values are used to keep state for each stage.
 ## Usage
 
 ```swift
-// Create an enum conforming to `StageProtocol` 
 enum FileOpenStage: StageProtocol {
+	typealias Completion = (text: String, number: Double, arrayOfText: [String])
+	
 	/// Initial stages
 	case read(fileURL: NSURL)
 	/// Intermediate stages
 	case unserializeJSON(data: NSData)
 	case parseJSON(object: AnyObject)
 	/// Completed stages
-	case success(text: String, number: Double, arrayOfText: [String])
-
+	case success(Completion)
+	
 	// Any errors thrown by the stages
 	enum Error: ErrorType {
 		case invalidJSON
@@ -25,27 +26,33 @@ enum FileOpenStage: StageProtocol {
 ```
 
 Each stage creates a task, which resolves to the next stage.
-Tasks can be synchronous subroutines (.unit) or asynchronous futures (.future).
+Tasks can be synchronous subroutines (`Task()`) or asynchronous futures (`Task.future()`).
+
+Grain by default runs tasks on a background queue, even synchronous ones.
 
 ```swift
 extension FileOpenStage {
 	/// The task for each stage
 	var nextTask: Task<FileOpenStage>? {
 		switch self {
+		// Currently at the .read stage:
 		case let .read(fileURL):
-			return .unit({
-				.unserializeJSON(
+			// A synchronous task to run the passed closure.
+			// The task returns the next stage: .read -> .unserializeJSON
+			return Task{
+				return .unserializeJSON(
 					data: try NSData(contentsOfURL: fileURL, options: .DataReadingMappedIfSafe)
 				)
-			})
+			}
+		// Currently at the .unserializeJSON stage
 		case let .unserializeJSON(data):
-			return .unit({
-				.parseJSON(
+			return Task{
+				return .parseJSON(
 					object: try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
 				)
-			})
+			}
 		case let .parseJSON(object):
-			return .unit({
+			return Task{
 				guard let dictionary = object as? [String: AnyObject] else {
 					throw Error.invalidJSON
 				}
@@ -62,39 +69,38 @@ extension FileOpenStage {
 					number: number,
 					arrayOfText: arrayOfText
 				)
-			})
+			}
 		case .success:
+			// Completed: no next task
 			return nil
 		}
+	}
+	
+	// Returns a value if this stage is completed 
+	var completion: Completion? {
+		guard case let .success(completion) = self else { return nil }
+		return completion
 	}
 }
 ```
 
 To execute, create an initial stage and call `.execute()`, which uses
 Grand Central Dispatch to asychronously dispatch each stage, by default
-with a **user initiated** QOS.
+with a **user initiated** quality of service.
 
 Your callback is passed `useResult`, which you call to return the result.
-Any errors thrown in the stages will bubble up, so use Swift error
-handling to catch these here in the one place. 
+Errors thrown in any of the stages will bubble up, so use Swift error
+handling to catch them here in the one place. 
 
 ```swift
 FileOpenStage.read(fileURL: fileURL).execute { useResult in
 	do {
-		let result = try useResult()
-		if case let .success(text, number, arrayOfText) = result {
-			// Do something with result
-		}
-		else {
-			// Invalid stage to complete at
-			fatalError("Invalid success stage \(result)")
-		}
+		let (text, number, arrayOfText) = try useResult()
+		// Use result...
 	}
 	catch {
 		// Handle `error` here
 	}
-	
-	expectation.fulfill()
 }
 ```
 
@@ -105,27 +111,30 @@ Use the `.future` task, and resolve the value, or resolve throwing an error.
 
 ```swift
 enum HTTPRequestStage: StageProtocol {
+	typealias Completion = (response: NSHTTPURLResponse, body: NSData?)
+	
 	case get(url: NSURL)
 	case post(url: NSURL, body: NSData)
-	case success(response: NSHTTPURLResponse, body: NSData?)
+	
+	case success(Completion)
 	
 	var nextTask: Task<HTTPRequestStage>? {
 		switch self {
 		case let .get(url):
-			return .future({ resolve in
+			return Task.future{ resolve in
 				let session = NSURLSession.sharedSession()
-				let task = session.dataTaskWithURL(url) { (data, response, error) in
+				let task = session.dataTaskWithURL(url) { data, response, error in
 					if let error = error {
-						resolve { throw error }
+						resolve{ throw error }
 					}
 					else {
-						resolve { .success(response: response as! NSHTTPURLResponse, body: data) }
+						resolve{ .success((response: response as! NSHTTPURLResponse, body: data)) }
 					}
 				}
 				task.resume()
-			})
+			}
 		case let .post(url, body):
-			return .future({ resolve in
+			return Task.future{ resolve in
 				let session = NSURLSession.sharedSession()
 				let request = NSMutableURLRequest(URL: url)
 				request.HTTPBody = body
@@ -134,14 +143,19 @@ enum HTTPRequestStage: StageProtocol {
 						resolve { throw error }
 					}
 					else {
-						resolve { .success(response: response as! NSHTTPURLResponse, body: data) }
+						resolve { .success((response: response as! NSHTTPURLResponse, body: data)) }
 					}
 				}
 				task.resume()
-			})
+			}
 		case .success:
 			return nil
 		}
+	}
+	
+	var completion: Completion? {
+		guard case let .success(completion) = self else { return nil }
+		return completion
 	}
 }
 ```
@@ -151,43 +165,44 @@ enum HTTPRequestStage: StageProtocol {
 ```swift
 var customizer = GCDExecutionCustomizer<FileOpenStage>()
 
-// Change QOS for particular stages
+let readQueue = dispatch_queue_create("com.example.fileReading", DISPATCH_QUEUE_SERIAL)
+
+// Change queue for particular stages
 customizer.serviceForStage = { stage in
 	switch stage {
-	case .read: return .utility
-	default: return .userInitiated
+	case .read: return .customQueue(readQueue) // Custom dispatch queue
+	default: return .utility // Utility QOS global queue
 	}
 }
 
-// Dispatch on a custom serial queue
-let resultQueue = dispatch_queue_create("com.example.results", DISPATCH_QUEUE_SERIAL)
-customizer.completionService = .customQueue(resultQueue)
+// Complete with user interactive QOS
+customizer.completionService = .userInteractive
 
 customizer.beforeStage = { print("About to perform stage \($0)") }
 
 // Execute using customizer
 FileOpenStage.read(fileURL: fileURL).execute(customizer: customizer) { useResult in
-	...
+	// ...
 }
 ```
 
 ## Multiple inputs or outputs
 
-Stages can have multiple choices of initial stages or success stages.
-Just add multiple cases!
+Stages can have multiple choices of initial stages: just add multiple cases!
+
+For multiple choice of output, use a `enum` for the `Completion` associated type.
 
 ## Motivations
 
 Breaking a data flow into a more declarative form makes it easier to understand.
 
-Each stage is distinct, and can contain code that is sychronous or asychronous.
+Each stage is distinct, and can be sychronous or asychronous.
 
-It allows easier testing, as stages are able to be stored and resumed at will.
-Associated values capture the entire state of a stage, making storing easy.
-And any stage can be executed, not just initial ones.
+Stages are able to be stored and restored at will, as associated values capture
+the entire state of a stage.
+This allows easier testing, as you can resume at any stage, not just initial ones.
 
-Data flows in a flattened heirarchy, with native support for Swift’s
-error system.
+Swift’s native error handling is used. 
 
 ## Composing stages
 
@@ -195,8 +210,12 @@ error system.
 inside other stages. A series of stages can become a single stage in a different
 enum, and so on.
 
+For example, combining the previous two stage types:
+
 ```swift
 enum FileUploadStage: StageProtocol {
+	typealias Completion = ()
+	
 	case openFile(fileOpenStage: FileOpenStage, destinationURL: NSURL)
 	case uploadRequest(HTTPRequestStage)
 	case success
@@ -209,23 +228,24 @@ enum FileUploadStage: StageProtocol {
 		switch self {
 		case let .openFile(stage, destinationURL):
 			if case let .success(_, number, _) = stage {
-				return .unit({
+				return Task{
 					.uploadRequest(.post(
 						url: destinationURL,
 						body: try NSJSONSerialization.dataWithJSONObject([ "number": number ], options: [])
 					))
-				})
+				}
 			}
 			else {
 				return stage.mapNext{ .openFile(fileOpenStage: $0, destinationURL: destinationURL) }
 			}
 		case let .uploadRequest(stage):
 			if case let .success(response, body) = stage {
-				if response.statusCode == 200 {
-					return .unit({ .success })
+				let statusCode = response.statusCode
+				if statusCode == 200 {
+					return Task{ .success }
 				}
 				else {
-					return .unit({ throw Error.uploadFailed(statusCode: response.statusCode, body: body) })
+					return Task{ throw Error.uploadFailed(statusCode: statusCode, body: body) }
 				}
 			}
 			else {
@@ -235,7 +255,19 @@ enum FileUploadStage: StageProtocol {
 			return nil
 		}
 	}
+	
+	var completion: Completion? {
+		// CRASHES: guard case let .success(completion) = self else { return nil }
+		guard case .success = self else { return nil }
+		return ()
+	}
 }
 ```
 
-(More to come.)
+## Installation
+
+### Carthage
+
+```
+github "BurntCaramel/Grain"
+```

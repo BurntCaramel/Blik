@@ -45,18 +45,20 @@ public struct GCDExecutionCustomizer<Stage: StageProtocol>: ExecutionCustomizing
 	
 	public var shouldStopStage: Stage -> Bool = { _ in false }
 	public var beforeStage: Stage -> () = { _ in }
+	
+	public init() {}
 }
 
 // Convenience method for GCD
 extension StageProtocol {
-	public func execute(completion: (() throws -> Self) -> ()) {
+	public func execute(completion: (() throws -> Completion) -> ()) {
 		execute(customizer: GCDExecutionCustomizer(), completion: completion)
 	}
 }
 
 
 extension StageProtocol {
-	public func createTask() -> Task<Self>? {
+	public func taskExecuting() -> Task<Completion>? {
 		return .future({ self.execute($0) })
 	}
 }

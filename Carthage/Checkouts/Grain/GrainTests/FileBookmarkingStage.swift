@@ -24,11 +24,13 @@ private func createBookmarkDataForFileURL(fileURL: NSURL) throws -> NSData {
 
 
 enum FileBookmarkingStage: StageProtocol {
+	typealias Completion = (fileURL: NSURL, bookmarkData: NSData, wasStale: Bool)
+	
 	/// Initial stages
 	case fileURL(fileURL: NSURL)
 	case bookmark(bookmarkData: NSData)
 	/// Completed stages
-	case resolved(fileURL: NSURL, bookmarkData: NSData, wasStale: Bool)
+	case resolved(Completion)
 }
 
 extension FileBookmarkingStage {
@@ -37,11 +39,11 @@ extension FileBookmarkingStage {
 		switch self {
 		case let .fileURL(fileURL):
 			return Task{
-				.resolved(
+				.resolved((
 					fileURL: fileURL,
 					bookmarkData: try createBookmarkDataForFileURL(fileURL),
 					wasStale: false
-				)
+				))
 			}
 		case let .bookmark(bookmarkData):
 			return Task{
@@ -54,15 +56,19 @@ extension FileBookmarkingStage {
 					bookmarkData = try createBookmarkDataForFileURL(fileURL)
 				}
 
-				return .resolved(
+				return .resolved((
 					fileURL: fileURL,
 					bookmarkData: bookmarkData,
 					wasStale: Bool(stale)
-				)
+				))
 			}
-		case .resolved:
-			return nil
+		case .resolved: return nil
 		}
+	}
+	
+	var completion: Completion? {
+		guard case let .resolved(completion) = self else { return nil }
+		return completion
 	}
 }
 
@@ -78,24 +84,19 @@ class FileBookmarkingTests: XCTestCase {
 		let bookmarkingCustomizer = GCDExecutionCustomizer<FileBookmarkingStage>()
 		let expectation = expectationWithDescription("File accessed")
 		
-		let accessTask = FileAccessingStage.start(fileURL: fileURL).taskExecuting(customizer: GCDExecutionCustomizer())
-
-		let bookmarkTask = accessTask.flatMap({ useResult -> Task<FileBookmarkingStage> in
-			let (fileURL, _) = try useResult().asStarted()
+		let accessTask = FileStartAccessingStage.start(fileURL: fileURL).taskExecuting(customizer: GCDExecutionCustomizer())
+		
+		let bookmarkTask = accessTask.flatMap{ useResult -> Task<FileBookmarkingStage.Completion> in
+			let (fileURL, _) = try useResult()
 			return FileBookmarkingStage.fileURL(fileURL: fileURL).taskExecuting(customizer: bookmarkingCustomizer)
-		})
+		}
 		
 		bookmarkTask.perform { useResult in
 			do {
 				let result = try useResult()
-				if case let .resolved(fileURL2, bookmarkData, wasStale) = result {
-					XCTAssertEqual(fileURL, fileURL2)
-					XCTAssert(bookmarkData.length > 0)
-					XCTAssertEqual(wasStale, false)
-				}
-				else {
-					XCTFail("Unexpected result \(result)")
-				}
+				XCTAssertEqual(result.fileURL, fileURL)
+				XCTAssert(result.bookmarkData.length > 0)
+				XCTAssertEqual(result.wasStale, false)
 			}
 			catch {
 				XCTFail("Error \(error)")

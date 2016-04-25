@@ -9,13 +9,26 @@
 import Foundation
 
 
-public protocol StageProtocol {
+public protocol StageProtocol: CompletingProtocol {
 	var nextTask: Task<Self>? { get }
+	
+	var completion: Completion? { get }
 }
 
 public enum StageError<Stage: StageProtocol>: ErrorType {
 	case stageAlreadyCompleted(Stage)
+	case expectedCompletion(Stage)
 	case stageInvalid(Stage)
+}
+
+extension StageProtocol {
+	public func requireCompletion() throws -> Self.Completion {
+		guard let completion = completion else {
+			throw StageError.expectedCompletion(self)
+		}
+		
+		return completion
+	}
 }
 
 extension StageProtocol {

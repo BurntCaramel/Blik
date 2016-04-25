@@ -11,9 +11,12 @@ import XCTest
 
 
 enum HTTPRequestStage: StageProtocol {
+	typealias Completion = (response: NSHTTPURLResponse, body: NSData?)
+	
 	case get(url: NSURL)
 	case post(url: NSURL, body: NSData)
-	case success(response: NSHTTPURLResponse, body: NSData?)
+	
+	case success(Completion)
 	
 	var nextTask: Task<HTTPRequestStage>? {
 		switch self {
@@ -25,7 +28,7 @@ enum HTTPRequestStage: StageProtocol {
 						resolve{ throw error }
 					}
 					else {
-						resolve{ .success(response: response as! NSHTTPURLResponse, body: data) }
+						resolve{ .success((response: response as! NSHTTPURLResponse, body: data)) }
 					}
 				}
 				task.resume()
@@ -40,7 +43,7 @@ enum HTTPRequestStage: StageProtocol {
 						resolve { throw error }
 					}
 					else {
-						resolve { .success(response: response as! NSHTTPURLResponse, body: data) }
+						resolve { .success((response: response as! NSHTTPURLResponse, body: data)) }
 					}
 				}
 				task.resume()
@@ -49,9 +52,16 @@ enum HTTPRequestStage: StageProtocol {
 			return nil
 		}
 	}
+	
+	var completion: Completion? {
+		guard case let .success(completion) = self else { return nil }
+		return completion
+	}
 }
 
 enum FileUploadStage: StageProtocol {
+	typealias Completion = ()
+	
 	case openFile(fileOpenStage: FileOpenStage, destinationURL: NSURL)
 	case uploadRequest(HTTPRequestStage)
 	case success
@@ -90,5 +100,11 @@ enum FileUploadStage: StageProtocol {
 		case .success:
 			return nil
 		}
+	}
+	
+	var completion: Completion? {
+		// CRASHES: guard case let .success(completion) = self else { return nil }
+		guard case .success = self else { return nil }
+		return ()
 	}
 }

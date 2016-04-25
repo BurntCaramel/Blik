@@ -99,6 +99,11 @@ typedef int swift_int4  __attribute__((__ext_vector_type__(4)));
 #pragma clang diagnostic ignored "-Wduplicate-method-arg"
 
 @interface NSEvent (SWIFT_EXTENSION(BurntCocoaUI))
+@property (nonatomic, readonly) BOOL burnt_isSpaceKey;
+@end
+
+
+@interface NSResponder (SWIFT_EXTENSION(BurntCocoaUI))
 @end
 
 #pragma clang diagnostic pop

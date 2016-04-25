@@ -11,13 +11,15 @@ import XCTest
 
 
 enum FileOpenStage: StageProtocol {
+	typealias Completion = (text: String, number: Double, arrayOfText: [String])
+	
 	/// Initial stages
 	case read(fileURL: NSURL)
 	/// Intermediate stages
 	case unserializeJSON(data: NSData)
 	case parseJSON(object: AnyObject)
 	/// Completed stages
-	case success(text: String, number: Double, arrayOfText: [String])
+	case success(Completion)
 	
 	// Any errors thrown by the stages
 	enum Error: ErrorType {
@@ -65,6 +67,12 @@ extension FileOpenStage {
 			return nil
 		}
 	}
+	
+	// The associated value if this is a completion case
+	var completion: Completion? {
+		guard case let .success(completion) = self else { return nil }
+		return completion
+	}
 }
 
 
@@ -93,16 +101,11 @@ class GrainTests: XCTestCase {
 		
 		FileOpenStage.read(fileURL: fileURL).execute { useResult in
 			do {
-				let result = try useResult()
-				if case let .success(text, number, arrayOfText) = result {
-					XCTAssertEqual(text, "abc")
-					XCTAssertEqual(number, 5)
-					XCTAssertEqual(arrayOfText.count, 2)
-					XCTAssertEqual(arrayOfText[1], "ghi")
-				}
-				else {
-					XCTFail("Unexpected result \(result)")
-				}
+				let (text, number, arrayOfText) = try useResult()
+				XCTAssertEqual(text, "abc")
+				XCTAssertEqual(number, 5)
+				XCTAssertEqual(arrayOfText.count, 2)
+				XCTAssertEqual(arrayOfText[1], "ghi")
 			}
 			catch {
 				XCTFail("Error \(error)")
