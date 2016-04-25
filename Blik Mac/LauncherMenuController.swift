@@ -98,7 +98,7 @@ public class LauncherMenuController: NSObject {
 		
 		menuAssistant = MenuAssistant(menu: menu)
 		
-		nowWidgetViewController = NowWidgetViewController()
+		nowWidgetViewController = NowWidgetViewController(nibName: "NowWidgetViewController", bundle: nil)!
 		
 		super.init()
 		
