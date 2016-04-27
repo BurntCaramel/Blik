@@ -20,11 +20,11 @@
 
 - (id)initWithFrame:(NSRect)frame
 {
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code here.
-    }
-    return self;
+	self = [super initWithFrame:frame];
+	if (self) {
+		self.cell = [GLAPopUpButtonCell new];
+	}
+	return self;
 }
 
 - (GLAPopUpButtonCell *)cell
