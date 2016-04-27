@@ -224,6 +224,12 @@
 		B2469A761CC9FB7700D0CC6C /* GLATableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2469A751CC9FB7700D0CC6C /* GLATableCellView.swift */; };
 		B2469A781CC9FF0100D0CC6C /* NSResponder+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2469A771CC9FF0100D0CC6C /* NSResponder+.swift */; };
 		B2469A791CC9FF0100D0CC6C /* NSResponder+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2469A771CC9FF0100D0CC6C /* NSResponder+.swift */; };
+		B2469A8B1CCE4E6700D0CC6C /* FileFilterFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2469A8A1CCE4E6700D0CC6C /* FileFilterFields.swift */; };
+		B2469A8C1CCE4E6700D0CC6C /* FileFilterFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2469A8A1CCE4E6700D0CC6C /* FileFilterFields.swift */; };
+		B2469A8F1CCE5A9600D0CC6C /* FileFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2469A8D1CCE5A9600D0CC6C /* FileFilterViewController.swift */; };
+		B2469A901CCE5A9600D0CC6C /* FileFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2469A8D1CCE5A9600D0CC6C /* FileFilterViewController.swift */; };
+		B2469A911CCE5A9600D0CC6C /* FileFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2469A8E1CCE5A9600D0CC6C /* FileFilterViewController.xib */; };
+		B2469A921CCE5A9600D0CC6C /* FileFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2469A8E1CCE5A9600D0CC6C /* FileFilterViewController.xib */; };
 		B24ADB2C1AD784E0007214C2 /* GLACollectedFolderContentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B24ADB2A1AD784E0007214C2 /* GLACollectedFolderContentsViewController.xib */; };
 		B24ADB321AD81939007214C2 /* GLAArrangedDirectoryChildren.m in Sources */ = {isa = PBXBuildFile; fileRef = B24ADB311AD81939007214C2 /* GLAArrangedDirectoryChildren.m */; };
 		B24B360B196E336E0094FA1F /* GLAMainNavigationBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */; };
@@ -521,6 +527,9 @@
 		B245E83E1A395D9D002ED636 /* GLAMainSectionNavigator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAMainSectionNavigator.m; sourceTree = "<group>"; };
 		B2469A751CC9FB7700D0CC6C /* GLATableCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLATableCellView.swift; sourceTree = "<group>"; };
 		B2469A771CC9FF0100D0CC6C /* NSResponder+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSResponder+.swift"; sourceTree = "<group>"; };
+		B2469A8A1CCE4E6700D0CC6C /* FileFilterFields.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileFilterFields.swift; sourceTree = "<group>"; };
+		B2469A8D1CCE5A9600D0CC6C /* FileFilterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileFilterViewController.swift; sourceTree = "<group>"; };
+		B2469A8E1CCE5A9600D0CC6C /* FileFilterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileFilterViewController.xib; sourceTree = "<group>"; };
 		B24ADB2A1AD784E0007214C2 /* GLACollectedFolderContentsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLACollectedFolderContentsViewController.xib; sourceTree = "<group>"; };
 		B24ADB301AD81939007214C2 /* GLAArrangedDirectoryChildren.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAArrangedDirectoryChildren.h; sourceTree = "<group>"; };
 		B24ADB311AD81939007214C2 /* GLAArrangedDirectoryChildren.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAArrangedDirectoryChildren.m; sourceTree = "<group>"; };
@@ -899,6 +908,7 @@
 				B2C7F29A1973993A005780B4 /* Projects List */,
 				B226E9521988CFCA00D607CC /* Collection Creating */,
 				B2CCF8DE1A344B5C00EC7703 /* Collection Inside */,
+				B2469A891CCE4E5300D0CC6C /* File Filter */,
 				B2E39B381A8497F4000A9A12 /* Preferences */,
 				B260F85619ADC92D002E3753 /* Launcher Menu */,
 				B27FB63F1C33DBDC00DA7F00 /* Desktop Widget */,
@@ -951,6 +961,16 @@
 				B23E7F9A1BDB79CB008460C8 /* HighlightCustomNameViewController.xib */,
 			);
 			name = "Highlight Details";
+			sourceTree = "<group>";
+		};
+		B2469A891CCE4E5300D0CC6C /* File Filter */ = {
+			isa = PBXGroup;
+			children = (
+				B2469A8A1CCE4E6700D0CC6C /* FileFilterFields.swift */,
+				B2469A8D1CCE5A9600D0CC6C /* FileFilterViewController.swift */,
+				B2469A8E1CCE5A9600D0CC6C /* FileFilterViewController.xib */,
+			);
+			name = "File Filter";
 			sourceTree = "<group>";
 		};
 		B24B3604196D1F4D0094FA1F /* MODEL */ = {
@@ -1273,7 +1293,6 @@
 				B25591F619C8456F0039D2AC /* Color Pickers */,
 				B22B7D7D1AC277F40026AEDB /* GLATopDownScrollView.h */,
 				B22B7D7E1AC277F40026AEDB /* GLATopDownScrollView.m */,
-				B21B6E631B06CD4F001B8430 /* NSEvent+extension.swift */,
 				B21B6E5F1B063741001B8430 /* TableView-OutlineView-Subclass.swift */,
 			);
 			name = VIEW;
@@ -1344,6 +1363,7 @@
 				B2BEDB371CA5840400AEC780 /* PGWSCFNotificationObserver.h */,
 				B2BEDB381CA5840400AEC780 /* PGWSCFNotificationObserver.m */,
 				B2469A771CC9FF0100D0CC6C /* NSResponder+.swift */,
+				B21B6E631B06CD4F001B8430 /* NSEvent+extension.swift */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1717,6 +1737,7 @@
 				B20DB3511B0C8ACA00E57532 /* GLAAddNewProjectViewController.xib in Resources */,
 				B20DB3521B0C8ACA00E57532 /* GLAAddNewCollectionChooseTypeViewController.xib in Resources */,
 				B20DB3531B0C8ACA00E57532 /* GLAEditPermittedApplicationFoldersViewController.xib in Resources */,
+				B2469A921CCE5A9600D0CC6C /* FileFilterViewController.xib in Resources */,
 				B20DB3541B0C8ACA00E57532 /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.xib in Resources */,
 				B20DB3551B0C8ACA00E57532 /* GLAProjectsListViewController.xib in Resources */,
 				B20DB3561B0C8ACA00E57532 /* Images.xcassets in Resources */,
@@ -1754,6 +1775,7 @@
 				B26659EC199C60D7003C4EA4 /* GLAAddNewProjectViewController.xib in Resources */,
 				B2ED54381A94629400F6B4FA /* GLAAddNewCollectionChooseTypeViewController.xib in Resources */,
 				B2E39B431A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.xib in Resources */,
+				B2469A911CCE5A9600D0CC6C /* FileFilterViewController.xib in Resources */,
 				B2ED543D1A947C5400F6B4FA /* GLAAddNewCollectionFilteredFolderChooseFolderViewController.xib in Resources */,
 				B2C7F28C197023EF005780B4 /* GLAProjectsListViewController.xib in Resources */,
 				B2ADDBEA1963DA2E0014EF84 /* Images.xcassets in Resources */,
@@ -1975,6 +1997,7 @@
 				B20DB2F81B0C8ACA00E57532 /* GLACollectedItemContentHolderView.m in Sources */,
 				B2BEDB361CA56EF600AEC780 /* FileFilter.swift in Sources */,
 				B20DB2F91B0C8ACA00E57532 /* GLATableView.m in Sources */,
+				B2469A901CCE5A9600D0CC6C /* FileFilterViewController.swift in Sources */,
 				B20DB37A1B0DBC9600E57532 /* WindowFirstResponderAssistant.swift in Sources */,
 				B20DB2FA1B0C8ACA00E57532 /* GLAQuickLookPreviewHelper.m in Sources */,
 				B20DB2FB1B0C8ACA00E57532 /* GLAFileCollectionViewController.m in Sources */,
@@ -1982,6 +2005,7 @@
 				B20DB2FD1B0C8ACA00E57532 /* GLACollectedFile.m in Sources */,
 				B20DB2FE1B0C8ACA00E57532 /* GLAColorChoiceView.m in Sources */,
 				B20DB2FF1B0C8ACA00E57532 /* GLAFilteredFolderCollectionViewController.m in Sources */,
+				B2469A8C1CCE4E6700D0CC6C /* FileFilterFields.swift in Sources */,
 				B20DB3001B0C8ACA00E57532 /* PGWSQueuedBlockConvenience.m in Sources */,
 				B20DB3011B0C8ACA00E57532 /* GLAButton.m in Sources */,
 				B20DB3021B0C8ACA00E57532 /* GLAProjectOverviewTableCellView.m in Sources */,
@@ -2108,6 +2132,7 @@
 				B250206B1B02F3CC00ABAE96 /* GLATableHeaderCell.m in Sources */,
 				B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */,
 				B2E39B5E1A89AF56000A9A12 /* GLANavigationButtonGroup.m in Sources */,
+				B2469A8B1CCE4E6700D0CC6C /* FileFilterFields.swift in Sources */,
 				B292453919E4058A00DD30CB /* GLANoNowProjectViewController.m in Sources */,
 				B2D9EE5B1AD3B0B400F5F34E /* GLAOverlaidBarView.m in Sources */,
 				B2E39B461A849F5A000A9A12 /* GLAChooseFoldersViewController.m in Sources */,
@@ -2148,6 +2173,7 @@
 				B2E39B421A849F06000A9A12 /* GLAEditPermittedApplicationFoldersViewController.m in Sources */,
 				B2B466711B29B88A001C4BC0 /* SymlinkCreator.swift in Sources */,
 				B2C7F28B197023EF005780B4 /* GLAProjectsListViewController.m in Sources */,
+				B2469A8F1CCE5A9600D0CC6C /* FileFilterViewController.swift in Sources */,
 				B2F0DBCA199449FB001AB5EE /* GLAPopUpButton.m in Sources */,
 				B2B717F61BF47B1100D3E7B1 /* LauncherProjectMenuController.swift in Sources */,
 				B2E39B331A7C5BEF000A9A12 /* GLAMultipleArrayTableHelper.m in Sources */,

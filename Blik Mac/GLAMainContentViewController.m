@@ -19,6 +19,7 @@
 #import "GLAPendingAddedCollectedFilesInfo.h"
 
 #import "GLAEnabledFeatures.h"
+#import "Blik-Swift.h"
 
 
 @interface GLAMainContentViewController ()
@@ -468,10 +469,18 @@
 		}
 	}
 	else if ([collectionType isEqualToString:GLACollectionTypeFilteredFolder]) {
+#if 1
+		FileFilterViewController *vc = [[FileFilterViewController alloc] initWithNibName:@"FileFilterViewController" bundle:nil];
+		
+		vc.filteredFolderCollection = collection;
+		
+		controller = vc;
+#else
 		GLAFilteredFolderCollectionViewController *filteredFolderCollectionViewController = [[GLAFilteredFolderCollectionViewController alloc] initWithNibName:NSStringFromClass([GLAFilteredFolderCollectionViewController class]) bundle:nil];
 		(filteredFolderCollectionViewController.filteredFolderCollection) = collection;
 		
 		controller = filteredFolderCollectionViewController;
+#endif
 	}
 	
 	return controller;
