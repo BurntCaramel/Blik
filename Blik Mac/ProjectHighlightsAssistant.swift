@@ -100,7 +100,7 @@ extension HighlightItemDetails {
 		
 		highlightedItemsUser = projectManager.useHighlightsForProject(project)
 		collectionsUser = projectManager.useCollectionsForProject(project)
-		primaryFoldersUser = projectManager.usePrimaryFoldersForProject(project)
+		primaryFoldersUser = projectManager.usePrimaryFoldersForProjectUUID(project.UUID)
 		
 		collectedFilesSetting = GLACollectedFilesSetting()
 		var keysToRequest = [NSURLLocalizedNameKey, NSURLIsDirectoryKey, NSURLIsPackageKey]

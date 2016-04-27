@@ -62,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark Project Master Folders
 
-- (id<GLALoadableArrayUsing>)usePrimaryFoldersForProject:(GLAProject *)project;
+- (id<GLALoadableArrayUsing>)usePrimaryFoldersForProjectUUID:(NSUUID *)projectUUID;
 
 - (BOOL)hasLoadedPrimaryFoldersForProject:(GLAProject *)project;
 - (void)loadPrimaryFoldersForProjectIfNeeded:(GLAProject *)project;

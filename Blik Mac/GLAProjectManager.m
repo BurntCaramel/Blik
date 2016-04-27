@@ -65,10 +65,11 @@
 
 - (BOOL)hasLoadedPrimaryFoldersForProject:(GLAProject *)project;
 - (void)loadPrimaryFoldersForProjectIfNeeded:(GLAProject *)project;
-- (GLAArrayEditor *)primaryFoldersArrayEditorForProject:(GLAProject *)project;
-- (GLAArrayEditor *)primaryFoldersArrayEditorForProject:(GLAProject *)project createIfNeeded:(BOOL)create loadIfNeeded:(BOOL)load;
 
-- (void)clearPrimaryFoldersArrayEditorForProject:(GLAProject *)project;
+- (GLAArrayEditor *)primaryFoldersArrayEditorForProjectUUID:(NSUUID *)projectUUID;
+- (GLAArrayEditor *)primaryFoldersArrayEditorForProjectUUID:(NSUUID *)projectUUID createIfNeeded:(BOOL)create loadIfNeeded:(BOOL)load;
+
+- (void)clearPrimaryFoldersArrayEditorForProjectUUID:(NSUUID *)projectUUID;
 
 #pragma mark Collections
 
@@ -333,20 +334,20 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (NSArray /* GLACollectedFile */ *)copyPrimaryFoldersForProject:(GLAProject *)project
 {
-	GLAArrayEditor *arrayEditor = [(self.store) primaryFoldersArrayEditorForProject:project];
+	GLAArrayEditor *arrayEditor = [(self.store) primaryFoldersArrayEditorForProjectUUID:project.UUID];
 	NSAssert(arrayEditor != nil, @"Project must have a master folders array editor to copy from.");
 
 	return [arrayEditor copyChildren];
 }
 
-- (BOOL)editPrimaryFoldersOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectedFoldersListEditor))block
+- (BOOL)editPrimaryFoldersOfProjectUUID:(NSUUID *)projectUUID usingBlock:(void (^)(id<GLAArrayEditing> collectedFoldersListEditor))block
 {
 	GLAProjectManagerStore *store = (self.store);
-	GLAArrayEditor *arrayEditor = [store primaryFoldersArrayEditorForProject:project];
+	GLAArrayEditor *arrayEditor = [store primaryFoldersArrayEditorForProjectUUID:projectUUID];
 	
 	GLAArrayEditorChanges *changes = [arrayEditor changesMadeInBlock:block];
 	if (changes.hasChanges) {
-		[self primaryFoldersForProjectDidChange:project];
+		[self primaryFoldersForProjectDidChange:projectUUID];
 		
 		return YES;
 	}
@@ -355,15 +356,20 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	}
 }
 
-- (id<GLALoadableArrayUsing>)usePrimaryFoldersForProject:(GLAProject *)project
+- (BOOL)editPrimaryFoldersOfProject:(GLAProject *)project usingBlock:(void (^)(id<GLAArrayEditing> collectedFoldersListEditor))block
+{
+	return [self editPrimaryFoldersOfProjectUUID:project.UUID usingBlock:block];
+}
+
+- (id<GLALoadableArrayUsing>)usePrimaryFoldersForProjectUUID:(NSUUID *)projectUUID
 {
 	GLAArrayEditorUser *arrayEditorUser = [[GLAArrayEditorUser alloc] initWithLoadingBlock:^GLAArrayEditor *(BOOL createAndLoadIfNeeded) {
-		return [(self.store) primaryFoldersArrayEditorForProject:project createIfNeeded:createAndLoadIfNeeded loadIfNeeded:createAndLoadIfNeeded];
+		return [(self.store) primaryFoldersArrayEditorForProjectUUID:projectUUID createIfNeeded:createAndLoadIfNeeded loadIfNeeded:createAndLoadIfNeeded];
 	} makeEditsBlock:^(GLAArrayEditingBlock editingBlock) {
-		[self editPrimaryFoldersOfProject:project usingBlock:editingBlock];
+		[self editPrimaryFoldersOfProjectUUID:projectUUID usingBlock:editingBlock];
 	}];
 	
-	id projectNotifier = [self notificationObjectForProject:project];
+	id projectNotifier = [self notificationObjectForProjectUUID:projectUUID];
 	[arrayEditorUser makeObserverOfObject:projectNotifier forChangeNotificationWithName:GLAProjectPrimaryFoldersDidChangeNotification];
 	
 	return arrayEditorUser;
@@ -1011,9 +1017,9 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 	}
 }
 
-- (void)primaryFoldersForProjectDidChange:(GLAProject *)project
+- (void)primaryFoldersForProjectDidChange:(NSUUID *)projectUUID
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectPrimaryFoldersDidChangeNotification object:[self notificationObjectForProject:project]];
+	[[NSNotificationCenter defaultCenter] postNotificationName:GLAProjectPrimaryFoldersDidChangeNotification object:[self notificationObjectForProjectUUID:projectUUID]];
 }
 
 - (void)collectionListForProjectDidChange:(GLAProject *)project
@@ -1529,7 +1535,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 		NSArray *collections = [self copyCollectionsForProject:project];
 		[(self.projectManager) collectionsWereDeleted:collections];
 		[self permanentlyDeleteAssociatedFilesForCollections:collections];
-		[self clearPrimaryFoldersArrayEditorForProject:project];
+		[self clearPrimaryFoldersArrayEditorForProjectUUID:project.UUID];
 		[self clearCollectionsArrayEditorForProject:project];
 	}
 	
@@ -1673,16 +1679,15 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 #pragma mark Project Primary Folders
 
-- (GLAArrayEditor *)primaryFoldersArrayEditorForProject:(GLAProject *)project createIfNeeded:(BOOL)create loadIfNeeded:(BOOL)load
+- (GLAArrayEditor *)primaryFoldersArrayEditorForProjectUUID:(NSUUID *)projectUUID createIfNeeded:(BOOL)create loadIfNeeded:(BOOL)load
 {
-	NSParameterAssert(project != nil);
+	NSParameterAssert(projectUUID != nil);
 	
 	NSMutableDictionary *projectIDsToPrimaryFoldersArrayEditors = (self.projectIDsToPrimaryFoldersArrayEditors);
 	if (projectIDsToPrimaryFoldersArrayEditors == nil) {
 		projectIDsToPrimaryFoldersArrayEditors = (self.projectIDsToPrimaryFoldersArrayEditors) = [NSMutableDictionary new];
 	}
 	
-	NSUUID *projectUUID = (project.UUID);
 	GLAArrayEditor *primaryFoldersArrayEditor = projectIDsToPrimaryFoldersArrayEditors[projectUUID];
 	
 	if (!primaryFoldersArrayEditor) {
@@ -1701,7 +1706,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 		NSAssert(editorStore != nil, @"Master folders array editor must have a store");
 		
 		__weak GLAProjectManagerStore *weakSelf = self;
-		dispatch_block_t actionTracker = [self beginActionWithIdentifier:@"Load Master Folders for Project \"%@\"", (project.name)];
+		dispatch_block_t actionTracker = [self beginActionWithIdentifier:@"Load Master Folders for Project \"%@\"", projectUUID];
 		
 		[editorStore
 		 loadIfNeededWithChildProcessor:nil
@@ -1712,7 +1717,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 			 }
 			 
 			 [self runInForeground:^(GLAProjectManagerStore *store, GLAProjectManager *projectManager) {
-				 [projectManager primaryFoldersForProjectDidChange:project];
+				 [projectManager primaryFoldersForProjectDidChange:projectUUID];
 				 
 				 actionTracker();
 			 }];
@@ -1724,7 +1729,7 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (BOOL)hasLoadedPrimaryFoldersForProject:(GLAProject *)project
 {
-	GLAArrayEditor *primaryFoldersArrayEditor = [self primaryFoldersArrayEditorForProject:project createIfNeeded:NO loadIfNeeded:NO];
+	GLAArrayEditor *primaryFoldersArrayEditor = [self primaryFoldersArrayEditorForProjectUUID:project.UUID createIfNeeded:NO loadIfNeeded:NO];
 	if (!primaryFoldersArrayEditor) {
 		return NO;
 	}
@@ -1734,22 +1739,21 @@ NSString *GLAProjectManagerJSONFilesListKey = @"filesList";
 
 - (void)loadPrimaryFoldersForProjectIfNeeded:(GLAProject *)project
 {
-	[self primaryFoldersArrayEditorForProject:project createIfNeeded:YES loadIfNeeded:YES];
+	[self primaryFoldersArrayEditorForProjectUUID:project.UUID createIfNeeded:YES loadIfNeeded:YES];
 }
 
-- (GLAArrayEditor *)primaryFoldersArrayEditorForProject:(GLAProject *)project
+- (GLAArrayEditor *)primaryFoldersArrayEditorForProjectUUID:(NSUUID *)projectUUID
 {
-	return [self primaryFoldersArrayEditorForProject:project createIfNeeded:YES loadIfNeeded:NO];
+	return [self primaryFoldersArrayEditorForProjectUUID:projectUUID createIfNeeded:YES loadIfNeeded:NO];
 }
 
-- (void)clearPrimaryFoldersArrayEditorForProject:(GLAProject *)project
+- (void)clearPrimaryFoldersArrayEditorForProjectUUID:(NSUUID *)projectUUID
 {
 	NSMutableDictionary *projectIDsToPrimaryFoldersArrayEditors = (self.projectIDsToPrimaryFoldersArrayEditors);
 	if (!projectIDsToPrimaryFoldersArrayEditors) {
 		return;
 	}
 	
-	NSUUID *projectUUID = (project.UUID);
 	[projectIDsToPrimaryFoldersArrayEditors removeObjectForKey:projectUUID];
 }
 

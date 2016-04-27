@@ -110,7 +110,7 @@
 	id<GLALoadableArrayUsing> primaryFoldersUser = (self.primaryFoldersUser);
 	if (!primaryFoldersUser) {
 		GLAProjectManager *pm = (self.projectManager);
-		(self.primaryFoldersUser) = primaryFoldersUser = [pm usePrimaryFoldersForProject:(self.project)];
+		(self.primaryFoldersUser) = primaryFoldersUser = [pm usePrimaryFoldersForProjectUUID:(self.project.UUID)];
 		
 		__weak GLAProjectMenuController *weakSelf = self;
 		
