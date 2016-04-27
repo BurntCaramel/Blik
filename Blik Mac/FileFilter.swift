@@ -10,10 +10,10 @@ import Foundation
 import Grain
 
 
-enum FileSort {
-	case name
-	case dateModified
-	case dateOpened
+enum FileSort : String {
+	case name = "name"
+	case dateModified = "dateModified"
+	case dateOpened = "dateOpened"
 	
 	var primarySpotlightAttribute: String {
 		switch self {
@@ -156,7 +156,8 @@ class FileFilterFetcher {
 			
 			let indexes = 0 ..< MDQueryGetResultCount(spotlightQuery)
 			let items = indexes.map{ index -> Item in
-				let spotlightItem = MDQueryGetResultAtIndex(spotlightQuery, index) as! MDItemRef
+				let spotlightItemPointer = MDQueryGetResultAtIndex(spotlightQuery, index)
+				let spotlightItem = Unmanaged<MDItem>.fromOpaque(COpaquePointer(spotlightItemPointer)).takeUnretainedValue()
 				
 				return Item(spotlightItem: spotlightItem)
 			}
@@ -197,7 +198,7 @@ class FileFilterFetcher {
 	func startSearch() {
 		stopSearch()
 		
-		var spotlightQuery = request.createSpotlightQuery(sortedBy: sortedBy)
+		let spotlightQuery = request.createSpotlightQuery(sortedBy: sortedBy)
 		let wantsItems = self.wantsItems
 		
 		let localNC = CFNotificationCenterGetLocalCenter()
@@ -211,33 +212,32 @@ class FileFilterFetcher {
 			}
 		}
 		
+		let spotlightQueryPointer = UnsafePointer<MDQuery>(Unmanaged.passUnretained(spotlightQuery).toOpaque())
+		
 		if let onProgress = callbacks.onProgress {
-			progressObserver = withUnsafePointer(&spotlightQuery) { pointer in
-				PGWSCFNotificationObserver(
-					center: localNC,
-					block: { (_, _, _, userInfo) in
-						print("SPOTLIGHT!")
-						onProgress(resultsFromSpotlightQuery(spotlightQuery))
-					},
-					name: kMDQueryProgressNotification,
-					object: pointer,
-					suspensionBehavior: .Coalesce
-				)
-			}
+			progressObserver = PGWSCFNotificationObserver(
+				center: localNC,
+				block: { (_, _, _, userInfo) in
+					print("SPOTLIGHT!")
+					onProgress(resultsFromSpotlightQuery(spotlightQuery))
+				},
+				name: kMDQueryProgressNotification,
+				object: spotlightQueryPointer,
+				suspensionBehavior: .DeliverImmediately
+			)
+			print("progressObserver \(progressObserver)")
 		}
 		
 		if let onUpdate = callbacks.onUpdate {
-			updateObserver = withUnsafePointer(&spotlightQuery) { pointer in
-				PGWSCFNotificationObserver(
-					center: localNC,
-					block: { (_, _, _, userInfo) in
-						onUpdate(resultsFromSpotlightQuery(spotlightQuery))
-					},
-					name: kMDQueryDidUpdateNotification,
-					object: pointer,
-					suspensionBehavior: .Coalesce
-				)
-			}
+			updateObserver = PGWSCFNotificationObserver(
+				center: localNC,
+				block: { (_, _, _, userInfo) in
+					onUpdate(resultsFromSpotlightQuery(spotlightQuery))
+				},
+				name: kMDQueryDidUpdateNotification,
+				object: spotlightQueryPointer,
+				suspensionBehavior: .DeliverImmediately
+			)
 		}
 		
 		MDQuerySetDispatchQueue(spotlightQuery, resultsQueue)
