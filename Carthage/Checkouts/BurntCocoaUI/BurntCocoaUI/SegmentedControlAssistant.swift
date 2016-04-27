@@ -25,15 +25,32 @@ public struct SegmentedItemCustomization<T: UIChoiceRepresentative> {
 
 public class SegmentedControlAssistant<T: UIChoiceRepresentative> {
 	public typealias Item = T
+	public typealias Value = Item.UniqueIdentifier
 	public typealias ItemUniqueIdentifier = Item.UniqueIdentifier
 	
-	public let segmentedControl: NSSegmentedControl!
+	public let segmentedControl: NSSegmentedControl
 	public var segmentedCell: NSSegmentedCell {
 		return segmentedControl.cell as! NSSegmentedCell
 	}
 	
 	public init(segmentedControl: NSSegmentedControl) {
 		self.segmentedControl = segmentedControl
+		
+		if let defaultSegmentedItemRepresentatives = self.defaultSegmentedItemRepresentatives {
+			segmentedItemRepresentatives = defaultSegmentedItemRepresentatives
+		}
+	}
+	
+	public convenience init() {
+		let segmentedControl = NSSegmentedControl()
+		self.init(segmentedControl: segmentedControl)
+	}
+	
+	/**
+	The default item representatives to populate with.
+	*/
+	public var defaultSegmentedItemRepresentatives: [Item]? {
+		return nil
 	}
 	
 	/**
@@ -78,7 +95,7 @@ public class SegmentedControlAssistant<T: UIChoiceRepresentative> {
 			segmentedCell.setLabel(title, forSegment: segmentIndex)
 			segmentedCell.setTag(tag, forSegment: segmentIndex)
 			
-			segmentIndex++
+			segmentIndex += 1
 		}
 		
 		if trackingMode == .SelectOne {
@@ -117,11 +134,11 @@ public class SegmentedControlAssistant<T: UIChoiceRepresentative> {
 	public var selectedItemRepresentative: Item? {
 		get {
 			let index = segmentedCell.selectedSegment
-			if index != -1 {
-				return itemRepresentativeForSegmentAtIndex(index)
+			guard index != -1 else {
+				return nil
 			}
 			
-			return nil
+			return itemRepresentativeForSegmentAtIndex(index)
 		}
 		set {
 			selectedUniqueIdentifier = newValue?.uniqueIdentifier
@@ -136,16 +153,39 @@ public class SegmentedControlAssistant<T: UIChoiceRepresentative> {
 			return selectedItemRepresentative?.uniqueIdentifier
 		}
 		set(newIdentifier) {
-			if let newIdentifier = newIdentifier {
-				for (index, itemRepresentative) in segmentedItemRepresentatives.enumerate() {
-					if itemRepresentative.uniqueIdentifier == newIdentifier {
-						segmentedControl.selectedSegment = index
-						return
-					}
+			guard let newIdentifier = newIdentifier else {
+				segmentedControl.selectedSegment = -1
+				return
+			}
+			
+			for (index, itemRepresentative) in segmentedItemRepresentatives.enumerate() {
+				if itemRepresentative.uniqueIdentifier == newIdentifier {
+					segmentedControl.selectedSegment = index
+					return
 				}
 			}
 			
 			segmentedControl.selectedSegment = -1
 		}
+	}
+}
+
+extension SegmentedControlAssistant : UIControlAssistant {
+	typealias Control = NSSegmentedControl
+	
+	var control: Control { return segmentedControl }
+	
+	var controlRenderer: (Value?) -> Control {
+		return { newValue in
+			self.selectedUniqueIdentifier = newValue
+			return self.control
+		}
+	}
+}
+
+
+extension SegmentedControlAssistant where T : UIChoiceEnumerable {
+	public var defaultSegmentedItemRepresentatives: [Item]? {
+		return Item.allChoices.map{ $0 }
 	}
 }

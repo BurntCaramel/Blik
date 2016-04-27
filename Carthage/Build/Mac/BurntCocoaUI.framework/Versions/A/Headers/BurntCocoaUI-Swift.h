@@ -93,10 +93,17 @@ typedef int swift_int4  __attribute__((__ext_vector_type__(4)));
 #endif
 #if defined(__has_feature) && __has_feature(modules)
 @import AppKit;
+@import ObjectiveC;
 #endif
 
 #pragma clang diagnostic ignored "-Wproperty-attribute-mismatch"
 #pragma clang diagnostic ignored "-Wduplicate-method-arg"
+@class Target;
+
+@interface NSControl (SWIFT_EXTENSION(BurntCocoaUI))
+- (Target * _Nonnull)setActionHandler:(void (^ _Nonnull)(id _Nullable))onPerform;
+@end
+
 
 @interface NSEvent (SWIFT_EXTENSION(BurntCocoaUI))
 @property (nonatomic, readonly) BOOL burnt_isSpaceKey;
@@ -104,6 +111,14 @@ typedef int swift_int4  __attribute__((__ext_vector_type__(4)));
 
 
 @interface NSResponder (SWIFT_EXTENSION(BurntCocoaUI))
+@end
+
+
+SWIFT_CLASS("_TtC12BurntCocoaUI6Target")
+@interface Target : NSObject
+- (nonnull instancetype)initOnPerform:(void (^ _Nonnull)(id _Nullable))onPerform OBJC_DESIGNATED_INITIALIZER;
+- (void)performed:(id _Nullable)sender;
+@property (nonatomic) SEL _Null_unspecified action;
 @end
 
 #pragma clang diagnostic pop

@@ -9,8 +9,9 @@
 import Cocoa
 
 
-public class PopUpButtonAssistant<T: UIChoiceRepresentative> {
+public class PopUpButtonAssistant<T : UIChoiceRepresentative> {
 	public typealias Item = T
+	public typealias Value = Item.UniqueIdentifier
 	public typealias ItemUniqueIdentifier = Item.UniqueIdentifier
 	
 	public let popUpButton: NSPopUpButton
@@ -19,6 +20,22 @@ public class PopUpButtonAssistant<T: UIChoiceRepresentative> {
 	public init(popUpButton: NSPopUpButton) {
 		self.popUpButton = popUpButton
 		menuAssistant = MenuAssistant<Item>(menu: popUpButton.menu!)
+		
+		if let defaultMenuItemRepresentatives = self.defaultMenuItemRepresentatives {
+			menuItemRepresentatives = defaultMenuItemRepresentatives
+		}
+	}
+	
+	public convenience init() {
+		let popUpButton = NSPopUpButton()
+		self.init(popUpButton: popUpButton)
+	}
+	
+	/**
+		The default item representatives to populate with.
+	*/
+	public var defaultMenuItemRepresentatives: [Item?]? {
+		return nil
 	}
 	
 	/**
@@ -56,14 +73,16 @@ public class PopUpButtonAssistant<T: UIChoiceRepresentative> {
 	*/
 	public var selectedItemRepresentative: Item? {
 		get {
-			if menuItemRepresentatives != nil {
-				let index = popUpButton.indexOfSelectedItem
-				if index != -1 {
-					return menuAssistant.itemRepresentativeForMenuItemAtIndex(index)
-				}
+			guard menuItemRepresentatives != nil else {
+				return nil
 			}
 			
-			return nil
+			let index = popUpButton.indexOfSelectedItem
+			guard index != -1 else {
+				return nil
+			}
+			
+			return menuAssistant.itemRepresentativeForMenuItemAtIndex(index)
 		}
 	}
 	
@@ -86,5 +105,25 @@ public class PopUpButtonAssistant<T: UIChoiceRepresentative> {
 			
 			popUpButton.selectItem(nil)
 		}
+	}
+}
+
+extension PopUpButtonAssistant : UIControlAssistant {
+	typealias Control = NSPopUpButton
+	
+	var control: Control { return popUpButton }
+	
+	var controlRenderer: (Value?) -> Control {
+		return { newValue in
+			self.selectedUniqueIdentifier = newValue
+			return self.control
+		}
+	}
+}
+
+
+extension PopUpButtonAssistant where T : UIChoiceEnumerable {
+	public var defaultMenuItemRepresentatives: [Item?]? {
+		return Item.allChoices.map{ $0 }
 	}
 }
