@@ -53,14 +53,14 @@ struct FileFilterQuery {
 	enum Kind {
 		case any
 		case folders(
-			containingFileNamed: String?,
-			pathNotContaining: String?
+			containingFileNamed: String?
 		)
 		case images()
 	}
 
 	var kind: Kind
 	var tagNames: [String]
+	var pathNotContaining: String?
 	
 	var fileMetadataQueryRepresentation: String {
 		var parts = [String]()
@@ -68,21 +68,36 @@ struct FileFilterQuery {
 		switch kind {
 		case .any:
 			break
-		case .folders(_, _):
-			parts.append("kMDItemContentType = \"\(kUTTypeFolder)\"")
+		case .folders(_):
+			parts.append("\(kMDItemContentType) == \"\(kUTTypeFolder)\"")
 		case .images:
-			parts.append("kMDItemContentType = \"\(kUTTypeImage)\"")
+			parts.append("\(kMDItemContentType) == \"\(kUTTypeImage)\"")
 		}
 		
 		if tagNames.count > 0 {
 			parts.append(
 				tagNames.map{ tagName in
-					"kMDItemUserTags = \"\(tagName.escapeAsMetadataQuery())*\"cdwt"
+					"kMDItemUserTags == \"\(tagName.escapeAsMetadataQuery())*\"cdwt"
 				}.joinWithSeparator(" || ")
 			)
 		}
 		
+		if let pathNotContaining = pathNotContaining where pathNotContaining != "" {
+			parts.append("\(kMDItemPath) != \"*\(pathNotContaining.escapeAsMetadataQuery())*\"")
+		}
+		
 		return parts.joinWithSeparator(" && ")
+	}
+}
+
+extension FileFilterQuery {
+	func taskForFilteringURLs(urls: [NSURL]) -> Task<[NSURL]> {
+		switch kind {
+		case let .folders(containingFileNamed):
+			return FilesMatchStage.folders(folderURLs: urls, containingFileNamed: containingFileNamed).taskExecuting()!
+		default:
+			return Task{ urls }
+		}
 	}
 }
 
@@ -99,6 +114,7 @@ struct FileFilterRequest {
 	
 	func createSpotlightQuery(sortedBy sortedBy: FileSort) -> MDQuery {
 		let metadataQueryString = query.fileMetadataQueryRepresentation
+		print("metadataQueryString: \(metadataQueryString)")
 		let spotlightQuery = MDQueryCreate(kCFAllocatorDefault, metadataQueryString, attributes, sortingAttributes)
 		
 		assert(spotlightQuery != nil, "Spotlight query must exist")
@@ -128,6 +144,8 @@ class FileFilterFetcher {
 			request.changeSpotlightQuery(spotlightQuery, sortedBy: sortedBy)
 		}
 	}
+	
+	let wantsUpdates: Bool
 	
 	struct Item {
 		var fileURL: NSURL?
@@ -173,22 +191,26 @@ class FileFilterFetcher {
 		case items([Item])
 	}
 	
-	struct Callbacks {
-		var onProgress: (Result -> ())?
-		var onUpdate: (Result -> ())?
+	enum UpdateKind {
+		case progress
+		case finish
+		case update
 	}
-	let callbacks: Callbacks
+	
+	let receiveResult: (result: Result, updateKind: UpdateKind) -> ()
 	
 	private var spotlightQuery: MDQuery?
 	private var resultsQueue = GCDService.utility.queue
 	private var progressObserver: PGWSCFNotificationObserver?
+	private var finishObserver: PGWSCFNotificationObserver?
 	private var updateObserver: PGWSCFNotificationObserver?
 	
-	init(request: FileFilterRequest, wantsItems: Bool, sortedBy: FileSort, callbacks: Callbacks) {
+	init(request: FileFilterRequest, wantsItems: Bool, sortedBy: FileSort, wantsUpdates: Bool, receiveResult: (result: Result, updateKind: UpdateKind) -> ()) {
 		self.request = request
 		self.wantsItems = wantsItems
 		self.sortedBy = sortedBy
-		self.callbacks = callbacks
+		self.wantsUpdates = wantsUpdates
+		self.receiveResult = receiveResult
 	}
 	
 	deinit {
@@ -199,40 +221,44 @@ class FileFilterFetcher {
 		stopSearch()
 		
 		let spotlightQuery = request.createSpotlightQuery(sortedBy: sortedBy)
-		let wantsItems = self.wantsItems
 		
 		let localNC = CFNotificationCenterGetLocalCenter()
-		
-		func resultsFromSpotlightQuery(spotlightQuery: MDQuery) -> Result {
-			if wantsItems {
-				return .items(Item.copyItemsFromSpotlightQuery(spotlightQuery))
-			}
-			else {
-				return .count(MDQueryGetResultCount(spotlightQuery))
-			}
-		}
-		
 		let spotlightQueryPointer = UnsafePointer<MDQuery>(Unmanaged.passUnretained(spotlightQuery).toOpaque())
 		
-		if let onProgress = callbacks.onProgress {
-			progressObserver = PGWSCFNotificationObserver(
-				center: localNC,
-				block: { (_, _, _, userInfo) in
-					print("SPOTLIGHT!")
-					onProgress(resultsFromSpotlightQuery(spotlightQuery))
-				},
-				name: kMDQueryProgressNotification,
-				object: spotlightQueryPointer,
-				suspensionBehavior: .DeliverImmediately
-			)
-			print("progressObserver \(progressObserver)")
-		}
+		let receiveResult = self.receiveResult
 		
-		if let onUpdate = callbacks.onUpdate {
+		progressObserver = PGWSCFNotificationObserver(
+			center: localNC,
+			block: { (_, _, _, userInfo) in
+				print("SPOTLIGHT!")
+				self.processResults(spotlightQuery) { result in
+					receiveResult(result: result, updateKind: .progress)
+				}
+			},
+			name: kMDQueryProgressNotification,
+			object: spotlightQueryPointer,
+			suspensionBehavior: .DeliverImmediately
+		)
+		
+		finishObserver = PGWSCFNotificationObserver(
+			center: localNC,
+			block: { (_, _, _, userInfo) in
+				self.processResults(spotlightQuery) { result in
+					receiveResult(result: result, updateKind: .finish)
+				}
+			},
+			name: kMDQueryDidFinishNotification,
+			object: spotlightQueryPointer,
+			suspensionBehavior: .DeliverImmediately
+		)
+		
+		if wantsUpdates {
 			updateObserver = PGWSCFNotificationObserver(
 				center: localNC,
 				block: { (_, _, _, userInfo) in
-					onUpdate(resultsFromSpotlightQuery(spotlightQuery))
+					self.processResults(spotlightQuery) { result in
+						receiveResult(result: result, updateKind: .update)
+					}
 				},
 				name: kMDQueryDidUpdateNotification,
 				object: spotlightQueryPointer,
@@ -245,6 +271,28 @@ class FileFilterFetcher {
 		MDQueryExecute(spotlightQuery, CFOptionFlags(kMDQueryWantsUpdates.rawValue))
 		
 		self.spotlightQuery = spotlightQuery
+	}
+	
+	func processResults(spotlightQuery: MDQuery, receiver: (Result) -> ()) {
+		if wantsItems {
+			let items = Item.copyItemsFromSpotlightQuery(spotlightQuery)
+			let urls = items.flatMap{ $0.fileURL }
+			request.query.taskForFilteringURLs(urls).perform{ useResult in
+				do {
+					let filteredURLs = Set(try useResult())
+					let items = items.filter{
+						$0.fileURL.map{ filteredURLs.contains($0) } ?? false
+					}
+					receiver(.items(items))
+				}
+				catch {
+					receiver(.items([]))
+				}
+			}
+		}
+		else {
+			receiver(.count(MDQueryGetResultCount(spotlightQuery)))
+		}
 	}
 	
 	func stopSearch() {

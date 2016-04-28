@@ -15,9 +15,9 @@ enum FileFilterField {
 	
 	// Folder
 	case hasFileNamed(String?)
-	case notWithin(String?)
 	
 	case tagged(FileTag?)
+	case notWithinFolderNamed(String?)
 	
 	case sortedBy(FileSort)
 	case upTo(FileQueryUpTo)
@@ -29,9 +29,9 @@ enum FileFilterField {
 		
 		// Folder
 		case hasFileNamed
-		case notWithin
 		
 		case tagged
+		case notWithinFolderNamed
 		
 		case sortedBy
 		case upTo
@@ -44,7 +44,7 @@ extension FileFilterField.Kind {
 	var fieldKind: FieldKind {
 		switch self {
 		case .kind, .tagged, .sortedBy, .upTo: return .popUp
-		case .hasFileNamed, .notWithin: return .text
+		case .hasFileNamed, .notWithinFolderNamed: return .text
 		case .highlight: return .checkbox
 		}
 	}
@@ -54,9 +54,9 @@ extension FileFilterField.Kind {
 		case .kind: return nil
 			
 		case .hasFileNamed: return NSLocalizedString("Has file named", comment: "Label for .hasFileNamed")
-		case .notWithin: return NSLocalizedString("Not within", comment: "Label for .notWithin")
 			
 		case .tagged: return NSLocalizedString("Tagged", comment: "Label for .tagged")
+		case .notWithinFolderNamed: return NSLocalizedString("Not within folder", comment: "Label for .notWithinFolderNamed")
 			
 		case .sortedBy: return NSLocalizedString("Sorted by", comment: "Label for .sortedBy")
 		case .upTo: return NSLocalizedString("Up to", comment: "Label for .upTo")
@@ -71,8 +71,8 @@ extension FileFilterField : FieldProtocol {
 		switch self {
 		case .kind: return .kind
 		case .hasFileNamed: return .hasFileNamed
-		case .notWithin: return .notWithin
 		case .tagged: return .tagged
+		case .notWithinFolderNamed: return .notWithinFolderNamed
 		case .sortedBy: return .sortedBy
 		case .upTo: return .upTo
 		case .highlight: return .highlight
@@ -196,9 +196,9 @@ class FileQueryFieldsProducer {
 	lazy var kindRenderer: FileFilterKind -> NSPopUpButton = popUpButtonRenderer(onChange: self.optionalValueChanged(Field.kind))
 	
 	lazy var hasFileNamedRenderer: String? -> NSTextField = textFieldRenderer(onChange: self.valueChanged(Field.hasFileNamed))
-	lazy var notWithinRenderer: String? -> NSTextField = textFieldRenderer(onChange: self.valueChanged(Field.notWithin))
 	
 	lazy var taggedRenderer: FileTag? -> NSPopUpButton = popUpButtonRenderer(onChange: self.optionalValueChanged(Field.tagged))
+	lazy var notWithinRenderer: String? -> NSTextField = textFieldRenderer(onChange: self.valueChanged(Field.notWithinFolderNamed))
 	
 	lazy var sortedByRenderer: FileSort -> NSPopUpButton = popUpButtonRenderer(onChange: self.optionalValueChanged(Field.sortedBy))
 	lazy var upToRenderer: FileQueryUpTo -> NSPopUpButton = popUpButtonRenderer(onChange: self.optionalValueChanged(Field.upTo))
@@ -213,8 +213,8 @@ extension FileQueryFieldsProducer : FieldsProducer {
 		switch field {
 		case let .kind(kind): return kindRenderer(kind)
 		case let .hasFileNamed(fileName): return hasFileNamedRenderer(fileName)
-		case let .notWithin(directoryName): return notWithinRenderer(directoryName)
 		case let .tagged(tag): return taggedRenderer(tag)
+		case let .notWithinFolderNamed(directoryName): return notWithinRenderer(directoryName)
 		case let .sortedBy(sortBy): return sortedByRenderer(sortBy)
 		case let .upTo(upTo): return upToRenderer(upTo)
 		//case .openWith: return NSView()
@@ -224,12 +224,12 @@ extension FileQueryFieldsProducer : FieldsProducer {
 }
 
 struct FileQueryFieldsState {
-	var kind: FileFilterKind = .folders
+	var kind: FileFilterKind = .images
 	
 	var hasFileNamed: String? = nil
-	var notWithin: String? = nil
 	
 	var tagged: FileTag? = nil
+	var notWithin: String? = nil
 	
 	var sortedBy: FileSort = .name
 	var upTo: FileQueryUpTo = .three
@@ -247,7 +247,6 @@ struct FileQueryFieldsState {
 				case .folders:
 					return [
 						FileFilterField.hasFileNamed(hasFileNamed),
-						FileFilterField.notWithin(notWithin),
 						nil
 					]
 				case .images:
@@ -256,6 +255,7 @@ struct FileQueryFieldsState {
 			}(),
 			[
 				FileFilterField.tagged(tagged),
+				FileFilterField.notWithinFolderNamed(notWithin),
 				nil,
 				FileFilterField.sortedBy(sortedBy),
 				FileFilterField.upTo(upTo),
@@ -271,7 +271,7 @@ struct FileQueryFieldsState {
 		switch field {
 		case let .kind(kind): self.kind = kind
 		case let .hasFileNamed(hasFileNamed): self.hasFileNamed = hasFileNamed
-		case let .notWithin(notWithin): self.notWithin = notWithin
+		case let .notWithinFolderNamed(notWithin): self.notWithin = notWithin
 		case let .tagged(tagged): self.tagged = tagged
 		case let .sortedBy(sortedBy): self.sortedBy = sortedBy
 		case let .upTo(upTo): self.upTo = upTo
@@ -285,8 +285,7 @@ extension FileQueryFieldsState {
 		switch kind {
 		case .folders:
 			return .folders(
-				containingFileNamed: hasFileNamed,
-				pathNotContaining: notWithin
+				containingFileNamed: hasFileNamed
 			)
 		case .images:
 			return .images()
@@ -296,7 +295,8 @@ extension FileQueryFieldsState {
 	var query: FileFilterQuery {
 		return FileFilterQuery(
 			kind: queryKind,
-			tagNames: tagged.map{ [$0.value] } ?? []
+			tagNames: tagged.map{ [$0.value] } ?? [],
+			pathNotContaining: notWithin
 		)
 	}
 	

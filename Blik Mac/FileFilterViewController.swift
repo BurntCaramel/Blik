@@ -64,22 +64,14 @@ class FileFilterViewController : GLAViewController {
 		
 		let request = fieldsState.toRequest(sourceFolderURLs: folderURLs)
 		
-		let fetcher = FileFilterFetcher(request: request, wantsItems: true, sortedBy: fieldsState.sortedBy, callbacks: FileFilterFetcher.Callbacks(
-			onProgress: { [weak self] result in
-				if case let .items(items) = result {
-					GCDService.mainQueue.async {
-						self?.updateItems(items)
-					}
-				}
-			},
-			onUpdate: { [weak self] result in
-				if case let .items(items) = result {
-					GCDService.mainQueue.async {
-						self?.updateItems(items)
-					}
+		let fetcher = FileFilterFetcher(request: request, wantsItems: true, sortedBy: fieldsState.sortedBy, wantsUpdates: true) {
+			[weak self] (result, updateKind) in
+			if case let .items(items) = result {
+				GCDService.mainQueue.async {
+					self?.updateItems(items)
 				}
 			}
-		))
+		}
 		
 		self.fetcher?.stopSearch()
 		
