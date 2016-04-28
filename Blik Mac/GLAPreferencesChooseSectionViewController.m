@@ -39,6 +39,7 @@
 	[style prepareCheckButton:(self.showStatusMenuItemCheckButton)];
 	[style prepareCheckButton:(self.showDockIconCheckButton)];
 	[style prepareCheckButton:(self.hideMainWindowWhenInactiveCheckButton)];
+	[style prepareCheckButton:(self.reduceMotionCheckButton)];
 	
 	[self setUpNotifications];
 	
