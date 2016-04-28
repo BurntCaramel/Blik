@@ -232,6 +232,8 @@
 		B2469A991CD18EE400D0CC6C /* FilesMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2469A971CD18EE400D0CC6C /* FilesMatch.swift */; };
 		B2469A9B1CD1B38300D0CC6C /* MainSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2469A9A1CD1B38300D0CC6C /* MainSection.swift */; };
 		B2469A9C1CD1B38300D0CC6C /* MainSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2469A9A1CD1B38300D0CC6C /* MainSection.swift */; };
+		B2469A9E1CD1C66900D0CC6C /* ProjectCollectionsAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2469A9D1CD1C66900D0CC6C /* ProjectCollectionsAssistant.swift */; };
+		B2469A9F1CD1C66900D0CC6C /* ProjectCollectionsAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2469A9D1CD1C66900D0CC6C /* ProjectCollectionsAssistant.swift */; };
 		B24ADB2C1AD784E0007214C2 /* GLACollectedFolderContentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B24ADB2A1AD784E0007214C2 /* GLACollectedFolderContentsViewController.xib */; };
 		B24ADB321AD81939007214C2 /* GLAArrangedDirectoryChildren.m in Sources */ = {isa = PBXBuildFile; fileRef = B24ADB311AD81939007214C2 /* GLAArrangedDirectoryChildren.m */; };
 		B24B360B196E336E0094FA1F /* GLAMainNavigationBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = B24B3609196E336E0094FA1F /* GLAMainNavigationBarController.m */; };
@@ -533,6 +535,7 @@
 		B2469A8E1CCE5A9600D0CC6C /* FileFilterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileFilterViewController.xib; sourceTree = "<group>"; };
 		B2469A971CD18EE400D0CC6C /* FilesMatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesMatch.swift; sourceTree = "<group>"; };
 		B2469A9A1CD1B38300D0CC6C /* MainSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainSection.swift; sourceTree = "<group>"; };
+		B2469A9D1CD1C66900D0CC6C /* ProjectCollectionsAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectCollectionsAssistant.swift; sourceTree = "<group>"; };
 		B24ADB2A1AD784E0007214C2 /* GLACollectedFolderContentsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GLACollectedFolderContentsViewController.xib; sourceTree = "<group>"; };
 		B24ADB301AD81939007214C2 /* GLAArrangedDirectoryChildren.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAArrangedDirectoryChildren.h; sourceTree = "<group>"; };
 		B24ADB311AD81939007214C2 /* GLAArrangedDirectoryChildren.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAArrangedDirectoryChildren.m; sourceTree = "<group>"; };
@@ -1049,6 +1052,7 @@
 				B285182F1BB62C1300135E5C /* CollectionItemAssistant.swift */,
 				B2B717EB1BE4A44600D3E7B1 /* ProjectHighlightsViewController.swift */,
 				B2B717E81BE4421E00D3E7B1 /* ProjectHighlightsAssistant.swift */,
+				B2469A9D1CD1C66900D0CC6C /* ProjectCollectionsAssistant.swift */,
 				B219DAAF196AD462007900DF /* GLAProjectViewController.h */,
 				B219DAB0196AD462007900DF /* GLAProjectViewController.m */,
 				B219DAB1196AD462007900DF /* GLAProjectViewController.xib */,
@@ -1970,6 +1974,7 @@
 				B20DB2DC1B0C8ACA00E57532 /* GLAWorkingFoldersManager.m in Sources */,
 				B20DB2DD1B0C8ACA00E57532 /* GLAProjectActionsBarController.m in Sources */,
 				B20DB2DE1B0C8ACA00E57532 /* GLAMainSectionNavigator.m in Sources */,
+				B2469A9F1CD1C66900D0CC6C /* ProjectCollectionsAssistant.swift in Sources */,
 				B20DB2DF1B0C8ACA00E57532 /* GLAFolderQueryResults.m in Sources */,
 				B20DB2E01B0C8ACA00E57532 /* GLATableActionsViewController.m in Sources */,
 				B20DB2E11B0C8ACA00E57532 /* GLAUIStyle.m in Sources */,
@@ -2137,6 +2142,7 @@
 				B250206B1B02F3CC00ABAE96 /* GLATableHeaderCell.m in Sources */,
 				B2841B3319809E15005BB6A3 /* GLAProject.m in Sources */,
 				B2E39B5E1A89AF56000A9A12 /* GLANavigationButtonGroup.m in Sources */,
+				B2469A9E1CD1C66900D0CC6C /* ProjectCollectionsAssistant.swift in Sources */,
 				B2469A8B1CCE4E6700D0CC6C /* FileFilterFields.swift in Sources */,
 				B292453919E4058A00DD30CB /* GLANoNowProjectViewController.m in Sources */,
 				B2D9EE5B1AD3B0B400F5F34E /* GLAOverlaidBarView.m in Sources */,
