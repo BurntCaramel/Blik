@@ -271,16 +271,18 @@ extension ProjectHighlightsViewController: GLACollectedFileListHelperDelegate {
 	}
 }
 
+func convertRowToOptional(row: Int) -> Int? {
+	switch row {
+	case -1:
+		return nil
+	default:
+		return row
+	}
+}
+
 extension ProjectHighlightsViewController {
 	var clickedRow: Int? {
-		let clickedRow = tableView.clickedRow
-		
-		switch clickedRow {
-		case -1:
-			return nil
-		default:
-			return clickedRow
-		}
+		return convertRowToOptional(tableView.clickedRow)
 	}
 	
 	var clickedIndex: Int? {
@@ -302,7 +304,7 @@ extension ProjectHighlightsViewController {
 	}
 	
 	func clickedRow(forSender sender: AnyObject?) -> Int? {
-		return clickedRow ?? (sender as? NSView).map{ tableView.rowForView($0) }
+		return clickedRow ?? (sender as? NSView).flatMap{ convertRowToOptional(tableView.rowForView($0)) }
 	}
 	
 	func openClickedItemWithBehaviour(behaviour: OpeningBehaviour, sender: AnyObject? = nil) {
