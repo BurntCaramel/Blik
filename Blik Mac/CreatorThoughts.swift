@@ -11,20 +11,29 @@ import BurntCocoaUI
 
 
 private enum Link {
-	case PerfectionIsADirection
-	case AlasOnlyApple
-	case TheHeartOfUserInterfaces
-	case TheDailyExpectation
+	case siriThePlatform
+	case appleCaredAggressively
+	case thingsSomeSteveJobsGuyOnceSaid
+	case perfectionIsADirection
+	case alasOnlyApple
+	case theHeartOfUserInterfaces
+	case theDailyExpectation
 	
 	var title: String {
 		switch self {
-		case .PerfectionIsADirection:
+		case .siriThePlatform:
+			return "Siri, the Platform"
+		case .appleCaredAggressively:
+			return "Apple Cared Aggressively"
+		case .thingsSomeSteveJobsGuyOnceSaid:
+			return "Things Some Steve Jobs Guy Once Said"
+		case .perfectionIsADirection:
 			return "Perfection is a Direction, Not a Destination"
-		case .AlasOnlyApple:
+		case .alasOnlyApple:
 			return "Alas, Only Apple"
-		case .TheHeartOfUserInterfaces:
+		case .theHeartOfUserInterfaces:
 			return "The Heart of User Interfaces"
-		case .TheDailyExpectation:
+		case .theDailyExpectation:
 			return "The Daily Expectation"
 			
 		}
@@ -32,13 +41,19 @@ private enum Link {
 	
 	var URL: NSURL {
 		switch self {
-		case .PerfectionIsADirection:
+		case .siriThePlatform:
+			return NSURL(string: "https://medium.com/@concreteniche/siri-the-new-platform-deec9cc4d5db")!
+		case .appleCaredAggressively:
+			return NSURL(string: "https://medium.com/@concreteniche/apple-cared-aggressively-65cec1c906e0")!
+		case .thingsSomeSteveJobsGuyOnceSaid:
+			return NSURL(string: "https://medium.com/@concreteniche/things-some-steve-jobs-guy-once-said-a7ec8810047e")!
+		case .perfectionIsADirection:
 			return NSURL(string: "https://medium.com/@concreteniche/perfection-is-a-direction-not-a-destination-9237caade2a5")!
-		case .AlasOnlyApple:
+		case .alasOnlyApple:
 			return NSURL(string: "https://medium.com/@concreteniche/alas-only-apple-20e0bc8b1c8f")!
-		case .TheHeartOfUserInterfaces:
+		case .theHeartOfUserInterfaces:
 			return NSURL(string: "https://medium.com/@concreteniche/the-heart-of-user-interfaces-78d9411e0af5")!
-		case .TheDailyExpectation:
+		case .theDailyExpectation:
 			return NSURL(string: "https://medium.com/@concreteniche/the-daily-expectation-bcf7107c0875")!
 			
 		}
@@ -46,10 +61,13 @@ private enum Link {
 	
 	static var chosenLinks: [Link] {
 		return [
-			.PerfectionIsADirection,
-			.AlasOnlyApple,
-			.TheHeartOfUserInterfaces,
-			.TheDailyExpectation
+			.siriThePlatform,
+			.appleCaredAggressively,
+			.thingsSomeSteveJobsGuyOnceSaid,
+			.perfectionIsADirection,
+			.alasOnlyApple,
+			.theHeartOfUserInterfaces,
+			.theDailyExpectation
 		]
 	}
 }
@@ -62,7 +80,7 @@ extension Link: UIChoiceRepresentative {
 }
 
 
-class CreatorThoughtsAssistant: NSObject {
+class CreatorThoughtsAssistant : NSObject {
 	private let menuAssistant: MenuAssistant<Link>
 	
 	init(menu: NSMenu) {
@@ -71,7 +89,10 @@ class CreatorThoughtsAssistant: NSObject {
 		super.init()
 		
 		menuAssistant.customization.actionAndTarget = { [weak self] link in
-			return (action: #selector(CreatorThoughtsAssistant.openLink(_:)), target: self)
+			return (
+				action: #selector(CreatorThoughtsAssistant.openLink(_:)),
+				target: self
+			)
 		}
 		
 		menuAssistant.menuItemRepresentatives = Link.chosenLinks.map { $0 }
