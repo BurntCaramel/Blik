@@ -469,6 +469,9 @@
 	NSMutableSet *directoryURLs = [NSMutableSet new];
 	for (GLACollectedFile *collectedFile in projectFolders) {
 		NSURL *directoryURL = ([collectedFile accessFile].filePathURL);
+		// FIXME: CRASH
+		// *** -[__NSSetM addObject:]: object cannot be nil
+		// https://burntcaramel.groovehq.com/groove_client/tickets/19357125
 		[directoryURLs addObject:directoryURL];
 	}
 	(collectedFilesSetting.directoryURLsToWatch) = directoryURLs;
