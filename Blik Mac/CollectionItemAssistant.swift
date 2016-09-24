@@ -11,23 +11,23 @@ import BurntCocoaUI
 
 
 private enum Item: Int {
-	case RenameOrRecolor
-	case Delete
+	case renameOrRecolor
+	case delete
 	
 	var title: String {
 		switch self {
-		case .RenameOrRecolor:
+		case .renameOrRecolor:
 			return "Rename or Recolor Collection…"
-		case .Delete:
+		case .delete:
 			return "Delete Collection…"
 		}
 	}
 	
 	var action: Selector {
 		switch self {
-		case .RenameOrRecolor:
+		case .renameOrRecolor:
 			return #selector(CollectionItemAssistant.renameOrRecolorCollection(_:))
-		case .Delete:
+		case .delete:
 			return #selector(CollectionItemAssistant.deleteCollection(_:))
 		}
 	}
@@ -42,18 +42,18 @@ extension Item: UIChoiceRepresentative {
 
 
 @objc public protocol CollectionItemAssistantDelegate: class {
-	func editDetailsOfCollection(collection: GLACollection, atRow collectionRow: Int)
+	func editDetailsOfCollection(_ collection: GLACollection, atRow collectionRow: Int)
 	
-	func deleteCollection(collection: GLACollection, atRow collectionRow: Int)
+	func deleteCollection(_ collection: GLACollection, atRow collectionRow: Int)
 	
-	func renameClickedCollection(sender: AnyObject?)
+	func renameClickedCollection(_ sender: AnyObject?)
 }
 
 
-public class CollectionItemAssistant: NSObject {
-	public weak var delegate: CollectionItemAssistantDelegate?
-	public let menu = NSMenu()
-	private let menuAssistant: MenuAssistant<Item>
+open class CollectionItemAssistant: NSObject {
+	open weak var delegate: CollectionItemAssistantDelegate?
+	open let menu = NSMenu()
+	fileprivate let menuAssistant: MenuAssistant<Item>
 	
 	override init() {
 		menuAssistant = MenuAssistant<Item>(menu: menu)
@@ -65,13 +65,13 @@ public class CollectionItemAssistant: NSObject {
 		}
 	}
 	
-	public var collectionAndRow: (collection: GLACollection, row: Int)? {
+	open var collectionAndRow: (collection: GLACollection, row: Int)? {
 		didSet {
 			if collectionAndRow != nil {
 				menuAssistant.menuItemRepresentatives = [
-					.RenameOrRecolor,
+					.renameOrRecolor,
 					nil,
-					.Delete
+					.delete
 				]
 			}
 			else {
@@ -82,13 +82,13 @@ public class CollectionItemAssistant: NSObject {
 		}
 	}
 	
-	@IBAction public func renameOrRecolorCollection(menuItem: NSMenuItem) {
+	@IBAction open func renameOrRecolorCollection(_ menuItem: NSMenuItem) {
 		if let (collection, row) = collectionAndRow {
 			delegate?.editDetailsOfCollection(collection, atRow: row)
 		}
 	}
 	
-	@IBAction public func deleteCollection(menuItem: NSMenuItem) {
+	@IBAction open func deleteCollection(_ menuItem: NSMenuItem) {
 		if let (collection, row) = collectionAndRow {
 			delegate?.deleteCollection(collection, atRow: row)
 		}
@@ -96,10 +96,10 @@ public class CollectionItemAssistant: NSObject {
 }
 
 
-public class CollectionItemTableCellView: NSTableCellView {
-	private let assistant = CollectionItemAssistant()
+open class CollectionItemTableCellView: NSTableCellView {
+	fileprivate let assistant = CollectionItemAssistant()
 	
-	public var delegate: CollectionItemAssistantDelegate? {
+	open var delegate: CollectionItemAssistantDelegate? {
 		get {
 			return assistant.delegate
 		}
@@ -108,15 +108,15 @@ public class CollectionItemTableCellView: NSTableCellView {
 		}
 	}
 	
-	public var contextualMenu: NSMenu {
+	open var contextualMenu: NSMenu {
 		return assistant.menu
 	}
 	
-	public func setCollection(collection: GLACollection, row: Int) {
+	open func setCollection(_ collection: GLACollection, row: Int) {
 		assistant.collectionAndRow = (collection, row)
 	}
 
-	public func clearCollection() {
+	open func clearCollection() {
 		assistant.collectionAndRow = nil
 	}
 }

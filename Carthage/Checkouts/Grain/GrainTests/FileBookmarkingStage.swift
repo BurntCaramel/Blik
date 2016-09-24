@@ -1,9 +1,9 @@
 //
-//  FileBookmarkingStage.swift
-//  Grain
+//	FileBookmarkingStage.swift
+//	Grain
 //
-//  Created by Patrick Smith on 24/03/2016.
-//  Copyright © 2016 Burnt Caramel. All rights reserved.
+//	Created by Patrick Smith on 24/03/2016.
+//	Copyright © 2016 Burnt Caramel. All rights reserved.
 //
 
 import XCTest
@@ -12,33 +12,27 @@ import XCTest
 
 private let defaultResourceKeys = Array<String>()
 
-private func createBookmarkDataForFileURL(fileURL: NSURL) throws -> NSData {
-	if fileURL.startAccessingSecurityScopedResource() {
-		defer {
-			fileURL.stopAccessingSecurityScopedResource()
-		}
-	}
-	
-	return try fileURL.bookmarkDataWithOptions(.WithSecurityScope, includingResourceValuesForKeys: defaultResourceKeys, relativeToURL:nil)
+private func createBookmarkDataForFileURL(_ fileURL: URL) throws -> Data {
+	return try (fileURL as NSURL).bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: defaultResourceKeys, relativeTo:nil)
 }
 
 
 enum FileBookmarkingStage: StageProtocol {
-	typealias Completion = (fileURL: NSURL, bookmarkData: NSData, wasStale: Bool)
+	typealias Result = (fileURL: URL, bookmarkData: Data, wasStale: Bool)
 	
 	/// Initial stages
-	case fileURL(fileURL: NSURL)
-	case bookmark(bookmarkData: NSData)
+	case fileURL(fileURL: URL)
+	case bookmark(bookmarkData: Data)
 	/// Completed stages
-	case resolved(Completion)
+	case resolved(Result)
 }
 
 extension FileBookmarkingStage {
 	/// The task for each stage
-	var nextTask: Task<FileBookmarkingStage>? {
+	func next() -> Deferred<FileBookmarkingStage> {
 		switch self {
 		case let .fileURL(fileURL):
-			return Task{
+			return Deferred{
 				.resolved((
 					fileURL: fileURL,
 					bookmarkData: try createBookmarkDataForFileURL(fileURL),
@@ -46,10 +40,10 @@ extension FileBookmarkingStage {
 				))
 			}
 		case let .bookmark(bookmarkData):
-			return Task{
+			return Deferred{
 				var stale: ObjCBool = false
 				// Resolve the bookmark data.
-				let fileURL = try NSURL(byResolvingBookmarkData: bookmarkData, options: .WithSecurityScope, relativeToURL: nil, bookmarkDataIsStale: &stale)
+				let fileURL = try (NSURL(resolvingBookmarkData: bookmarkData, options: .withSecurityScope, relativeTo: nil, bookmarkDataIsStale: &stale) as URL)
 				
 				var bookmarkData = bookmarkData
 				if stale {
@@ -62,50 +56,51 @@ extension FileBookmarkingStage {
 					wasStale: Bool(stale)
 				))
 			}
-		case .resolved: return nil
+		case .resolved: completedStage(self)
 		}
 	}
 	
-	var completion: Completion? {
-		guard case let .resolved(completion) = self else { return nil }
-		return completion
+	var result: Result? {
+		guard case let .resolved(result) = self else { return nil }
+		return result
 	}
 }
 
 
 class FileBookmarkingTests: XCTestCase {
-	var bundle: NSBundle { return NSBundle(forClass: self.dynamicType) }
+	var bundle: Bundle { return Bundle(for: type(of: self)) }
 	
 	func testFileAccess() {
-		guard let fileURL = bundle.URLForResource("example", withExtension: "json") else {
+		guard let fileURL = bundle.url(forResource: "example", withExtension: "json") else {
 			return
 		}
 		
-		let bookmarkingCustomizer = GCDExecutionCustomizer<FileBookmarkingStage>()
-		let expectation = expectationWithDescription("File accessed")
+		let expectation = self.expectation(description: "File accessed")
 		
-		let accessTask = FileStartAccessingStage.start(fileURL: fileURL).taskExecuting(customizer: GCDExecutionCustomizer())
+		let accessDeferred = FileAccessStage.start(fileURL: fileURL, forgiving: false) * GCDService.utility
 		
-		let bookmarkTask = accessTask.flatMap{ useResult -> Task<FileBookmarkingStage.Completion> in
-			let (fileURL, _) = try useResult()
-			return FileBookmarkingStage.fileURL(fileURL: fileURL).taskExecuting(customizer: bookmarkingCustomizer)
+		let bookmarkDeferred = accessDeferred.flatMap{ useResult -> Deferred<FileBookmarkingStage.Result> in
+			let (fileURL, _, stopAccessing) = try useResult()
+			return (
+				FileBookmarkingStage.fileURL(fileURL: fileURL) * GCDService.background
+			).withCleanUp(stopAccessing!.taskExecuting())
 		}
 		
-		bookmarkTask.perform { useResult in
+		(bookmarkDeferred + GCDService.mainQueue).perform { useResult in
 			do {
 				let result = try useResult()
 				XCTAssertEqual(result.fileURL, fileURL)
-				XCTAssert(result.bookmarkData.length > 0)
+				XCTAssert(result.bookmarkData.count > 0)
 				XCTAssertEqual(result.wasStale, false)
+				
+				expectation.fulfill()
 			}
 			catch {
 				XCTFail("Error \(error)")
 			}
-			
-			expectation.fulfill()
 		}
 		
-		waitForExpectationsWithTimeout(3, handler: nil)
+		waitForExpectations(timeout: 3, handler: nil)
 	}
 }
 

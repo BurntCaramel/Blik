@@ -11,6 +11,7 @@
 #import "GLACollection.h"
 #import "GLACollectionColor.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface GLAUIStyle : NSObject
 
@@ -151,3 +152,5 @@
 - (void)secondaryWindowDidResignMain:(NSWindow *)window;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -20,19 +20,19 @@ extension TopProject: UIChoiceRepresentative {
 		return project.name
 	}
 	
-	typealias UniqueIdentifier = NSUUID
+	typealias UniqueIdentifier = UUID
 	var uniqueIdentifier: UniqueIdentifier {
-		return project.UUID
+		return project.uuid
 	}
 }
 
 
 class TopProjectsAssistant: NSObject {
-	private let navigator: GLAMainSectionNavigator
+	fileprivate let navigator: GLAMainSectionNavigator
 	
-	private let allProjectsUser: GLALoadableArrayUsing
+	fileprivate let allProjectsUser: GLALoadableArrayUsing
 	
-	private let menuItemsAssistant: PlaceholderMenuItemAssistant<TopProject>
+	fileprivate let menuItemsAssistant: PlaceholderMenuItemAssistant<TopProject>
 	
 	init(placeholderMenuItem: NSMenuItem, projectManager: GLAProjectManager, navigator: GLAMainSectionNavigator) {
 		self.navigator = navigator
@@ -49,9 +49,7 @@ class TopProjectsAssistant: NSObject {
 		
 		menuItemsAssistant.customization.additionalSetUp = { topProject, menuItem in
 			menuItem.keyEquivalent = String(topProject.index + 1)
-			
-			let keyEquivalentModifierMask: NSEventModifierFlags = [.CommandKeyMask, .AlternateKeyMask]
-			menuItem.keyEquivalentModifierMask = Int(keyEquivalentModifierMask.rawValue)
+			menuItem.keyEquivalentModifierMask = [.command, .option]
 		}
 		
 		allProjectsUser.changeCompletionBlock = { [weak self] _ in
@@ -61,26 +59,26 @@ class TopProjectsAssistant: NSObject {
 		reloadUI()
 	}
 	
-	private var items: [TopProject?] {
+	fileprivate var items: [TopProject?] {
 		let allProjects = (allProjectsUser.copyChildrenLoadingIfNeeded() as! [GLAProject]?) ?? []
 		let topProjects = allProjects.prefix(6)
 		
-		let projectItems: [TopProject?] = topProjects.enumerate().map { (index, project) in
+		let projectItems: [TopProject?] = topProjects.enumerated().map { (index, project) in
 			TopProject(project: project, index: index)
 		}
 		
 		return projectItems
 	}
 	
-	private func reloadUI() {
+	fileprivate func reloadUI() {
 		menuItemsAssistant.menuItemRepresentatives = self.items
 		menuItemsAssistant.update()
 		menuItemsAssistant.placeholderMenuItem.menu?.update()
 	}
 	
-	@IBAction func goToProject(menuItem: NSMenuItem) {
-		if let item = menuItemsAssistant.itemRepresentativeForMenuItem(menuItem) {
-			navigator.goToProject(item.project)
+	@IBAction func goToProject(_ menuItem: NSMenuItem) {
+    if let item = menuItemsAssistant.itemRepresentative(for: menuItem) {
+      navigator.go(to: item.project)
 		}
 	}
 }

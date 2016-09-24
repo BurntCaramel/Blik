@@ -10,55 +10,58 @@ import Foundation
 
 
 public protocol NotificationObserverType {
-	typealias NotificationIdentifier
-	typealias Notification
+	associatedtype NotificationIdentifier
+	associatedtype Notification
 	
-	mutating func observe(notificationIdentifier: NotificationIdentifier, block: (Notification) -> ())
-	mutating func observeAll(block: (NotificationIdentifier, Notification) -> ())
-	mutating func stopObserving(notificationIdentifier: NotificationIdentifier)
+	mutating func observe(_ notificationIdentifier: NotificationIdentifier, block: @escaping (Notification) -> ())
+	mutating func observeAll(_ block: @escaping (NotificationIdentifier, Notification) -> ())
+	mutating func stopObserving(_ notificationIdentifier: NotificationIdentifier)
 	mutating func stopObservingAll()
 	mutating func stopObserving()
 }
 
 
-public class NotificationObserver<I: RawRepresentable where I.RawValue == String, I: Hashable>: NotificationObserverType {
+public class NotificationObserver
+<I: RawRepresentable> : NotificationObserverType where I.RawValue == String, I: Hashable
+{
 	public typealias NotificationIdentifier = I
-	public typealias Notification = NSNotification!
+	public typealias Notification = Foundation.Notification!
 	
 	public let object: AnyObject
-	public let notificationCenter: NSNotificationCenter
-	public let operationQueue: NSOperationQueue
+	public let notificationCenter: NotificationCenter
+	public let operationQueue: OperationQueue
 	
-	private var observers = [NotificationIdentifier: AnyObject]()
-	private var allObserver: AnyObject?
+	fileprivate var observers = [NotificationIdentifier: AnyObject]()
+	fileprivate var allObserver: AnyObject?
 	
-	public init(object: AnyObject, notificationCenter: NSNotificationCenter, queue: NSOperationQueue = NSOperationQueue.mainQueue()) {
+	public init(object: AnyObject, notificationCenter: NotificationCenter, queue: OperationQueue = OperationQueue.main) {
 		self.object = object
 		self.notificationCenter = notificationCenter
 		self.operationQueue = queue
 	}
 	
 	public convenience init(object: AnyObject) {
-		self.init(object: object, notificationCenter: NSNotificationCenter.defaultCenter())
+		self.init(object: object, notificationCenter: NotificationCenter.default)
 	}
 	
-	public func observe(notificationIdentifier: NotificationIdentifier, block: (Notification) -> ()) {
+	public func observe(_ notificationIdentifier: NotificationIdentifier, block: @escaping (Notification) -> ()) {
 		assert(observers[notificationIdentifier] == nil, "Existing observer for \(notificationIdentifier) must be removed first")
 		
-		observers[notificationIdentifier] = notificationCenter.addObserverForName(notificationIdentifier.rawValue, object: object, queue: operationQueue, usingBlock: block)
+		observers[notificationIdentifier] = notificationCenter.addObserver(forName: NSNotification.Name(rawValue: notificationIdentifier.rawValue), object: object, queue: operationQueue, using: block)
 	}
 	
-	public func observeAll(block: (NotificationIdentifier, Notification) -> ()) {
+	public func observeAll(_ block: @escaping (NotificationIdentifier, Notification) -> ()) {
 		assert(allObserver == nil, "Existing observer for all must be removed first")
 		
-		allObserver = notificationCenter.addObserverForName(nil, object: object, queue: operationQueue) { notification in
-			guard let notificationIdentifier = NotificationIdentifier(rawValue: notification.name) else { return }
+		allObserver = notificationCenter.addObserver(forName: nil, object: object, queue: operationQueue) { notification in
+			guard let notificationIdentifier = NotificationIdentifier(rawValue: notification.name.rawValue)
+        else { return }
 			
 			block(notificationIdentifier, notification)
 		}
 	}
 	
-	public func stopObserving(notificationIdentifier: NotificationIdentifier) {
+	public func stopObserving(_ notificationIdentifier: NotificationIdentifier) {
 		guard let observer = observers[notificationIdentifier] else { return }
 		
 		notificationCenter.removeObserver(observer)
@@ -87,28 +90,28 @@ public class NotificationObserver<I: RawRepresentable where I.RawValue == String
 }
 
 
-public extension NSNotificationCenter {
+public extension NotificationCenter {
 	public func postNotification
-		<NotificationIdentifier: RawRepresentable where NotificationIdentifier.RawValue == String>
-		(notificationIdentifier: NotificationIdentifier, object: AnyObject, userInfo: [String:AnyObject]? = nil)
+		<NotificationIdentifier : RawRepresentable>
+		(_ notificationIdentifier: NotificationIdentifier, object: AnyObject, userInfo: [String:AnyObject]? = nil) where NotificationIdentifier.RawValue == String
 	{
-		postNotificationName(notificationIdentifier.rawValue, object: object, userInfo: userInfo)
+		post(name: Notification.Name(rawValue: notificationIdentifier.rawValue), object: object, userInfo: userInfo)
 	}
 }
 
 
 
-public class AnyNotificationObserver: NotificationObserverType {
+public class AnyNotificationObserver : NotificationObserverType {
 	public typealias NotificationIdentifier = String
-	public typealias Notification = NSNotification!
+	public typealias Notification = Foundation.Notification!
 	
 	public let object: AnyObject
-	public let notificationCenter: NSNotificationCenter
-	public let operationQueue: NSOperationQueue
+	public let notificationCenter: NotificationCenter
+	public let operationQueue: OperationQueue
 	
-	private let underlyingObserver: NotificationObserver<AnyStringNotificationIdentifier>
+	fileprivate let underlyingObserver: NotificationObserver<AnyStringNotificationIdentifier>
 	
-	public init(object: AnyObject, notificationCenter: NSNotificationCenter, queue: NSOperationQueue = NSOperationQueue.mainQueue()) {
+	public init(object: AnyObject, notificationCenter: NotificationCenter, queue: OperationQueue = OperationQueue.main) {
 		self.object = object
 		self.notificationCenter = notificationCenter
 		self.operationQueue = queue
@@ -116,20 +119,20 @@ public class AnyNotificationObserver: NotificationObserverType {
 	}
 	
 	public convenience init(object: AnyObject) {
-		self.init(object: object, notificationCenter: NSNotificationCenter.defaultCenter())
+		self.init(object: object, notificationCenter: NotificationCenter.default)
 	}
 	
-	public func observe(notificationIdentifier: NotificationIdentifier, block: (NSNotification!) -> Void) {
+	public func observe(_ notificationIdentifier: NotificationIdentifier, block: @escaping (Foundation.Notification!) -> ()) {
 		underlyingObserver.observe(AnyStringNotificationIdentifier(string: notificationIdentifier), block: block)
 	}
 	
-	public func observeAll(block: (NotificationIdentifier, Notification) -> ()) {
+	public func observeAll(_ block: @escaping (NotificationIdentifier, Notification) -> ()) {
 		underlyingObserver.observeAll { notificationIdentifier, notification in
 			block(notificationIdentifier.rawValue, notification)
 		}
 	}
 	
-	public func stopObserving(notificationIdentifier: NotificationIdentifier) {
+	public func stopObserving(_ notificationIdentifier: NotificationIdentifier) {
 		underlyingObserver.stopObserving(AnyStringNotificationIdentifier(string: notificationIdentifier))
 	}
 	
@@ -143,7 +146,7 @@ public class AnyNotificationObserver: NotificationObserverType {
 }
 
 
-private struct AnyStringNotificationIdentifier: RawRepresentable, Hashable {
+private struct AnyStringNotificationIdentifier : RawRepresentable, Hashable {
 	typealias RawValue = String
 	var rawValue: RawValue
 	

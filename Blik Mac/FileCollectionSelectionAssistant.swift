@@ -12,29 +12,29 @@ import BurntFoundation
 
 @objc public final class FileCollectionSelectionAssistant: NSObject {
 	public let source: FileCollectionSelectionSourcing
-	public let filesListCollectionUUID: NSUUID
-	public let projectUUID: NSUUID
+	public let filesListCollectionUUID: UUID
+	public let projectUUID: UUID
 	public let projectManager: GLAProjectManager
 	
 	public let openerApplicationCombiner = GLAFileOpenerApplicationFinder()
 	
 	var projectObserver: AnyNotificationObserver
 	
-	public init(source: FileCollectionSelectionSourcing, filesListCollectionUUID: NSUUID, projectUUID: NSUUID, projectManager: GLAProjectManager) {
+	public init(source: FileCollectionSelectionSourcing, filesListCollectionUUID: UUID, projectUUID: UUID, projectManager: GLAProjectManager) {
 		self.source = source
 		self.filesListCollectionUUID = filesListCollectionUUID
 		self.projectUUID = projectUUID
 		self.projectManager = projectManager
 		
-		projectObserver = AnyNotificationObserver(object: projectManager.notificationObjectForProjectUUID(projectUUID))
+		projectObserver = AnyNotificationObserver(object: projectManager.notificationObject(forProjectUUID: projectUUID) as AnyObject)
 		
 		super.init()
 		
 		observeProject()
 	}
 	
-	private func observeProject() {
-		projectObserver.observe(GLAProjectHighlightsDidChangeNotification) { [weak self] notification in
+	fileprivate func observeProject() {
+		projectObserver.observe(NSNotification.Name.GLAProjectHighlightsDidChange.rawValue) { [weak self] notification in
 			self?.update()
 		}
 	}
@@ -43,8 +43,8 @@ import BurntFoundation
 		case DidUpdate = "FileCollectionSelectionAssistantDidUpdateNotification"
 	}
 	
-	internal func notify(notificationIdentifier: Notification) {
-		NSNotificationCenter.defaultCenter().postNotification(notificationIdentifier, object: self, userInfo: nil)
+	internal func notify(_ notificationIdentifier: Notification) {
+		NotificationCenter.default.postNotification(notificationIdentifier, object: self, userInfo: nil)
 	}
 	
 	public func update() {
@@ -56,10 +56,10 @@ import BurntFoundation
 	// MARK:
 	
 	public var isReadyToHighlight: Bool {
-		if let project = projectManager.projectWithUUID(projectUUID) {
-			projectManager.loadHighlightsForProjectIfNeeded(project)
+		if let project = projectManager.project(with: projectUUID) {
+			projectManager.loadHighlights(forProjectIfNeeded: project)
 			
-			return projectManager.hasLoadedHighlightsForProject(project)
+			return projectManager.hasLoadedHighlights(for: project)
 		}
 		
 		return false
@@ -90,7 +90,7 @@ import BurntFoundation
 	public var selectedFilesAreAllCollected: Bool {
 		let selectedFileURLs = source.selectedFileURLs
 		if selectedFileURLs.count > 0 {
-			let fileURLsNotYetCollected = projectManager.filterFileURLs(selectedFileURLs, notInFilesListCollectionWithUUID: filesListCollectionUUID)
+			let fileURLsNotYetCollected = projectManager.filterFileURLs(selectedFileURLs, notInFilesListCollectionWith: filesListCollectionUUID)
 			return fileURLsNotYetCollected.count == 0
 		}
 		
@@ -99,23 +99,23 @@ import BurntFoundation
 	
 	public func addSelectedFilesToCollection() {
 		let fileURLs = source.selectedFileURLs
-		let collectedFiles = GLACollectedFile.collectedFilesWithFileURLs(fileURLs)
+		let collectedFiles = GLACollectedFile.collectedFiles(withFileURLs: fileURLs)
 		
-		if let filesListCollection = projectManager.collectionWithUUID(filesListCollectionUUID, inProjectWithUUID: projectUUID) {
-			projectManager.editFilesListOfCollection(filesListCollection, insertingCollectedFiles:collectedFiles, atOptionalIndex:UInt(NSNotFound))
+		if let filesListCollection = projectManager.collection(with: filesListCollectionUUID, inProjectWith: projectUUID) {
+			projectManager.editFilesList(of: filesListCollection, insertingCollectedFiles:collectedFiles!, atOptionalIndex:UInt(NSNotFound))
 		}
 	}
 	
 	public func removeSelectedFilesFromCollection() {
 		let fileURLs = source.selectedFileURLs
 		
-		if let filesListCollection = projectManager.collectionWithUUID(filesListCollectionUUID, inProjectWithUUID: projectUUID) {
-			projectManager.editFilesListOfCollection(filesListCollection) { filesListEditor in
-				let indexes = filesListEditor.indexesOfChildrenWhoseResultFromVisitor({ child in
+		if let filesListCollection = projectManager.collection(with: filesListCollectionUUID, inProjectWith: projectUUID) {
+			projectManager.editFilesList(of: filesListCollection) { filesListEditor in
+				let indexes = filesListEditor.indexesOfChildrenWhoseResult(fromVisitor: { child in
 					let collectedFile = child as! GLACollectedFile
 					return collectedFile.accessFile().filePathURL
-					}, hasValueContainedInSet: Set(fileURLs))
-				filesListEditor.removeChildrenAtIndexes(indexes)
+					}, hasValueContainedIn: Set(fileURLs))
+				filesListEditor.removeChildren(at: indexes)
 			}
 		}
 	}

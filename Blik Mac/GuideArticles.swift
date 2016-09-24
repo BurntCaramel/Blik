@@ -23,8 +23,8 @@ private enum Link: String {
 		}
 	}
 	
-	var URL: NSURL {
-		return NSURL(string: rawValue)!
+	var url: Foundation.URL {
+		return Foundation.URL(string: rawValue)!
 	}
 	
 	static var chosenLinks: [Link] {
@@ -36,15 +36,15 @@ private enum Link: String {
 }
 
 extension Link: UIChoiceRepresentative {
-	typealias UniqueIdentifier = NSURL
+	typealias UniqueIdentifier = Foundation.URL
 	var uniqueIdentifier: UniqueIdentifier {
-		return URL
+		return url
 	}
 }
 
 
 class GuideArticlesAssistant: NSObject {
-	private let menuItemAssistant: PlaceholderMenuItemAssistant<Link>
+	fileprivate let menuItemAssistant: PlaceholderMenuItemAssistant<Link>
 	
 	init(placeholderMenuItem: NSMenuItem) {
 		menuItemAssistant = PlaceholderMenuItemAssistant<Link>(placeholderMenuItem: placeholderMenuItem)
@@ -59,9 +59,9 @@ class GuideArticlesAssistant: NSObject {
 		menuItemAssistant.update()
 	}
 	
-	@IBAction func openLink(menuItem: NSMenuItem) {
-		if let link = menuItemAssistant.itemRepresentativeForMenuItem(menuItem) {
-			NSWorkspace.sharedWorkspace().openURL(link.URL)
+	@IBAction func openLink(_ menuItem: NSMenuItem) {
+    if let link = menuItemAssistant.itemRepresentative(for: menuItem) {
+			NSWorkspace.shared().open(link.url)
 		}
 	}
 }

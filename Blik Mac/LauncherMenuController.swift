@@ -28,7 +28,7 @@ extension Item: UIChoiceRepresentative {
 		case .nowProject:
 			return "now"
 		case let .project(project):
-			return "project.\(project.UUID)"
+			return "project.\(project.uuid)"
 		case .allProjects:
 			return "allProjects"
 		case .newProject:
@@ -60,7 +60,7 @@ extension Item: UIChoiceRepresentative {
 }
 
 extension Item {
-	var action: Selector {
+	var action: Selector? {
 		switch self {
 		case .nowProject:
 			return nil
@@ -80,14 +80,14 @@ extension Item {
 	}
 }
 
-public class LauncherMenuController: NSObject {
-	private let projectManager: GLAProjectManager
-	private let navigator: GLAMainSectionNavigator
-	private let allProjectsUser: GLALoadableArrayUsing
-	private let menuAssistant: MenuAssistant<Item>
-	private let projectMenuControllerCache = NSCache()
-	private let projectManagerObserver: AnyNotificationObserver
-	private let nowWidgetViewController: NowWidgetViewController
+open class LauncherMenuController: NSObject {
+	fileprivate let projectManager: GLAProjectManager
+	fileprivate let navigator: GLAMainSectionNavigator
+	fileprivate let allProjectsUser: GLALoadableArrayUsing
+	fileprivate let menuAssistant: MenuAssistant<Item>
+	fileprivate let projectMenuControllerCache = NSCache<NSUUID, LauncherProjectMenuController>()
+	fileprivate let projectManagerObserver: AnyNotificationObserver
+	fileprivate let nowWidgetViewController: NowWidgetViewController
 	
 	public init(menu: NSMenu, projectManager: GLAProjectManager, navigator: GLAMainSectionNavigator) {
 		self.projectManager = projectManager
@@ -140,18 +140,18 @@ public class LauncherMenuController: NSObject {
 			self?.reloadMenu()
 		}
 		
-		projectManagerObserver.observe(GLAProjectManagerNowProjectDidChangeNotification) { [weak self] _ in
+		projectManagerObserver.observe(NSNotification.Name.GLAProjectManagerNowProjectDidChange.rawValue) { [weak self] _ in
 			self?.reloadMenu()
 		}
 		
 		reloadMenu()
 	}
 	
-	public var menu: NSMenu {
+	open var menu: NSMenu {
 		return menuAssistant.menu
 	}
 	
-	private var items: [Item?] {
+	fileprivate var items: [Item?] {
 		var items = [Item?]()
 		
 		if projectManager.nowProject != nil {
@@ -177,7 +177,7 @@ public class LauncherMenuController: NSObject {
 		return items
 	}
 	
-	private func reloadMenu() {
+	fileprivate func reloadMenu() {
 		projectManager.loadNowProjectIfNeeded()
 		
 		menuAssistant.menuItemRepresentatives = self.items
@@ -186,53 +186,53 @@ public class LauncherMenuController: NSObject {
 }
 
 extension LauncherMenuController {
-	private func activateApplication() {
-		NSApp.activateIgnoringOtherApps(true)
+	fileprivate func activateApplication() {
+		NSApp.activate(ignoringOtherApps: true)
 	}
 	
-	@IBAction func openProject(menuItem: NSMenuItem) {
+	@IBAction func openProject(_ menuItem: NSMenuItem) {
 		guard let
-			item = menuAssistant.itemRepresentativeForMenuItem(menuItem),
+      item = menuAssistant.itemRepresentative(for: menuItem),
 			case let .project(project) = item
 			else { return }
 		
-		navigator.goToProject(project)
+		navigator.go(to: project)
 	
 		activateApplication()
 	}
 	
-	@IBAction func createNewProject(menuItem: NSMenuItem) {
+	@IBAction func createNewProject(_ menuItem: NSMenuItem) {
 		navigator.addNewProject()
 	
 		activateApplication()
 	}
 	
-	@IBAction func goToAllProjects(menuItem: NSMenuItem) {
+	@IBAction func goToAllProjects(_ menuItem: NSMenuItem) {
 		navigator.goToAllProjects()
 	
 		activateApplication()
 	}
 	
-	@IBAction func toggleShowInDock(menuItem: NSMenuItem) {
-		let settings = GLAApplicationSettingsManager.sharedApplicationSettingsManager()
-		settings.toggleHidesDockIcon(menuItem)
+	@IBAction func toggleShowInDock(_ menuItem: NSMenuItem) {
+		let settings = GLAApplicationSettingsManager.shared()
+		settings?.toggleHidesDockIcon(menuItem)
 	}
 	
-	@IBAction func showPreferences(menuItem: NSMenuItem) {
+	@IBAction func showPreferences(_ menuItem: NSMenuItem) {
 		GLAPreferencesWindowController.showWindow()
 		activateApplication()
 	}
 	
-	@IBAction func terminateApp(menuItem: NSMenuItem) {
+	@IBAction func terminateApp(_ menuItem: NSMenuItem) {
 		NSApp.terminate(menuItem)
 	}
 }
 
 extension LauncherMenuController: NSMenuDelegate {
-	public func menu(menu: NSMenu, willHighlightItem menuItem: NSMenuItem?) {
+	public func menu(_ menu: NSMenu, willHighlight menuItem: NSMenuItem?) {
 		guard let menuItem = menuItem else { return }
 		
-		guard let item = menuAssistant.itemRepresentativeForMenuItem(menuItem) else { return }
+    guard let item = menuAssistant.itemRepresentative(for: menuItem) else { return }
 		
 		if case let .project(project) = item {
 			let submenu = menuItem.submenu ?? {
@@ -241,9 +241,9 @@ extension LauncherMenuController: NSMenuDelegate {
 				return submenu
 			}()
 			
-			let menuController = projectMenuControllerCache.objectForKey(project.UUID) as! LauncherProjectMenuController? ?? {
+      let menuController = projectMenuControllerCache.object(forKey: project.uuid as NSUUID) ?? {
 				let menuController = LauncherProjectMenuController(menu: submenu, project: project, projectManager: projectManager, navigator: navigator)
-				projectMenuControllerCache.setObject(menuController, forKey: project.UUID)
+				projectMenuControllerCache.setObject(menuController, forKey: project.uuid as NSUUID)
 				return menuController
 			}()
 			
@@ -253,22 +253,22 @@ extension LauncherMenuController: NSMenuDelegate {
 }
 
 extension LauncherMenuController: NSUserInterfaceValidations {
-	public func validateUserInterfaceItem(anItem: NSValidatedUserInterfaceItem) -> Bool {
+	public func validateUserInterfaceItem(_ anItem: NSValidatedUserInterfaceItem) -> Bool {
 		guard let
 			menuItem = anItem as? NSMenuItem,
-			item = menuAssistant.itemRepresentativeForMenuItem(menuItem)
+      let item = menuAssistant.itemRepresentative(for: menuItem)
 			else { return true }
 		
 		var state = NSOffState
 		
 		switch item {
 		case let .project(project):
-			if project.UUID == projectManager.nowProject?.UUID {
+			if project.uuid == projectManager.nowProject?.uuid {
 				state = NSOnState
 			}
 		case .showInDock:
-			let settings = GLAApplicationSettingsManager.sharedApplicationSettingsManager()
-			state = settings.hidesDockIcon ? NSOffState : NSOnState
+			let settings = GLAApplicationSettingsManager.shared()
+			state = (settings?.hidesDockIcon)! ? NSOffState : NSOnState
 		default: break
 		}
 		

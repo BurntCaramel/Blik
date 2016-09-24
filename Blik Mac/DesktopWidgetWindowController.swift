@@ -19,15 +19,15 @@ class DesktopWidgetWindow: NSWindow {
 	}*/
 }
 
-private let activeWindowLevel = CGWindowLevelForKey(.DesktopIconWindowLevelKey) + 1
-private let inactiveWindowLevel = CGWindowLevelForKey(.DesktopIconWindowLevelKey) + 0
+private let activeWindowLevel = CGWindowLevelForKey(.desktopIconWindow) + 1
+private let inactiveWindowLevel = CGWindowLevelForKey(.desktopIconWindow) + 0
 
 @objc(GLADesktopWidgetWindowController) class DesktopWidgetWindowController: NSWindowController, NSWindowDelegate {
-	@IBOutlet private var mainViewController: NowWidgetViewController!
+	@IBOutlet fileprivate var mainViewController: NowWidgetViewController!
 	
 	override func windowDidLoad() {
 		let window = self.window!
-		window.movableByWindowBackground = true
+		window.isMovableByWindowBackground = true
 		window.acceptsMouseMovedEvents = true
 		
 		window.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
@@ -49,14 +49,14 @@ private let inactiveWindowLevel = CGWindowLevelForKey(.DesktopIconWindowLevelKey
 	func setUpContentView() {
 		let contentView = mainViewController.view
 		contentView.wantsLayer = true
-		contentView.layer!.backgroundColor = GLAUIStyle.activeStyle().contentBackgroundColor.CGColor
+		contentView.layer!.backgroundColor = GLAUIStyle.active().contentBackgroundColor.cgColor
 	}
 	
-	func windowDidBecomeKey(notification: NSNotification) {
+	func windowDidBecomeKey(_ notification: Notification) {
 		window!.level = Int(activeWindowLevel)
 	}
 	
-	func windowDidResignKey(notification: NSNotification) {
+	func windowDidResignKey(_ notification: Notification) {
 		window!.level = Int(inactiveWindowLevel)
 	}
 }

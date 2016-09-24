@@ -10,16 +10,16 @@ import Foundation
 import Grain
 
 
-let fm = NSFileManager()
+let fm = FileManager()
 
 
-func folderMatches(folderURL: NSURL, containingFileNamed: String? = nil) throws -> Bool {
+func folderMatches(_ folderURL: URL, containingFileNamed: String? = nil) throws -> Bool {
 	if let
 		containingFileNamed = containingFileNamed
-		where containingFileNamed != ""
+		, containingFileNamed != ""
 	{
-		let urls = try fm.contentsOfDirectoryAtURL(folderURL, includingPropertiesForKeys: [NSURLNameKey], options: [])
-		let names = try urls.map{ try $0.resourceValuesForKeys([NSURLNameKey])[NSURLNameKey]! as! String }
+		let urls = try fm.contentsOfDirectory(at: folderURL, includingPropertiesForKeys: [URLResourceKey.nameKey], options: [])
+		let names = try urls.map{ try ($0 as NSURL).resourceValues(forKeys: [URLResourceKey.nameKey])[URLResourceKey.nameKey]! as! String }
 		if !names.contains(containingFileNamed) {
 			return false
 		}
@@ -30,28 +30,28 @@ func folderMatches(folderURL: NSURL, containingFileNamed: String? = nil) throws 
 
 
 enum FilesMatchStage : StageProtocol {
-	typealias Completion = [NSURL]
+	typealias Result = [URL]
 	
 	case folders(
-		folderURLs: [NSURL],
+		folderURLs: [URL],
 		containingFileNamed: String?
 	)
-	case completed(Completion)
+	case completed(Result)
 	
-	var nextTask: Task<FilesMatchStage>? {
+	func next() -> Deferred<FilesMatchStage> {
 		switch self {
 		case let .folders(folderURLs, containingFileNamed):
-			return Task{
+			return Deferred{
 				try .completed(folderURLs.filter{
 					try folderMatches($0, containingFileNamed: containingFileNamed)
 				})
 			}
-		case .completed: return nil
+		case .completed: completedStage(self)
 		}
 	}
 	
-	var completion: Completion? {
-		guard case let .completed(completion) = self else { return nil }
-		return completion
+	var result: Result? {
+		guard case let .completed(result) = self else { return nil }
+		return result
 	}
 }

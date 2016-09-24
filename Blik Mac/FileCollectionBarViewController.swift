@@ -10,31 +10,29 @@ import Cocoa
 import BurntFoundation
 
 
-func changeViewValues<T: NSView>(views: [T], animate: Bool, viewBlock: (view: NSView) -> Void) {
+func changeViewValues<T: NSView>(_ views: [T], animate: Bool, viewBlock: (_ view: NSView) -> Void) {
 	for view in views {
-		viewBlock(view: animate ? view.animator() : view)
+		viewBlock(animate ? view.animator() : view)
 	}
 }
 
 
-@objc public class FileCollectionBarViewController: GLAViewController {
+@objc open class FileCollectionBarViewController: GLAViewController {
 	@IBOutlet var openInApplicationPopUpButton: NSPopUpButton!
 	@IBOutlet var shareButton: GLAButton!
 	@IBOutlet var addToHighlightsButton: GLAButton!
 	
 	var openerApplicationCombinerNotificationObserver: AnyNotificationObserver!
 	
-	public override func prepareView() {
+	open override func prepareView() {
 		super.prepareView()
 		
-		shareButton.sendActionOn(
-			Int(NSEventMask.LeftMouseDownMask.rawValue)
-		)
+    shareButton.sendAction(on: .leftMouseDown)
 		
 		startObservingOpenerApplicationCombiner()
 	}
 	
-	@objc public var selectionAssistant: FileCollectionSelectionAssistant? {
+	@objc open var selectionAssistant: FileCollectionSelectionAssistant? {
 		didSet {
 			clearObservingOfOpenerApplicationCombiner()
 			startObservingOpenerApplicationCombiner()
@@ -67,13 +65,13 @@ func changeViewValues<T: NSView>(views: [T], animate: Bool, viewBlock: (view: NS
 				openerApplicationCombinerNotificationObserver = AnyNotificationObserver(object: selectionAssistant.openerApplicationCombiner)
 			}
 			
-			openerApplicationCombinerNotificationObserver.observe(GLAFileURLOpenerApplicationCombinerDidChangeNotification) { [weak self] note in
+			openerApplicationCombinerNotificationObserver.observe(NSNotification.Name.GLAFileURLOpenerApplicationCombinerDidChange.rawValue) { [weak self] note in
 				self?.setNeedsToUpdateOpenerApplicationsUI()
 			}
 		}
 	}
 	
-	public func update() {
+	open func update() {
 		_ = self.view
 		
 		//updateAddToHighlightsUI()
@@ -89,7 +87,7 @@ func changeViewValues<T: NSView>(views: [T], animate: Bool, viewBlock: (view: NS
 		
 		openerApplicationsPopUpButtonNeedsUpdate = true
 		
-		NSOperationQueue.mainQueue().addOperationWithBlock {
+		OperationQueue.main.addOperation {
 			self.updateOpenerApplicationMenu()
 			
 			self.openerApplicationsPopUpButtonNeedsUpdate = false
@@ -106,45 +104,45 @@ func changeViewValues<T: NSView>(views: [T], animate: Bool, viewBlock: (view: NS
 		if let selectionAssistant = selectionAssistant {
 			if let collectedFileSource = selectionAssistant.source.collectedFileSource {
 				if collectedFileSource.isReadyToHighlight {
-					button.enabled = true
+					button?.isEnabled = true
 					
 					let selectionIsAllHighlighted = selectionAssistant.collectedFilesAreAllHighlighted
 					
 					// If all are already highlighted.
 					if selectionIsAllHighlighted {
-						button.title = NSLocalizedString("Remove from Highlights", comment: "Title for 'Remove from Highlights' button when all of the selected collected files are already in the highlights list.");
-						button.action = #selector(FileCollectionBarViewController.removeSelectedFilesFromHighlights(_:))
+						button?.title = NSLocalizedString("Remove from Highlights", comment: "Title for 'Remove from Highlights' button when all of the selected collected files are already in the highlights list.");
+						button?.action = #selector(FileCollectionBarViewController.removeSelectedFilesFromHighlights(_:))
 					}
 						// If some or all are not highlighted.
 					else {
-						button.title = NSLocalizedString("Add to Highlights", comment: "Title for 'Add to Highlights' button when some of the selected collected files are not yet in the highlights list.");
-						button.action = #selector(FileCollectionBarViewController.addSelectedFilesToHighlights(_:))
+						button?.title = NSLocalizedString("Add to Highlights", comment: "Title for 'Add to Highlights' button when some of the selected collected files are not yet in the highlights list.");
+						button?.action = #selector(FileCollectionBarViewController.addSelectedFilesToHighlights(_:))
 					}
 				}
 				else {
-					button.enabled = false
+					button?.isEnabled = false
 					
-					button.title = NSLocalizedString("Loading Highlights", comment: "Title for 'Add to Highlights' button when the highlights is still loading.")
+					button?.title = NSLocalizedString("Loading Highlights", comment: "Title for 'Add to Highlights' button when the highlights is still loading.")
 				}
 			}
 			else {
 				let selectedFilesAreAllCollected = selectionAssistant.selectedFilesAreAllCollected
 				
 				if selectedFilesAreAllCollected {
-					button.enabled = false
-					button.title = NSLocalizedString("Already in Collection", comment: "Title for 'Add to Collection' button when all of the selected files are already in the collection.")
-					button.action = nil
+					button?.isEnabled = false
+					button?.title = NSLocalizedString("Already in Collection", comment: "Title for 'Add to Collection' button when all of the selected files are already in the collection.")
+					button?.action = nil
 				}
 				else {
-					button.enabled = true
-					button.title = NSLocalizedString("Add to Collection", comment: "Title for 'Add to Collection' button when some of selected files are not yet in the collection list.");
-					button.action = #selector(FileCollectionBarViewController.addSelectedFilesToCollection(_:))
+					button?.isEnabled = true
+					button?.title = NSLocalizedString("Add to Collection", comment: "Title for 'Add to Collection' button when some of selected files are not yet in the collection list.");
+					button?.action = #selector(FileCollectionBarViewController.addSelectedFilesToCollection(_:))
 				}
 			}
 		}
 	}
 	
-	func updateSelectedFilesUIVisibilityAnimating(animate: Bool) {
+	func updateSelectedFilesUIVisibilityAnimating(_ animate: Bool) {
 		let views: [NSView] = [
 			openInApplicationPopUpButton,
 			addToHighlightsButton,
@@ -184,35 +182,35 @@ func changeViewValues<T: NSView>(views: [T], animate: Bool, viewBlock: (view: NS
 		}
 	}
 	
-	@IBAction func addSelectedFilesToHighlights(sender: AnyObject?) {
+	@IBAction func addSelectedFilesToHighlights(_ sender: AnyObject?) {
 		selectionAssistant?.addSelectedFilesToHighlights()
 		
 		updateAddToHighlightsUI()
 	}
 	
-	@IBAction public func removeSelectedFilesFromHighlights(sender: AnyObject?) {
+	@IBAction open func removeSelectedFilesFromHighlights(_ sender: AnyObject?) {
 		selectionAssistant?.removeSelectedFilesFromHighlights()
 		
 		updateAddToHighlightsUI()
 	}
 	
-	@IBAction public func addSelectedFilesToCollection(sender: AnyObject?) {
+	@IBAction open func addSelectedFilesToCollection(_ sender: AnyObject?) {
 		selectionAssistant?.addSelectedFilesToCollection()
 	}
 	
-	@IBAction func openSelectedFilesInChosenApplication(sender: AnyObject?) {
+	@IBAction func openSelectedFilesInChosenApplication(_ sender: AnyObject?) {
 		if let menuItem = sender as? NSMenuItem {
-			selectionAssistant?.openerApplicationCombiner.openFileURLsUsingMenuItem(menuItem)
+			selectionAssistant?.openerApplicationCombiner.openFileURLs(using: menuItem)
 		}
 	}
 	
 	var sharingServicePicker: NSSharingServicePicker?
-	@IBAction func showShareMenuForSelectedFiles(sender: GLAButton) {
-		if let selectedFileURLs = selectionAssistant?.source.selectedFileURLs where selectedFileURLs.count > 0 {
+	@IBAction func showShareMenuForSelectedFiles(_ sender: GLAButton) {
+		if let selectedFileURLs = selectionAssistant?.source.selectedFileURLs , selectedFileURLs.count > 0 {
 			let picker = NSSharingServicePicker(items: selectedFileURLs)
 			self.sharingServicePicker = picker
 		
-			picker.showRelativeToRect(sender.insetBounds, ofView: sender, preferredEdge: NSRectEdge.MinY)
+			picker.show(relativeTo: sender.insetBounds, of: sender, preferredEdge: NSRectEdge.minY)
 		}
 	}
 }

@@ -14,48 +14,48 @@ public class SystemDirectory {
 	public typealias ErrorReceiver = (NSError) -> ()
 	
 	public let pathComponents: [String]
-	public let directoryBase: NSSearchPathDirectory
+	public let domainMask: FileManager.SearchPathDomainMask
+	public let directoryBase: FileManager.SearchPathDirectory
 	public let errorReceiver: ErrorReceiver
-	private let group: dispatch_group_t
-	private var createdDirectoryURL: NSURL?
+	fileprivate let group: DispatchGroup
+	fileprivate var createdDirectoryURL: URL?
 	
-	public init(var pathComponents: [String], inUserDirectory directoryBase: NSSearchPathDirectory, errorReceiver: ErrorReceiver, useBundleIdentifier: Bool = true) {
+	public init(pathComponents: [String], inUserDirectory directoryBase: FileManager.SearchPathDirectory, errorReceiver: @escaping ErrorReceiver, useBundleIdentifier: Bool = true) {
+		var pathComponents = pathComponents
 		if useBundleIdentifier {
-			if let bundleIdentifier = NSBundle.mainBundle().bundleIdentifier {
-				pathComponents.insert(bundleIdentifier, atIndex: 0)
+			if let bundleIdentifier = Bundle.main.bundleIdentifier {
+				pathComponents.insert(bundleIdentifier, at: 0)
 			}
 		}
 		
 		self.pathComponents = pathComponents
+		self.domainMask = [.userDomainMask]
 		self.directoryBase = directoryBase
 		self.errorReceiver = errorReceiver
 		
-		group = dispatch_group_create()
+		group = DispatchGroup()
 		
 		createDirectory()
 	}
 	
-	private func directoryURLResolver(fm fm: NSFileManager) throws -> NSURL? {
-		return try fm.URLForDirectory(directoryBase, inDomain:.UserDomainMask, appropriateForURL:nil, create:true)
-	}
-	
-	private func createDirectory() {
-		let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
-		dispatch_group_async(group, queue) {
-			let fm = NSFileManager.defaultManager()
+	fileprivate func createDirectory() {
+		let queue = DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.low)
+		queue.async(group: group) {
+			let fm = FileManager.default
 			
 			do {
-				guard let baseDirectoryURL = try self.directoryURLResolver(fm: fm) else { return }
+				let baseDirectoryURL = try fm.url(for: self.directoryBase, in: self.domainMask, appropriateFor: nil, create: true)
 				
 				// Convert path to its components, so we can add more components
 				// and convert back into a URL.
-				var pathComponents = (baseDirectoryURL.pathComponents)!
-				pathComponents.appendContentsOf(self.pathComponents)
+				var pathComponents = baseDirectoryURL.pathComponents
+				pathComponents.append(contentsOf: self.pathComponents)
 				
 				// Convert components back into a URL.
-				guard let directoryURL = NSURL.fileURLWithPathComponents(pathComponents) else { return }
+				guard let directoryURL = NSURL.fileURL(withPathComponents: pathComponents)
+          else { return }
 				
-				try fm.createDirectoryAtURL(directoryURL, withIntermediateDirectories:true, attributes:nil)
+				try fm.createDirectory(at: directoryURL, withIntermediateDirectories: true, attributes: nil)
 				
 				self.createdDirectoryURL = directoryURL
 			}
@@ -65,10 +65,10 @@ public class SystemDirectory {
 		}
 	}
 	
-	public func useOnQueue(queue: dispatch_queue_t, closure: (directoryURL: NSURL) -> Void) {
-		dispatch_group_notify(group, queue) {
+	public func useOnQueue(_ queue: DispatchQueue, closure: @escaping (_ directoryURL: URL) -> ()) {
+		group.notify(queue: queue) {
 			if let createdDirectoryURL = self.createdDirectoryURL {
-				closure(directoryURL: createdDirectoryURL)
+				closure(createdDirectoryURL)
 			}
 		}
 	}

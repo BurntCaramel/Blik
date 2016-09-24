@@ -8,8 +8,9 @@
 
 import Cocoa
 
+private var kvoContext = 0
 
-@objc(GLAWindowFirstResponderAssistant) public class WindowFirstResponderAssistant: NSObject {
+@objc(GLAWindowFirstResponderAssistant) open class WindowFirstResponderAssistant: NSObject {
 	let window: NSWindow
 	
 	var firstResponderDidChange: (() -> Void)?
@@ -27,16 +28,16 @@ import Cocoa
 	}
 	
 	func startObservingWindow() {
-		window.addObserver(self, forKeyPath: "firstResponder", options: .New, context: nil)
+		window.addObserver(self, forKeyPath: #keyPath(NSWindow.firstResponder), options: .new, context: &kvoContext)
 	}
 	
 	func stopObservingWindow() {
-		window.removeObserver(self, forKeyPath: "firstResponder")
+		window.removeObserver(self, forKeyPath: #keyPath(NSWindow.firstResponder))
 	}
 	
-	public override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-		if object === window {
-			if keyPath == "firstResponder" {
+	open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+		if context == &kvoContext {
+      if keyPath == #keyPath(NSWindow.firstResponder) {
 				firstResponderDidChange?()
 			}
 		}

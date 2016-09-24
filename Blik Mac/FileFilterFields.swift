@@ -118,7 +118,7 @@ struct FileTag : UIChoiceRepresentative, UIChoiceEnumerable {
 	var uniqueIdentifier: String { return value }
 	
 	// FIXME: what if file labels change?
-	static var allChoices: [FileTag] = NSWorkspace.sharedWorkspace().fileLabels.map{ FileTag(value: $0) }
+	static var allChoices: [FileTag] = NSWorkspace.shared().fileLabels.map{ FileTag(value: $0) }
 }
 
 extension FileSort : UIChoiceRepresentative, UIChoiceEnumerable {
@@ -166,18 +166,18 @@ extension FileQueryUpTo : UIChoiceRepresentative, UIChoiceEnumerable {
 class FileQueryFieldsProducer {
 	var onFieldChange: (Field) -> ()
 	
-	init(onFieldChange: (Field) -> ()) {
+	init(onFieldChange: @escaping (Field) -> ()) {
 		self.onFieldChange = onFieldChange
 	}
 	
-	private func valueChanged<Value>(fieldCreator: (Value) -> Field) -> (Value) -> () {
+	fileprivate func valueChanged<Value>(_ fieldCreator: @escaping (Value) -> Field) -> (Value) -> () {
 		let onFieldChange = self.onFieldChange
 		return { value in
 			onFieldChange(fieldCreator(value))
 		}
 	}
 	
-	private func optionalValueChanged<Value>(fieldCreator: (Value) -> Field) -> (Value?) -> () {
+	fileprivate func optionalValueChanged<Value>(_ fieldCreator: @escaping (Value) -> Field) -> (Value?) -> () {
 		let onFieldChange = self.onFieldChange
 		return { value in
 			if let value = value {
@@ -186,24 +186,24 @@ class FileQueryFieldsProducer {
 		}
 	}
 	
-	private func buttonStateChanged(fieldCreator: (Bool) -> Field) -> (NSCellStateValue) -> () {
+	fileprivate func buttonStateChanged(_ fieldCreator: @escaping (Bool) -> Field) -> (NSCellStateValue) -> () {
 		let onFieldChange = self.onFieldChange
 		return { state in
 			onFieldChange(fieldCreator(state == NSOnState))
 		}
 	}
 	
-	lazy var kindRenderer: FileFilterKind -> NSPopUpButton = popUpButtonRenderer(onChange: self.optionalValueChanged(Field.kind))
+	lazy var kindRenderer: (FileFilterKind) -> NSPopUpButton = popUpButtonRenderer(onChange: self.optionalValueChanged(Field.kind))
 	
-	lazy var hasFileNamedRenderer: String? -> NSTextField = textFieldRenderer(onChange: self.valueChanged(Field.hasFileNamed))
+	lazy var hasFileNamedRenderer: (String?) -> NSTextField = textFieldRenderer(onChange: self.valueChanged(Field.hasFileNamed))
 	
-	lazy var taggedRenderer: FileTag? -> NSPopUpButton = popUpButtonRenderer(onChange: self.optionalValueChanged(Field.tagged))
-	lazy var notWithinRenderer: String? -> NSTextField = textFieldRenderer(onChange: self.valueChanged(Field.notWithinFolderNamed))
+	lazy var taggedRenderer: (FileTag?) -> NSPopUpButton = popUpButtonRenderer(onChange: self.optionalValueChanged(Field.tagged))
+	lazy var notWithinRenderer: (String?) -> NSTextField = textFieldRenderer(onChange: self.valueChanged(Field.notWithinFolderNamed))
 	
-	lazy var sortedByRenderer: FileSort -> NSPopUpButton = popUpButtonRenderer(onChange: self.optionalValueChanged(Field.sortedBy))
-	lazy var upToRenderer: FileQueryUpTo -> NSPopUpButton = popUpButtonRenderer(onChange: self.optionalValueChanged(Field.upTo))
+	lazy var sortedByRenderer: (FileSort) -> NSPopUpButton = popUpButtonRenderer(onChange: self.optionalValueChanged(Field.sortedBy))
+	lazy var upToRenderer: (FileQueryUpTo) -> NSPopUpButton = popUpButtonRenderer(onChange: self.optionalValueChanged(Field.upTo))
 	//lazy var openWithRenderer: NSURL -> NSPopUpButton = popUpButtonRenderer(onChange: self.optionalValueChanged(Field.openWith))
-	lazy var highlightRenderer: NSCellStateValue -> NSButton = checkboxRenderer(onChange: self.buttonStateChanged(Field.highlight), title: FileFilterField.Kind.highlight.label!)
+	lazy var highlightRenderer: (NSCellStateValue) -> NSButton = checkboxRenderer(onChange: self.buttonStateChanged(Field.highlight), title: FileFilterField.Kind.highlight.label!)
 }
 
 extension FileQueryFieldsProducer : FieldsProducer {
@@ -264,10 +264,10 @@ struct FileQueryFieldsState {
 			]
 		]
 
-		return Array(unflattened.flatten())
+		return Array(unflattened.joined())
 	}
 	
-	mutating func mergeField(field: FileFilterField) {
+	mutating func mergeField(_ field: FileFilterField) {
 		switch field {
 		case let .kind(kind): self.kind = kind
 		case let .hasFileNamed(hasFileNamed): self.hasFileNamed = hasFileNamed
@@ -300,7 +300,7 @@ extension FileQueryFieldsState {
 		)
 	}
 	
-	func toRequest(sourceFolderURLs sourceFolderURLs: [NSURL]) -> FileFilterRequest {
+	func toRequest(sourceFolderURLs: [URL]) -> FileFilterRequest {
 		return FileFilterRequest(sourceFolderURLs: sourceFolderURLs, query: query, maxCount: upTo.rawValue, attributes: FileFilterRequest.defaultAttributes, sortingAttributes: FileFilterRequest.defaultSortingAttributes)
 	}
 }

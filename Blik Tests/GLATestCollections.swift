@@ -24,14 +24,14 @@ class GLATestCollections: XCTestCase {
         super.tearDown()
     }
 	
-	func newCollection(name: String = "Test collection") -> GLACollection
+	func newCollection(_ name: String = "Test collection") -> GLACollection
 	{
 		let collection = GLACollection(type: GLACollectionTypeFilesList) { editor in
-			editor.projectUUID = NSUUID()
-			editor.name = name
+			editor?.projectUUID = UUID()
+			editor?.name = name
 		}
 	
-		return collection
+		return collection!
 	}
 
     func testCreateCollection()
@@ -47,38 +47,38 @@ class GLATestCollections: XCTestCase {
 		let collection = newCollection("Test collection");
 		XCTAssertNotNil(collection, "Collection was created")
 	
-		let JSONDictionary = MTLJSONAdapter.JSONDictionaryFromModel(collection)
+		let JSONDictionary = MTLJSONAdapter.jsonDictionary(from: collection)
 		XCTAssertNotNil(JSONDictionary, "JSON dictionary is not nil")
 	
-		let isValidJSON = NSJSONSerialization.isValidJSONObject(JSONDictionary)
+		let isValidJSON = JSONSerialization.isValidJSONObject(JSONDictionary)
 		XCTAssertTrue(isValidJSON, "JSON dictionary is valid")
 		
 		let modelClass = GLACollection.self
 		var error: NSError?
-		let collectionFromJSON: GLACollection = (try! MTLJSONAdapter.modelOfClass(modelClass, fromJSONDictionary: JSONDictionary)) as! GLACollection
+		let collectionFromJSON: GLACollection = (try! MTLJSONAdapter.model(of: modelClass, fromJSONDictionary: JSONDictionary)) as! GLACollection
 		
 		XCTAssertNotNil(collectionFromJSON, "Created collection from JSON")
-		XCTAssertEqual(collection.UUID, collectionFromJSON.UUID, "Have same UUID")
+		XCTAssertEqual(collection.uuid, collectionFromJSON.uuid, "Have same UUID")
 		XCTAssertEqual(collection.name, collectionFromJSON.name, "Have same name")
 	}
 	
 	func testCreateCollectedFile()
 	{
-		let collectedFile = GLACollectedFile(fileURL: NSURL(fileURLWithPath: NSHomeDirectory()))
+		let collectedFile = GLACollectedFile(fileURL: URL(fileURLWithPath: NSHomeDirectory()))
 		XCTAssertNotNil(collectedFile, "Collected file was created")
 		
-		let bookmarkData = collectedFile.bookmarkData
+		let bookmarkData = collectedFile?.bookmarkData
 		XCTAssertNotNil(bookmarkData, "Bookmark data")
 		
-		let JSONDictionary = MTLJSONAdapter.JSONDictionaryFromModel(collectedFile)
+		let JSONDictionary = MTLJSONAdapter.jsonDictionary(from: collectedFile)
 		XCTAssertNotNil(JSONDictionary, "JSON dictionary is not nil")
-		XCTAssertNotNil(JSONDictionary["bookmarkData"], "Has 'bookmarkData' JSON key")
+		XCTAssertNotNil(JSONDictionary?["bookmarkData"], "Has 'bookmarkData' JSON key")
 		
-		let isValidJSON = NSJSONSerialization.isValidJSONObject(JSONDictionary)
+		let isValidJSON = JSONSerialization.isValidJSONObject(JSONDictionary)
 		XCTAssertTrue(isValidJSON, "JSON dictionary is valid")
 		
 		var error: NSError?
-		let recreatedCollectedFile = MTLJSONAdapter.modelOfClass(GLACollectedFile.self, fromJSONDictionary: JSONDictionary) as? GLACollectedFile
+		let recreatedCollectedFile = MTLJSONAdapter.model(of: GLACollectedFile.self, fromJSONDictionary: JSONDictionary) as? GLACollectedFile
 		XCTAssertNotNil(recreatedCollectedFile, "Recreated collected file")
 	}
 	
@@ -86,28 +86,28 @@ class GLATestCollections: XCTestCase {
 	{
 		let collection = newCollection()
 		
-		let collectedFile = GLACollectedFile(fileURL: NSURL(fileURLWithPath: NSHomeDirectory()))
+		let collectedFile = GLACollectedFile(fileURL: URL(fileURLWithPath: NSHomeDirectory()))
 		XCTAssertNotNil(collectedFile, "Collected file was created")
 		
 		let highlightedItem = GLAHighlightedCollectedFile { (editor) -> Void in
-			editor.holdingCollectionUUID = collection.UUID
-			editor.collectedFileUUID = collectedFile.UUID
+			editor.holdingCollectionUUID = collection.uuid
+			editor.collectedFileUUID = (collectedFile?.uuid)!
 		}
 		
-		let JSONDictionary = MTLJSONAdapter.JSONDictionaryFromModel(highlightedItem)
+		let JSONDictionary = MTLJSONAdapter.jsonDictionary(from: highlightedItem)
 		XCTAssertNotNil(JSONDictionary, "JSON dictionary is not nil")
-		XCTAssertNotNil(JSONDictionary["holdingCollectionUUID"], "Has 'holdingCollectionUUID' JSON key")
-		XCTAssertNotNil(JSONDictionary["collectedFileUUID"], "Has 'collectedFileUUID' JSON key")
+		XCTAssertNotNil(JSONDictionary?["holdingCollectionUUID"], "Has 'holdingCollectionUUID' JSON key")
+		XCTAssertNotNil(JSONDictionary?["collectedFileUUID"], "Has 'collectedFileUUID' JSON key")
 		
-		let isValidJSON = NSJSONSerialization.isValidJSONObject(JSONDictionary)
+		let isValidJSON = JSONSerialization.isValidJSONObject(JSONDictionary)
 		XCTAssertTrue(isValidJSON, "JSON dictionary is valid")
 		
 		let modelClass = GLAHighlightedCollectedFile.self
 		var error: NSError?
-		let highlightedItemFromJSON: GLAHighlightedCollectedFile = (try! MTLJSONAdapter.modelOfClass(modelClass, fromJSONDictionary: JSONDictionary)) as! GLAHighlightedCollectedFile
+		let highlightedItemFromJSON: GLAHighlightedCollectedFile = (try! MTLJSONAdapter.model(of: modelClass, fromJSONDictionary: JSONDictionary)) as! GLAHighlightedCollectedFile
 		
 		XCTAssertNotNil(highlightedItemFromJSON, "Created highlighted item from JSON")
-		XCTAssertEqual(highlightedItem.UUID, highlightedItemFromJSON.UUID, "Have same UUID")
+		XCTAssertEqual(highlightedItem.uuid, highlightedItemFromJSON.uuid, "Have same UUID")
 		XCTAssertEqual(highlightedItem.holdingCollectionUUID, highlightedItemFromJSON.holdingCollectionUUID, "Have same holdingCollectionUUID")
 		XCTAssertEqual(highlightedItem.collectedFileUUID, highlightedItemFromJSON.collectedFileUUID, "Have same collectedFileUUID")
 	}

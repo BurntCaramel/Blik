@@ -10,7 +10,7 @@ import Foundation
 
 
 @objc public protocol FileSelectionSourcing {
-	var selectedFileURLs: [NSURL] { get }
+	var selectedFileURLs: [URL] { get }
 }
 
 @objc public protocol CollectedFileSelectionSourcing: FileSelectionSourcing {

@@ -16,7 +16,7 @@ struct ProjectChoice : UIChoiceRepresentative {
 	
 	var title: String { return project.name }
 	
-	var uniqueIdentifier: NSUUID { return project.UUID }
+	var uniqueIdentifier: UUID { return project.uuid }
 }
 
 
@@ -24,7 +24,7 @@ class NowWidgetViewController : GLAViewController {
 	@IBOutlet var projectPopUpButton: NSPopUpButton?
 	@IBOutlet var highlightsViewController: ProjectHighlightsViewController!
 	
-	private var projectButtonAssistant: PopUpButtonAssistant<ProjectChoice>?
+	fileprivate var projectButtonAssistant: PopUpButtonAssistant<ProjectChoice>?
 	
 	override func prepareView() {
 		super.prepareView()
@@ -39,16 +39,16 @@ class NowWidgetViewController : GLAViewController {
 		view.frame = NSRect(origin: .zero, size: preferredContentSize)
 		
 		view.wantsLayer = true
-		view.layer!.backgroundColor = GLAUIStyle.activeStyle().contentBackgroundColor.CGColor
+		view.layer!.backgroundColor = GLAUIStyle.active().contentBackgroundColor.cgColor
 		
 		view.layoutSubtreeIfNeeded()
 	}
 	
-	private var projectManager: GLAProjectManager { return GLAProjectManager.sharedProjectManager() }
-	private var allProjectsUser: GLALoadableArrayUsing?
-	private var projectManagerObserver: AnyNotificationObserver!
+	fileprivate var projectManager: GLAProjectManager { return GLAProjectManager.shared() }
+	fileprivate var allProjectsUser: GLALoadableArrayUsing?
+	fileprivate var projectManagerObserver: AnyNotificationObserver!
 	
-	private func inspectModel() {
+	fileprivate func inspectModel() {
 		let pm = projectManager
 		let projectManagerObserver = AnyNotificationObserver(object: pm)
 		
@@ -65,17 +65,17 @@ class NowWidgetViewController : GLAViewController {
 		
 		// Now Project
 		
-		projectManagerObserver.observe(GLAProjectManagerNowProjectDidChangeNotification) { notification in
+		projectManagerObserver.observe(NSNotification.Name.GLAProjectManagerNowProjectDidChange.rawValue) { notification in
 			guard let nowProject = pm.nowProject else { return }
 			
-			self.projectButtonAssistant?.selectedUniqueIdentifier = nowProject.UUID
+			self.projectButtonAssistant?.selectedUniqueIdentifier = nowProject.uuid
 			self.highlightsViewController.project = nowProject
 		}
 		
 		pm.loadNowProjectIfNeeded()
 		
 		if let nowProject = pm.nowProject {
-			projectButtonAssistant?.selectedUniqueIdentifier = nowProject.UUID
+			projectButtonAssistant?.selectedUniqueIdentifier = nowProject.uuid
 			highlightsViewController.project = nowProject
 		}
 		
@@ -83,14 +83,14 @@ class NowWidgetViewController : GLAViewController {
 		self.projectManagerObserver = projectManagerObserver
 	}
 	
-	@IBAction func selectProject(sender: NSPopUpButton) {
+	@IBAction func selectProject(_ sender: NSPopUpButton) {
 		if let project = projectButtonAssistant?.selectedItemRepresentative?.project {
 			projectManager.changeNowProject(project)
 		}
 	}
 }
 
-public class NowWidgetView: NSView {
+open class NowWidgetView: NSView {
 	#if false
 	func ensureWindowIsKey(window: NSWindow?) {
 		if let window = window /*where !window.keyWindow*/ {

@@ -1,82 +1,69 @@
 //
-//  SerialStage.swift
-//  Grain
+//	SerialStage.swift
+//	Grain
 //
-//  Created by Patrick Smith on 19/04/2016.
-//  Copyright © 2016 Burnt Caramel. All rights reserved.
+//	Created by Patrick Smith on 19/04/2016.
+//	Copyright © 2016 Burnt Caramel. All rights reserved.
 //
 
 import Foundation
 
 
-public enum Serial<
-	Stage : StageProtocol,
-	ExecutionCustomizer : ExecutionCustomizing
-	where
-	ExecutionCustomizer.Stage == Stage
-	>
-{
-	public typealias Completion = [() throws -> Stage.Completion]
+public enum Serial<Stage : StageProtocol> {
+	public typealias Result = [() throws -> Stage.Result]
 	
-	case start(stages: [Stage], executionCustomizer: ExecutionCustomizer)
-	case running(remainingStages: [Stage], activeStage: Stage, completedSoFar: [() throws -> Stage.Completion], executionCustomizer: ExecutionCustomizer)
-	case completed(Completion)
+	case start(stages: [Stage], environment: Environment)
+	case running(remainingStages: [Stage], activeStage: Stage, completedSoFar: [() throws -> Stage.Result], environment: Environment)
+	case completed(Result)
 }
 
 extension Serial : StageProtocol {
-	public var nextTask: Task<Serial>? {
+	public func next() -> Deferred<Serial> {
 		switch self {
-		case let .start(stages, executionCustomizer):
-			if stages.count == 0 {
-				return Task{ .completed([]) }
+		case let .start(stages, environment):
+			return Deferred{
+				if stages.count == 0 {
+					return .completed([])
+				}
+				
+				var remainingStages = stages
+				let nextStage = remainingStages.remove(at: 0)
+				
+				return .running(remainingStages: remainingStages, activeStage: nextStage, completedSoFar: [], environment: environment)
 			}
-			
-			var remainingStages = stages
-			let nextStage = remainingStages.removeAtIndex(0)
-			
-			return Task{
-				.running(remainingStages: remainingStages, activeStage: nextStage, completedSoFar: [], executionCustomizer: executionCustomizer)
-			}
-		case let .running(remainingStages, activeStage, completedSoFar, executionCustomizer):
-			return activeStage.taskExecuting(customizer: executionCustomizer).flatMap { useCompletion in
+		case let .running(remainingStages, activeStage, completedSoFar, environment):
+			return activeStage.taskExecuting(environment).flatMap { useCompletion in
 				var completedSoFar = completedSoFar
 				completedSoFar.append(useCompletion)
 				
 				if remainingStages.count == 0 {
-					return Task{ .completed(completedSoFar) }
+					return Deferred{ .completed(completedSoFar) }
 				}
 				
 				var remainingStages = remainingStages
-				let nextStage = remainingStages.removeAtIndex(0)
+				let nextStage = remainingStages.remove(at: 0)
 				
-				return Task{ .running(remainingStages: remainingStages, activeStage: nextStage, completedSoFar: completedSoFar, executionCustomizer: executionCustomizer) }
+				return Deferred{ .running(remainingStages: remainingStages, activeStage: nextStage, completedSoFar: completedSoFar, environment: environment) }
 			}
 		case .completed:
-			return nil
+			completedStage(self)
 		}
 	}
 	
-	public var completion: Completion? {
-		guard case let .completed(completion) = self else { return nil }
-		return completion
+	public var result: Result? {
+		guard case let .completed(result) = self else { return nil }
+		return result
 	}
 }
 
 
-extension SequenceType where Generator.Element : StageProtocol {
-	public func executeSerially<
-		IC : ExecutionCustomizing,
-		SC : ExecutionCustomizing
-		where
-		IC.Stage == Generator.Element,
-		SC.Stage == Serial<Generator.Element, IC>
-		>(
-		elementCustomizer: IC,
-		serialCustomizer: SC,
-		completion: (() throws -> [() throws -> Generator.Element.Completion]) -> ()
+extension Sequence where Iterator.Element : StageProtocol {
+	public func executeSerially(
+		_ environment: Environment,
+		completion: @escaping (() throws -> [() throws -> Iterator.Element.Result]) -> ()
 		)
 	{
-		Serial.start(stages: Array(self), executionCustomizer: elementCustomizer)
-			.execute(customizer: serialCustomizer, completion: completion)
+		Serial.start(stages: Array(self), environment: environment)
+			.execute(environment: environment, completionService: nil, completion: completion)
 	}
 }

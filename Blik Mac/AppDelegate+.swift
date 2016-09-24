@@ -14,16 +14,16 @@ var global_symlinkCreator: SymlinkCreator?
 
 extension AppDelegate {
 	var hidesMainWindowWhenInactive: Bool {
-		let settings = GLAApplicationSettingsManager.sharedApplicationSettingsManager()
-		return settings.hidesMainWindowWhenInactive
+		let settings = GLAApplicationSettingsManager.shared()
+		return settings!.hidesMainWindowWhenInactive
 	}
 	
-	@IBAction func toggleHideMainWindowWhenInactive(sender: AnyObject?) {
-		let settings = GLAApplicationSettingsManager.sharedApplicationSettingsManager()
-		settings.toggleHidesMainWindowWhenInactive(sender)
+	@IBAction func toggleHideMainWindowWhenInactive(_ sender: AnyObject?) {
+		let settings = GLAApplicationSettingsManager.shared()
+		settings?.toggleHidesMainWindowWhenInactive(sender)
 	}
 	
-	@IBAction func createSymlinks(sender: AnyObject?) {
+	@IBAction func createSymlinks(_ sender: AnyObject?) {
 		SymlinkCreator.chooseFolderAndCreateSymlinks { symlinkCreator in
 			symlinkCreator.createLinks()
 			global_symlinkCreator = symlinkCreator

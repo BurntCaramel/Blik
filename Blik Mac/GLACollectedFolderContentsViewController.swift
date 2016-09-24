@@ -11,22 +11,22 @@ import BurntCocoaUI
 
 
 private enum BrowseChoice {
-	case Hierarchy
-	case LoadingAvailableTags
-	case FilesWithTag(tagName: String)
-	case ZeroAvailableTags
+	case hierarchy
+	case loadingAvailableTags
+	case filesWithTag(tagName: String)
+	case zeroAvailableTags
 }
 
 extension BrowseChoice: UIChoiceRepresentative {
 	var title: String {
 		switch self {
-		case .Hierarchy:
+		case .hierarchy:
 			return NSLocalizedString("Content", comment: "Title for hierachy folder contents browsing choice.")
-		case .LoadingAvailableTags:
+		case .loadingAvailableTags:
 			return NSLocalizedString("(Loading Tags)", comment: "Title for hierachy folder contents browsing choice when loading tags.")
-		case let .FilesWithTag(tagName):
+		case let .filesWithTag(tagName):
 			return tagName
-		case .ZeroAvailableTags:
+		case .zeroAvailableTags:
 			return NSLocalizedString("(No Tags)", comment: "Title for hierachy folder contents browsing choice when there are no tags.")
 		}
 	}
@@ -34,59 +34,59 @@ extension BrowseChoice: UIChoiceRepresentative {
 	typealias UniqueIdentifier = String
 	var uniqueIdentifier: UniqueIdentifier {
 		switch self {
-		case .Hierarchy:
+		case .hierarchy:
 			return "hierarchy"
-		case .LoadingAvailableTags:
+		case .loadingAvailableTags:
 			return "loadingAvailableTags"
-		case let .FilesWithTag(tagName):
+		case let .filesWithTag(tagName):
 			return "filesWithTag-\(tagName)"
-		case .ZeroAvailableTags:
+		case .zeroAvailableTags:
 			return "zeroAvailableTags"
 		}
 	}
 }
 
 
-@objc public class GLACollectedFolderContentsViewController: GLAViewController {
+@objc open class GLACollectedFolderContentsViewController: GLAViewController {
 	
-	var resourceKeyToSortBy = NSURLLocalizedNameKey
+	var resourceKeyToSortBy = URLResourceKey.localizedNameKey
 	var sortsAscending = true
 	var hidesInvisibles = true
 	
 	@IBOutlet var folderContentOutlineView: NSOutlineView!
 	
-	public var assistant: GLAFolderContentsAssisting?
+	open var assistant: GLAFolderContentsAssisting?
 	
 	var fileInfoRetriever: GLAFileInfoRetriever!
-	var directoryURLToArrangedChildren = [NSURL: GLAArrangedDirectoryChildren]()
+	var directoryURLToArrangedChildren = [URL: GLAArrangedDirectoryChildren]()
 	//var availableTagNames: Set<String>?
 	
-	private var browseChoice: BrowseChoice = .Hierarchy
+	fileprivate var browseChoice: BrowseChoice = .hierarchy
 	@IBOutlet var browseChoicePopUpButton: NSPopUpButton!
-	private var browseChoicePopUpButtonAssistant: PopUpButtonAssistant<BrowseChoice>!
+	fileprivate var browseChoicePopUpButtonAssistant: PopUpButtonAssistant<BrowseChoice>!
 	
-	var dateFormatter: NSDateFormatter = {
-		let dateFormatter = NSDateFormatter()
-		dateFormatter.dateStyle = .MediumStyle
-		dateFormatter.timeStyle = .ShortStyle
+	var dateFormatter: DateFormatter = {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateStyle = .medium
+		dateFormatter.timeStyle = .short
 		dateFormatter.doesRelativeDateFormatting = true
 		return dateFormatter
 	}()
 	
 	var quickLookPreviewHelper: GLAQuickLookPreviewHelper!
 	
-	private enum MenuChoice: Int, UIChoiceRepresentative {
-		case AddToCollection = 1
-		case RemoveFromCollection
-		case ShowInFinder
+	fileprivate enum MenuChoice: Int, UIChoiceRepresentative {
+		case addToCollection = 1
+		case removeFromCollection
+		case showInFinder
 		
 		var title: String {
 			switch self {
-			case AddToCollection:
+			case .addToCollection:
 				return "Add to Collection"
-			case RemoveFromCollection:
+			case .removeFromCollection:
 				return "Remove from Collection"
-			case ShowInFinder:
+			case .showInFinder:
 				return "Show in Finder…"
 			}
 		}
@@ -94,39 +94,39 @@ extension BrowseChoice: UIChoiceRepresentative {
 		typealias UniqueIdentifier = MenuChoice
 		var uniqueIdentifier: UniqueIdentifier { return self }
 	}
-	private var contextualMenuAssistant: MenuAssistant<MenuChoice>!
+	fileprivate var contextualMenuAssistant: MenuAssistant<MenuChoice>!
 	
 	
-	override public class func defaultNibName() -> String {
+	override open class func defaultNibName() -> String {
 		return "GLACollectedFolderContentsViewController"
 	}
 	
-	override public func prepareView() {
+	override open func prepareView() {
 		insertIntoResponderChain()
 		
 		let defaultResourceKeys = [
-			NSURLIsDirectoryKey,
-			NSURLIsPackageKey,
-			NSURLIsRegularFileKey,
-			NSURLIsSymbolicLinkKey,
-			NSURLLocalizedNameKey,
-			NSURLEffectiveIconKey,
-			NSURLIsHiddenKey,
-			NSURLContentModificationDateKey
+			URLResourceKey.isDirectoryKey,
+			URLResourceKey.isPackageKey,
+			URLResourceKey.isRegularFileKey,
+			URLResourceKey.isSymbolicLinkKey,
+			URLResourceKey.localizedNameKey,
+			URLResourceKey.effectiveIconKey,
+			URLResourceKey.isHiddenKey,
+			URLResourceKey.contentModificationDateKey
 		]
 		fileInfoRetriever = GLAFileInfoRetriever(delegate:self, defaultResourceKeysToRequest:defaultResourceKeys)
 		
-		let style = GLAUIStyle.activeStyle()
+		let style = GLAUIStyle.active()
 		
-		let folderContentOutlineView = self.folderContentOutlineView
+		let folderContentOutlineView = self.folderContentOutlineView!
 		
-		let nameSortDescriptor = NSSortDescriptor(key:NSURLLocalizedNameKey, ascending:true)
-		let dateModifiedSortDescriptor = NSSortDescriptor(key:NSURLContentModificationDateKey, ascending:false)
+		let nameSortDescriptor = NSSortDescriptor(key:URLResourceKey.localizedNameKey.rawValue, ascending:true)
+		let dateModifiedSortDescriptor = NSSortDescriptor(key:URLResourceKey.contentModificationDateKey.rawValue, ascending:false)
 		
-		let displayNameTableColumn = folderContentOutlineView.tableColumnWithIdentifier("displayNameAndIcon")!
+		let displayNameTableColumn = folderContentOutlineView.tableColumn(withIdentifier: "displayNameAndIcon")!
 		displayNameTableColumn.sortDescriptorPrototype = nameSortDescriptor
 		
-		let dateModifiedTableColumn = folderContentOutlineView.tableColumnWithIdentifier("dateModified")!
+		let dateModifiedTableColumn = folderContentOutlineView.tableColumn(withIdentifier: "dateModified")!
 		dateModifiedTableColumn.sortDescriptorPrototype = dateModifiedSortDescriptor
 		
 		style.prepareContentTableColumn(displayNameTableColumn)
@@ -140,8 +140,8 @@ extension BrowseChoice: UIChoiceRepresentative {
 		
 		updateSortingFromOutlineView()
 		
-		folderContentOutlineView.setDataSource(self)
-		folderContentOutlineView.setDelegate(self)
+		folderContentOutlineView.dataSource = self
+		folderContentOutlineView.delegate = self
 		folderContentOutlineView.target = self
 		folderContentOutlineView.doubleAction = #selector(GLACollectedFolderContentsViewController.openSelectedFiles(_:))
 		style.prepareContentTableView(folderContentOutlineView)
@@ -163,7 +163,7 @@ extension BrowseChoice: UIChoiceRepresentative {
 	var directoryWatcher: GLADirectoryWatcher?
 	
 	var collectedFolder: GLACollectedFile!
-	var sourceDirectoryURL: NSURL! {
+	var sourceDirectoryURL: URL! {
 		didSet {
 			// Make sure view has loaded
 			_ = self.view
@@ -192,37 +192,37 @@ extension BrowseChoice: UIChoiceRepresentative {
 		folderContentOutlineView.reloadData()
 	}
 	
-	func updateBrowseChoiceUI(initial: Bool = false) {
+	func updateBrowseChoiceUI(_ initial: Bool = false) {
 		if let sourceDirectoryURL = sourceDirectoryURL {
 			var browseChoices: [BrowseChoice?] = [
-				.Hierarchy,
+				.hierarchy,
 				nil
 			]
 			
-			if let tagNames = fileInfoRetriever.availableTagNamesInsideDirectoryURL(sourceDirectoryURL, requestIfNeeded: true) as? Set<String> {
+			if let tagNames = fileInfoRetriever.availableTagNames(insideDirectoryURL: sourceDirectoryURL, requestIfNeeded: true) as? Set<String> {
 				if tagNames.count > 0 {
 					for tagName in tagNames {
 						browseChoices.append(
-							BrowseChoice.FilesWithTag(tagName: tagName)
+							BrowseChoice.filesWithTag(tagName: tagName)
 						)
 					}
 				}
 				else {
 					browseChoices.append(
-						BrowseChoice.ZeroAvailableTags
+						BrowseChoice.zeroAvailableTags
 					)
 				}
 			}
 			else {
 				browseChoices.append(
-					BrowseChoice.LoadingAvailableTags
+					BrowseChoice.loadingAvailableTags
 				)
 			}
 			
 			if initial {
 				browseChoicePopUpButtonAssistant.menuAssistant.customization.enabled = { choice in
 					switch choice {
-					case .Hierarchy, .FilesWithTag:
+					case .hierarchy, .filesWithTag:
 						return true
 					default:
 						return false
@@ -241,32 +241,32 @@ extension BrowseChoice: UIChoiceRepresentative {
 			let firstSortDescriptor = sortDescriptors[0] 
 			
 			let sortingKey = firstSortDescriptor.key!
-			resourceKeyToSortBy = sortingKey
+			resourceKeyToSortBy = URLResourceKey(rawValue: sortingKey)
 			sortsAscending = firstSortDescriptor.ascending
 			
 			updateAllArrangedChildrenWithSortingOptions()
 		}
 	}
 	
-	func arrangedChildrenForDirectoryURL(directoryURL: NSURL) -> [NSURL]? {
+	func arrangedChildrenForDirectoryURL(_ directoryURL: URL) -> [URL]? {
 		let arrangedChildren = directoryURLToArrangedChildren[directoryURL] ?? {
 			let arrangedChildren = GLAArrangedDirectoryChildren(directoryURL:directoryURL, delegate:self, fileInfoRetriever:self.fileInfoRetriever)
 			self.directoryURLToArrangedChildren[directoryURL] = arrangedChildren
 			
-			self.updateArrangedChildrenWithSortingOptions(arrangedChildren)
+			self.updateArrangedChildrenWithSortingOptions(arrangedChildren!)
 			
-			return arrangedChildren
+			return arrangedChildren!
 		}()
 		
-		return arrangedChildren.arrangedChildren as! [NSURL]?
+		return arrangedChildren.arrangedChildren as! [URL]?
 	}
 	
-	func updateArrangedChildrenWithSortingOptions(arrangedChildren: GLAArrangedDirectoryChildren)
+	func updateArrangedChildrenWithSortingOptions(_ arrangedChildren: GLAArrangedDirectoryChildren)
 	{
-		arrangedChildren.updateAfterEditingOptions { editor in
-			editor.resourceKeyToSortBy = self.resourceKeyToSortBy
-			editor.sortsAscending = self.sortsAscending
-			editor.hidesInvisibles = self.hidesInvisibles
+		arrangedChildren.update { editor in
+			editor?.resourceKeyToSortBy = self.resourceKeyToSortBy.rawValue
+			editor?.sortsAscending = self.sortsAscending
+			editor?.hidesInvisibles = self.hidesInvisibles
 		}
 	}
 	
@@ -276,34 +276,30 @@ extension BrowseChoice: UIChoiceRepresentative {
 		}
 	}
 	
-	public var selectedURLs: [NSURL] {
-		let folderContentOutlineView = self.folderContentOutlineView
-		
-		let selectedRowIndexes = folderContentOutlineView.selectedRowIndexes
-		var selectedURLs = [NSURL]()
-		selectedRowIndexes.enumerateIndexesUsingBlock { rowIndex, stop in
-			let fileURL = folderContentOutlineView.itemAtRow(rowIndex) as! NSURL
-			selectedURLs.append(fileURL)
-		}
-	
-		return selectedURLs
+	open var selectedURLs: [URL] {
+    guard let folderContentOutlineView = self.folderContentOutlineView
+        else { return [] }
+    
+    return folderContentOutlineView.selectedRowIndexes.map({ rowIndex in
+      return folderContentOutlineView.item(atRow: rowIndex) as! URL
+    })
 	}
 	
-	public var hasFirstResponder: Bool {
-		let folderContentOutlineView = self.folderContentOutlineView
+	open var hasFirstResponder: Bool {
+		let folderContentOutlineView = self.folderContentOutlineView!
 		
 		if let firstResponder = folderContentOutlineView.window?.firstResponder as? NSView {
-			return firstResponder.isDescendantOf(folderContentOutlineView)
+			return firstResponder.isDescendant(of: folderContentOutlineView)
 		}
 		
 		return false
 	}
 	
-	@IBAction internal func openSelectedFiles(sender: AnyObject?) {
+	@IBAction internal func openSelectedFiles(_ sender: AnyObject?) {
 		assistant?.openFolderContentsSelectedFiles()
 	}
 	
-	override public func keyDown(theEvent: NSEvent) {
+	override open func keyDown(with theEvent: NSEvent) {
 		if theEvent.burnt_isSpaceKey {
 			quickLookPreviewItems(self)
 		}
@@ -311,7 +307,7 @@ extension BrowseChoice: UIChoiceRepresentative {
 }
 
 extension GLACollectedFolderContentsViewController {
-	var fileURLsForContextualMenu: [NSURL]? {
+	var fileURLsForContextualMenu: [URL]? {
 		let row = folderContentOutlineView.clickedRow
 		if row == -1 {
 			return nil
@@ -320,22 +316,22 @@ extension GLACollectedFolderContentsViewController {
 		if folderContentOutlineView.isRowSelected(row) {
 			return selectedURLs
 		}
-		else if let fileURL = folderContentOutlineView.itemAtRow(row) as? NSURL {
+		else if let fileURL = folderContentOutlineView.item(atRow: row) as? URL {
 			return [fileURL]
 		}
 		
 		return nil
 	}
 	
-	func updateContextualMenu(initial: Bool = false) {
+	func updateContextualMenu(_ initial: Bool = false) {
 		if initial {
 			contextualMenuAssistant.customization.actionAndTarget = { [unowned self] choice in
 				switch choice {
-				case .AddToCollection:
+				case .addToCollection:
 					return (action: #selector(GLACollectedFolderContentsViewController.addSelectedFileToCollection(_:)), target: self)
-				case .RemoveFromCollection:
+				case .removeFromCollection:
 					return (action: #selector(GLACollectedFolderContentsViewController.removeSelectedFileFromCollection(_:)), target: self)
-				case .ShowInFinder:
+				case .showInFinder:
 					return (action: #selector(GLACollectedFolderContentsViewController.showSelectedFileInFinder(_:)), target: self)
 				}
 			}
@@ -343,41 +339,41 @@ extension GLACollectedFolderContentsViewController {
 		
 		var showAdd = true
 		
-		if let assistant = assistant, fileURLsForContextualMenu = fileURLsForContextualMenu {
+		if let assistant = assistant, let fileURLsForContextualMenu = fileURLsForContextualMenu {
 			if assistant.fileURLsAreAllCollected(fileURLsForContextualMenu) {
 				showAdd = false
 			}
 		}
 		
 		contextualMenuAssistant.menuItemRepresentatives = [
-			showAdd ? .AddToCollection : .RemoveFromCollection,
+			showAdd ? .addToCollection : .removeFromCollection,
 			nil,
-			.ShowInFinder
+			.showInFinder
 		]
 		contextualMenuAssistant.update()
 	}
 	
-	@IBAction func addSelectedFileToCollection(sender: AnyObject?) {
+	@IBAction func addSelectedFileToCollection(_ sender: AnyObject?) {
 		if let fileURLsForContextualMenu = fileURLsForContextualMenu {
-			assistant?.addFileURLsToCollection(fileURLsForContextualMenu)
+			assistant?.addFileURLs(toCollection: fileURLsForContextualMenu)
 		}
 	}
 	
-	@IBAction func removeSelectedFileFromCollection(sender: AnyObject?) {
+	@IBAction func removeSelectedFileFromCollection(_ sender: AnyObject?) {
 		if let fileURLsForContextualMenu = fileURLsForContextualMenu {
-			assistant?.removeFileURLsFromCollection(fileURLsForContextualMenu)
+			assistant?.removeFileURLs(fromCollection: fileURLsForContextualMenu)
 		}
 	}
 	
-	@IBAction func showSelectedFileInFinder(sender: AnyObject?) {
+	@IBAction func showSelectedFileInFinder(_ sender: AnyObject?) {
 		if let fileURLsForContextualMenu = fileURLsForContextualMenu {
-			NSWorkspace.sharedWorkspace().activateFileViewerSelectingURLs(fileURLsForContextualMenu)
+			NSWorkspace.shared().activateFileViewerSelecting(fileURLsForContextualMenu)
 		}
 	}
 }
 
 extension GLACollectedFolderContentsViewController: GLAArrangedDirectoryChildrenDelegate {
-	public func arrangedDirectoryChildrenDidUpdateChildren(arrangedDirectoryChildren: GLAArrangedDirectoryChildren) {
+	public func arrangedDirectoryChildrenDidUpdate(_ arrangedDirectoryChildren: GLAArrangedDirectoryChildren) {
 		let directoryURL = arrangedDirectoryChildren.directoryURL
 		
 		if directoryURL == sourceDirectoryURL {
@@ -390,11 +386,11 @@ extension GLACollectedFolderContentsViewController: GLAArrangedDirectoryChildren
 }
 
 extension GLACollectedFolderContentsViewController: GLAFileInfoRetrieverDelegate {
-	public func fileInfoRetriever(fileInfoRetriever: GLAFileInfoRetriever, didRetrieveAvailableTagNamesInsideDirectoryURL directoryURL: NSURL) {
+	public func fileInfoRetriever(_ fileInfoRetriever: GLAFileInfoRetriever, didRetrieveAvailableTagNamesInsideDirectoryURL directoryURL: URL) {
 		updateBrowseChoiceUI()
 	}
 	
-	public func fileInfoRetriever(fileInfoRetriever: GLAFileInfoRetriever, didFailWithError error: NSError, retrievingContentsOfDirectoryURL directoryURL: NSURL) {
+	@nonobjc public func fileInfoRetriever(_ fileInfoRetriever: GLAFileInfoRetriever, didFailWithError error: NSError, retrievingContentsOfDirectoryURL directoryURL: URL) {
 		if directoryURL == sourceDirectoryURL {
 			folderContentOutlineView.reloadData()
 		}
@@ -405,14 +401,14 @@ extension GLACollectedFolderContentsViewController: GLAFileInfoRetrieverDelegate
 }
 
 extension GLACollectedFolderContentsViewController: GLADirectoryWatcherDelegate {
-	public func directoryWatcher(directoryWatcher: GLADirectoryWatcher!, directoriesURLsDidChange directoryURLs: [AnyObject]!) {
+	public func directoryWatcher(_ directoryWatcher: GLADirectoryWatcher!, directoriesURLsDidChange directoryURLs: [Any]!) {
 		reloadContentsOfFolder()
 	}
 }
 
 extension GLACollectedFolderContentsViewController: NSOutlineViewDataSource, NSOutlineViewDelegate {
-	public func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
-		let directoryURL: NSURL
+	public func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
+		let directoryURL: URL
 		if item == nil {
 			if let sourceDirectoryURL = sourceDirectoryURL {
 				directoryURL = sourceDirectoryURL
@@ -422,14 +418,14 @@ extension GLACollectedFolderContentsViewController: NSOutlineViewDataSource, NSO
 			}
 		}
 		else {
-			directoryURL = item as! NSURL
+			directoryURL = item as! URL
 		}
 		
 		if let childURLs = arrangedChildrenForDirectoryURL(directoryURL) {
 			return childURLs.count
 		}
 		else {
-			if let errorLoadingChildURLs = fileInfoRetriever.errorRetrievingChildURLsOfDirectoryWithURL(directoryURL) {
+			if let errorLoadingChildURLs = fileInfoRetriever.errorRetrievingChildURLsOfDirectory(with: directoryURL) {
 				// TODO: present error some way.
 			}
 			
@@ -437,14 +433,14 @@ extension GLACollectedFolderContentsViewController: NSOutlineViewDataSource, NSO
 		}
 	}
 	
-	public func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
+	public func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
 		let fileInfoRetriever = self.fileInfoRetriever
 		
-		let fileURL = item as! NSURL
+		let fileURL = item as! URL
 		
 		if let
-			isRegularFileValue = fileInfoRetriever.resourceValueForKey(NSURLIsRegularFileKey, forURL:fileURL) as? NSNumber,
-			isPackageValue = fileInfoRetriever.resourceValueForKey(NSURLIsPackageKey, forURL:fileURL) as? NSNumber
+			isRegularFileValue = fileInfoRetriever?.resourceValue(forKey: URLResourceKey.isRegularFileKey.rawValue, for:fileURL) as? NSNumber,
+			let isPackageValue = fileInfoRetriever?.resourceValue(forKey: URLResourceKey.isPackageKey.rawValue, for:fileURL) as? NSNumber
 		{
 			let isRegularFile = isRegularFileValue.boolValue
 			let isPackage = isPackageValue.boolValue
@@ -455,34 +451,34 @@ extension GLACollectedFolderContentsViewController: NSOutlineViewDataSource, NSO
 		return false
 	}
 	
-	public func outlineView(outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject {
-		let directoryURL: NSURL
+	public func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
+		let directoryURL: URL
 		if item == nil {
 			directoryURL = sourceDirectoryURL
 		}
 		else {
-			directoryURL = item as! NSURL
+			directoryURL = item as! URL
 		}
 		
 		let childURLs = arrangedChildrenForDirectoryURL(directoryURL)
 		return childURLs![index]
 	}
 	
-	public func outlineView(outlineView: NSOutlineView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
+	public func outlineView(_ outlineView: NSOutlineView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
 		updateSortingFromOutlineView()
 	}
 	
-	public func outlineView(outlineView: NSOutlineView, pasteboardWriterForItem item: AnyObject) -> NSPasteboardWriting? {
-		return item as? NSURL
+	public func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> NSPasteboardWriting? {
+		return item as? URL as NSPasteboardWriting?
 	}
 	
 	// MARK: Delegate
 	
-	public func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
+	public func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
 		if let identifier = tableColumn?.identifier {
-			let cellView = outlineView.makeViewWithIdentifier(identifier, owner: nil) as! NSTableCellView
+			let cellView = outlineView.make(withIdentifier: identifier, owner: nil) as! NSTableCellView
 			
-			let fileURL = item as! NSURL
+			let fileURL = item as! URL
 			let fileInfoRetriever = self.fileInfoRetriever
 			
 			var text: String?
@@ -491,13 +487,13 @@ extension GLACollectedFolderContentsViewController: NSOutlineViewDataSource, NSO
 			
 			switch identifier {
 			case "displayNameAndIcon":
-				text = fileInfoRetriever.resourceValueForKey(NSURLLocalizedNameKey, forURL: fileURL) as? String
+				text = fileInfoRetriever?.resourceValue(forKey: URLResourceKey.localizedNameKey.rawValue, for: fileURL) as? String
 				if hasImageView {
-					image = fileInfoRetriever.resourceValueForKey(NSURLEffectiveIconKey, forURL: fileURL) as? NSImage
+					image = fileInfoRetriever?.resourceValue(forKey: URLResourceKey.effectiveIconKey.rawValue, for: fileURL) as? NSImage
 				}
 			case "dateModified":
-				if let dateModified = fileInfoRetriever.resourceValueForKey(NSURLContentModificationDateKey, forURL: fileURL) as? NSDate {
-					text = dateFormatter.stringFromDate(dateModified)
+				if let dateModified = fileInfoRetriever?.resourceValue(forKey: URLResourceKey.contentModificationDateKey.rawValue, for: fileURL) as? Date {
+					text = dateFormatter.string(from: dateModified)
 				}
 			default:
 				break
@@ -514,7 +510,7 @@ extension GLACollectedFolderContentsViewController: NSOutlineViewDataSource, NSO
 		return nil
 	}
 	
-	public func outlineViewSelectionDidChange(notification: NSNotification) {
+	public func outlineViewSelectionDidChange(_ notification: Notification) {
 		assistant?.folderContentsSelectionDidChange()
 		
 		quickLookPreviewHelper.updatePreviewAnimating(true)
@@ -522,33 +518,33 @@ extension GLACollectedFolderContentsViewController: NSOutlineViewDataSource, NSO
 }
 
 extension GLACollectedFolderContentsViewController: GLAQuickLookPreviewHelperDelegate {
-	public func selectedURLsForQuickLookPreviewHelper(helper: GLAQuickLookPreviewHelper) -> [AnyObject] {
-		return selectedURLs
+	public func selectedURLs(for helper: GLAQuickLookPreviewHelper) -> [Any] {
+		return selectedURLs as [AnyObject]
 	}
 	
-	public func quickLookPreviewHelper(helper: GLAQuickLookPreviewHelper, tableRowForSelectedURL fileURL: NSURL) -> Int {
-		return folderContentOutlineView.rowForItem(fileURL)
+	public func quickLookPreviewHelper(_ helper: GLAQuickLookPreviewHelper, tableRowForSelectedURL fileURL: URL) -> Int {
+		return folderContentOutlineView.row(forItem: fileURL)
 	}
 	
-	override public func acceptsPreviewPanelControl(panel: QLPreviewPanel!) -> Bool {
+	override open func acceptsPreviewPanelControl(_ panel: QLPreviewPanel!) -> Bool {
 		return true
 	}
 	
-	override public func beginPreviewPanelControl(panel: QLPreviewPanel!) {
+	override open func beginPreviewPanelControl(_ panel: QLPreviewPanel!) {
 		quickLookPreviewHelper.beginPreviewPanelControl(panel)
 	}
 	
-	override public func endPreviewPanelControl(panel: QLPreviewPanel!) {
+	override open func endPreviewPanelControl(_ panel: QLPreviewPanel!) {
 		quickLookPreviewHelper.endPreviewPanelControl(panel)
 	}
 	
-	override public func quickLookPreviewItems(sender: AnyObject?) {
+	override open func quickLookPreviewItems(_ sender: Any?) {
 		quickLookPreviewHelper.quickLookPreviewItems(sender)
 	}
 }
 
 extension GLACollectedFolderContentsViewController: NSMenuDelegate {
-	public func menuNeedsUpdate(menu: NSMenu) {
+	public func menuNeedsUpdate(_ menu: NSMenu) {
 		updateContextualMenu()
 	}
 }

@@ -13,12 +13,12 @@ import BurntFoundation
 
 class UserDefaultsTests: XCTestCase {
 	enum ExampleIntChoice: Int, UserDefaultsChoiceRepresentable {
-		case One = 1
-		case Two = 2
-		case Three = 3
+		case one = 1
+		case two = 2
+		case three = 3
 		
 		static var identifier: String = "exampleInt"
-		static var defaultValue = ExampleIntChoice.One
+		static var defaultValue = ExampleIntChoice.one
 	}
 	
 	enum ExampleStringChoice: String, UserDefaultsChoiceRepresentable {
@@ -41,23 +41,23 @@ class UserDefaultsTests: XCTestCase {
     }
     
     func testIntChoice() {
-		let ud = NSUserDefaults()
+		let ud = UserDefaults()
 		
-		ud.setInteger(3, forKey: ExampleIntChoice.identifier)
-		XCTAssertEqual(ud.choice(ExampleIntChoice), ExampleIntChoice.Three, "Set integer, get choice")
+		ud.set(3, forKey: ExampleIntChoice.identifier)
+		XCTAssertEqual(ud.choice(ExampleIntChoice.self), ExampleIntChoice.three, "Set integer, get choice")
 		
-		ud.setChoice(ExampleIntChoice.Two)
-		XCTAssertEqual(ud.integerForKey(ExampleIntChoice.identifier), 2, "Set choice, get integer")
+		ud.setChoice(ExampleIntChoice.two)
+		XCTAssertEqual(ud.integer(forKey: ExampleIntChoice.identifier), 2, "Set choice, get integer")
     }
 	
 	func testStringChoice() {
-		let ud = NSUserDefaults()
+		let ud = UserDefaults()
 		
-		ud.setObject("banana", forKey: ExampleStringChoice.identifier)
-		XCTAssertEqual(ud.choice(ExampleStringChoice), ExampleStringChoice.Banana, "Set string, get choice")
+		ud.set("banana", forKey: ExampleStringChoice.identifier)
+		XCTAssertEqual(ud.choice(ExampleStringChoice.self), ExampleStringChoice.Banana, "Set string, get choice")
 		
 		ud.setChoice(ExampleStringChoice.Carrot)
-		XCTAssertEqual(ud.stringForKey(ExampleStringChoice.identifier)!, "carrot", "Set choice, get string")
+		XCTAssertEqual(ud.string(forKey: ExampleStringChoice.identifier)!, "carrot", "Set choice, get string")
 	}
 	
 }

@@ -39,22 +39,22 @@ private enum Link {
 		}
 	}
 	
-	var URL: NSURL {
+	var url: Foundation.URL {
 		switch self {
 		case .siriThePlatform:
-			return NSURL(string: "https://medium.com/@concreteniche/siri-the-new-platform-deec9cc4d5db")!
+			return Foundation.URL(string: "https://medium.com/@concreteniche/siri-the-new-platform-deec9cc4d5db")!
 		case .appleCaredAggressively:
-			return NSURL(string: "https://medium.com/@concreteniche/apple-cared-aggressively-65cec1c906e0")!
+			return Foundation.URL(string: "https://medium.com/@concreteniche/apple-cared-aggressively-65cec1c906e0")!
 		case .thingsSomeSteveJobsGuyOnceSaid:
-			return NSURL(string: "https://medium.com/@concreteniche/things-some-steve-jobs-guy-once-said-a7ec8810047e")!
+			return Foundation.URL(string: "https://medium.com/@concreteniche/things-some-steve-jobs-guy-once-said-a7ec8810047e")!
 		case .perfectionIsADirection:
-			return NSURL(string: "https://medium.com/@concreteniche/perfection-is-a-direction-not-a-destination-9237caade2a5")!
+			return Foundation.URL(string: "https://medium.com/@concreteniche/perfection-is-a-direction-not-a-destination-9237caade2a5")!
 		case .alasOnlyApple:
-			return NSURL(string: "https://medium.com/@concreteniche/alas-only-apple-20e0bc8b1c8f")!
+			return Foundation.URL(string: "https://medium.com/@concreteniche/alas-only-apple-20e0bc8b1c8f")!
 		case .theHeartOfUserInterfaces:
-			return NSURL(string: "https://medium.com/@concreteniche/the-heart-of-user-interfaces-78d9411e0af5")!
+			return Foundation.URL(string: "https://medium.com/@concreteniche/the-heart-of-user-interfaces-78d9411e0af5")!
 		case .theDailyExpectation:
-			return NSURL(string: "https://medium.com/@concreteniche/the-daily-expectation-bcf7107c0875")!
+			return Foundation.URL(string: "https://medium.com/@concreteniche/the-daily-expectation-bcf7107c0875")!
 			
 		}
 	}
@@ -73,15 +73,15 @@ private enum Link {
 }
 
 extension Link: UIChoiceRepresentative {
-	typealias UniqueIdentifier = NSURL
+	typealias UniqueIdentifier = Foundation.URL
 	var uniqueIdentifier: UniqueIdentifier {
-		return URL
+		return url
 	}
 }
 
 
 class CreatorThoughtsAssistant : NSObject {
-	private let menuAssistant: MenuAssistant<Link>
+	fileprivate let menuAssistant: MenuAssistant<Link>
 	
 	init(menu: NSMenu) {
 		menuAssistant = MenuAssistant<Link>(menu: menu)
@@ -99,9 +99,9 @@ class CreatorThoughtsAssistant : NSObject {
 		menuAssistant.update()
 	}
 	
-	@IBAction func openLink(menuItem: NSMenuItem) {
-		if let link = menuAssistant.itemRepresentativeForMenuItem(menuItem) {
-			NSWorkspace.sharedWorkspace().openURL(link.URL)
+	@IBAction func openLink(_ menuItem: NSMenuItem) {
+    if let link = menuAssistant.itemRepresentative(for: menuItem) {
+			NSWorkspace.shared().open(link.url)
 		}
 	}
 }

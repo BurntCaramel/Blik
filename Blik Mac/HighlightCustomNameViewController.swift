@@ -24,7 +24,7 @@ class HighlightCustomNameViewController: GLAViewController {
 	}
 	
 	override func prepareView() {
-		let style = GLAUIStyle.activeStyle();
+		let style = GLAUIStyle.active();
 		
 		style.prepareTextLabel(customNameLabel)
 		style.prepareOutlinedTextField(customNameField)
@@ -34,8 +34,8 @@ class HighlightCustomNameViewController: GLAViewController {
 		return customNameField.stringValue
 	}
 	
-	@IBAction private func customNameChanged(sender: AnyObject) {
-		let nc = NSNotificationCenter.defaultCenter()
+	@IBAction fileprivate func customNameChanged(_ sender: AnyObject) {
+		let nc = NotificationCenter.default
 		nc.postNotification(Notification.CustomNameDidChange, object: self)
 	}
 }
@@ -48,7 +48,7 @@ class HighlightCustomNamePopover: NSPopover {
 		
 		popover.highlightCustomNameViewController = viewController
 		popover.appearance = NSAppearance(named:NSAppearanceNameVibrantDark)
-		popover.behavior = .Semitransient
+		popover.behavior = .semitransient
 		
 		return popover
 	}
@@ -66,10 +66,10 @@ class HighlightCustomNamePopover: NSPopover {
 		}
 	}
 	
-	private var viewControllerNotificationObserver: NotificationObserver<Notification>!
-	private func setUpViewControllerNotificationObserver() {
+	fileprivate var viewControllerNotificationObserver: NotificationObserver<Notification>!
+	fileprivate func setUpViewControllerNotificationObserver() {
 		let no = NotificationObserver<Notification>(object: highlightCustomNameViewController!)
-		let nc = NSNotificationCenter.defaultCenter()
+		let nc = NotificationCenter.default
 		// Forward notifications from view controller
 		no.observeAll { notificationIdentifier, _ in
 			nc.postNotification(notificationIdentifier, object: self)
@@ -78,7 +78,7 @@ class HighlightCustomNamePopover: NSPopover {
 		viewControllerNotificationObserver = no
 	}
 	
-	func setUpWithHighlightedItem(item: GLAHighlightedItem) {
+	func setUpWithHighlightedItem(_ item: GLAHighlightedItem) {
 		let viewController = highlightCustomNameViewController!
 		_ = viewController.view // Yippee!
 		

@@ -9,45 +9,45 @@
 import Foundation
 
 
-public class GLATableCellView : NSTableCellView
+open class GLATableCellView : NSTableCellView
 {
-	public override func acceptsFirstMouse(theEvent: NSEvent?) -> Bool {
+	open override func acceptsFirstMouse(for theEvent: NSEvent?) -> Bool {
 		return true
 	}
 
-	public override func mouseDown(theEvent: NSEvent) {
+	open override func mouseDown(with theEvent: NSEvent) {
 		if enclosingMenuItem != nil {
 			// Do not pass up to table view as normal, as we want to do the tracking
 		}
 		else {
-			self.nextResponder?.mouseDown(theEvent)
+			self.nextResponder?.mouseDown(with: theEvent)
 		}
 	}
 		
-	public override func mouseUp(theEvent: NSEvent) {
+	open override func mouseUp(with theEvent: NSEvent) {
 		if enclosingMenuItem != nil {
 			guard let nextResponder = self.nextResponder else {
 				return
 			}
 			
-			if nextResponder.tryToPerform(#selector(NSControl.performClick(_:)), with: self) {
+			if nextResponder.try(toPerform: #selector(NSControl.performClick(_:)), with: self) {
 				return
 			}
 			
 			guard let
 				scrollView = nextResponderChain.flatMap({ $0 as? NSScrollView }).first,
-				tableView = scrollView.documentView as? NSTableView
+				let tableView = scrollView.documentView as? NSTableView
 				else { return }
 			
-			tableView.tryToPerform(#selector(NSControl.performClick(_:)), with: self)
+			tableView.try(toPerform: #selector(NSControl.performClick(_:)), with: self)
 		}
 		else {
-			self.nextResponder?.mouseUp(theEvent)
+			self.nextResponder?.mouseUp(with: theEvent)
 		}
 	}
 }
 
 
-public class GLAHighlightsTableCellView : GLATableCellView {
+open class GLAHighlightsTableCellView : GLATableCellView {
 	@IBOutlet var collectionIndicationButton: GLACollectionIndicationButton!
 }

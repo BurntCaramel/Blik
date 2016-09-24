@@ -9,37 +9,34 @@
 import Cocoa
 
 
-let workDispatchQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
-
-
-public class SymlinkCreator {
-	let holdingDirectoryURL: NSURL
+open class SymlinkCreator {
+	let holdingDirectoryURL: URL
 	let projectManager: GLAProjectManager
-	private var modelUsers = [GLALoadableArrayUsing]()
+	fileprivate var modelUsers = [GLALoadableArrayUsing]()
 	
-	private let fileManager: NSFileManager
-	private let fileOperationQueue: dispatch_queue_t
+	fileprivate let fileManager: FileManager
+	fileprivate let fileOperationQueue: DispatchQueue
 	
-	init(holdingDirectoryURL: NSURL, projectManager: GLAProjectManager = GLAProjectManager.sharedProjectManager()) {
+	init(holdingDirectoryURL: URL, projectManager: GLAProjectManager = GLAProjectManager.shared()) {
 		self.holdingDirectoryURL = holdingDirectoryURL
 		self.projectManager = projectManager
-		self.fileManager = NSFileManager()
-		self.fileOperationQueue = dispatch_queue_create("SymlinkCreator.fileOperationQueue", DISPATCH_QUEUE_SERIAL)
+		self.fileManager = FileManager()
+		self.fileOperationQueue = DispatchQueue(label: "SymlinkCreator.fileOperationQueue", attributes: [])
 	}
 	
-	public func createLinks() {
+	open func createLinks() {
 		self.createLinksForAllProjectsInDirectoryURL(self.holdingDirectoryURL)
 	}
 	
-	private func useFileManagerInBackground(closure: (fileManager: NSFileManager) -> Void) {
+	fileprivate func useFileManagerInBackground(_ closure: @escaping (_ fileManager: FileManager) -> Void) {
 		let fileManager = self.fileManager
-		dispatch_async(fileOperationQueue) {
-			closure(fileManager: fileManager)
+		fileOperationQueue.async {
+			closure(fileManager)
 		}
 	}
 	
-	private var allProjectsUser: GLALoadableArrayUsing?
-	private func useAllProjects() -> GLALoadableArrayUsing {
+	fileprivate var allProjectsUser: GLALoadableArrayUsing?
+	fileprivate func useAllProjects() -> GLALoadableArrayUsing {
 		if let allProjectsUser = (self.allProjectsUser) {
 			return allProjectsUser
 		}
@@ -57,14 +54,14 @@ public class SymlinkCreator {
 		}
 	}
 	
-	private func removeContentsOfDirectoryWithURL(directoryURL: NSURL) {
+	fileprivate func removeContentsOfDirectoryWithURL(_ directoryURL: URL) {
 		let holdingDirectoryURL = self.holdingDirectoryURL
 		useFileManagerInBackground { fileManager in
 			do {
-				let existingURLs = try fileManager.contentsOfDirectoryAtURL(holdingDirectoryURL, includingPropertiesForKeys: nil, options: .SkipsSubdirectoryDescendants)
+				let existingURLs = try fileManager.contentsOfDirectory(at: holdingDirectoryURL, includingPropertiesForKeys: nil, options: .skipsSubdirectoryDescendants)
 				for existingURL in existingURLs {
 					do {
-						try fileManager.removeItemAtURL(existingURL)
+						try fileManager.removeItem(at: existingURL)
 					}
 				}
 			}
@@ -74,15 +71,15 @@ public class SymlinkCreator {
 		}
 	}
 	
-	private func projectsDidChange() {
+	fileprivate func projectsDidChange() {
 		removeContentsOfDirectoryWithURL(holdingDirectoryURL)
 		createLinksForAllProjectsInDirectoryURL(holdingDirectoryURL)
 	}
 	
-	private func createDirectoryAtURL(directoryURL: NSURL) {
+	fileprivate func createDirectoryAtURL(_ directoryURL: URL) {
 		useFileManagerInBackground { fileManager in
 			do {
-				try fileManager.createDirectoryAtURL(directoryURL, withIntermediateDirectories: true, attributes: nil)
+				try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true, attributes: nil)
 			}
 			catch {
 				NSLog("%@", error as NSError)
@@ -90,16 +87,16 @@ public class SymlinkCreator {
 		}
 	}
 	
-	private func createLinksForAllProjectsInDirectoryURL(holdingDirectoryURL: NSURL) {
+	fileprivate func createLinksForAllProjectsInDirectoryURL(_ holdingDirectoryURL: URL) {
 		let projectsUser = useAllProjects()
 		
 		projectsUser.whenLoaded { projectsInspector in
 			let projects = projectsInspector.copyChildren() as! [GLAProject]
 			for project in projects {
-				let projectDirectoryURL = holdingDirectoryURL.URLByAppendingPathComponent(project.name)
+				let projectDirectoryURL = holdingDirectoryURL.appendingPathComponent(project.name)
 				self.createDirectoryAtURL(projectDirectoryURL)
 				
-				self.createLinksForProjectWithUUID(project.UUID, inDirectoryURL: projectDirectoryURL)
+				self.createLinksForProjectWithUUID(project.uuid, inDirectoryURL: projectDirectoryURL)
 			}
 			
 			#if DEBUG
@@ -110,18 +107,18 @@ public class SymlinkCreator {
 		}
 	}
 	
-	private func createLinksForProjectWithUUID(projectUUID: NSUUID, inDirectoryURL holdingDirectoryURL: NSURL) {
+	fileprivate func createLinksForProjectWithUUID(_ projectUUID: UUID, inDirectoryURL holdingDirectoryURL: URL) {
 		let pm = projectManager
-		let project = pm.projectWithUUID(projectUUID)!
+		let project = pm.project(with: projectUUID)!
 		
-		let collectionsUser = pm.useCollectionsForProject(project)
+		let collectionsUser = pm.useCollections(for: project)
 		modelUsers.append(collectionsUser)
 		
 		collectionsUser.whenLoaded { collectionsInspector in
 			let collections = collectionsInspector.copyChildren() as! [GLACollection]
 			
 			for collection in collections {
-				let collectionDirectoryURL = holdingDirectoryURL.URLByAppendingPathComponent(collection.name)
+				let collectionDirectoryURL = holdingDirectoryURL.appendingPathComponent(collection.name)
 				self.createDirectoryAtURL(collectionDirectoryURL)
 				
 				self.createLinksForFilesListCollection(collection, inDirectoryURL: collectionDirectoryURL)
@@ -129,11 +126,11 @@ public class SymlinkCreator {
 		}
 	}
 	
-	private func createLinksForFilesListCollection(collection: GLACollection, inDirectoryURL holdingDirectoryURL: NSURL) {
+	fileprivate func createLinksForFilesListCollection(_ collection: GLACollection, inDirectoryURL holdingDirectoryURL: URL) {
 		
 		let pm = projectManager
 		
-		let filesListUser = pm.useFilesListForCollection(collection)
+		let filesListUser = pm.useFilesList(for: collection)
 		modelUsers.append(filesListUser)
 		
 		filesListUser.whenLoaded { filesListInspector in
@@ -142,16 +139,14 @@ public class SymlinkCreator {
 			self.useFileManagerInBackground { fileManager in
 				for collectedFile in filesList {
 					let accessedFile = collectedFile.accessFile()
-					if let
-						filePathURL = accessedFile.filePathURL,
-						fileName = filePathURL.lastPathComponent
-					{
-						let linkURL = holdingDirectoryURL.URLByAppendingPathComponent(fileName)
+					if let filePathURL = accessedFile?.filePathURL {
+            let fileName = filePathURL.lastPathComponent
+						let linkURL = holdingDirectoryURL.appendingPathComponent(fileName)
 						do {
-							try fileManager.createSymbolicLinkAtURL(linkURL, withDestinationURL: filePathURL)
+              try fileManager.createSymbolicLink(at: linkURL, withDestinationURL: filePathURL)
 						}
 						catch {
-							NSOperationQueue.mainQueue().addOperationWithBlock {
+							OperationQueue.main.addOperation {
 								NSApp.presentError(error as NSError)
 							}
 						}
@@ -163,17 +158,17 @@ public class SymlinkCreator {
 }
 
 extension SymlinkCreator {
-	public class func chooseFolderAndCreateSymlinks(completion: (SymlinkCreator) -> Void) {
+	public class func chooseFolderAndCreateSymlinks(_ completion: @escaping (SymlinkCreator) -> Void) {
 		let openPanel = NSOpenPanel()
 		openPanel.canChooseDirectories = true
 		openPanel.canChooseFiles = false
 		openPanel.canCreateDirectories = true
 		openPanel.allowsMultipleSelection = false
-		openPanel.level = Int(CGWindowLevelForKey(CGWindowLevelKey.FloatingWindowLevelKey))
+		openPanel.level = Int(CGWindowLevelForKey(CGWindowLevelKey.floatingWindow))
 		
-		openPanel.beginWithCompletionHandler { result in
+		openPanel.begin { result in
 			if result == NSFileHandlingPanelOKButton {
-				let fileURL = openPanel.URLs[0]
+				let fileURL = openPanel.urls[0]
 				let symlinkCreator = SymlinkCreator(holdingDirectoryURL: fileURL)
 				completion(symlinkCreator)
 			}

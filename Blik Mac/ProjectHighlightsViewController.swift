@@ -12,8 +12,8 @@ import BurntFoundation
 
 private let collectionGroupHeight: CGFloat = 18.0
 
-private func attributedStringForName(name: String, textAlignment: NSTextAlignment = NSRightTextAlignment) -> NSAttributedString {
-	let activeStyle = GLAUIStyle.activeStyle()
+private func attributedStringForName(_ name: String, textAlignment: NSTextAlignment = NSRightTextAlignment) -> NSAttributedString {
+	let activeStyle = GLAUIStyle.active()
 	
 	let titleFont = activeStyle.highlightItemFont
 	
@@ -27,13 +27,13 @@ private func attributedStringForName(name: String, textAlignment: NSTextAlignmen
 		NSFontAttributeName: titleFont,
 		NSParagraphStyleAttributeName: paragraphStyle,
 		NSForegroundColorAttributeName: textColor
-	];
+	] as [String : Any]
 	
 	return NSAttributedString(string: name, attributes: titleAttributes)
 }
 
-private func attributedStringForMasterFoldersHeading(textAlignment textAlignment: NSTextAlignment = NSRightTextAlignment) -> NSAttributedString {
-	let activeStyle = GLAUIStyle.activeStyle()
+private func attributedStringForMasterFoldersHeading(textAlignment: NSTextAlignment = NSRightTextAlignment) -> NSAttributedString {
+	let activeStyle = GLAUIStyle.active()
 	
 	let titleFont = activeStyle.highlightGroupFont
 	
@@ -47,15 +47,15 @@ private func attributedStringForMasterFoldersHeading(textAlignment textAlignment
 		NSFontAttributeName: titleFont,
 		NSParagraphStyleAttributeName: paragraphStyle,
 		NSForegroundColorAttributeName: textColor
-	];
+	] as [String : Any];
 	
 	let displayName = NSLocalizedString("Master Folders", comment: "Display name for Master Folders heading")
 	
-	return NSAttributedString(string: displayName.uppercaseString, attributes: titleAttributes)
+	return NSAttributedString(string: displayName.uppercased(), attributes: titleAttributes)
 }
 
-private func attributedStringForCollectionGroup(collection: GLACollection, textAlignment: NSTextAlignment = NSRightTextAlignment) -> NSAttributedString {
-	let activeStyle = GLAUIStyle.activeStyle()
+private func attributedStringForCollectionGroup(_ collection: GLACollection, textAlignment: NSTextAlignment = NSRightTextAlignment) -> NSAttributedString {
+	let activeStyle = GLAUIStyle.active()
 	
 	let titleFont = activeStyle.highlightGroupFont
 	
@@ -63,24 +63,24 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 	paragraphStyle.alignment = textAlignment
 	paragraphStyle.maximumLineHeight = collectionGroupHeight
 	
-	let textColor = activeStyle.colorForCollectionColor(collection.color)
+	let textColor = activeStyle.color(for: collection.color)
 	
 	let titleAttributes = [
 		NSFontAttributeName: titleFont,
 		NSParagraphStyleAttributeName: paragraphStyle,
 		NSForegroundColorAttributeName: textColor
-	];
+	] as [String : Any];
 	
-	return NSAttributedString(string: collection.name.uppercaseString, attributes: titleAttributes)
+	return NSAttributedString(string: collection.name.uppercased(), attributes: titleAttributes)
 }
 
 
-@objc(GLAProjectHighlightsViewController) public class ProjectHighlightsViewController: GLAViewController {
-	@IBOutlet public var tableView: NSTableView!
+@objc(GLAProjectHighlightsViewController) open class ProjectHighlightsViewController: GLAViewController {
+	@IBOutlet open var tableView: NSTableView!
 	//@IBOutlet public var scrollLeadingConstraint: NSLayoutConstraint!
 	
-	@IBOutlet public var openAllHighlightsButton: GLAButton?
-	@IBOutlet public var instructionsViewController: GLAInstructionsViewController?
+	@IBOutlet open var openAllHighlightsButton: GLAButton?
+	@IBOutlet open var instructionsViewController: GLAInstructionsViewController?
 	
 	var contextualMenu = NSMenu()
 	
@@ -107,7 +107,7 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 			if let project = project {
 				self.assistant = nil
 				
-				let assistant = ProjectHighlightsAssistant(project: project, projectManager: GLAProjectManager.sharedProjectManager(), navigator: GLAMainSectionNavigator.sharedMainSectionNavigator())
+				let assistant = ProjectHighlightsAssistant(project: project, projectManager: GLAProjectManager.shared(), navigator: GLAMainSectionNavigator.shared())
 				assistant.reloadItems()
 				assistant.changesNotifier = { [weak self] in
 					self?.reloadViews()
@@ -123,7 +123,7 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 	}
 	
 	var projectManager: GLAProjectManager {
-		return GLAProjectManager.sharedProjectManager()
+		return GLAProjectManager.shared()
 	}
 	
 	var doNotUpdateViews: Bool = false
@@ -132,10 +132,10 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 		return tableView.enclosingScrollView!
 	}
 	
-	override public func prepareView() {
+	override open func prepareView() {
 		super.prepareView()
 		
-		let uiStyle = GLAUIStyle.activeStyle()
+		let uiStyle = GLAUIStyle.active()
 		
 		uiStyle.prepareContentTableView(tableView)
 		
@@ -144,20 +144,20 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 		self.contextualMenu = contextualMenu
 		tableView.menu = contextualMenu*/
 		
-		tableView.registerForDraggedTypes([GLAHighlightedCollectedFile.objectJSONPasteboardType()])
+		tableView.register(forDraggedTypes: [GLAHighlightedCollectedFile.objectJSONPasteboardType()])
 		
-		measuringHighlightTableCellView = tableView.makeViewWithIdentifier("highlightedItem", owner: nil) as! GLAHighlightsTableCellView
+		measuringHighlightTableCellView = tableView.make(withIdentifier: "highlightedItem", owner: nil) as! GLAHighlightsTableCellView
 		
 		prepareScrollView()
 		
-		tableView.setDataSource(self)
-		tableView.setDelegate(self)
+		tableView.dataSource = self
+		tableView.delegate = self
 		
 		tableView.target = self
 		tableView.action = #selector(ProjectHighlightsViewController.openClickedItem(_:))
 		
 		let collectedFileMenuCreator = GLACollectedFileMenuCreator()
-		collectedFileMenuCreator.context = .InHighlights
+		collectedFileMenuCreator.context = .inHighlights
 		collectedFileMenuCreator.target = self
 		collectedFileMenuCreator.openInApplicationAction = #selector(ProjectHighlightsViewController.openWithChosenApplication(_:))
 		collectedFileMenuCreator.changePreferredOpenerApplicationAction = #selector(ProjectHighlightsViewController.changePreferredOpenerApplication(_:))
@@ -165,9 +165,9 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 		collectedFileMenuCreator.changeCustomNameHighlightsAction = #selector(ProjectHighlightsViewController.changeCustomNameOfClickedItem(_:))
 		collectedFileMenuCreator.removeFromHighlightsAction = #selector(ProjectHighlightsViewController.removedClickedItem(_:))
 		
-		let nc = NSNotificationCenter.defaultCenter()
+		let nc = NotificationCenter.default
 		
-		nc.addObserverForName(GLACollectedFileMenuCreatorNeedsUpdateNotification, object: collectedFileMenuCreator, queue: nil) { _ in
+		nc.addObserver(forName: NSNotification.Name.GLACollectedFileMenuCreatorNeedsUpdate, object: collectedFileMenuCreator, queue: nil) { _ in
 			self.updateMenu(self.contextualMenu)
 		}
 		self.collectedFileMenuCreator = collectedFileMenuCreator
@@ -189,7 +189,7 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 		// I think Apple says this is better for scrolling performance.
 		scrollView.wantsLayer = true
 
-		fillViewWithChildView(scrollView)
+		fillView(withChildView: scrollView)
 	}
 	
 	func showInstructions() {
@@ -197,10 +197,10 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 		
 		let instructionsView = instructionsViewController.view
 		if instructionsView.superview == nil {
-			fillViewWithChildView(instructionsView)
+			fillView(withChildView: instructionsView)
 		}
 		else {
-			instructionsView.hidden = false
+			instructionsView.isHidden = false
 		}
 	}
 	
@@ -209,16 +209,16 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 		
 		let instructionsView = instructionsViewController.view
 		if instructionsView.superview != nil {
-			instructionsView.hidden = true
+			instructionsView.isHidden = true
 		}
 	}
 	
 	func showTable() {
-		tableScrollView.hidden = false
+		tableScrollView.isHidden = false
 	}
 	
 	func hideTable() {
-		tableScrollView.hidden = true
+		tableScrollView.isHidden = true
 	}
 	
 	func reloadViews() {
@@ -226,21 +226,21 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 		// Resolves an out-of-bounds exception.
 		tableView.reloadData()
 		
-		if let assistant = assistant where assistant.itemCount > 0 {
+		if let assistant = assistant , assistant.itemCount > 0 {
 			showTable()
 			hideInstructions()
 			
-			openAllHighlightsButton?.enabled = assistant.canOpenAllHighlights
+			openAllHighlightsButton?.isEnabled = assistant.canOpenAllHighlights
 		}
 		else {
 			showInstructions()
 			hideTable()
 			
-			openAllHighlightsButton?.enabled = false
+			openAllHighlightsButton?.isEnabled = false
 		}
 	}
 	
-	override public func viewWillTransitionIn() {
+	override open func viewWillTransitionIn() {
 		super.viewWillTransitionIn()
 		
 		doNotUpdateViews = false
@@ -248,7 +248,7 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 		reloadViews()
 	}
 	
-	override public func viewWillTransitionOut() {
+	override open func viewWillTransitionOut() {
 		super.viewWillTransitionOut()
 		
 		doNotUpdateViews = true
@@ -258,20 +258,20 @@ private func attributedStringForCollectionGroup(collection: GLACollection, textA
 }
 
 extension ProjectHighlightsViewController {
-	func collectedFileForHighlightedItem(highlightedItem: GLAHighlightedItem) -> GLACollectedFile? {
+	func collectedFileForHighlightedItem(_ highlightedItem: GLAHighlightedItem) -> GLACollectedFile? {
 		guard let highlightedCollectedFile = highlightedItem as?GLAHighlightedCollectedFile else { return nil }
 	
-		return projectManager.collectedFileForHighlightedCollectedFile(highlightedCollectedFile, loadIfNeeded: true)
+		return projectManager.collectedFile(for: highlightedCollectedFile, loadIfNeeded: true)
 	}
 }
 
 extension ProjectHighlightsViewController: GLACollectedFileListHelperDelegate {
-	public func collectedFileListHelperDidInvalidate(helper: GLACollectedFileListHelper) {
+	public func collectedFileListHelperDidInvalidate(_ helper: GLACollectedFileListHelper) {
 		reloadViews()
 	}
 }
 
-func convertRowToOptional(row: Int) -> Int? {
+func convertRowToOptional(_ row: Int) -> Int? {
 	switch row {
 	case -1:
 		return nil
@@ -287,7 +287,7 @@ extension ProjectHighlightsViewController {
 	
 	var clickedIndex: Int? {
 		return clickedRow.flatMap { row in
-			return assistant?.outputIndexesForTableRows(NSIndexSet(index: row)).firstIndex
+			return assistant?.outputIndexesForTableRows(IndexSet(integer: row)).first
 		}
 	}
 	
@@ -296,27 +296,27 @@ extension ProjectHighlightsViewController {
 	}
 	
 	var clickedItemDetails: HighlightItemDetails? {
-		return clickedRow.flatMap({ assistant?.details[AnyRandomAccessIndex($0)] })
+		return clickedRow.flatMap({ assistant?.details[AnyIndex($0)] })
 	}
 	
-	var clickedFileURL: NSURL? {
+	var clickedFileURL: URL? {
 		return clickedRow.flatMap({ assistant?.fileURLAtIndex($0) })
 	}
 	
 	func clickedRow(forSender sender: AnyObject?) -> Int? {
-		return clickedRow ?? (sender as? NSView).flatMap{ convertRowToOptional(tableView.rowForView($0)) }
+		return clickedRow ?? (sender as? NSView).flatMap{ convertRowToOptional(tableView.row(for: $0)) }
 	}
 	
-	func openClickedItemWithBehaviour(behaviour: OpeningBehaviour, sender: AnyObject? = nil) {
+	func openClickedItemWithBehaviour(_ behaviour: OpeningBehaviour, sender: AnyObject? = nil) {
 		guard let
 			clickedRow = clickedRow(forSender: sender),
-			assistant = self.assistant
+			let assistant = self.assistant
 			else { return }
 		
 		assistant.openItem(atIndex: clickedRow, withBehaviour: behaviour, activateIfNeeded: true)
 	}
 	
-	@IBAction public func openClickedItem(sender: AnyObject?) {
+	@IBAction public func openClickedItem(_ sender: AnyObject?) {
 		if let menu = (sender as? NSView)?.enclosingMenuItem?.menu {
 			// Close launcher menu
 			menu.cancelTracking()
@@ -325,28 +325,28 @@ extension ProjectHighlightsViewController {
 		openClickedItemWithBehaviour(OpeningBehaviour(modifierFlags: NSEvent.modifierFlags()), sender: sender)
 	}
 	
-	@IBAction public func openAllItems(sender: AnyObject?) {
+	@IBAction public func openAllItems(_ sender: AnyObject?) {
 		assistant?.openAllHighlights()
 	}
 	
-	@IBAction public func openWithChosenApplication(menuItem: NSMenuItem) {
+	@IBAction public func openWithChosenApplication(_ menuItem: NSMenuItem) {
 		guard let
-			applicationURL = menuItem.representedObject as? NSURL,
-			fileURL = clickedFileURL
+			applicationURL = menuItem.representedObject as? URL,
+			let fileURL = clickedFileURL
 			else { return }
 		
 		GLAFileOpenerApplicationFinder.openFileURLs([fileURL], withApplicationURL: applicationURL, useSecurityScope: true)
 	}
 	
-	@IBAction public func changePreferredOpenerApplication(menuItem: NSMenuItem) {
-		guard let applicationURL = menuItem.representedObject as? NSURL? else { return }
+	@IBAction public func changePreferredOpenerApplication(_ menuItem: NSMenuItem) {
+		guard let applicationURL = menuItem.representedObject as? URL? else { return }
 	
 		guard let
 			source = clickedItem,
-			case let HighlightItemSource.Item(highlightedCollectedFile as GLAHighlightedCollectedFile, _) = source
+			case let HighlightItemSource.item(highlightedCollectedFile as GLAHighlightedCollectedFile, _) = source
 			else { return }
 		
-		projectManager.editHighlightedCollectedFile(highlightedCollectedFile) { editor in
+		projectManager.edit(highlightedCollectedFile) { editor in
 			if let applicationURL = applicationURL {
 				editor.applicationToOpenFile = GLACollectedFile(fileURL: applicationURL)
 			}
@@ -356,26 +356,26 @@ extension ProjectHighlightsViewController {
 		}
 	}
 	
-	@IBAction func showItemInFinder(menuItem: NSMenuItem) {
-		openClickedItemWithBehaviour(.ShowInFinder)
+	@IBAction func showItemInFinder(_ menuItem: NSMenuItem) {
+		openClickedItemWithBehaviour(.showInFinder)
 	}
 	
-	@IBAction func changeCustomNameOfClickedItem(sender: AnyObject?) {
+	@IBAction func changeCustomNameOfClickedItem(_ sender: AnyObject?) {
 		guard let
 			row = clickedRow,
-			source = clickedItem,
-			case let HighlightItemSource.Item(highlightedItem, _) = source
+			let source = clickedItem,
+			case let HighlightItemSource.item(highlightedItem, _) = source
 			else { return }
 		
 		chooseCustomNameForHighlightedItem(highlightedItem, atRow: row)
 	}
 	
-	private func chooseCustomNameForHighlightedItem(highlightedItem: GLAHighlightedItem, atRow row: Int) {
+	fileprivate func chooseCustomNameForHighlightedItem(_ highlightedItem: GLAHighlightedItem, atRow row: Int) {
 		itemWithDetailsBeingEdited = highlightedItem;
 		
 		let popover = HighlightCustomNamePopover.sharedPopover
 		
-		if popover.shown {
+		if popover.isShown {
 			popover.close()
 		}
 		else {
@@ -385,9 +385,9 @@ extension ProjectHighlightsViewController {
 				self?.changeCustomName(popover.chosenCustomName, forHighlightedItem: highlightedItem)
 			}
 			
-			let nc = NSNotificationCenter.defaultCenter()
+			let nc = NotificationCenter.default
 			var closeObserver: AnyObject!
-			closeObserver = nc.addObserverForName(NSPopoverDidCloseNotification, object: popover, queue: nil) { [weak self] _ in
+			closeObserver = nc.addObserver(forName: NSNotification.Name.NSPopoverDidClose, object: popover, queue: nil) { [weak self] _ in
 				observer.stopObserving()
 				self?.itemWithDetailsBeingEdited = nil
 				
@@ -396,22 +396,22 @@ extension ProjectHighlightsViewController {
 			
 			popover.setUpWithHighlightedItem(highlightedItem)
 			
-			let rowRect = tableView.rectOfRow(row)
+			let rowRect = tableView.rect(ofRow: row)
 			// Show underneath.
-			popover.showRelativeToRect(rowRect, ofView: tableView, preferredEdge: .MaxY)
+			popover.show(relativeTo: rowRect, of: tableView, preferredEdge: .maxY)
 		}
 	}
 	
-	private func changeCustomName(name: String, forHighlightedItem highlightedItem: GLAHighlightedItem) {
+	fileprivate func changeCustomName(_ name: String, forHighlightedItem highlightedItem: GLAHighlightedItem) {
 		guard let project = project else { return }
 		
-		let name = name.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+		let name = name.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 		
-		let projectManager = GLAProjectManager.sharedProjectManager()
+		let projectManager = GLAProjectManager.shared()
 		
-		projectManager.editHighlightsOfProjectWithUUID(project.UUID) { highlightsEditor in
-			highlightsEditor.replaceFirstChildWhoseKey("UUID", hasValue: highlightedItem.UUID) { originalItem in
-				return originalItem.copyWithChangesFromEditing { editor in
+		projectManager.editHighlightsOfProject(with: project.uuid) { highlightsEditor in
+			highlightsEditor.replaceFirstChildWhoseKey("UUID", hasValue: highlightedItem.uuid) { originalItem in
+				return (originalItem as! GLAHighlightedItem).copyWithChanges { editor in
 					if name  == "" {
 						editor.customName = nil
 					}
@@ -423,62 +423,62 @@ extension ProjectHighlightsViewController {
 		}
 	}
 	
-	@IBAction func removedClickedItem(sender: AnyObject?) {
+	@IBAction func removedClickedItem(_ sender: AnyObject?) {
 		guard let
 			project = project,
-			index = clickedIndex
+			let index = clickedIndex
 			else { return }
 		
-		projectManager.editHighlightsOfProject(project) { highlightsEditor in
-			highlightsEditor.removeChildrenAtIndexes(NSIndexSet(index: index))
+		projectManager.editHighlights(of: project) { highlightsEditor in
+			highlightsEditor.removeChildren(at: IndexSet(integer: index))
 		}
 	}
 }
 
 extension ProjectHighlightsViewController {
-	public func updateMenu(menu: NSMenu) {
+	public func updateMenu(_ menu: NSMenu) {
 		guard let fileURL = clickedFileURL else {
 			menu.removeAllItems()
 			return
 		}
 		let highlightedCollectedFile: GLAHighlightedCollectedFile? = clickedItem.flatMap {
 			switch $0 {
-			case let .Item(highlightedItem as GLAHighlightedCollectedFile, _): return highlightedItem
+			case let .item(highlightedItem as GLAHighlightedCollectedFile, _): return highlightedItem
 			default: return nil
 			}
 		}
 
 		collectedFileMenuCreator.fileURL = fileURL;
 		collectedFileMenuCreator.highlightedCollectedFile = highlightedCollectedFile
-		collectedFileMenuCreator.updateMenu(menu)
+		collectedFileMenuCreator.update(menu)
 	}
 }
 
 extension ProjectHighlightsViewController: NSTableViewDataSource {
-	public func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+	public func numberOfRows(in tableView: NSTableView) -> Int {
 		return assistant?.itemCount ?? 0
 	}
 	
-	public func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
+	public func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
 		return row
 	}
 }
 
 extension ProjectHighlightsViewController: NSTableViewDelegate {
-	public func selectionShouldChangeInTableView(tableView: NSTableView) -> Bool {
+	public func selectionShouldChange(in tableView: NSTableView) -> Bool {
 		return false
 	}
 	
-	public func tableView(tableView: NSTableView, isGroupRow row: NSInteger) -> Bool {
+	public func tableView(_ tableView: NSTableView, isGroupRow row: NSInteger) -> Bool {
 		switch assistant![row] {
-		case .GroupedCollectionHeading:
+		case .groupedCollectionHeading:
 			return true
 		default:
 			return false
 		}
 	}
 	
-	public func tableView(tableView: NSTableView, heightOfRow row: NSInteger) -> CGFloat {
+	public func tableView(_ tableView: NSTableView, heightOfRow row: NSInteger) -> CGFloat {
 		var height: CGFloat = 0.0
 		
 		autoreleasepool {
@@ -487,17 +487,17 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 			let inMenuItem = tableView.enclosingMenuItem != nil
 			let textAlignment = inMenuItem ? NSLeftTextAlignment : NSRightTextAlignment
 			
-			switch assistant!.details[AnyRandomAccessIndex(row)] {
-			case let .Item(_, displayName, isFolder, _, collection):
+			switch assistant!.details[AnyIndex(row)] {
+			case let .item(_, displayName, isFolder, _, collection):
 				measuringHighlightTableCellView.removeFromSuperview()
 				
 				setUpTableCellView(measuringHighlightTableCellView, textAlignment: textAlignment, displayName: displayName, isFolder: isFolder, collection: collection)
 				
 				cellView = measuringHighlightTableCellView
-			case .GroupedCollectionHeading(_), .MasterFoldersHeading:
+			case .groupedCollectionHeading(_), .masterFoldersHeading:
 				height = collectionGroupHeight
 				return
-			case let .MasterFolder(displayName, _):
+			case let .masterFolder(displayName, _):
 				measuringHighlightTableCellView.removeFromSuperview()
 				
 				setUpTableCellView(measuringHighlightTableCellView, textAlignment: textAlignment, displayName: displayName, isFolder: true, collection: nil)
@@ -522,44 +522,44 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 		return height
 	}
 	
-	public func setUpTableCellView(cellView: GLAHighlightsTableCellView, textAlignment: NSTextAlignment, displayName: String?, isFolder: Bool?, collection: GLACollection?) {
-		cellView.backgroundStyle = .Dark
+	public func setUpTableCellView(_ cellView: GLAHighlightsTableCellView, textAlignment: NSTextAlignment, displayName: String?, isFolder: Bool?, collection: GLACollection?) {
+		cellView.backgroundStyle = .dark
 		cellView.alphaValue = 1.0
 		
 		cellView.textField!.attributedStringValue = attributedStringForName(displayName ?? "Loading…", textAlignment: textAlignment)
 		
 		let collectionIndicationButton = cellView.collectionIndicationButton
-		collectionIndicationButton.collection = collection
-		collectionIndicationButton.isFolder = isFolder ?? false
+		collectionIndicationButton?.collection = collection
+		collectionIndicationButton?.isFolder = isFolder ?? false
 		
 		cellView.needsLayout = true
 	}
 	
-	public func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: NSInteger) -> NSView? {
+	public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: NSInteger) -> NSView? {
 		let inMenuItem = tableView.enclosingMenuItem != nil
 		let textAlignment = inMenuItem ? NSLeftTextAlignment : NSRightTextAlignment
 		
-		switch assistant!.details[AnyRandomAccessIndex(row)] {
-		case let .Item(_, displayName, isFolder, _, collection):
-			let cellView = tableView.makeViewWithIdentifier("highlightedItem", owner: nil) as! GLAHighlightsTableCellView
+		switch assistant!.details[AnyIndex(row)] {
+		case let .item(_, displayName, isFolder, _, collection):
+			let cellView = tableView.make(withIdentifier: "highlightedItem", owner: nil) as! GLAHighlightsTableCellView
 			
 			setUpTableCellView(cellView, textAlignment: textAlignment, displayName: displayName, isFolder: isFolder, collection: collection)
 			
 			return cellView
-		case let .GroupedCollectionHeading(collection):
-			let cellView = tableView.makeViewWithIdentifier("collectionGroup", owner: nil) as! NSTableCellView
+		case let .groupedCollectionHeading(collection):
+			let cellView = tableView.make(withIdentifier: "collectionGroup", owner: nil) as! NSTableCellView
 			
 			cellView.textField!.attributedStringValue = attributedStringForCollectionGroup(collection, textAlignment: textAlignment)
 			
 			return cellView
-		case .MasterFoldersHeading:
-			let cellView = tableView.makeViewWithIdentifier("collectionGroup", owner: nil) as! NSTableCellView
+		case .masterFoldersHeading:
+			let cellView = tableView.make(withIdentifier: "collectionGroup", owner: nil) as! NSTableCellView
 			
 			cellView.textField!.attributedStringValue = attributedStringForMasterFoldersHeading(textAlignment: textAlignment)
 			
 			return cellView
-		case let .MasterFolder(displayName, _):
-			let cellView = tableView.makeViewWithIdentifier("highlightedItem", owner: nil) as! GLAHighlightsTableCellView
+		case let .masterFolder(displayName, _):
+			let cellView = tableView.make(withIdentifier: "highlightedItem", owner: nil) as! GLAHighlightsTableCellView
 			
 			setUpTableCellView(cellView, textAlignment: textAlignment, displayName: displayName, isFolder: true, collection: nil)
 			
@@ -567,34 +567,34 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 		}
 	}
 	
-	public func tableView(tableView: NSTableView, pasteboardWriterForRow row:Int) -> NSPasteboardWriting? {
+	public func tableView(_ tableView: NSTableView, pasteboardWriterForRow row:Int) -> NSPasteboardWriting? {
 		guard let assistant = assistant else { return nil }
 		
 		switch assistant[row] {
-		case let .Item(highlightedItem, isGrouped: false):
+		case let .item(highlightedItem, isGrouped: false):
 			return highlightedItem
 		default:
 			return nil
 		}
 	}
 	
-	public func tableView(tableView: NSTableView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forRowIndexes rowIndexes: NSIndexSet) {
-		tableDraggingHelper?.tableView(tableView, draggingSession: session, willBeginAtPoint: screenPoint, forRowIndexes: rowIndexes)
+	@objc(tableView:draggingSession:willBeginAtPoint:forRowIndexes:) public func tableView(_ tableView: NSTableView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forRowIndexes rowIndexes: IndexSet) {
+		tableDraggingHelper?.tableView(tableView, draggingSession: session, willBeginAt: screenPoint, forRowIndexes: rowIndexes)
 	}
 	
-	public func tableView(tableView: NSTableView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
-		tableDraggingHelper?.tableView(tableView, draggingSession: session, endedAtPoint: screenPoint, operation: operation)
+	@objc(tableView:draggingSession:endedAtPoint:operation:) public func tableView(_ tableView: NSTableView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
+		tableDraggingHelper?.tableView(tableView, draggingSession: session, endedAt: screenPoint, operation: operation)
 	}
 	
-	public func tableView(tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: NSInteger, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+	public func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: NSInteger, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
 		guard let
 			assistant = assistant,
-			tableDraggingHelper = tableDraggingHelper
-			else { return .None }
+			let tableDraggingHelper = tableDraggingHelper
+			else { return NSDragOperation() }
 		
 		if row < assistant.count {
 			switch assistant[row] {
-			case .Item(_, isGrouped: false):
+			case .item(_, isGrouped: false):
 				// FIXME:
 				// <= Less than or equal to allow dragging to bottom of highlighted items.
 				return tableDraggingHelper.tableView(tableView, validateDrop: info, proposedRow: row, proposedDropOperation: dropOperation)
@@ -603,23 +603,23 @@ extension ProjectHighlightsViewController: NSTableViewDelegate {
 			}
 		}
 		
-		guard row > 0 else { return .None }
+		guard row > 0 else { return NSDragOperation() }
 		
 		switch assistant[row - 1] {
-		case .Item(_, isGrouped: false):
+		case .item(_, isGrouped: false):
 			return tableDraggingHelper.tableView(tableView, validateDrop: info, proposedRow: row, proposedDropOperation: dropOperation)
 		default:
-			return .None
+			return NSDragOperation()
 		}
 	}
 	
-	public func tableView(tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: NSInteger, dropOperation: NSTableViewDropOperation) -> Bool {
+	public func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: NSInteger, dropOperation: NSTableViewDropOperation) -> Bool {
 	return tableDraggingHelper!.tableView(tableView, acceptDrop: info, row: row, dropOperation: dropOperation)
 	}
 }
 
 extension ProjectHighlightsViewController: NSMenuDelegate {
-	public func menuNeedsUpdate(menu: NSMenu) {
+	public func menuNeedsUpdate(_ menu: NSMenu) {
 		updateMenu(menu)
 	}
 }

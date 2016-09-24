@@ -31,66 +31,66 @@ class NotificationTests: XCTestCase {
 	}
 	
 	func testObserving() {
-		let nc = NSNotificationCenter()
+		let nc = NotificationCenter()
 		let object = Example()
 		
-		let expectation = expectationWithDescription("Observed .DidUpdate notification")
+		let expectation = self.expectation(description: "Observed .DidUpdate notification")
 		
-		let notificationObserver = NotificationObserver<Example.Notification>(object: object, notificationCenter: nc, queue: NSOperationQueue.mainQueue())
+		let notificationObserver = NotificationObserver<Example.Notification>(object: object, notificationCenter: nc, queue: OperationQueue.main)
 		notificationObserver.observe(.DidUpdate) { notification in
 			expectation.fulfill()
 		}
 		
-		NSOperationQueue.mainQueue().addOperationWithBlock {
+		OperationQueue.main.addOperation {
 			withExtendedLifetime(notificationObserver) {
-				nc.postNotificationName(Example.Notification.DidUpdate.rawValue, object: object)
+				nc.post(name: Notification.Name(rawValue: Example.Notification.DidUpdate.rawValue), object: object)
 			}
 		}
 		
-		waitForExpectationsWithTimeout(2) { error in
+		waitForExpectations(timeout: 2) { error in
 		}
 	}
 	
 	func testObservingAll() {
-		let nc = NSNotificationCenter()
+		let nc = NotificationCenter()
 		let object = Example()
 		
 		let expectations: [Example.Notification: XCTestExpectation] = [
-			.DidUpdate: expectationWithDescription("Observed .DidUpdate notification"),
-			.DidDoSomethingElse: expectationWithDescription("Observed .DidDoSomethingElse notification")
+			.DidUpdate: expectation(description: "Observed .DidUpdate notification"),
+			.DidDoSomethingElse: expectation(description: "Observed .DidDoSomethingElse notification")
 		]
 		
-		let notificationObserver = NotificationObserver<Example.Notification>(object: object, notificationCenter: nc, queue: NSOperationQueue.mainQueue())
+		let notificationObserver = NotificationObserver<Example.Notification>(object: object, notificationCenter: nc, queue: OperationQueue.main)
 		notificationObserver.observeAll { identifier, notification in
 			XCTAssertNotNil(expectations[identifier])
 			
 			expectations[identifier]!.fulfill()
 		}
 		
-		NSOperationQueue.mainQueue().addOperationWithBlock {
+		OperationQueue.main.addOperation {
 			withExtendedLifetime(notificationObserver) {
-				nc.postNotificationName(Example.Notification.DidUpdate.rawValue, object: object)
-				nc.postNotificationName(Example.Notification.DidDoSomethingElse.rawValue, object: object)
+				nc.post(name: Notification.Name(rawValue: Example.Notification.DidUpdate.rawValue), object: object)
+				nc.post(name: Notification.Name(rawValue: Example.Notification.DidDoSomethingElse.rawValue), object: object)
 			}
 		}
 		
-		waitForExpectationsWithTimeout(2) { error in
+		waitForExpectations(timeout: 2) { error in
 		}
 	}
 	
 	func testPosting() {
-		let nc = NSNotificationCenter.defaultCenter()
+		let nc = NotificationCenter.default
 		let object = Example()
 		
-		let expectation = expectationForNotification(Example.Notification.DidUpdate.rawValue, object: object, handler: nil)
+		let expectation = self.expectation(forNotification: Example.Notification.DidUpdate.rawValue, object: object, handler: nil)
 		
-		NSOperationQueue.mainQueue().addOperationWithBlock {
+		OperationQueue.main.addOperation {
 			withExtendedLifetime(expectation) {
 				nc.postNotification(Example.Notification.DidUpdate, object: object, userInfo: nil)
 			}
 		}
 		
-		waitForExpectationsWithTimeout(2) { error in
+		waitForExpectations(timeout: 2) { error in
 		}
 	}
 	

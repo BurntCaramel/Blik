@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B2469A691CC61BDC00D0CC6C /* ProductionLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2469A681CC61BDC00D0CC6C /* ProductionLine.swift */; };
 		B2469A6B1CC6349C00D0CC6C /* Serial.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2469A6A1CC6349C00D0CC6C /* Serial.swift */; };
 		B2B9440F1CAA054F005956A9 /* FileAccessingStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285951C1CA3AB5D008C34F7 /* FileAccessingStage.swift */; };
 		B2B944101CAA0558005956A9 /* FileBookmarkingStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B285951E1CA3B2C8008C34F7 /* FileBookmarkingStage.swift */; };
@@ -14,9 +15,9 @@
 		B2C8AB561C9A473000065E75 /* Grain.h in Headers */ = {isa = PBXBuildFile; fileRef = B2C8AB551C9A473000065E75 /* Grain.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B2C8AB5D1C9A473000065E75 /* Grain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2C8AB521C9A473000065E75 /* Grain.framework */; };
 		B2C8AB621C9A473000065E75 /* FileOpenStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C8AB611C9A473000065E75 /* FileOpenStage.swift */; };
-		B2C8AB6D1C9A47FE00065E75 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C8AB6C1C9A47FE00065E75 /* Task.swift */; };
+		B2C8AB6D1C9A47FE00065E75 /* Deferred.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C8AB6C1C9A47FE00065E75 /* Deferred.swift */; };
 		B2C8AB6F1C9A483200065E75 /* Stage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C8AB6E1C9A483200065E75 /* Stage.swift */; };
-		B2C8AB711C9A491200065E75 /* Execution.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C8AB701C9A491200065E75 /* Execution.swift */; };
+		B2C8AB711C9A491200065E75 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C8AB701C9A491200065E75 /* Environment.swift */; };
 		B2C8AB731C9A494D00065E75 /* GCD.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C8AB721C9A494D00065E75 /* GCD.swift */; };
 		B2C8AB751C9A507600065E75 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C8AB741C9A507600065E75 /* Service.swift */; };
 		B2C8AB7A1C9A676B00065E75 /* example.json in Resources */ = {isa = PBXBuildFile; fileRef = B2C8AB781C9A64F300065E75 /* example.json */; };
@@ -33,6 +34,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B2469A681CC61BDC00D0CC6C /* ProductionLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductionLine.swift; sourceTree = "<group>"; };
 		B2469A6A1CC6349C00D0CC6C /* Serial.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serial.swift; sourceTree = "<group>"; };
 		B285951C1CA3AB5D008C34F7 /* FileAccessingStage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileAccessingStage.swift; sourceTree = "<group>"; };
 		B285951E1CA3B2C8008C34F7 /* FileBookmarkingStage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBookmarkingStage.swift; sourceTree = "<group>"; };
@@ -43,9 +45,9 @@
 		B2C8AB5C1C9A473000065E75 /* GrainOSXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrainOSXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2C8AB611C9A473000065E75 /* FileOpenStage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOpenStage.swift; sourceTree = "<group>"; };
 		B2C8AB631C9A473000065E75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B2C8AB6C1C9A47FE00065E75 /* Task.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		B2C8AB6C1C9A47FE00065E75 /* Deferred.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deferred.swift; sourceTree = "<group>"; };
 		B2C8AB6E1C9A483200065E75 /* Stage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stage.swift; sourceTree = "<group>"; };
-		B2C8AB701C9A491200065E75 /* Execution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Execution.swift; sourceTree = "<group>"; };
+		B2C8AB701C9A491200065E75 /* Environment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		B2C8AB721C9A494D00065E75 /* GCD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCD.swift; sourceTree = "<group>"; };
 		B2C8AB741C9A507600065E75 /* Service.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		B2C8AB761C9A62D100065E75 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -97,12 +99,13 @@
 			children = (
 				B2C8AB551C9A473000065E75 /* Grain.h */,
 				B2C8AB571C9A473000065E75 /* Info.plist */,
-				B2C8AB6C1C9A47FE00065E75 /* Task.swift */,
-				B2C8AB6E1C9A483200065E75 /* Stage.swift */,
+				B2C8AB6C1C9A47FE00065E75 /* Deferred.swift */,
 				B2C8AB741C9A507600065E75 /* Service.swift */,
-				B2C8AB701C9A491200065E75 /* Execution.swift */,
+				B2C8AB701C9A491200065E75 /* Environment.swift */,
+				B2C8AB6E1C9A483200065E75 /* Stage.swift */,
 				B2469A6A1CC6349C00D0CC6C /* Serial.swift */,
 				B2C8AB721C9A494D00065E75 /* GCD.swift */,
+				B2469A681CC61BDC00D0CC6C /* ProductionLine.swift */,
 			);
 			path = Grain;
 			sourceTree = "<group>";
@@ -110,8 +113,8 @@
 		B2C8AB601C9A473000065E75 /* GrainTests */ = {
 			isa = PBXGroup;
 			children = (
-				B2C8AB611C9A473000065E75 /* FileOpenStage.swift */,
 				B285951C1CA3AB5D008C34F7 /* FileAccessingStage.swift */,
+				B2C8AB611C9A473000065E75 /* FileOpenStage.swift */,
 				B285951E1CA3B2C8008C34F7 /* FileBookmarkingStage.swift */,
 				B2C8AB7B1C9A7E9100065E75 /* HTTPRequestStage.swift */,
 				B2C8AB781C9A64F300065E75 /* example.json */,
@@ -182,9 +185,11 @@
 				TargetAttributes = {
 					B2C8AB511C9A473000065E75 = {
 						CreatedOnToolsVersion = 7.2.1;
+						LastSwiftMigration = 0800;
 					};
 					B2C8AB5B1C9A473000065E75 = {
 						CreatedOnToolsVersion = 7.2.1;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -230,11 +235,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2C8AB6F1C9A483200065E75 /* Stage.swift in Sources */,
-				B2C8AB711C9A491200065E75 /* Execution.swift in Sources */,
+				B2469A691CC61BDC00D0CC6C /* ProductionLine.swift in Sources */,
+				B2C8AB711C9A491200065E75 /* Environment.swift in Sources */,
 				B2C8AB751C9A507600065E75 /* Service.swift in Sources */,
 				B2C8AB731C9A494D00065E75 /* GCD.swift in Sources */,
 				B2469A6B1CC6349C00D0CC6C /* Serial.swift in Sources */,
-				B2C8AB6D1C9A47FE00065E75 /* Task.swift in Sources */,
+				B2C8AB6D1C9A47FE00065E75 /* Deferred.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,6 +370,7 @@
 				PRODUCT_NAME = Grain;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -384,6 +391,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.burntcaramel.Grain;
 				PRODUCT_NAME = Grain;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -395,6 +403,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.burntcaramel.GrainTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -406,6 +415,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.burntcaramel.GrainTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

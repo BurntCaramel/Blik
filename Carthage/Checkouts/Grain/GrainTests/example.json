@@ -1,5 +1,5 @@
 {
-    "text": "abc",
-    "number": 5,
-    "arrayOfText": ["def", "ghi"]
+		"text": "abc",
+		"number": 5,
+		"arrayOfText": ["def", "ghi"]
 }

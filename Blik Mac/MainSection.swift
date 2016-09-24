@@ -18,18 +18,18 @@ indirect enum MainSection {
 	case allProjects
 	case addNewProject(previousSection: MainSection?)
 	
-	case project(projectUUID: NSUUID, isNow: Bool?)
-	case projectMasterFolders(projectUUID: NSUUID)
+	case project(projectUUID: UUID, isNow: Bool?)
+	case projectMasterFolders(projectUUID: UUID)
 	
-	case collection(collectionUUID: NSUUID, projectUUID: NSUUID)
+	case collection(collectionUUID: UUID, projectUUID: UUID)
 	//case handpickedFilesCollection(collectionUUID: NSUUID, projectUUID: NSUUID)
 	//case filteredFilesCollection(collectionUUID: NSUUID, projectUUID: NSUUID)
 	
-	case addNewCollection(subsection: AddNewCollectionSubsection, projectUUID: NSUUID, indexInList: Int?)
+	case addNewCollection(subsection: AddNewCollectionSubsection, projectUUID: UUID, indexInList: Int?)
 	
 	indirect enum AddNewCollectionSubsection {
 		case chooseType
-		case handpickedFiles(fileURLsToAdd: [NSURL])
+		case handpickedFiles(fileURLsToAdd: [URL])
 		case filteredFiles(filterKind: FileFilterKind)
 		case nameAndColor(previousSubsection: AddNewCollectionSubsection?)
 	}

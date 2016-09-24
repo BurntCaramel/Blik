@@ -35,9 +35,9 @@ import Cocoa
 	var helpGuidesAssistant: GuideArticlesAssistant!
 }
 
-func isShowingWindowController(windowController: NSWindowController?) -> Bool {
-	if let windowController = windowController where windowController.windowLoaded {
-		return windowController.window!.visible
+func isShowingWindowController(_ windowController: NSWindowController?) -> Bool {
+	if let windowController = windowController , windowController.isWindowLoaded {
+		return windowController.window!.isVisible
 	}
 	else {
 		return false

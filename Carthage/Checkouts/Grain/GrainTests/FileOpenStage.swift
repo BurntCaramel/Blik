@@ -1,61 +1,79 @@
 //
-//  GrainTests.swift
-//  GrainTests
+//	GrainTests.swift
+//	GrainTests
 //
-//  Created by Patrick Smith on 17/03/2016.
-//  Copyright © 2016 Burnt Caramel. All rights reserved.
+//	Created by Patrick Smith on 17/03/2016.
+//	Copyright © 2016 Burnt Caramel. All rights reserved.
 //
 
 import XCTest
 @testable import Grain
 
 
-enum FileOpenStage: StageProtocol {
-	typealias Completion = (text: String, number: Double, arrayOfText: [String])
+enum FileUnserializeStage : StageProtocol {
+	typealias Result = (text: String, number: Double, arrayOfText: [String])
 	
 	/// Initial stages
-	case read(fileURL: NSURL)
+	case open(fileURL: URL)
 	/// Intermediate stages
-	case unserializeJSON(data: NSData)
+	case read(access: FileAccessStage)
+	case unserializeJSON(data: Data)
 	case parseJSON(object: AnyObject)
 	/// Completed stages
-	case success(Completion)
+	case success(Result)
 	
 	// Any errors thrown by the stages
-	enum Error: ErrorType {
+	enum Error : Error {
+		case cannotAccess
 		case invalidJSON
-		case missingData
+		case missingInformation
 	}
 }
 
-extension FileOpenStage {
+extension FileUnserializeStage {
 	/// The task for each stage
-	var nextTask: Task<FileOpenStage>? {
+	func next() -> Deferred<FileUnserializeStage> {
 		switch self {
-		case let .read(fileURL):
-			return Task{
-				.unserializeJSON(
+		case let .open(fileURL):
+			return Deferred{ .read(
+				access: .start(fileURL: fileURL, forgiving: false)
+			) }
+				/*return .unserializeJSON(
 					data: try NSData(contentsOfURL: fileURL, options: .DataReadingMappedIfSafe)
-				)
-			}
+				)*/
+		case let .read(access):
+			return access.compose(
+				transformNext: FileUnserializeStage.read,
+				transformResult: { (result) -> Deferred<FileUnserializeStage> in
+					let next = Deferred<FileUnserializeStage>{
+						if result.hasAccess {
+							return .unserializeJSON(
+								data: try NSData(contentsOfURL: result.fileURL, options: .DataReadingMappedIfSafe)
+							)
+						}
+						else {
+							throw Error.cannotAccess
+						}
+					}
+					
+					return result.stopper.map{ next.withCleanUp($0.taskExecuting()) } ?? next
+				}
+			)
 		case let .unserializeJSON(data):
-			return Task{
-				.parseJSON(
-					object: try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
-				)
-			}
+			return Deferred{ .parseJSON(
+				object: try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
+				) }
 		case let .parseJSON(object):
-			return Task{
+			return Deferred{
 				guard let dictionary = object as? [String: AnyObject] else {
 					throw Error.invalidJSON
 				}
 				
 				guard let
 					text = dictionary["text"] as? String,
-					number = dictionary["number"] as? Double,
-					arrayOfText = dictionary["arrayOfText"] as? [String]
-					else { throw Error.missingData }
-				
+					let number = dictionary["number"] as? Double,
+					let arrayOfText = dictionary["arrayOfText"] as? [String]
+					else { throw Error.missingInformation }
 				
 				return .success(
 					text: text,
@@ -64,19 +82,19 @@ extension FileOpenStage {
 				)
 			}
 		case .success:
-			return nil
+			completedStage(self)
 		}
 	}
 	
 	// The associated value if this is a completion case
-	var completion: Completion? {
-		guard case let .success(completion) = self else { return nil }
-		return completion
+	var result: Result? {
+		guard case let .success(result) = self else { return nil }
+		return result
 	}
 }
 
 
-class GrainTests: XCTestCase {
+class GrainTests : XCTestCase {
 	override func setUp() {
 		super.setUp()
 		// Put setup code here. This method is called before the invocation of each test method in the class.
@@ -87,19 +105,19 @@ class GrainTests: XCTestCase {
 		super.tearDown()
 	}
 	
-	var bundle: NSBundle { return NSBundle(forClass: self.dynamicType) }
+	var bundle: Bundle { return Bundle(for: type(of: self)) }
 	
 	func testFileOpen() {
 		print("BUNDLE \(bundle.bundleURL)")
 		
-		guard let fileURL = bundle.URLForResource("example", withExtension: "json") else {
+		guard let fileURL = bundle.url(forResource: "example", withExtension: "json") else {
 			XCTFail("Could not find file `example.json`")
 			return
 		}
 		
-		let expectation = expectationWithDescription("FileOpenStage executed")
+		let expectation = self.expectation(description: "FileUnserializeStage executed")
 		
-		FileOpenStage.read(fileURL: fileURL).execute { useResult in
+		FileUnserializeStage.open(fileURL: fileURL).execute { useResult in
 			do {
 				let (text, number, arrayOfText) = try useResult()
 				XCTAssertEqual(text, "abc")
@@ -114,6 +132,6 @@ class GrainTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		waitForExpectationsWithTimeout(3, handler: nil)
+		waitForExpectations(timeout: 3, handler: nil)
 	}
 }

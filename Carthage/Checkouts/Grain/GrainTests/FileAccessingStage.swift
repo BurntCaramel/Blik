@@ -1,105 +1,98 @@
 //
-//  FileAccessingStage.swift
-//  Grain
+//	FileAccessingStage.swift
+//	Grain
 //
-//  Created by Patrick Smith on 24/03/2016.
-//  Copyright © 2016 Burnt Caramel. All rights reserved.
+//	Created by Patrick Smith on 24/03/2016.
+//	Copyright © 2016 Burnt Caramel. All rights reserved.
 //
 
 import XCTest
 @testable import Grain
 
 
-enum FileStartAccessingStage: StageProtocol {
-	typealias Completion = (fileURL: NSURL, accessSucceeded: Bool)
+indirect enum FileAccessStage : StageProtocol {
+	typealias Result = (fileURL: URL, hasAccess: Bool, stopper: FileAccessStage?)
 	
 	/// Initial stages
-	case start(fileURL: NSURL)
+	case start(fileURL: URL, forgiving: Bool)
+	case stop(fileURL: URL)
 	
-	case started(Completion)
+	case complete(Result)
+	
+	enum Error : Error {
+		case cannotAccess(fileURL: URL)
+	}
 }
 
-enum FileStopAccessingStage: StageProtocol {
-	typealias Completion = NSURL
-	
-	/// Initial stages
-	case stop(fileURL: NSURL, accessSucceeded: Bool)
-	
-	case stopped(fileURL: NSURL)
-}
-
-extension FileStartAccessingStage {
+extension FileAccessStage {
 	/// The task for each stage
-	var nextTask: Task<FileStartAccessingStage>? {
+	func next() -> Deferred<FileAccessStage> {
 		switch self {
-		case let .start(fileURL):
-			return Task{
+		case let .start(fileURL, forgiving):
+			return Deferred{
 				let accessSucceeded = fileURL.startAccessingSecurityScopedResource()
 				
-				return .started(
-					fileURL: fileURL,
-					accessSucceeded: accessSucceeded
-				)
-			}
-		case .started: return nil
-		}
-	}
-	
-	var completion: Completion? {
-		guard case let .started(completion) = self else { return nil }
-		return completion
-	}
-}
-
-extension FileStopAccessingStage {
-	/// The task for each stage
-	var nextTask: Task<FileStopAccessingStage>? {
-		switch self {
-		case let .stop(fileURL, accessSucceeded):
-			return Task{
-				if accessSucceeded {
-					fileURL.stopAccessingSecurityScopedResource()
+				if !accessSucceeded && !forgiving {
+					throw Error.cannotAccess(fileURL: fileURL)
 				}
 				
-				return .stopped(
-					fileURL: fileURL
-				)
+				return FileAccessStage.complete((
+					fileURL: fileURL,
+					hasAccess: accessSucceeded,
+					stopper: accessSucceeded ? FileAccessStage.stop(
+						fileURL: fileURL
+					) : nil
+				))
 			}
-		case .stopped: return nil
+		case let .stop(fileURL):
+			return Deferred{
+				fileURL.stopAccessingSecurityScopedResource()
+				
+				return FileAccessStage.complete((
+					fileURL: fileURL,
+					hasAccess: false,
+					stopper: nil
+				))
+			}
+		case .complete:
+			completedStage(self)
 		}
 	}
 	
-	var completion: NSURL? {
-		guard case let .stopped(fileURL) = self else { return nil }
-		return fileURL
+	var result: Result? {
+		guard case let .complete(result) = self else { return nil }
+		return result
 	}
 }
 
 
-class FileAccessingTests: XCTestCase {
-	var bundle: NSBundle { return NSBundle(forClass: self.dynamicType) }
+class FileAccessingTests : XCTestCase {
+	var bundle: Bundle { return Bundle(for: type(of: self)) }
 	
 	func testFileAccess() {
-		guard let fileURL = bundle.URLForResource("example", withExtension: "json") else {
+		guard let fileURL = bundle.url(forResource: "example", withExtension: "json") else {
 			return
 		}
 		
-		let expectation = expectationWithDescription("File accessed")
+		let expectation = self.expectation(description: "File accessed")
 		
-		FileStartAccessingStage.start(fileURL: fileURL).execute { useResult in
+		FileAccessStage.start(fileURL: fileURL, forgiving: true).execute { useResult in
 			do {
 				let result = try useResult()
 				XCTAssertEqual(result.fileURL, fileURL)
-				XCTAssertEqual(result.accessSucceeded, true)
+				
+				XCTAssertNotNil(result.stopper)
+				
+				result.stopper!.execute{ _ in
+					expectation.fulfill()
+				}
 			}
 			catch {
 				XCTFail("Error \(error)")
 			}
-			
-			expectation.fulfill()
 		}
 		
-		waitForExpectationsWithTimeout(3, handler: nil)
+		waitForExpectations(timeout: 3, handler: nil)
 	}
 }
 

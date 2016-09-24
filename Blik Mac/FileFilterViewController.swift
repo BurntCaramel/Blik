@@ -34,19 +34,19 @@ class FileFilterViewController : GLAViewController {
 			self.fetchResults()
 		})
 		
-		let pm = GLAProjectManager.sharedProjectManager()
-		masterFoldersUser = pm.usePrimaryFoldersForProjectUUID(filteredFolderCollection.projectUUID)
+		let pm = GLAProjectManager.shared()
+		masterFoldersUser = pm.usePrimaryFolders(forProjectUUID: filteredFolderCollection.projectUUID)
 		masterFoldersUser.changeCompletionBlock = copyMasterFolders
 		
 		let _ = masterFoldersUser.inspectLoadingIfNeeded().map(copyMasterFolders)
 		
 		updateFields()
 		
-		resultsTableView.setDataSource(self)
-		resultsTableView.setDelegate(self)
+		resultsTableView.dataSource = self
+		resultsTableView.delegate = self
 	}
 	
-	func copyMasterFolders(inspector: GLAArrayInspecting) {
+	func copyMasterFolders(_ inspector: GLAArrayInspecting) {
 		let masterFolders = (inspector.copyChildren() as! [GLACollectedFile])
 		masterFolderAccessors = masterFolders.map { $0.accessFile() }
 		
@@ -54,7 +54,7 @@ class FileFilterViewController : GLAViewController {
 	}
 	
 	func updateFields() {
-		fieldsProducer.updateStackView(fieldsStackView, forFields: fieldsState.fields, gapSpacing: fieldGroupSpacing, gravity: .Top)
+    fieldsProducer.update(stackView: fieldsStackView, forFields: fieldsState.fields, gapSpacing: fieldGroupSpacing, gravity: .top)
 	}
 	
 	func fetchResults() {
@@ -79,7 +79,7 @@ class FileFilterViewController : GLAViewController {
 		self.fetcher = fetcher
 	}
 	
-	func updateItems(items: [FileFilterFetcher.Item]) {
+	func updateItems(_ items: [FileFilterFetcher.Item]) {
 		self.items = items
 		
 		resultsTableView.reloadData()
@@ -87,16 +87,16 @@ class FileFilterViewController : GLAViewController {
 }
 
 extension FileFilterViewController : NSTableViewDataSource, NSTableViewDelegate {
-	func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+	func numberOfRows(in tableView: NSTableView) -> Int {
 		return items?.count ?? 0
 	}
 	
-	func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
+	func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
 		let item = items![row]
 		
-		let cellView = tableView.makeViewWithIdentifier("file", owner: nil) as! FileFilterResultCellView
+		let cellView = tableView.make(withIdentifier: "file", owner: nil) as! FileFilterResultCellView
 		//cellView.textField?.stringValue = item.displayName ?? ""
-		cellView.pathControl.URL = item.fileURL
+		cellView.pathControl.url = item.fileURL as URL?
 		
 		return cellView
 	}

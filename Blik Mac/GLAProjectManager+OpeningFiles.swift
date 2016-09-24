@@ -10,53 +10,53 @@ import Foundation
 
 
 public enum OpeningBehaviour: Int {
-	case Default = 0
-	case ShowInFinder = 1
-	case Edit = 2
+	case `default` = 0
+	case showInFinder = 1
+	case edit = 2
 }
 
 extension OpeningBehaviour {
 	init(modifierFlags: NSEventModifierFlags) {
-		if modifierFlags.contains(.CommandKeyMask) {
-			self = .ShowInFinder
+		if modifierFlags.contains(.command) {
+			self = .showInFinder
 		}
-		else if modifierFlags.contains(.AlternateKeyMask) {
-			self = .Edit;
+		else if modifierFlags.contains(.option) {
+			self = .edit;
 		}
 		else {
-			self = .Default
+			self = .default
 		}
 	}
 }
 
 
 extension GLAProjectManager {
-	func openCollectedFile(collectedFile: GLACollectedFile, behaviour: OpeningBehaviour, withApplication applicationURL: NSURL? = nil) {
+	func openCollectedFile(_ collectedFile: GLACollectedFile, behaviour: OpeningBehaviour, withApplication applicationURL: URL? = nil) {
 		let accessedFileInfo = collectedFile.accessFile()
 		
 		withExtendedLifetime(accessedFileInfo) {
-			let fileURL = accessedFileInfo.filePathURL
+			let fileURL = accessedFileInfo?.filePathURL
 			
 			switch behaviour {
-			case .ShowInFinder:
-				NSWorkspace.sharedWorkspace().activateFileViewerSelectingURLs([fileURL])
-			case .Default:
-				if let bundleInfo = NSBundle(URL: fileURL)?.infoDictionary {
+			case .showInFinder:
+				NSWorkspace.shared().activateFileViewerSelecting([fileURL!])
+			case .default:
+				if let bundleInfo = Bundle(url: fileURL!)?.infoDictionary {
 					let isApplication = "APPL" == bundleInfo["CFBundlePackageType"] as? String
 					if isApplication {
-						NSWorkspace.sharedWorkspace().openURL(fileURL)
+						NSWorkspace.shared().open(fileURL!)
 						return
 					}
 				}
 				fallthrough
-			case .Edit:
+			case .edit:
 				GLAFileOpenerApplicationFinder.openFileURLs([fileURL], withApplicationURL: applicationURL, useSecurityScope: true)
 			}
 		}
 	}
 
-	func openHighlightedCollectedFile(highlightedCollectedFile: GLAHighlightedCollectedFile, behaviour: OpeningBehaviour) -> Bool {
-		guard let collectedFile = collectedFileForHighlightedCollectedFile(highlightedCollectedFile, loadIfNeeded: false) else { return false }
+	func openHighlightedCollectedFile(_ highlightedCollectedFile: GLAHighlightedCollectedFile, behaviour: OpeningBehaviour) -> Bool {
+		guard let collectedFile = collectedFile(for: highlightedCollectedFile, loadIfNeeded: false) else { return false }
 		if collectedFile.empty { return false }
 		
 		let applicationToOpenFileAccess = highlightedCollectedFile.applicationToOpenFile?.accessFile()

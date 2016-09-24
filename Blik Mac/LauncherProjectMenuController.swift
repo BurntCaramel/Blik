@@ -11,31 +11,31 @@ import BurntCocoaUI
 
 
 private enum Item {
-	case Highlight(HighlightItemSource, HighlightItemDetails)
-	case Collection(GLACollection)
-	case WorkOnNow
+	case highlight(HighlightItemSource, HighlightItemDetails)
+	case collection(GLACollection)
+	case workOnNow
 }
 
 extension Item: UIChoiceRepresentative {
 	typealias UniqueIdentifier = String
 	var uniqueIdentifier: UniqueIdentifier {
 		switch self {
-		case let .Highlight(sourceItem, _):
+		case let .highlight(sourceItem, _):
 			return "highlight.\(sourceItem.UUID)"
-		case let .Collection(collection):
-			return "collection.\(collection.UUID)"
-		case .WorkOnNow:
+		case let .collection(collection):
+			return "collection.\(collection.uuid)"
+		case .workOnNow:
 			return "workOnNow"
 		}
 	}
 	
 	var title: String {
 		switch self {
-		case let .Highlight(_, details):
+		case let .highlight(_, details):
 			return details.displayName ?? NSLocalizedString("Loading…", comment: "Title for loading highlight")
-		case let .Collection(collection):
+		case let .collection(collection):
 			return collection.name
-		case .WorkOnNow:
+		case .workOnNow:
 			return NSLocalizedString("Work on Now…", comment: "Title for working on project now")
 		}
 	}
@@ -49,10 +49,10 @@ extension Item: UIChoiceRepresentative {
 				//NSUnderlineColorAttributeName: style.colorForCollectionColor(collection.color),
 				NSFontAttributeName: style.highlightGroupFont
 			]*/
-		case let .Highlight(itemSource, _):
+		case let .highlight(itemSource, _):
 			switch itemSource {
-			case .GroupedCollectionHeading, .MasterFoldersHeading:
-				let style = GLAUIStyle.activeStyle()
+			case .groupedCollectionHeading, .masterFoldersHeading:
+				let style = GLAUIStyle.active()
 				return [
 					NSFontAttributeName: style.highlightGroupFont
 				]
@@ -66,7 +66,7 @@ extension Item: UIChoiceRepresentative {
 	
 	var enabled: Bool {
 		switch self {
-		case let .Highlight(_, details):
+		case let .highlight(_, details):
 			return details.displayName != nil
 		default:
 			return true
@@ -75,7 +75,7 @@ extension Item: UIChoiceRepresentative {
 	
 	var icon: NSImage? {
 		switch self {
-		case let .Highlight(_, details):
+		case let .highlight(_, details):
 			return details.icon.map { image in
 				image.size = NSSize(width: 16, height: 16)
 				return image
@@ -86,12 +86,12 @@ extension Item: UIChoiceRepresentative {
 	}
 }
 
-public class LauncherProjectMenuController: NSObject {
-	public let project: GLAProject
-	private let projectManager: GLAProjectManager
-	private let navigator: GLAMainSectionNavigator
-	private let highlightsAssistant: ProjectHighlightsAssistant
-	private let menuAssistant: MenuAssistant<Item>
+open class LauncherProjectMenuController: NSObject {
+	open let project: GLAProject
+	fileprivate let projectManager: GLAProjectManager
+	fileprivate let navigator: GLAMainSectionNavigator
+	fileprivate let highlightsAssistant: ProjectHighlightsAssistant
+	fileprivate let menuAssistant: MenuAssistant<Item>
 	
 	public init(menu: NSMenu, project: GLAProject, projectManager: GLAProjectManager, navigator: GLAMainSectionNavigator) {
 		self.project = project
@@ -116,11 +116,11 @@ public class LauncherProjectMenuController: NSObject {
 			let action: Selector
 			
 			switch item {
-			case .Highlight:
+			case .highlight:
 				action = #selector(LauncherProjectMenuController.openHighlight(_:))
-			case .Collection:
+			case .collection:
 				action = #selector(LauncherProjectMenuController.openCollection(_:))
-			case .WorkOnNow:
+			case .workOnNow:
 				action = #selector(LauncherProjectMenuController.workOnNow(_:))
 			}
 			
@@ -129,62 +129,62 @@ public class LauncherProjectMenuController: NSObject {
 		
 		menuAssistant.customization.additionalSetUp = { item, menuItem in
 			if let attributes = item.attributes {
-				menuItem.attributedTitle = NSAttributedString(string: item.title.uppercaseString, attributes: attributes)
+				menuItem.attributedTitle = NSAttributedString(string: item.title.uppercased(), attributes: attributes)
 			}
 		}
 	}
 	
-	public var menu: NSMenu {
+	open var menu: NSMenu {
 		return menuAssistant.menu
 	}
 	
-	private var items: [Item?] {
+	fileprivate var items: [Item?] {
 		var items = zip(highlightsAssistant, highlightsAssistant.details).map { (sourceItem, details) -> Item? in
-			return Item.Highlight(sourceItem, details)
+			return Item.highlight(sourceItem, details)
 		}
 		
 		items.append(nil)
-		items.append(Item.WorkOnNow)
+		items.append(Item.workOnNow)
 		
 		return items
 	}
 
-	private func reloadMenu() {
+	fileprivate func reloadMenu() {
 		menuAssistant.menuItemRepresentatives = items
 		menuAssistant.update()
 	}
 	
-	public func update() {
+	open func update() {
 		reloadMenu()
 	}
 }
 
 extension LauncherProjectMenuController {
-	private func activateApplication() {
-		NSApp.activateIgnoringOtherApps(true)
+	fileprivate func activateApplication() {
+		NSApp.activate(ignoringOtherApps: true)
 	}
 	
-	@IBAction func openHighlight(menuItem: NSMenuItem) {
+	@IBAction func openHighlight(_ menuItem: NSMenuItem) {
 		guard let
-			item = menuAssistant.itemRepresentativeForMenuItem(menuItem),
-			case let .Highlight(highlightSource, _) = item
+      item = menuAssistant.itemRepresentative(for: menuItem),
+			case let .highlight(highlightSource, _) = item
 			else { return }
 		
 		highlightsAssistant.openItem(highlightSource, withBehaviour: OpeningBehaviour(modifierFlags: NSEvent.modifierFlags()), activateIfNeeded: true)
 	}
 	
-	@IBAction func openCollection(menuItem: NSMenuItem) {
+	@IBAction func openCollection(_ menuItem: NSMenuItem) {
 		guard let
-			item = menuAssistant.itemRepresentativeForMenuItem(menuItem),
-			case let .Collection(collection) = item
+      item = menuAssistant.itemRepresentative(for: menuItem),
+			case let .collection(collection) = item
 			else { return }
 	
-		navigator.goToCollection(collection)
+    navigator.go(to: collection)
 	
 		activateApplication()
 	}
 	
-	@IBAction func workOnNow(menuItem: NSMenuItem) {
+	@IBAction func workOnNow(_ menuItem: NSMenuItem) {
 		projectManager.changeNowProject(project)
 	}
 }
