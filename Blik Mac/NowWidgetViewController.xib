@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NowWidgetViewController" customModule="Blik" customModuleProvider="target">
@@ -42,11 +42,11 @@
         <scrollView identifier="Highlights List" verticalHuggingPriority="750" borderType="none" autohidesScrollers="YES" horizontalLineScroll="38" horizontalPageScroll="10" verticalLineScroll="38" verticalPageScroll="36" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="light" translatesAutoresizingMaskIntoConstraints="NO" id="uPf-9a-wPm" userLabel="Highlights List Scroll">
             <rect key="frame" x="0.0" y="0.0" width="290" height="174"/>
             <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="JsJ-eu-dg3">
-                <rect key="frame" x="0.0" y="0.0" width="300" height="175"/>
+                <rect key="frame" x="0.0" y="0.0" width="290" height="174"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="36" rowSizeStyle="automatic" viewBased="YES" id="ir3-Sw-E0c" customClass="GLATableView">
-                        <rect key="frame" x="0.0" y="0.0" width="290" height="0.0"/>
+                        <rect key="frame" x="0.0" y="0.0" width="290" height="174"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <size key="intercellSpacing" width="3" height="2"/>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -66,13 +66,13 @@
                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
                                 <prototypeCellViews>
                                     <tableCellView identifier="highlightedItem" placeholderIntrinsicWidth="116" placeholderIntrinsicHeight="36" id="kI3-bF-oFi" userLabel="Highlighted Item" customClass="GLAHighlightsTableCellView" customModule="Blik" customModuleProvider="target">
-                                        <rect key="frame" x="1" y="1" width="297" height="36"/>
+                                        <rect key="frame" x="1" y="1" width="287" height="36"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wrA-yL-cvW" customClass="GLACollectionIndicationButton">
+                                            <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wrA-yL-cvW" customClass="GLACollectionIndicationButton">
                                                 <rect key="frame" x="17" y="0.0" width="10" height="36"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="36" id="WfO-cn-rWg"/>
+                                                    <constraint firstAttribute="height" constant="36" id="WfO-cn-rWg"/>
                                                     <constraint firstAttribute="width" constant="10" id="hWr-EQ-ceD"/>
                                                 </constraints>
                                                 <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="rTx-d1-Nwr">
@@ -142,7 +142,6 @@
                         </tableColumns>
                     </tableView>
                 </subviews>
-                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
             </clipView>
             <constraints>
                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="163" id="sLs-rJ-NQY"/>
