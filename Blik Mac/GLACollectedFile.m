@@ -176,6 +176,8 @@
 	
 	return
   @{
+	@"UUID": @"UUID",
+	@"bookmarkData": @"bookmarkData",
 	@"sourceBookmarkData": null,
 	@"wasCreatedFromBookmarkData": null,
 	@"fileReferenceURL": null,
@@ -291,7 +293,7 @@
 			case NSFileNoSuchFileError:
 			case NSFileReadUnknownError:
 			case NSFileReadNoSuchFileError:
-			//case NSFileReadCorruptFileError:
+			case NSFileReadCorruptFileError:
 			return YES;
 			
 			default:
