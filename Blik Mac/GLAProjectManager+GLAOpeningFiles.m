@@ -17,6 +17,9 @@
 	// Stays accessed as long as this exists.
 	// So (accessedFileInfo.filePathURL) is used below, to have a reference.
 	id<GLAFileAccessing> accessedFileInfo = [collectedFile accessFile];
+  if (!accessedFileInfo) {
+    return;
+  }
 	
 	// Command shows the file in the Finder
 	if (behaviour == GLAOpenBehaviourShowInFinder) {
@@ -62,6 +65,9 @@
 	// Stays accessed as long as this exists.
 	// So (accessedFileInfo.filePathURL) is used below, to have a reference.
 	id<GLAFileAccessing> accessedFileInfo = [collectedFile accessFile];
+  if (!accessedFileInfo) {
+    return NO;
+  }
 	
 	// Command shows the file in the Finder
 	if (behaviour == GLAOpenBehaviourShowInFinder) {

@@ -48,7 +48,7 @@ class FileFilterViewController : GLAViewController {
 	
 	func copyMasterFolders(_ inspector: GLAArrayInspecting) {
 		let masterFolders = (inspector.copyChildren() as! [GLACollectedFile])
-		masterFolderAccessors = masterFolders.map { $0.accessFile() }
+		masterFolderAccessors = masterFolders.flatMap { $0.accessFile() }
 		
 		fetchResults()
 	}

@@ -407,7 +407,7 @@ extension HighlightItemDetails {
 			return nil
 		}
 		
-		return collectedFile?.accessFile().filePathURL
+		return collectedFile?.accessFile()?.filePathURL
 	}
 	
 	var details: AnyRandomAccessCollection<HighlightItemDetails> {

@@ -35,16 +35,17 @@ extension GLAProjectManager {
 		let accessedFileInfo = collectedFile.accessFile()
 		
 		withExtendedLifetime(accessedFileInfo) {
-			let fileURL = accessedFileInfo?.filePathURL
+      guard let fileURL = accessedFileInfo?.filePathURL
+        else { return }
 			
 			switch behaviour {
 			case .showInFinder:
-				NSWorkspace.shared().activateFileViewerSelecting([fileURL!])
+				NSWorkspace.shared().activateFileViewerSelecting([fileURL])
 			case .default:
-				if let bundleInfo = Bundle(url: fileURL!)?.infoDictionary {
+				if let bundleInfo = Bundle(url: fileURL)?.infoDictionary {
 					let isApplication = "APPL" == bundleInfo["CFBundlePackageType"] as? String
 					if isApplication {
-						NSWorkspace.shared().open(fileURL!)
+						NSWorkspace.shared().open(fileURL)
 						return
 					}
 				}

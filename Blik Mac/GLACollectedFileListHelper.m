@@ -126,7 +126,9 @@
 		}
 		
 		NSURL *directoryURL = ([collectedFile accessFile].filePathURL);
-		[directoryURLs addObject:directoryURL];
+    if (directoryURL) {
+      [directoryURLs addObject:directoryURL];
+    }
 	}
 	(collectedFilesSetting.directoryURLsToWatch) = directoryURLs;
 }

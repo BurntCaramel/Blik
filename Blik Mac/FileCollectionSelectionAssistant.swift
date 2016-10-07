@@ -102,7 +102,7 @@ import BurntFoundation
 		let collectedFiles = GLACollectedFile.collectedFiles(withFileURLs: fileURLs)
 		
 		if let filesListCollection = projectManager.collection(with: filesListCollectionUUID, inProjectWith: projectUUID) {
-			projectManager.editFilesList(of: filesListCollection, insertingCollectedFiles:collectedFiles!, atOptionalIndex:UInt(NSNotFound))
+			projectManager.editFilesList(of: filesListCollection, insertingCollectedFiles:collectedFiles, atOptionalIndex:UInt(NSNotFound))
 		}
 	}
 	
@@ -113,7 +113,7 @@ import BurntFoundation
 			projectManager.editFilesList(of: filesListCollection) { filesListEditor in
 				let indexes = filesListEditor.indexesOfChildrenWhoseResult(fromVisitor: { child in
 					let collectedFile = child as! GLACollectedFile
-					return collectedFile.accessFile().filePathURL
+					return collectedFile.accessFile()?.filePathURL
 					}, hasValueContainedIn: Set(fileURLs))
 				filesListEditor.removeChildren(at: indexes)
 			}

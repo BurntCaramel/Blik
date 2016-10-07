@@ -119,7 +119,9 @@
 	}
 	else {
 		NSURL *sourceFilePathURL = (self.sourceFilePathURL);
-		NSAssert(sourceFilePathURL != nil, @"Collected file must have a source file path URL");
+    if (!sourceFilePathURL) {
+      return nil;
+    }
 		accessedFileInfo = [[GLAAccessedFileInfo alloc] initWithFileURL:sourceFilePathURL];
 	}
 	

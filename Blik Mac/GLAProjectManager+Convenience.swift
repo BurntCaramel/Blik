@@ -33,7 +33,7 @@ public extension GLAProjectManager {
 		let collectedFiles = GLACollectedFile.collectedFiles(withFileURLs: fileURLs)
 		
 		if let filesListCollection = collection(with: filesListCollectionUUID, inProjectWith: projectUUID) {
-			editFilesList(of: filesListCollection, insertingCollectedFiles:collectedFiles!, atOptionalIndex:UInt(NSNotFound))
+			editFilesList(of: filesListCollection, insertingCollectedFiles:collectedFiles, atOptionalIndex:UInt(NSNotFound))
 		}
 	}
 	
@@ -42,7 +42,7 @@ public extension GLAProjectManager {
 			editFilesList(of: filesListCollection) { filesListEditor in
 				let indexes = filesListEditor.indexesOfChildrenWhoseResult(fromVisitor: { child in
 					let collectedFile = child as! GLACollectedFile
-					return collectedFile.accessFile().filePathURL
+					return collectedFile.accessFile()?.filePathURL
 					}, hasValueContainedIn: Set(fileURLs))
 				filesListEditor.removeChildren(at: indexes)
 			}

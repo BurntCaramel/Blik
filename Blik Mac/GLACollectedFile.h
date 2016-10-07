@@ -11,6 +11,8 @@
 #import "GLAArrayEditing.h"
 #import "GLAAccessedFileInfo.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 
 @interface GLACollectedFile : GLAModel <GLACollectedItem>
 
@@ -27,7 +29,7 @@
 @property(readonly, nonatomic) BOOL empty;
 
 // Retain this if you want this to be cached.
-- (id<GLAFileAccessing>)accessFile;
+- (id <GLAFileAccessing> _Nullable)accessFile;
 
 //@property(readonly, nonatomic) NSURL *filePathURL;
 //@property(readonly, nonatomic) NSURL *fileReferenceURL;
@@ -39,3 +41,5 @@
 @property(readonly, nonatomic) NSData *bookmarkData;
 
 @end
+
+NS_ASSUME_NONNULL_END

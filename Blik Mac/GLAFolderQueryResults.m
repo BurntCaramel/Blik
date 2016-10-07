@@ -139,6 +139,10 @@
 	
 	GLACollectedFile *collectedFileForFolderURL = (folderQuery.collectedFileForFolderURL);
 	id<GLAFileAccessing> accessedFolder = [collectedFileForFolderURL accessFile];
+  if (!accessedFolder) {
+    // TODO: error
+    return;
+  }
 	(self.accessedFolder) = accessedFolder;
 	NSURL *folderURL = (accessedFolder.filePathURL);
 	NSArray *scopeFolderPaths = @[folderURL];
