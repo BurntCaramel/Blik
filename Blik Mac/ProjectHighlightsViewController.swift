@@ -424,13 +424,14 @@ extension ProjectHighlightsViewController {
 	}
 	
 	@IBAction func removedClickedItem(_ sender: AnyObject?) {
-		guard let
-			project = project,
-			let index = clickedIndex
+		guard
+			let project = project,
+			let uuid = clickedItem?.UUID
 			else { return }
 		
 		projectManager.editHighlights(of: project) { highlightsEditor in
-			highlightsEditor.removeChildren(at: IndexSet(integer: index))
+			let index = highlightsEditor.index(ofFirstChildWhoseKey: "UUID", hasValue: uuid)
+			highlightsEditor.removeChildren(at: IndexSet(integer: Int(index)))
 		}
 	}
 }
