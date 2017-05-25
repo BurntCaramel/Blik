@@ -1,5 +1,9 @@
 # Blik
-Easy file organisation for Mac
+Easy file organisation for Mac. Organize projects, then quickly open any of their files from the status bar.
+
+![A project organized in Blik](https://trello-attachments.s3.amazonaws.com/580710faeb62c4f7a6fa7786/580a0a1302bc0262ff403932/f18629b7bf5257944ecdf2747c8eabc0/blik-app-image-2b.png)
+![Quickly open files from any project with the launcher menu](https://trello-attachments.s3.amazonaws.com/580710faeb62c4f7a6fa7786/59261df84ad830f3b7cf7291/1bf248fbc16171652ed222e78631e22e/Launcher-Menu-Inside-Project.jpg)
+![Set the preferred app to open files in](https://trello-attachments.s3.amazonaws.com/580710faeb62c4f7a6fa7786/59261e94f04d2e5ff7fb0f2a/78318e86a853f7639ce889e5655a1425/Preferred-Application-TextMate.png)
 
 ## Organization
 
